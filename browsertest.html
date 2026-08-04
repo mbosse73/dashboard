@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard — Browsertest</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"Cascadia Mono",Consolas,monospace;
+  --paper:#f7f5f0;--sheet:#fffefb;--raise:#efece4;--rule:#e2ded4;--rule2:#cbc6ba;
+  --ink:#1a1a18;--ink2:#54514b;--ink3:#87837c;
+  --ja:#2b6b46;--ja-s:#e3f0e8;
+  --nein:#a8321f;--nein-s:#fbe9e5;
+  --tinte:#2f3a8c;--tinte-s:#e7eaf6;
+}
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;padding:0 0 70px}
+button{font:inherit;border:0;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--tinte);outline-offset:2px}
+.wrap{max-width:760px;margin:0 auto;padding:44px 28px;background:var(--paper)}
+h1{font-size:25px;letter-spacing:-.025em;font-weight:700}
+.lead{font-size:15px;color:var(--ink2);line-height:1.6;margin-top:12px}
+.lead code{font-family:var(--mono);font-size:13px;background:var(--raise);
+  border-radius:4px;padding:1px 6px}
+.sec{font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:700;color:var(--ink);display:flex;align-items:center;gap:13px;padding:36px 0 12px}
+.sec::after{content:"";flex:1;height:1px;background:var(--rule)}
+.row{display:flex;align-items:flex-start;gap:14px;padding:13px 12px;border-radius:9px;
+  background:var(--sheet);border:1px solid var(--rule);margin-bottom:5px}
+.tag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.06em;
+  padding:4px 9px;border-radius:6px;flex-shrink:0;min-width:56px;text-align:center}
+.tag.ja{background:var(--ja-s);color:var(--ja)}
+.tag.nein{background:var(--nein-s);color:var(--nein)}
+.tag.warte{background:var(--raise);color:var(--ink3)}
+.b{flex:1;min-width:0}
+.t{font-size:14.5px;font-weight:600}
+.m{font-size:13px;color:var(--ink3);margin-top:4px;line-height:1.5;overflow-wrap:anywhere}
+.m code{font-family:var(--mono);font-size:12px}
+.go{background:var(--tinte-s);color:var(--tinte);border:1.5px solid var(--tinte);
+  padding:12px 22px;border-radius:10px;font-size:14.5px;font-weight:600;margin-top:8px}
+.go:hover{background:#d9dff1}
+.go[disabled]{opacity:.45;cursor:not-allowed}
+.fazit{margin-top:34px;padding:20px 22px;border-radius:12px;background:var(--sheet);
+  border:1px solid var(--rule2);font-size:14.5px;line-height:1.6}
+.fazit b{display:block;font-size:16px;margin-bottom:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Browsertest für das Dashboard</h1>
+  <p class="lead">Diese Seite prüft, was Edge erlaubt, wenn eine HTML-Datei per Doppelklick
+  geöffnet wird. Sie schreibt nichts, außer du drückst den Knopf.
+  Speichere sie unter <code>C:\FlowBoard\test.html</code> und öffne sie per Doppelklick —
+  <b>nicht</b> per Drag-and-drop in ein offenes Fenster, das erzeugt eine andere Herkunft.</p>
+
+  <div class="sec">Umgebung</div>
+  <div id="umgebung"></div>
+
+  <div class="sec">Speicherwege</div>
+  <div id="wege"></div>
+
+  <div class="sec">Der eigentliche Test</div>
+  <div class="row">
+    <span class="tag warte" id="schreib-tag">offen</span>
+    <span class="b">
+      <span class="t">Datei anlegen und beschreiben</span>
+      <span class="m" id="schreib-m">Legt eine Datei deiner Wahl an, schreibt zwei Zeilen hinein
+      und liest sie sofort zurück. Genau das braucht FlowBoard.</span>
+      <button class="go" id="schreib">Testdatei anlegen</button>
+    </span>
+  </div>
+  <div class="row">
+    <span class="tag warte" id="merk-tag">offen</span>
+    <span class="b">
+      <span class="t">Verbindung über einen Neustart merken</span>
+      <span class="m" id="merk-m">Prüft, ob Edge sich die Datei merken kann, damit du sie nicht
+      bei jedem Start neu auswählen musst. Erst den Test darüber ausführen.</span>
+      <button class="go" id="merk" disabled>Merken prüfen</button>
+    </span>
+  </div>
+
+  <div class="sec">Die drei ungeklärten Funktionen</div>
+  <div class="row">
+    <span class="tag warte" id="tel-tag">offen</span>
+    <span class="b">
+      <span class="t">Anrufen und Mailen</span>
+      <span class="m" id="tel-m">Prüft, ob Edge <code>tel:</code> und <code>mailto:</code>
+      an deine Windows-Programme übergibt. Es öffnet sich eine Rückfrage — die kannst du
+      abbrechen, der Test gilt trotzdem als bestanden.</span>
+      <button class="go" id="tel">Anruf-Übergabe testen</button>
+      <button class="go" id="mail">Mail-Übergabe testen</button>
+    </span>
+  </div>
+  <div class="row">
+    <span class="tag warte" id="app-tag">offen</span>
+    <span class="b">
+      <span class="t">Andere lokale Datei öffnen (Appstarter)</span>
+      <span class="m" id="app-m">Versucht, eine zweite lokale HTML-Datei in einem neuen Tab
+      zu öffnen. Chromium ist hier bei <code>file://</code> teilweise restriktiv — genau
+      die Ecke, in der der Dateizugriff gescheitert ist. Lege vorher eine beliebige
+      <code>test2.html</code> im selben Ordner an.</span>
+      <button class="go" id="app">Appstart testen</button>
+    </span>
+  </div>
+  <div class="row">
+    <span class="tag warte" id="clip-tag">offen</span>
+    <span class="b">
+      <span class="t">Zwischenablage (Textbausteine)</span>
+      <span class="m" id="clip-m">Kopiert einen Text und liest ihn zurück. Prüft zuerst den
+      modernen Weg, bei Misserfolg den Notweg über ein verstecktes Textfeld.</span>
+      <button class="go" id="clip">Kopieren testen</button>
+    </span>
+  </div>
+
+  <div class="fazit" id="fazit"><b>Noch kein Urteil</b>Führe den Test oben aus.</div>
+</div>
+
+<script>
+"use strict";
+const $ = s => document.querySelector(s);
+function zeile(box, ok, titel, meta){
+  const r = document.createElement("div"); r.className = "row";
+  r.innerHTML = '<span class="tag '+(ok===null?"warte":ok?"ja":"nein")+'">'
+    + (ok===null?"offen":ok?"ja":"nein") + '</span>'
+    + '<span class="b"><span class="t">'+titel+'</span><span class="m">'+meta+'</span></span>';
+  box.appendChild(r);
+}
+
+/* ---------- Umgebung ---------- */
+const u = $("#umgebung");
+zeile(u, location.protocol==="file:", "Als lokale Datei geöffnet",
+  "Protokoll: <code>"+location.protocol+"</code> · Herkunft: <code>"+(location.origin||"null")+"</code>");
+zeile(u, window.isSecureContext, "Sicherer Kontext",
+  window.isSecureContext ? "Edge stuft die Seite als vertrauenswürdig ein."
+    : "Ohne sicheren Kontext sperrt Edge den Dateizugriff grundsätzlich.");
+zeile(u, /Edg\//.test(navigator.userAgent), "Edge erkannt",
+  navigator.userAgent.slice(0,110));
+
+/* ---------- Speicherwege ---------- */
+const w = $("#wege");
+const hatAPI = typeof window.showSaveFilePicker === "function";
+zeile(w, hatAPI, "File System Access API vorhanden",
+  hatAPI ? "<code>showSaveFilePicker</code> ist verfügbar."
+    : "Fehlt. Dann bleibt nur localStorage mit Export und Import.");
+
+let lsOk=false, lsInfo="";
+try{ localStorage.setItem("fb-test","1");
+     lsOk = localStorage.getItem("fb-test")==="1";
+     localStorage.removeItem("fb-test");
+     lsInfo="Schreiben und Lesen funktioniert."; }
+catch(e){ lsInfo="Blockiert: "+e.name+". Dann ginge nur der Dateiweg."; }
+zeile(w, lsOk, "localStorage nutzbar", lsInfo);
+
+let idbOk=null;
+zeile(w, null, "IndexedDB nutzbar", "wird geprüft …");
+const idbRow = w.lastElementChild;
+try{
+  const req = indexedDB.open("fb-test", 1);
+  req.onsuccess = () => { setz(idbRow, true, "Nötig, damit sich Edge die Datei merken kann.");
+    req.result.close(); indexedDB.deleteDatabase("fb-test"); };
+  req.onerror = () => setz(idbRow, false, "Blockiert. Datei müsste bei jedem Start neu gewählt werden.");
+  req.onblocked = () => setz(idbRow, false, "Blockiert.");
+}catch(e){ setz(idbRow, false, "Blockiert: "+e.name); }
+
+function setz(row, ok, meta){
+  const t = row.querySelector(".tag");
+  t.className = "tag " + (ok?"ja":"nein"); t.textContent = ok?"ja":"nein";
+  row.querySelector(".m").innerHTML = meta;
+}
+
+/* ---------- Schreibtest ---------- */
+let griff = null;
+$("#schreib").onclick = async () => {
+  if(!hatAPI){ fertig(false, "Die API fehlt in dieser Umgebung."); return; }
+  try{
+    griff = await window.showSaveFilePicker({
+      suggestedName: "flowboard-test.md",
+      types:[{description:"Markdown", accept:{"text/markdown":[".md"]}}]
+    });
+    const inhalt = "# FlowBoard Schreibtest\n- [x] geschrieben am " + new Date().toLocaleString("de-DE") + "\n";
+    const wr = await griff.createWritable();
+    await wr.write(inhalt); await wr.close();
+    const zurueck = await (await griff.getFile()).text();
+    const gleich = zurueck === inhalt;
+    $("#schreib-tag").className = "tag " + (gleich?"ja":"nein");
+    $("#schreib-tag").textContent = gleich?"ja":"nein";
+    $("#schreib-m").innerHTML = gleich
+      ? "Geschrieben und unverändert zurückgelesen: <code>"+griff.name+"</code>"
+      : "Geschrieben, aber der Inhalt kam verändert zurück.";
+    $("#merk").disabled = !gleich;
+    fertig(gleich, gleich ? "" : "Rücklesen fehlgeschlagen.");
+  }catch(e){
+    $("#schreib-tag").className="tag nein"; $("#schreib-tag").textContent="nein";
+    $("#schreib-m").innerHTML = e.name==="AbortError"
+      ? "Abgebrochen — bitte noch einmal, und eine Datei auswählen."
+      : "Fehlgeschlagen: <code>"+e.name+" — "+e.message+"</code>";
+    if(e.name!=="AbortError") fertig(false, e.name+": "+e.message);
+  }
+};
+
+/* ---------- Merktest ---------- */
+$("#merk").onclick = async () => {
+  try{
+    const db = await new Promise((ok,err)=>{
+      const r = indexedDB.open("fb-griff", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("h");
+      r.onsuccess = () => ok(r.result); r.onerror = () => err(r.error);
+    });
+    await new Promise((ok,err)=>{
+      const tx = db.transaction("h","readwrite");
+      tx.objectStore("h").put(griff,"plan");
+      tx.oncomplete = ok; tx.onerror = () => err(tx.error);
+    });
+    const zurueck = await new Promise((ok,err)=>{
+      const tx = db.transaction("h","readonly");
+      const rq = tx.objectStore("h").get("plan");
+      rq.onsuccess = () => ok(rq.result); rq.onerror = () => err(rq.error);
+    });
+    db.close();
+    const ok = !!(zurueck && zurueck.name === griff.name);
+    $("#merk-tag").className = "tag " + (ok?"ja":"nein");
+    $("#merk-tag").textContent = ok?"ja":"nein";
+    $("#merk-m").innerHTML = ok
+      ? "Edge kann die Verbindung behalten. Nach einem Neustart genügt ein Klick zur Freigabe."
+      : "Die Verbindung lässt sich nicht ablegen. Datei müsste bei jedem Start neu gewählt werden.";
+  }catch(e){
+    $("#merk-tag").className="tag nein"; $("#merk-tag").textContent="nein";
+    $("#merk-m").innerHTML = "Fehlgeschlagen: <code>"+e.name+"</code>. "
+      + "Datei müsste bei jedem Start neu gewählt werden — ein Klick, kein Datenverlust.";
+  }
+};
+
+/* ---------- Anrufen und Mailen ---------- */
+function uebergabe(schema, ziel, tagId, mId, was){
+  try{
+    const a=document.createElement("a");
+    a.href=schema+ziel; a.style.display="none";
+    document.body.appendChild(a); a.click(); a.remove();
+    const t=$("#"+tagId); t.className="tag ja"; t.textContent="ja";
+    $("#"+mId).innerHTML = was+" wurde an Windows übergeben. Wenn sich nichts getan hat, "
+      + "fehlt nur ein Standardprogramm — das ist eine Windows-Einstellung, kein Hindernis "
+      + "für das Dashboard.";
+  }catch(e){
+    const t=$("#"+tagId); t.className="tag nein"; t.textContent="nein";
+    $("#"+mId).innerHTML = "Fehlgeschlagen: <code>"+e.name+"</code>";
+  }
+}
+$("#tel").onclick  = ()=>uebergabe("tel:","+4939155512040","tel-tag","tel-m","Die Rufnummer");
+$("#mail").onclick = ()=>uebergabe("mailto:","test@example.com","tel-tag","tel-m","Die Mailadresse");
+
+/* ---------- Appstarter ---------- */
+$("#app").onclick = ()=>{
+  const ziel = location.href.replace(/[^/]*$/,"") + "test2.html";
+  let w=null;
+  try{ w = window.open(ziel,"_blank","noopener"); }catch(e){}
+  const t=$("#app-tag");
+  if(w){ t.className="tag ja"; t.textContent="ja";
+    $("#app-m").innerHTML="Ein neuer Tab wurde geöffnet: <code>"+ziel+"</code>. "
+      + "Steht dort „Datei nicht gefunden“, ist das in Ordnung — entscheidend ist, "
+      + "dass Edge das Öffnen zugelassen hat."; }
+  else { t.className="tag nein"; t.textContent="nein";
+    $("#app-m").innerHTML="Edge hat das Öffnen blockiert — vermutlich der Popup-Blocker "
+      + "oder die <code>file://</code>-Beschränkung. Der Appstarter bräuchte dann einen "
+      + "anderen Weg, etwa einen anklickbaren Link statt eines Skriptaufrufs."; }
+};
+
+/* ---------- Zwischenablage ---------- */
+$("#clip").onclick = async ()=>{
+  const probe="Dashboard-Zwischenablagetest "+Date.now();
+  const t=$("#clip-tag"), m=$("#clip-m");
+  try{
+    await navigator.clipboard.writeText(probe);
+    t.className="tag ja"; t.textContent="ja";
+    m.innerHTML="Der moderne Weg funktioniert (<code>navigator.clipboard</code>). "
+      + "Füge irgendwo ein, um es zu bestätigen.";
+    return;
+  }catch(e){
+    /* Notweg */
+    try{
+      const ta=document.createElement("textarea");
+      ta.value=probe; ta.style.position="fixed"; ta.style.opacity="0";
+      document.body.appendChild(ta); ta.select();
+      const ok=document.execCommand("copy");
+      ta.remove();
+      if(ok){ t.className="tag ja"; t.textContent="notweg";
+        m.innerHTML="Der moderne Weg ist gesperrt (<code>"+e.name+"</code>), der Notweg "
+          + "über ein verstecktes Textfeld funktioniert. Das Dashboard muss dann diesen "
+          + "Weg nehmen."; }
+      else throw new Error("execCommand lieferte false");
+    }catch(e2){
+      t.className="tag nein"; t.textContent="nein";
+      m.innerHTML="Beide Wege gesperrt: <code>"+e.name+"</code> / <code>"+e2.message+"</code>. "
+        + "Textbausteine müssten dann in einem Feld zum Selbstmarkieren angezeigt werden.";
+    }
+  }
+};
+
+function fertig(ok, warum){
+  $("#fazit").innerHTML = ok
+    ? "<b>Der Dateiweg funktioniert bei dir.</b>FlowBoard kann seine Daten direkt in eine "
+      + "<code>.md</code> auf deiner Platte schreiben. Sag mir das Ergebnis, dann baue ich "
+      + "das Wochenbrett auf diesen Speicher um."
+    : "<b>Der Dateiweg funktioniert hier nicht.</b>" + (warum?warum+" ":"")
+      + "Dann ist localStorage mit einem Export- und Import-Knopf der bessere Weg — "
+      + "gleiche Sicherungsmöglichkeit, nur mit einem Klick mehr.";
+}
+</script>
+</body>
+</html>

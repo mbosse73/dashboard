@@ -13,6 +13,12 @@ import vm from "node:vm";
 const DATEIEN = ["dashboard.html", "referenz/theme-notion.html",
                  "referenz/workflow-dialog.html", "browsertest.html"];
 
+/* Fehlt eine Datei aus dieser Liste, ist das ein Fehler und kein Hinweis.
+   Sonst läuft die Prüfung grün durch, ohne die Anwendung angesehen zu
+   haben — ein Prüflauf, der nichts geprüft hat, ist schlimmer als keiner.
+   Genau das ist passiert, als dashboard.html vorübergehend index.html hieß. */
+const PFLICHT = ["dashboard.html"];
+
 let fehler = 0, warnungen = 0;
 const ok   = (t) => console.log("  \u2713 " + t);
 const bad  = (t) => { console.log("  \u2717 " + t); fehler++; };
@@ -134,8 +140,13 @@ function pruefeFassungen() {
 
 /* ============================================================ */
 console.log("\nPrüfung nach CLAUDE.md\n" + "\u2500".repeat(52));
+let gesehen = 0;
 for (const f of DATEIEN) {
-  if (!existsSync(f)) { warn(f + " nicht vorhanden"); continue; }
+  if (!existsSync(f)) {
+    (PFLICHT.includes(f) ? bad : warn)(f + " nicht vorhanden");
+    continue;
+  }
+  gesehen++;
   const html = readFileSync(f, "utf8");
   const { js, css } = teile(html);
   console.log("\n" + f);
@@ -157,7 +168,8 @@ if (fehler) {
   console.log("Nicht committen, bevor die Fehler behoben sind.\n");
   process.exit(1);
 }
-console.log("Keine Fehler" + (warnungen ? ", " + warnungen + " Hinweise" : "") + "\n");
+console.log("Keine Fehler" + (warnungen ? ", " + warnungen + " Hinweise" : "")
+            + " — " + gesehen + " von " + DATEIEN.length + " Dateien angesehen\n");
 console.log("Achtung: Das ersetzt nicht das Hinsehen. Sämtliche schwarzen");
 console.log("Flächen aus dem Fehlerbuch haben diese Prüfung bestanden.");
 console.log("dashboard.html im Browser öffnen und die geänderte Stelle ansehen.\n");

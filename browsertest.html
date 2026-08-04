@@ -53,7 +53,7 @@ h1{font-size:25px;letter-spacing:-.025em;font-weight:700}
   <h1>Browsertest für das Dashboard</h1>
   <p class="lead">Diese Seite prüft, was Edge erlaubt, wenn eine HTML-Datei per Doppelklick
   geöffnet wird. Sie schreibt nichts, außer du drückst den Knopf.
-  Speichere sie unter <code>C:\FlowBoard\test.html</code> und öffne sie per Doppelklick —
+  Sie liegt unter <code>C:\Dashboard\browsertest.html</code>. Öffne sie per Doppelklick —
   <b>nicht</b> per Drag-and-drop in ein offenes Fenster, das erzeugt eine andere Herkunft.</p>
 
   <div class="sec">Umgebung</div>
@@ -68,7 +68,7 @@ h1{font-size:25px;letter-spacing:-.025em;font-weight:700}
     <span class="b">
       <span class="t">Datei anlegen und beschreiben</span>
       <span class="m" id="schreib-m">Legt eine Datei deiner Wahl an, schreibt zwei Zeilen hinein
-      und liest sie sofort zurück. Genau das braucht FlowBoard.</span>
+      und liest sie sofort zurück. Genau das bräuchte das Dashboard für einen Dateispeicher.</span>
       <button class="go" id="schreib">Testdatei anlegen</button>
     </span>
   </div>
@@ -177,10 +177,10 @@ $("#schreib").onclick = async () => {
   if(!hatAPI){ fertig(false, "Die API fehlt in dieser Umgebung."); return; }
   try{
     griff = await window.showSaveFilePicker({
-      suggestedName: "flowboard-test.md",
+      suggestedName: "dashboard-test.md",
       types:[{description:"Markdown", accept:{"text/markdown":[".md"]}}]
     });
-    const inhalt = "# FlowBoard Schreibtest\n- [x] geschrieben am " + new Date().toLocaleString("de-DE") + "\n";
+    const inhalt = "# Dashboard Schreibtest\n- [x] geschrieben am " + new Date().toLocaleString("de-DE") + "\n";
     const wr = await griff.createWritable();
     await wr.write(inhalt); await wr.close();
     const zurueck = await (await griff.getFile()).text();
@@ -300,9 +300,9 @@ $("#clip").onclick = async ()=>{
 
 function fertig(ok, warum){
   $("#fazit").innerHTML = ok
-    ? "<b>Der Dateiweg funktioniert bei dir.</b>FlowBoard kann seine Daten direkt in eine "
+    ? "<b>Der Dateiweg funktioniert bei dir.</b>Das Dashboard könnte seine Daten direkt in eine "
       + "<code>.md</code> auf deiner Platte schreiben. Sag mir das Ergebnis, dann baue ich "
-      + "das Wochenbrett auf diesen Speicher um."
+      + "die Speicherung darauf um."
     : "<b>Der Dateiweg funktioniert hier nicht.</b>" + (warum?warum+" ":"")
       + "Dann ist localStorage mit einem Export- und Import-Knopf der bessere Weg — "
       + "gleiche Sicherungsmöglichkeit, nur mit einem Klick mehr.";

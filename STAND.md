@@ -24,6 +24,12 @@ unberührt. Fünf Dinge im Umfeld waren nicht in Ordnung:
 * `.github/pull_request_template.md` fehlte.
 * `browsertest.html` sprach noch von „FlowBoard" und `C:\FlowBoard`.
 
+Dazu sind `referenz/theme-notion.html` und `referenz/workflow-dialog.html`
+nachgereicht worden. Damit läuft Prüfung 9 (Logik deckungsgleich) zum
+ersten Mal — sie ist grün, die Notion-Fassung ist zeichengenau dieselbe
+Logik — und Schritt 6 hat seine Dialogvorlage. Der Prüflauf sieht jetzt
+alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
+
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
 als Arbeitsfläche. Elf Module sind angemeldet, davon zwei fertig
 (Planner, Leiste) und neun als Gerüst. Sichern und Laden über JSON,
@@ -75,19 +81,7 @@ bestimmen, wie drei Dinge gebaut werden müssen:
 
 **Bis das geklärt ist, Schritt 4 und Schritt 7 der Roadmap zurückstellen.**
 
-### 2. Die beiden Dateien unter `referenz/` fehlen im Repository
-
-`referenz/theme-notion.html` und `referenz/workflow-dialog.html` sind
-nicht eingecheckt. Zwei Folgen:
-
-* Die Regel „Wer eine Fassung ändert, ändert beide" ist nicht befolgbar,
-  und Prüfung 9 (Logik deckungsgleich) läuft nie.
-* **Schritt 6 der Roadmap hat keine Vorlage** — dort steht ausdrücklich
-  „Dialog nach `referenz/workflow-dialog.html`".
-
-Beide nachreichen, bevor Schritt 6 beginnt.
-
-### 3. Notion-Fassung: Kontrast
+### 2. Notion-Fassung: Kontrast
 
 Notions Tertiärton hat 2,5 : 1 auf Weiß und trifft Zeitangaben und
 Metazeilen. Das ist Notions eigener Wert, kein Fehler. Falls es stört:

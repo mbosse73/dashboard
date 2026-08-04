@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Workflow-Dialog — Entwurf</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#87837c;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --gut:#2b6b46;   --gut-s:#e3f0e8;
+}
+html,body{background:var(--paper)!important;color:var(--ink)!important;height:100%}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit;text-align:left}
+input,textarea,select{font:inherit}
+:focus-visible{outline:2px solid var(--tinte);outline-offset:2px;border-radius:4px}
+*{scrollbar-color:var(--rule2) transparent;scrollbar-width:thin}
+::-webkit-scrollbar{width:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:6px;
+  border:3px solid var(--sheet);background-clip:padding-box}
+
+.buehne{height:100vh;background:var(--paper);display:grid;place-items:center;padding:16px}
+.dlg{width:min(900px,100%);max-height:calc(100vh - 32px);background:var(--sheet);
+  border:1px solid var(--rule2);border-radius:14px;box-shadow:0 24px 70px rgba(26,26,24,.2);
+  display:flex;flex-direction:column;overflow:hidden}
+.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:12px;padding:16px 24px 13px;
+  border-bottom:1px solid var(--rule);flex-wrap:wrap}
+.dlg-k .art{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink3);font-weight:700}
+.dlg-k h1{font-size:18px;font-weight:650;letter-spacing:-.02em}
+.dlg-k .sp{flex:1}
+.dlg-k .zu{font-size:20px;color:var(--ink3);line-height:1;padding:2px 8px;border-radius:6px}
+.dlg-k .zu:hover{background:var(--raise);color:var(--ink)}
+.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:2px 24px 20px}
+.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:13px 24px;
+  border-top:1px solid var(--rule);background:var(--paper)}
+.dlg-f .sp{flex:1}
+.knopf{font-size:13.5px;font-weight:600;background:var(--tinte-s);color:var(--tinte);
+  border:1px solid var(--tinte);padding:9px 18px;border-radius:9px}
+.knopf:hover{background:#d9dff1}
+.knopf.still{background:transparent;color:var(--ink2);border-color:var(--rule2);font-weight:500}
+.knopf.still:hover{background:var(--raise);color:var(--ink)}
+.knopf.weg{color:var(--signal);border-color:transparent;background:transparent;font-weight:500}
+.knopf.weg:hover{background:var(--signal-s)}
+
+.abs{display:flex;align-items:center;gap:12px;padding:20px 0 9px}
+.abs h2{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+  font-weight:700;color:var(--ink)}
+.abs .r{flex:1;height:1px;background:var(--rule)}
+.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.5;padding:0 0 9px}
+
+.raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:11px 15px}
+.feld{display:flex;flex-direction:column;gap:5px}
+.feld.breit{grid-column:1/-1}
+.feld label{font-size:12px;color:var(--ink3);font-weight:500}
+.feld input,.feld select,.feld textarea{border:1px solid var(--rule2);border-radius:8px;
+  padding:8px 11px;background:var(--paper);font-size:14px;color:var(--ink);width:100%}
+.feld input:focus,.feld select:focus,.feld textarea:focus{outline:0;border-color:var(--tinte);
+  box-shadow:0 0 0 3px var(--tinte-s);background:var(--sheet)}
+.feld textarea{min-height:68px;resize:vertical;line-height:1.5}
+.feld .hint{font-size:11.5px;color:var(--ink3)}
+.feld.schalter{flex-direction:row;align-items:center;gap:9px}
+.feld.schalter input{width:17px;height:17px;padding:0;accent-color:var(--tinte)}
+.feld.schalter label{font-size:14px;color:var(--ink)}
+
+.liste{display:flex;flex-direction:column}
+.lz{display:flex;align-items:flex-start;gap:12px;padding:8px 10px;border-radius:8px;
+  border-left:2px solid transparent;width:100%;text-align:left}
+.lz:hover{background:var(--raise)}
+.lz[aria-current="true"]{background:var(--raise);border-left-color:var(--tinte)}
+.lz .mk{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  font-family:var(--mono);font-size:10px;font-weight:700;margin-top:1px;
+  background:var(--raise);color:var(--ink3);box-shadow:inset 0 0 0 1px var(--rule2)}
+.lz.fertig .mk{background:var(--gut-s);color:var(--gut);box-shadow:inset 0 0 0 1px var(--gut)}
+.lz.aktiv .mk{background:var(--tinte);color:#fff;box-shadow:none}
+.lz.spaet .mk{background:var(--signal);color:#fff;box-shadow:none}
+.lz-b{flex:1;min-width:0}
+.lz-t{display:block;font-size:14px;line-height:1.4}
+.lz.fertig .lz-t{color:var(--ink3)}
+.lz.aktiv .lz-t,.lz.spaet .lz-t{font-weight:600}
+.lz-m{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+.lz-r{font-family:var(--mono);font-size:11.5px;color:var(--ink3);flex-shrink:0;padding-top:3px}
+.lz-r.spaet{color:var(--signal);font-weight:700}
+
+.schritt{border:1px solid var(--rule2);border-radius:12px;padding:15px 17px;
+  background:var(--paper);margin-top:6px}
+.schritt.ist-aktiv{border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.schritt-k{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:13px}
+.schritt-k h3{font-size:16px;font-weight:650;letter-spacing:-.015em}
+.schritt-k .sp{flex:1}
+.schritt-k .nur{font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+.marke{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;
+  font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.marke.aktiv{background:var(--tinte-s);color:var(--tinte)}
+.marke.fertig{background:var(--gut-s);color:var(--gut)}
+.marke.offen{background:var(--raise);color:var(--ink3)}
+.marke.spaet{background:var(--signal-s);color:var(--signal)}
+.schritt-tat{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px;padding-top:13px;
+  border-top:1px solid var(--rule)}
+.merk{font-size:12.5px;color:var(--ink2);background:var(--raise);border-radius:8px;
+  padding:8px 11px;margin-top:11px;line-height:1.5}
+.merk.warn{color:var(--signal);background:var(--signal-s)}
+
+.zettel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:var(--sheet);color:var(--ink);border:1px solid var(--rule2);font-size:13.5px;
+  padding:11px 20px;border-radius:10px;opacity:0;pointer-events:none;z-index:900;
+  box-shadow:0 14px 40px rgba(26,26,24,.16);
+  transition:transform .24s cubic-bezier(.2,.8,.3,1),opacity .24s}
+.zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="buehne">
+  <div class="dlg" role="dialog" aria-label="Workflow-Instanz bearbeiten">
+    <div class="dlg-k">
+      <span class="art" id="art">—</span>
+      <h1 id="kopf">—</h1>
+      <span class="sp"></span>
+      <button class="zu" aria-label="Schließen">×</button>
+    </div>
+    <div class="dlg-b" id="rumpf"></div>
+    <div class="dlg-f">
+      <button class="knopf weg" id="loeschen">Instanz löschen</button>
+      <span class="sp"></span>
+      <button class="knopf still">Abbrechen</button>
+      <button class="knopf">Speichern</button>
+    </div>
+  </div>
+</div>
+<div class="zettel" id="zettel" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const p2=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
+const HEUTE=iso(new Date());
+function tagPlus(n){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+n);return iso(d)}
+const TAGL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+const MONK=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+let zT; function melde(m){const t=$("#zettel");t.textContent=m;t.classList.add("an");
+  clearTimeout(zT);zT=setTimeout(()=>t.classList.remove("an"),2200)}
+function frist(d){
+  if(!d) return "kein Termin";
+  const diff=Math.round((new Date(d+"T00:00:00")-new Date(HEUTE+"T00:00:00"))/86400000);
+  const x=new Date(d+"T00:00:00");
+  if(diff<0) return "überfällig";
+  if(diff===0) return "heute";
+  if(diff===1) return "morgen";
+  if(diff<7) return TAGL[x.getDay()];
+  return x.getDate()+". "+MONK[x.getMonth()];
+}
+const KONTAKTE=[{id:"k1",nm:"Lisa Meier"},{id:"k2",nm:"Jan Kowalski"},
+  {id:"k4",nm:"Eva Bergmann"},{id:"k5",nm:"Petra Hoffmann"},{id:"k6",nm:"Tobias Meinhardt"}];
+
+/* ============================================================
+   VORLAGE — die Schablone
+
+   Feste Teilschritte in fester Reihenfolge. Eigenschaften auf
+   beiden Ebenen; je Teilschritt können es andere sein.
+   Zwei Felder sind eingebaut und nicht abwählbar: der Titel der
+   Instanz und die Frist je Teilschritt.
+   ============================================================ */
+const VORLAGE={
+  id:"vertrag", nm:"Vertragsabschluss",
+  eigenschaften:[
+    {schl:"kontakt", nm:"Ansprechpartner", art:"kontakt"},
+    {schl:"volumen", nm:"Volumen in Euro", art:"zahl"},
+    {schl:"akte",    nm:"Ablage",          art:"text"}
+  ],
+  schritte:[
+    {schl:"anfrage", nm:"Anfrage erfasst", eigenschaften:[
+      {schl:"eingang", nm:"Eingegangen am", art:"datum"},
+      {schl:"weg", nm:"Eingangsweg", art:"auswahl",
+       optionen:[["mail","E-Mail"],["tel","Telefon"],["post","Post"]]}]},
+    {schl:"pruefung", nm:"Unterlagen geprüft", eigenschaften:[
+      {schl:"vollstaendig", nm:"Vollständig", art:"schalter"},
+      {schl:"anmerkung", nm:"Anmerkung", art:"mehrzeilig"}]},
+    {schl:"angebot", nm:"Angebot erstellt", eigenschaften:[
+      {schl:"nummer", nm:"Angebotsnummer", art:"text"},
+      {schl:"betrag", nm:"Betrag", art:"zahl"},
+      {schl:"datei", nm:"Link zum Angebot", art:"text"}]},
+    {schl:"rueckfragen", nm:"Rückfragen geklärt", eigenschaften:[
+      {schl:"offen", nm:"Offene Punkte", art:"mehrzeilig"}]},
+    {schl:"freigabe", nm:"Freigabe eingeholt", eigenschaften:[
+      {schl:"durch", nm:"Freigegeben durch", art:"kontakt"},
+      {schl:"am", nm:"Freigegeben am", art:"datum"}]},
+    {schl:"versand", nm:"Vertrag versandt", eigenschaften:[
+      {schl:"art", nm:"Versandart", art:"auswahl",
+       optionen:[["mail","E-Mail"],["post","Post"],["kurier","Kurier"]]},
+      {schl:"nachweis", nm:"Sendungsnummer", art:"text"}]},
+    {schl:"unterschrift", nm:"Unterschrift erhalten", eigenschaften:[
+      {schl:"am", nm:"Erhalten am", art:"datum"}]},
+    {schl:"ablage", nm:"Abgelegt", eigenschaften:[
+      {schl:"ort", nm:"Ablageort", art:"text"}]}
+  ]
+};
+
+/* ---------- Instanz — die Ausprägung ---------- */
+const INSTANZ={
+  id:"i1", vorlage:"vertrag", titel:"Vertrag Meinhardt IT",
+  aktiv:"rueckfragen",                       /* Schlüssel, nicht Position */
+  werte:{kontakt:"k6", volumen:24000, akte:"2026-114"},
+  schritte:{
+    anfrage:{frist:tagPlus(-21), werte:{eingang:tagPlus(-21), weg:"mail"}},
+    pruefung:{frist:tagPlus(-14), werte:{vollstaendig:true,
+      anmerkung:"Alte Vertragsfassung im Archiv gefunden."}},
+    angebot:{frist:tagPlus(-6), werte:{nummer:"A-2026-114", betrag:24000,
+      datei:"intranet/angebote/A-2026-114"}},
+    rueckfragen:{frist:tagPlus(-2), werte:{offen:"Reaktionszeit im Störfall noch unklar."}},
+    freigabe:{frist:tagPlus(3), werte:{}},
+    versand:{frist:tagPlus(-1), werte:{}},
+    unterschrift:{frist:tagPlus(11), werte:{}},
+    ablage:{frist:null, werte:{}}
+  }
+};
+
+/* ---------- Ableitungen: der Stand wird berechnet, nicht gespeichert ---------- */
+const wfIndex = () => VORLAGE.schritte.findIndex(s=>s.schl===INSTANZ.aktiv);
+const wfFrist = () => { const s=INSTANZ.schritte[INSTANZ.aktiv]; return s ? s.frist : null; };
+const wfSpaet = () => { const f=wfFrist(); return !!f && f<HEUTE; };
+const wfFertig= () => wfIndex()<0;
+function wfLage(schl){
+  const i=wfIndex(), j=VORLAGE.schritte.findIndex(s=>s.schl===schl);
+  if(i<0 || j<i) return "fertig";
+  if(j>i) return "offen";
+  return wfSpaet() ? "spaet" : "aktiv";
+}
+const LAGE={fertig:"erledigt", aktiv:"aktiv", spaet:"aktiv, überfällig", offen:"offen"};
+
+let gewaehlt = INSTANZ.aktiv;
+
+/* ============================================================
+   FELDER — aus der Definition erzeugt, nicht von Hand gebaut
+
+   Genau dieses Format braucht auch der Dialog-Baustein aus
+   Schritt 2 der Roadmap: {schl, nm, art, optionen}. Wer den
+   Baustein baut, kann Workflows ohne Sonderbehandlung anzeigen.
+   ============================================================ */
+function feld(def, wert, setzen){
+  const f=el("div","feld"+(def.art==="mehrzeilig"?" breit":"")
+    +(def.art==="schalter"?" schalter":""));
+  let n;
+  if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=wert||""; }
+  else if(def.art==="auswahl"||def.art==="kontakt"){
+    n=el("select");
+    const opt = def.art==="kontakt"
+      ? [["","— keiner —"]].concat(KONTAKTE.map(k=>[k.id,k.nm]))
+      : [["","— ohne —"]].concat(def.optionen||[]);
+    opt.forEach(([w,t])=>{ const o=el("option",null,esc(t)); o.value=w;
+      if(String(w)===String(wert==null?"":wert)) o.selected=true; n.appendChild(o); });
+  }
+  else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!wert; }
+  else { n=el("input");
+    n.type = def.art==="datum" ? "date" : def.art==="zahl" ? "number" : "text";
+    n.value = wert==null ? "" : wert; }
+  const lab=el("label",null,esc(def.nm));
+  if(def.art==="schalter"){ f.append(n,lab); } else { f.append(lab,n); }
+  n.onchange=()=>{ setzen(def.art==="schalter" ? n.checked : n.value); melde("Übernommen"); };
+  if(def.hinweis) f.appendChild(el("span","hint",esc(def.hinweis)));
+  return f;
+}
+
+/* ============================================================
+   ZEICHNEN
+   ============================================================ */
+function abs(t,n){
+  const a=el("div","abs",'<h2>'+esc(t)+'</h2><span class="r"></span>');
+  if(n) a.appendChild(el("span","n",esc(n)));
+  return a;
+}
+
+function male(){
+  $("#art").textContent=VORLAGE.nm;
+  $("#kopf").textContent=INSTANZ.titel;
+  const b=$("#rumpf"); b.innerHTML="";
+  const i=wfIndex();
+
+  /* --- 1. Eigenschaften der Instanz --- */
+  b.appendChild(abs("Instanz", wfFertig() ? "abgeschlossen"
+    : "Schritt "+(i+1)+" von "+VORLAGE.schritte.length));
+  b.appendChild(el("div","hinweis",
+    "Der Titel ist fest eingebaut. Die übrigen Eigenschaften stammen aus der Vorlage "
+    +"„"+esc(VORLAGE.nm)+"“ und sind in jeder Instanz dieselben — nur die Werte "
+    +"unterscheiden sich."));
+  const r=el("div","raster");
+  r.appendChild(feld({schl:"titel", nm:"Titel", art:"text"}, INSTANZ.titel,
+    v=>{ INSTANZ.titel=v; $("#kopf").textContent=v; }));
+  VORLAGE.eigenschaften.forEach(def=>
+    r.appendChild(feld(def, INSTANZ.werte[def.schl], v=>{ INSTANZ.werte[def.schl]=v; })));
+  b.appendChild(r);
+
+  /* --- 2. Alle Teilschritte --- */
+  b.appendChild(abs("Teilschritte", VORLAGE.schritte.length+" Stück, feste Reihenfolge"));
+  const liste=el("div","liste");
+  VORLAGE.schritte.forEach((s,j)=>{
+    const l=wfLage(s.schl);
+    const w=INSTANZ.schritte[s.schl] || {frist:null, werte:{}};
+    const n=el("button","lz "+l);
+    n.setAttribute("aria-current",String(s.schl===gewaehlt));
+    const voll=s.eigenschaften.filter(e=>{
+      const v=w.werte[e.schl]; return v!==undefined && v!=="" && v!==null && v!==false;
+    }).length;
+    n.innerHTML='<span class="mk">'+(l==="fertig"?"✓":p2(j+1))+'</span>'
+      +'<span class="lz-b"><span class="lz-t">'+esc(s.nm)+'</span>'
+      +'<span class="lz-m">'+voll+" von "+s.eigenschaften.length
+      +' Eigenschaften ausgefüllt</span></span>'
+      +'<span class="lz-r'+(w.frist&&w.frist<HEUTE&&l!=="fertig"?" spaet":"")+'">'
+      +esc(frist(w.frist))+'</span>';
+    n.onclick=()=>{ gewaehlt=s.schl; male(); };
+    liste.appendChild(n);
+  });
+  b.appendChild(liste);
+
+  /* --- 3. Der gewählte Teilschritt --- */
+  b.appendChild(gewaehlterSchritt());
+}
+
+function gewaehlterSchritt(){
+  const def=VORLAGE.schritte.find(s=>s.schl===gewaehlt);
+  const j=VORLAGE.schritte.indexOf(def);
+  if(!INSTANZ.schritte[def.schl]) INSTANZ.schritte[def.schl]={frist:null, werte:{}};
+  const w=INSTANZ.schritte[def.schl];
+  const l=wfLage(def.schl), aktiv=(def.schl===INSTANZ.aktiv);
+
+  const k=el("div","schritt"+(aktiv?" ist-aktiv":""));
+  const kopf=el("div","schritt-k");
+  kopf.appendChild(el("h3",null,p2(j+1)+" · "+esc(def.nm)));
+  kopf.appendChild(el("span","marke "+l, LAGE[l]));
+  kopf.appendChild(el("span","sp"));
+  if(!aktiv) kopf.appendChild(el("span","nur","nur angesehen"));
+  k.appendChild(kopf);
+
+  const r=el("div","raster");
+  /* Frist ist eingebaut, nicht aus der Vorlage */
+  r.appendChild(feld({schl:"frist", nm:"Frist", art:"datum",
+      hinweis: aktiv ? "zählt für „überfällig“"
+                     : "zählt erst, wenn dieser Schritt aktiv ist"},
+    w.frist, v=>{ w.frist=v||null; male(); }));
+  def.eigenschaften.forEach(e=>
+    r.appendChild(feld(e, w.werte[e.schl], v=>{ w.werte[e.schl]=v; male(); })));
+  k.appendChild(r);
+
+  if(!aktiv && l==="offen" && w.frist && w.frist<HEUTE)
+    k.appendChild(el("div","merk",
+      "Die Frist dieses Schritts liegt in der Vergangenheit. Sie zählt trotzdem nicht "
+      +"als überfällig — dafür ist nur der aktive Schritt maßgeblich."));
+
+  const t=el("div","schritt-tat");
+  if(aktiv){
+    const weiter=el("button","knopf", j<VORLAGE.schritte.length-1
+      ? "Abschließen und weiter zu „"+VORLAGE.schritte[j+1].nm+"“"
+      : "Letzten Schritt abschließen");
+    weiter.onclick=()=>{
+      if(j<VORLAGE.schritte.length-1){
+        INSTANZ.aktiv=VORLAGE.schritte[j+1].schl; gewaehlt=INSTANZ.aktiv;
+        melde("Jetzt aktiv: "+VORLAGE.schritte[j+1].nm);
+      } else { INSTANZ.aktiv=null; melde("Instanz abgeschlossen"); }
+      male();
+    };
+    t.appendChild(weiter);
+  } else if(wfFertig()){
+    const auf=el("button","knopf still","Hier wieder aufnehmen");
+    auf.onclick=()=>{ INSTANZ.aktiv=def.schl; gewaehlt=def.schl; male();
+      melde("Wieder aktiv: "+def.nm); };
+    t.appendChild(auf);
+  } else if(l==="fertig"){
+    const zu=el("button","knopf still","Hierher zurücksetzen");
+    zu.onclick=()=>{ INSTANZ.aktiv=def.schl; male(); melde("Wieder aktiv: "+def.nm); };
+    t.appendChild(zu);
+  } else {
+    const spr=el("button","knopf still","Diesen Schritt aktivieren");
+    const sprung=j-wfIndex();
+    spr.onclick=()=>{ INSTANZ.aktiv=def.schl; male();
+      melde(sprung+" Schritt"+(sprung>1?"e":"")+" übersprungen"); };
+    t.appendChild(spr);
+    if(sprung>1) k.appendChild(el("div","merk warn",
+      "Das überspringt "+(sprung-1)+" Schritt"+(sprung>2?"e":"")+" davor. "
+      +"Sie gelten danach als erledigt, ohne bearbeitet worden zu sein."));
+  }
+  if(!aktiv && !wfFertig()){
+    const zur=el("button","knopf still","Zum aktiven Schritt");
+    zur.onclick=()=>{ gewaehlt=INSTANZ.aktiv; male(); };
+    t.appendChild(zur);
+  }
+  k.appendChild(t);
+  return k;
+}
+
+$("#loeschen").onclick=()=>melde("Löschen — im Entwurf nicht belegt");
+document.querySelectorAll(".knopf.still, .zu").forEach(b=>{
+  if(!b.onclick) b.onclick=()=>melde("Im Entwurf nicht belegt");
+});
+male();
+</script>
+</body>
+</html>

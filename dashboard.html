@@ -315,8 +315,14 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .blk.termin{border-left-color:var(--tinte)}
 .blk.aufgabe{border-left-color:var(--gut)}
 .blk.spaet{border-left-color:var(--signal)}
-.blk .t{font-size:13px;font-weight:600;letter-spacing:-.008em}
-.blk .m{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.blk{display:flex;align-items:flex-start;gap:8px;cursor:pointer}
+.blk-b{flex:1;min-width:0}
+.blk .t{display:block;font-size:13px;font-weight:600;letter-spacing:-.008em}
+.blk .m{display:block;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.blk .kast{width:15px;height:15px;border-radius:4px;margin-top:1px}
+.blk .kast svg{width:9px;height:9px}
+.blk.fertig .t{text-decoration:line-through;color:var(--ink3)}
+.vz{cursor:pointer}
 .jetztlinie{position:absolute;left:40px;right:0;height:2px;background:var(--signal);z-index:3}
 .jetztlinie::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;
   border-radius:50%;background:var(--signal)}
@@ -354,6 +360,28 @@ textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
   transition:transform .24s cubic-bezier(.2,.8,.3,1),opacity .24s}
 .zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---------- Kalender: zwei Werktage nebeneinander ---------- */
+.tage{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.tag{border:1px solid var(--rule);border-radius:11px;background:var(--sheet);overflow:hidden}
+.tag-k{display:flex;align-items:baseline;gap:9px;padding:11px 14px;
+  border-bottom:1px solid var(--rule);background:var(--paper)}
+.tag-k .d{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.tag-k .h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--tinte);font-weight:700}
+.tag-k .sp{flex:1}
+.tag-k .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.tag-b{padding:6px 8px 10px}
+.tagfuss{padding:4px 8px 8px}
+.tm{display:flex;align-items:flex-start;gap:11px;padding:8px;border-radius:8px;width:100%;
+  text-align:left;border-left:2px solid transparent}
+.tm:hover{background:var(--paper);border-left-color:var(--tinte)}
+.tm .u{font-family:var(--mono);font-size:12px;color:var(--ink2);font-weight:600;flex-shrink:0;
+  padding-top:1px;font-variant-numeric:tabular-nums}
+.tm .b{flex:1;min-width:0}
+.tm .t{display:block;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;overflow-wrap:anywhere}
+.tm .w{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;padding-top:2px}
 </style>
 </head>
 <body>
@@ -884,11 +912,11 @@ function vorgabe(){ return {
   {id:"k6",nach:"Meinhardt",vor:"Tobias",firma:"Meinhardt IT",tel:"0391 30021-7",mail:"t@meinhardt-it.de",fav:false,notiz:"Serverwartung"}
  ],
  termine:[
-  {id:"t1",d:K0[0],zeit:"08:00",dauer:30,titel:"Standup",anm:"Team",kontakt:null,fertig:true},
-  {id:"t2",d:K0[0],zeit:"10:00",dauer:60,titel:"Strategie-Call",anm:"Video",kontakt:"k1",fertig:false},
-  {id:"t3",d:K0[0],zeit:"14:00",dauer:30,titel:"Abstimmung Layout",anm:"Büro 2.14",kontakt:"k2",fertig:false},
-  {id:"t4",d:K0[1],zeit:"09:00",dauer:60,titel:"Sprint-Planung",anm:"Team",kontakt:null,fertig:false},
-  {id:"t5",d:K0[1],zeit:"15:30",dauer:45,titel:"Vertragsgespräch",anm:"Kanzlei",kontakt:"k4",fertig:false}
+  {id:"t1",d:K0[0],zeit:"08:00",dauer:30,titel:"Standup",anm:"Team",kontakt:null},
+  {id:"t2",d:K0[0],zeit:"10:00",dauer:60,titel:"Strategie-Call",anm:"Video",kontakt:"k1"},
+  {id:"t3",d:K0[0],zeit:"14:00",dauer:30,titel:"Abstimmung Layout",anm:"Büro 2.14",kontakt:"k2"},
+  {id:"t4",d:K0[1],zeit:"09:00",dauer:60,titel:"Sprint-Planung",anm:"Team",kontakt:null},
+  {id:"t5",d:K0[1],zeit:"15:30",dauer:45,titel:"Vertragsgespräch",anm:"Kanzlei",kontakt:"k4"}
  ],
  aufgaben:[
   {id:"a1",kat:"todo",titel:"Rechnung 2026-114 freigeben",d:tagPlus(-1),zeit:null,notiz:"Skonto läuft",kontakt:"k4",fertig:false},
@@ -1263,6 +1291,9 @@ registriere({
         ()=>{ a.fertig=!a.fertig; bewahre();
           melde(a.fertig?"Abgehakt: "+a.titel:"Wieder offen: "+a.titel); }),{bleibt:true}));
   },
+  /* Legt bewusst sofort an, statt den Dialog zu öffnen. Eine Aufgabe aus
+     „Rückruf Kanzlei ? mo“ ist auf der Stelle brauchbar — das ist der Sinn
+     der Leiste. Bei Kontakten ist es umgekehrt, ein bloßer Name genügt nicht. */
   erfassen(d){
     return [treff("Aufgabe",d.titel,
       "als "+(d.nach?"Nachverfolgen":"To-do")+(d.tag?" · "+d.tag:" · ohne Frist"),"↵",
@@ -1273,27 +1304,126 @@ registriere({
   flaeche(b){
     [["todo","To-do","Was du selbst abarbeitest."],
      ["nach","Nachverfolgen","Was bei anderen liegt und beobachtet wird."]].forEach(([kat,nm,sub])=>{
-      const l=DATEN.aufgaben.filter(a=>a.kat===kat)
-        .sort((x,y)=>(x.d||"9")<(y.d||"9")?-1:1);
-      b.appendChild(abschnitt(nm,l.filter(a=>!a.fertig).length+" offen"));
+      const l=DATEN.aufgaben.filter(a=>a.kat===kat&&!a.fertig)
+        .sort((x,y)=>(x.d||"9999")<(y.d||"9999")?-1:1);
+      const k=abschnitt(nm,null);
+      const neu=el("button","n","neue Aufgabe +");
+      neu.onclick=()=>aufgabeDialog(null,kat);
+      k.appendChild(neu);
+      b.appendChild(k);
       b.appendChild(el("div","hinweis",sub));
-      l.forEach(a=>b.appendChild(zeile(a,{meta:(a.notiz||"")
-        +(a.kontakt?" · "+kname(a.kontakt):""),
-        rechts:frist(a), k:istSpaet(a)?"eilig":""})));
+      if(!l.length) b.appendChild(el("div","leer","Nichts offen."));
+      l.forEach(a=>b.appendChild(aufgabeZeile(a)));
     });
+
+    /* Erledigte verschwinden nicht, sie ziehen um. Hier haben sie
+       ihren Platz und hier lassen sie sich gesammelt wegräumen. */
+    const fertig=DATEN.aufgaben.filter(a=>a.fertig)
+      .sort((x,y)=>(y.d||"")<(x.d||"")?-1:1);
+    const kf=abschnitt("Erledigt", fertig.length?null:"nichts");
+    if(fertig.length){
+      const alle=el("button","n","alle "+fertig.length+" löschen");
+      alle.onclick=()=>erledigteLoeschen(fertig.length);
+      kf.appendChild(alle);
+    }
+    b.appendChild(kf);
+    if(!fertig.length) b.appendChild(el("div","leer",
+      "Abgehakte Aufgaben sammeln sich hier, bis du sie löschst."));
+    fertig.forEach(a=>b.appendChild(aufgabeZeile(a)));
   }
 });
 /* ===== ENDE aufgaben ===== */
+
+const AFELDER=[
+  {schl:"titel", nm:"Titel", art:"text", breit:true},
+  {schl:"kat",   nm:"Kategorie", art:"auswahl",
+   optionen:[["todo","To-do — arbeite ich selbst ab"],
+             ["nach","Nachverfolgen — liegt bei anderen"]]},
+  {schl:"d",     nm:"Fällig am", art:"datum", sub:"Jedes Datum erlaubt, auch keines."},
+  {schl:"zeit",  nm:"Uhrzeit",   art:"zeit",
+   sub:"Optional. Setzt auch der Planner beim Ziehen."},
+  {schl:"kontakt",nm:"Kontakt",  art:"kontakt"},
+  {schl:"notiz", nm:"Notizen",   art:"mehrzeilig"}
+];
+const ALEER={id:null,kat:"todo",titel:"",d:null,zeit:null,notiz:"",kontakt:null,fertig:false};
+
+function aufgabeDialog(a, katVor){
+  const neu=!a;
+  const start=Object.assign({}, ALEER, a||{});
+  if(neu&&katVor) start.kat=katVor;
+  dialog({
+    art: neu?"Neue Aufgabe":"Aufgabe bearbeiten",
+    titel: w=>w.titel,
+    felder: AFELDER,
+    werte: start,
+    merk: "<b>Pflicht ist nur der Titel.</b> Ohne Datum landet die Aufgabe im Vorrat des "
+      +"Planners und bleibt dort sichtbar, bis sie eingeplant oder abgehakt wird.",
+    pruefe: w=>String(w.titel||"").trim()?null:{schl:"titel",text:"Ohne Titel geht es nicht."},
+    loeschen: neu?null:{
+      frage: w=>"<b>„"+esc(w.titel)+"“ wirklich löschen?</b><ul>"
+        +"<li>Die Aufgabe verschwindet aus dem Modul, aus dem Planner und aus der Leiste.</li>"
+        +"<li>Auf Aufgaben verweist nichts — es bleibt nirgends etwas zurück.</li>"
+        +(w.fertig?"":"<li>Abhaken wäre der schonendere Weg.</li>")+"</ul>",
+      tun: w=>{ const i=DATEN.aufgaben.findIndex(x=>x.id===w.id);
+        if(i>=0) DATEN.aufgaben.splice(i,1);
+        bewahre(); male(); melde("Aufgabe gelöscht"); }
+    },
+    speichern: w=>{
+      w.titel=String(w.titel).trim();
+      /* Eine Uhrzeit ohne Tag kann der Planner nicht unterbringen. */
+      if(!w.d) w.zeit=null;
+      if(neu){ w.id=neueId("a"); DATEN.aufgaben.push(w); }
+      else { const z=DATEN.aufgaben.find(x=>x.id===w.id);
+        if(!z){ melde("Die Aufgabe ist nicht mehr da."); male(); return; }
+        Object.keys(ALEER).forEach(k=>{ if(k!=="id") z[k]=w[k]; }); }
+      bewahre(); male(); melde(neu?"Aufgabe angelegt":"Aufgabe gespeichert");
+    }
+  });
+}
+
+function aufgabeZeile(a){
+  const r=el("div","z"+(a.fertig?" fertig":"")+(istSpaet(a)?" eilig":""));
+  const kast=el("button","kast");
+  kast.innerHTML='<svg viewBox="0 0 12 12"><path d="M2 6.2 4.6 9 10 3"/></svg>';
+  kast.setAttribute("aria-label",(a.fertig?"Wieder öffnen: ":"Erledigen: ")+a.titel);
+  kast.onclick=e=>{ e.stopPropagation(); a.fertig=!a.fertig; bewahre(); male();
+    melde(a.fertig?"Abgehakt: "+a.titel:"Wieder offen: "+a.titel); };
+  r.appendChild(kast);
+  const b=el("button","zb",'<span class="zt">'+esc(a.titel)+'</span>'
+    +'<span class="zm">'+esc([a.notiz, kname(a.kontakt)].filter(Boolean).join(" · "))+'</span>');
+  b.setAttribute("aria-label","Aufgabe bearbeiten: "+a.titel);
+  b.onclick=()=>aufgabeDialog(a);
+  r.appendChild(b);
+  r.appendChild(el("span","zr"+(istSpaet(a)?" eilig":""),esc(frist(a))));
+  return r;
+}
+
+/* Sammellöschen mit Rückfrage — dieselbe zweistufige Form wie im Dialog,
+   nur ohne Dialog drumherum. */
+function erledigteLoeschen(zahl){
+  dialog({
+    art:"Erledigte löschen", titel:zahl+(zahl===1?" Aufgabe":" Aufgaben"),
+    felder:[], werte:{},
+    merk:"<b>Alle abgehakten Aufgaben werden gelöscht.</b> Offene bleiben unberührt. "
+      +"Auf Aufgaben verweist nichts, es bleibt also nirgends etwas zurück. "
+      +"Rückgängig machen lässt sich das nur über eine Sicherung.",
+    speichern:()=>{
+      const bleibt=DATEN.aufgaben.filter(a=>!a.fertig);
+      ersetze(DATEN.aufgaben, bleibt);
+      bewahre(); male(); melde(zahl+(zahl===1?" Aufgabe":" Aufgaben")+" gelöscht");
+    }
+  });
+}
 
 /* ---------- 06 Kalender ---------- */
 /* ===== MODUL kalender ===== */
 registriere({
   id:"kalender", nr:"06", nm:"Kalender",
-  zahl:()=>DATEN.termine.filter(t=>!t.fertig).length,
+  zahl:()=>DATEN.termine.length,
   suche(q){
     return DATEN.termine.filter(t=>t.titel.toLowerCase().includes(q)).map(t=>
       treff("Termin",t.titel,(t.d===HEUTE?"heute":"nächster Werktag")+" "+t.zeit
-        +(t.anm?" · "+t.anm:""),"↵",()=>zeigeFlaeche("planner")));
+        +(t.anm?" · "+t.anm:""),"↵",()=>terminDialog(t)));
   },
   erfassen(d){
     const KA=planTage().map(iso);
@@ -1303,11 +1433,102 @@ registriere({
            : (d.zeit ? "nur heute und am nächsten Werktag möglich" : "Uhrzeit fehlt"),"↵",
       ()=>{ if(!geht){ melde("Termine gibt es nur für die beiden Werktage"); return; }
         DATEN.termine.push({id:neueId("t"),d:d.datum,zeit:d.zeit,dauer:30,
-          titel:d.titel,anm:"",kontakt:null,fertig:false});
+          titel:d.titel,anm:"",kontakt:null});
         bewahre(); melde("Termin angelegt"); zeigeFlaeche("planner"); })];
+  },
+  flaeche(b){
+    b.appendChild(abschnitt("Kalender","zwei Werktage"));
+    b.appendChild(el("div","hinweis",
+      "Termine sind an den aktuellen und den nächsten Werktag gebunden. Alles Weitere "
+      +"gehört in eine Aufgabe — die trägt jedes Datum oder gar keines."));
+    const g=el("div","tage");
+    planTage().forEach(d=>{
+      const key=iso(d), heute=key===HEUTE;
+      const l=DATEN.termine.filter(t=>t.d===key).sort((x,y)=>toMin(x.zeit)-toMin(y.zeit));
+      const s=el("div","tag");
+      s.appendChild(el("div","tag-k",
+        (heute?'<span class="h">heute</span>':"")
+        +'<span class="d">'+TAGL[d.getDay()]+", "+d.getDate()+". "+MONK[d.getMonth()]+'</span>'
+        +'<span class="sp"></span><span class="n">'+l.length+'</span>'));
+      const tb=el("div","tag-b");
+      if(!l.length) tb.appendChild(el("div","leer","Nichts geplant."));
+      l.forEach(t=>{
+        const n=el("button","tm",
+          '<span class="u">'+esc(t.zeit)+'</span>'
+          +'<span class="b"><span class="t">'+esc(t.titel)+'</span>'
+          +'<span class="m">'+esc([t.anm,kname(t.kontakt)].filter(Boolean).join(" · "))
+          +'</span></span><span class="w">'+esc(t.dauer)+' min</span>');
+        n.setAttribute("aria-label","Termin bearbeiten: "+t.titel);
+        n.onclick=()=>terminDialog(t);
+        tb.appendChild(n);
+      });
+      s.appendChild(tb);
+      const f=el("div","tagfuss");
+      const neu=el("button","tat still","neuer Termin +");
+      neu.onclick=()=>terminDialog(null,key);
+      f.appendChild(neu); s.appendChild(f);
+      g.appendChild(s);
+    });
+    b.appendChild(g);
   }
 });
 /* ===== ENDE kalender ===== */
+
+/* Der Tag ist eine Auswahl aus genau zwei Werktagen, kein freies Datum.
+   Damit kann ein Termin gar nicht erst irgendwo landen, wo ihn niemand
+   sieht — die Regel steckt in der Maske statt in einer Prüfung dahinter.
+   Die Liste wird bei jedem Öffnen neu gebaut, weil sich die beiden
+   Werktage über Nacht verschieben. */
+function tFelder(){
+  const [d1,d2]=planTage();
+  const nm=d=>TAGL[d.getDay()]+", "+d.getDate()+". "+MONK[d.getMonth()];
+  return [
+    {schl:"titel", nm:"Titel", art:"text", breit:true},
+    {schl:"d",     nm:"Tag", art:"auswahl",
+     optionen:[[iso(d1),nm(d1)],[iso(d2),nm(d2)]], sub:"Nur diese beiden Werktage."},
+    {schl:"zeit",  nm:"Uhrzeit", art:"zeit"},
+    {schl:"dauer", nm:"Dauer in Minuten", art:"zahl"},
+    {schl:"kontakt",nm:"Kontakt", art:"kontakt"},
+    {schl:"anm",   nm:"Anmerkung", art:"mehrzeilig"}
+  ];
+}
+const TLEER={id:null,d:null,zeit:"09:00",dauer:30,titel:"",anm:"",kontakt:null};
+
+function terminDialog(t, tagVor){
+  const neu=!t;
+  const start=Object.assign({}, TLEER, t||{});
+  if(neu) start.d=tagVor||iso(planTage()[0]);
+  dialog({
+    art: neu?"Neuer Termin":"Termin bearbeiten",
+    titel: w=>w.titel,
+    felder: tFelder(),
+    werte: start,
+    merk: "<b>Termine gibt es nur für den aktuellen und den nächsten Werktag.</b> "
+      +"Im Planner lassen sie sich zwischen beiden Tagen hin und her ziehen.",
+    pruefe: w=>{
+      if(!String(w.titel||"").trim()) return {schl:"titel",text:"Ohne Titel geht es nicht."};
+      if(!w.zeit) return {schl:"zeit",text:"Ein Termin braucht eine Uhrzeit."};
+      if(!w.d)    return {schl:"d",   text:"Ein Termin braucht einen Tag."};
+      return null;
+    },
+    loeschen: neu?null:{
+      frage: w=>"<b>„"+esc(w.titel)+"“ wirklich löschen?</b> Der Termin verschwindet aus "
+        +"dem Kalender und aus dem Planner. Auf Termine verweist nichts.",
+      tun: w=>{ const i=DATEN.termine.findIndex(x=>x.id===w.id);
+        if(i>=0) DATEN.termine.splice(i,1);
+        bewahre(); male(); melde("Termin gelöscht"); }
+    },
+    speichern: w=>{
+      w.titel=String(w.titel).trim();
+      w.dauer=Number(w.dauer)>0 ? Number(w.dauer) : 30;
+      if(neu){ w.id=neueId("t"); DATEN.termine.push(w); }
+      else { const z=DATEN.termine.find(x=>x.id===w.id);
+        if(!z){ melde("Der Termin ist nicht mehr da."); male(); return; }
+        Object.keys(TLEER).forEach(k=>{ if(k!=="id") z[k]=w[k]; }); }
+      bewahre(); male(); melde(neu?"Termin angelegt":"Termin gespeichert");
+    }
+  });
+}
 
 /* ---------- 01 Notizen ---------- */
 /* ===== MODUL notizen ===== */
@@ -1631,7 +1852,9 @@ function ueberfaellig(){
      Jetzt tauchen sie hier auf und lassen sich zurückholen. */
   const [d1,d2]=planTage(), k1=iso(d1), k2=iso(d2);
   return [].concat(
-    DATEN.termine.filter(t=>!t.fertig && t.d && t.d!==k1 && t.d!==k2)
+    /* Termine kennen kein „erledigt“ — ein vergangener Termin ist vorbei,
+       nicht abgehakt. Er lässt sich hier nur zurückholen oder löschen. */
+    DATEN.termine.filter(t=>t.d && t.d!==k1 && t.d!==k2)
       .map(t=>({typ:"Termin",obj:t,titel:t.titel,verschieben:t,
         m:"war am "+t.d+" um "+t.zeit+(t.anm?" · "+t.anm:"")})),
     DATEN.aufgaben.filter(istSpaet).map(a=>({typ:"Aufgabe",obj:a,titel:a.titel,
@@ -1642,7 +1865,7 @@ function ueberfaellig(){
 }
 function naechsterTermin(){
   const n=nowMin();
-  return DATEN.termine.filter(t=>t.d===HEUTE && !t.fertig && toMin(t.zeit)+t.dauer>n)
+  return DATEN.termine.filter(t=>t.d===HEUTE && toMin(t.zeit)+t.dauer>n)
     .sort((a,b)=>toMin(a.zeit)-toMin(b.zeit))[0]||null;
 }
 
@@ -1714,6 +1937,13 @@ function ruhezustand(box){
           x.verschieben.d=iso(planTage()[0]); bewahre(); male();
           melde('"'+x.titel+'" liegt jetzt auf heute'); };
         r.appendChild(t);
+        /* Der zweite Weg heraus. Termine kennen kein Abhaken, also
+           bleibt nur zurückholen oder löschen — sonst stünde ein
+           vergangener Termin hier für immer. */
+        const w=el("button","tat weg","löschen");
+        w.onclick=ev=>{ ev.stopPropagation(); terminDialog(x.verschieben); };
+        w.style.marginLeft="4px";
+        r.appendChild(w);
       }
       box.appendChild(r);
     });
@@ -1856,9 +2086,25 @@ function plannerMalen(rumpf){
   rumpf.appendChild(box);
 }
 function block(x,art,meta){
-  const n=el("div","blk "+art+(istSpaet(x)?" spaet":""));
+  const n=el("div","blk "+art+(istSpaet(x)?" spaet":"")+(x.fertig?" fertig":""));
   n.draggable=true;
-  n.innerHTML='<div class="t">'+esc(x.titel)+'</div><div class="m">'+esc(meta)+'</div>';
+  /* Nur Aufgaben lassen sich abhaken. Termine kennen kein „erledigt“ —
+     ein vergangener Termin ist vorbei, nicht abgearbeitet. */
+  if(art==="aufgabe"){
+    const kast=el("button","kast");
+    kast.innerHTML='<svg viewBox="0 0 12 12"><path d="M2 6.2 4.6 9 10 3"/></svg>';
+    kast.setAttribute("aria-label",(x.fertig?"Wieder öffnen: ":"Erledigen: ")+x.titel);
+    kast.onclick=e=>{ e.stopPropagation(); x.fertig=!x.fertig; bewahre(); male();
+      melde(x.fertig?"Abgehakt: "+x.titel:"Wieder offen: "+x.titel); };
+    n.appendChild(kast);
+  }
+  n.appendChild(el("span","blk-b",
+    '<span class="t">'+esc(x.titel)+'</span><span class="m">'+esc(meta)+'</span>'));
+  n.setAttribute("role","button"); n.tabIndex=0;
+  n.setAttribute("aria-label",(art==="termin"?"Termin":"Aufgabe")+" bearbeiten: "+x.titel);
+  const auf=()=> art==="termin" ? terminDialog(x) : aufgabeDialog(x);
+  n.onclick=auf;
+  n.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); auf(); } };
   n.addEventListener("dragstart",()=>{ zieht=x; n.classList.add("zieht"); });
   n.addEventListener("dragend",()=>{ n.classList.remove("zieht"); zieht=null;
     document.querySelectorAll(".stunde.ziel").forEach(s=>s.classList.remove("ziel")); });
@@ -1870,6 +2116,10 @@ function vorratZeile(a){
   n.innerHTML='<span class="zb"><span class="zt">'+esc(a.titel)+'</span>'
     +'<span class="zm">'+esc((a.kat==="nach"?"Nachverfolgen · ":"")+frist(a)
     +(a.kontakt?" · "+kname(a.kontakt):""))+'</span></span>';
+  n.setAttribute("role","button"); n.tabIndex=0;
+  n.setAttribute("aria-label","Aufgabe bearbeiten: "+a.titel);
+  n.onclick=()=>aufgabeDialog(a);
+  n.onkeydown=e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); aufgabeDialog(a); } };
   n.addEventListener("dragstart",()=>{ zieht=a; n.classList.add("zieht"); });
   n.addEventListener("dragend",()=>{ n.classList.remove("zieht"); zieht=null;
     document.querySelectorAll(".stunde.ziel").forEach(s=>s.classList.remove("ziel")); });

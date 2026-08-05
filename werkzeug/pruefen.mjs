@@ -148,10 +148,15 @@ function pruefeNamen(name, css) {
     const m = z.match(/^([.#][^{]*)\{/);
     if (!m) return;
     m[1].split(",").forEach(s => {
+      s = s.trim();
       /* Erste Klasse der Kette. Am Punkt zu zerlegen liefert einen
          leeren Namen, weil der Selektor mit einem Punkt beginnt. */
-      const k = s.trim().match(/^\.([\w-]+)/);
+      const k = s.match(/^\.([\w-]+)/);
       if (!k) return;
+      /* Nur zählen, wenn die Klasse selbst gestaltet wird. Bei
+         `.note code` ist `code` das Ziel und `.note` nur die Umgebung —
+         so eine Regel darf überall stehen. */
+      if (/[\s>+~]/.test(s.slice(k[0].length))) return;
       (wo["." + k[1]] = wo["." + k[1]] || []).push(i + 1);
     });
   });

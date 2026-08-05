@@ -84,7 +84,24 @@ danach gebauter Testdialog.
 
 ---
 
-## Schritt 3 — Aufgaben und Termine bearbeiten
+## Schritt 3 — Aufgaben und Termine bearbeiten · **erledigt**
+
+Beide Module beschreiben ihre Maske nur noch als Liste von
+`{schl, nm, art}` — eigenen Dialogcode gibt es nicht mehr. Damit hat
+sich der Baustein aus Schritt 2 bewährt.
+
+Der Tag eines Termins ist eine **Auswahl aus genau zwei Werktagen**,
+kein freies Datum. Die Regel steckt in der Maske statt in einer Prüfung
+dahinter.
+
+Abgehakte Aufgaben ziehen in einen eigenen Abschnitt „Erledigt" und
+lassen sich dort einzeln oder gesammelt löschen.
+
+`fertig` bei Terminen ist entfallen — siehe `ARCHITEKTUR.md`.
+
+Der Planner bekam drei Handgriffe dazu: Klick auf einen Block öffnet den
+Dialog, Aufgabenblöcke tragen ein Kästchen, der Vorrat ist anklickbar.
+Das Ziehen blieb unverändert.
 
 Mit dem Baustein aus Schritt 2.
 

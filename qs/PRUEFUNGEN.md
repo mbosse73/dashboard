@@ -154,6 +154,52 @@ Schaden angerichtet. Bitte beides eigens ansehen:
 
 ---
 
+## Schritt 3 — Aufgaben und Termine
+
+### Modul Aufgaben
+
+- [ ] Zwei Abschnitte **To-do** und **Nachverfolgen**, darunter **Erledigt** **[vorgeprüft]**
+- [ ] Überfällige tragen eine rote Kante links und eine rote Fälligkeit rechts **[vorgeprüft]**
+- [ ] Zeile anklicken öffnet den Dialog, sechs Felder **[vorgeprüft]**
+- [ ] Die **Uhrzeit ist als optional beschriftet** **[vorgeprüft]**
+- [ ] Aufgabe **ohne Datum** speichern, die eine Uhrzeit hatte — die Uhrzeit ist
+      danach leer. Ohne Tag kann der Planner sie nicht unterbringen **[nur du]**
+- [ ] Kästchen drücken — die Aufgabe wandert nach „Erledigt" **[vorgeprüft]**
+- [ ] Dort das Kästchen erneut drücken — sie kommt zurück in ihre Kategorie **[nur du]**
+- [ ] **„alle N löschen"** fragt zurück und löscht nur die abgehakten **[vorgeprüft]**
+- [ ] Eine einzelne erledigte Aufgabe über den Dialog löschen **[nur du]**
+- [ ] **Seite neu laden** — Stand unverändert? **[nur du]**
+
+### Modul Kalender
+
+- [ ] Genau **zwei Tage** nebeneinander, der heutige mit der Marke „heute" **[vorgeprüft]**
+- [ ] Termine nach Uhrzeit sortiert, mit Dauer rechts **[vorgeprüft]**
+- [ ] Termin anklicken öffnet den Dialog; **Dauer ist ein Feld** **[vorgeprüft]**
+- [ ] Der **Tag ist eine Auswahl aus genau zwei Werktagen**, kein freies Datum **[vorgeprüft]**
+- [ ] „neuer Termin +" legt am richtigen Tag an **[nur du]**
+- [ ] Termin **ohne Uhrzeit** speichern — es kommt eine Meldung, das Feld wird rot **[nur du]**
+- [ ] Im Dialog den Tag wechseln, speichern — der Termin steht auf der anderen Seite **[nur du]**
+
+### Vergangene Termine
+
+- [ ] In der Leiste steht ein vergangener Termin unter **Überfällig** **[vorgeprüft]**
+- [ ] Er bietet **„auf heute holen"** und **„löschen"** **[vorgeprüft]**
+- [ ] Er hat **kein Kästchen** — Termine kennen kein Abhaken mehr **[vorgeprüft]**
+- [ ] „auf heute holen" drücken — er erscheint im Kalender und im Planner **[nur du]**
+
+### Planner
+
+- [ ] **Klick auf einen Terminblock** öffnet den Termindialog **[vorgeprüft]**
+- [ ] **Klick auf einen Aufgabenblock** öffnet den Aufgabendialog **[vorgeprüft]**
+- [ ] Aufgabenblöcke haben ein **Kästchen**, Terminblöcke nicht **[vorgeprüft]**
+- [ ] **Klick im Vorrat links** öffnet den Aufgabendialog **[vorgeprüft]**
+- [ ] **Ziehen wie bisher:** Aufgabe aus dem Vorrat auf eine Stunde, Termin von
+      einem Tag auf den anderen, Aufgabe zurück nach links **[nur du]**
+- [ ] Ziehen und Klicken kommen sich **nicht** ins Gehege — ein Zug darf keinen
+      Dialog öffnen **[nur du]**
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.
@@ -172,8 +218,6 @@ Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bi
 
 Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 
-- **Schritt 3 — Aufgaben und Termine:** Ein im Planner angelegter Termin steht
-  nach dem Neuladen an derselben Stelle
 - **Schritt 4 — Textbausteine:** Ein Baustein mit drei Platzhaltern liegt in vier
   Klicks als fertiger Text in der Zwischenablage. *Braucht Schritt 0*
 - **Schritt 5 — Notizen:** Eine exportierte Notiz sieht nach dem Import identisch aus

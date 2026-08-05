@@ -73,7 +73,7 @@ Ein Feld über alle Daten. Besonderheiten:
 
 ---
 
-## 04 Aufgaben — Gerüst
+## 04 Aufgaben — fertig
 
 Zwei Kategorien: **To-do** (selbst abarbeiten) und **Nachverfolgen**
 (liegt bei anderen).
@@ -81,8 +81,11 @@ Zwei Kategorien: **To-do** (selbst abarbeiten) und **Nachverfolgen**
 Felder: Titel, Fälligkeit, Uhrzeit, Notiz, Kontakt.
 Jedes beliebige Datum erlaubt oder gar keins.
 
-**Fehlt noch:** Bearbeiten-Dialog, Kategorie wechseln, Kontakt zuordnen,
-Löschen.
+Abgehakte Aufgaben ziehen in einen eigenen Abschnitt „Erledigt" und
+lassen sich dort einzeln oder gesammelt löschen. Auf Aufgaben verweist
+nichts — Löschen ist hier wirklich nur Löschen.
+
+Überfällige tragen eine rote Kante links und eine rote Fälligkeit rechts.
 
 ---
 
@@ -99,15 +102,21 @@ funktioniert oder der Notweg über ein verstecktes Textfeld nötig ist.
 
 ---
 
-## 06 Kalender — Gerüst
+## 06 Kalender — fertig
 
 Termine ausschließlich für den aktuellen und den nächsten Werktag.
 Felder: Uhrzeit, Dauer, Titel, Anmerkung, Kontakt.
 
-**Fehlt noch:** Anlegen und Bearbeiten als Dialog, Löschen.
+Die Modulfläche zeigt die beiden Werktage nebeneinander. Der Tag ist im
+Dialog eine **Auswahl aus genau zweien**, kein freies Datum — ein Termin
+kann damit gar nicht erst irgendwo landen, wo ihn niemand sieht.
 
-**Hinweis:** Der Planner ist die Fläche, der Kalender nur noch der Dialog.
-Zwei getrennte Vollansichten wären doppelt.
+**Termine haben kein `fertig`.** Ein vergangener Termin erscheint unter
+„Überfällig" und bietet dort zwei Wege heraus: auf heute holen oder
+löschen.
+
+**Hinweis:** Verschoben wird im Planner. Dort lässt sich jeder Termin
+zwischen den beiden Tagen und über die Stunden ziehen.
 
 ---
 

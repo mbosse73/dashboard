@@ -93,7 +93,7 @@ werden nicht gesichert. Das ist der häufigste Fehler.
 Z = {
   format: 1,
   kontakte:  [{id, nach, vor, firma, tel, mail, fav, notiz}],
-  termine:   [{id, d, zeit, dauer, titel, anm, kontakt, fertig}],
+  termine:   [{id, d, zeit, dauer, titel, anm, kontakt}],
   aufgaben:  [{id, kat, titel, d, zeit, notiz, kontakt, fertig}],
   notizen:   [{id, art, titel, d, zeit, kontakt, text}],
   workflows: [{id, vorlage, titel, aktiv, werte, schritte}],
@@ -113,6 +113,11 @@ Z = {
 * `kontakt` — ID aus `kontakte` oder `null`
 * `aktiv` — **Schlüssel** des laufenden Teilschritts, nicht seine Position
 * `art` bei Notizen — `"telefon"` oder `"allgemein"`
+
+**Termine haben kein `fertig`.** Ein vergangener Termin ist vorbei, nicht
+abgearbeitet. Er erscheint unter „Überfällig" und bietet dort zwei Wege
+heraus: auf heute holen oder löschen. Ein drittes Feld dafür wäre eine
+Zustandsangabe, die niemand pflegt.
 
 Kontakte sind das Rückgrat: Notizen, Aufgaben, Termine und Workflows
 verweisen darauf. Beim Löschen eines Kontakts müssen die Verweise auf

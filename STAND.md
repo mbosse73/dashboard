@@ -7,7 +7,26 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: Schritt 2 — der Dialog als Baustein.** In zwei Ebenen statt
+**Zuletzt: Schritt 3 — Aufgaben und Termine bearbeiten.** Beide Module
+beschreiben ihre Maske nur noch als Liste von `{schl, nm, art}`; eigenen
+Dialogcode gibt es nicht mehr. Der Baustein aus Schritt 2 hat sich damit
+bewährt — er wurde für Schritt 3 nicht ein einziges Mal angefasst.
+
+Der Tag eines Termins ist eine **Auswahl aus genau zwei Werktagen**, kein
+freies Datum. Die Regel steckt in der Maske statt in einer Prüfung
+dahinter. Abgehakte Aufgaben ziehen in einen Abschnitt „Erledigt" und
+lassen sich einzeln oder gesammelt löschen.
+
+**`fertig` bei Terminen ist entfallen.** Ein vergangener Termin ist
+vorbei, nicht abgearbeitet; er bietet unter „Überfällig" zwei Wege
+heraus, auf heute holen oder löschen.
+
+Der Planner bekam drei Handgriffe: Klick auf einen Block öffnet den
+Dialog, Aufgabenblöcke tragen ein Kästchen, der Vorrat ist anklickbar.
+Das Ziehen blieb unangetastet — Termine ließen sich schon vorher zwischen
+den beiden Tagen schieben.
+
+**Davor: Schritt 2 — der Dialog als Baustein.** In zwei Ebenen statt
 einer: `felderMalen` erzeugt eine Gruppe Eigenschaften im Format
 `{schl, nm, art, optionen}`, `dialog` legt die Hülle darum. Der Grund ist
 Schritt 6 — der Workflow-Dialog braucht die Felder, aber nicht die Hülle,
@@ -70,8 +89,8 @@ Logik — und Schritt 6 hat seine Dialogvorlage. Der Prüflauf sieht jetzt
 alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
 
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
-als Arbeitsfläche. Elf Module sind angemeldet, davon drei fertig
-(Planner, Leiste, Kontakte) und acht als Gerüst. Sichern und Laden über JSON,
+als Arbeitsfläche. Elf Module sind angemeldet, davon fünf fertig
+(Planner, Leiste, Kontakte, Aufgaben, Kalender) und sechs als Gerüst. Sichern und Laden über JSON,
 Markdown-Export einbahnig. Alle Modulblöcke tragen Marker.
 
 Ein Entwurf für den Workflow-Dialog liegt unter
@@ -130,13 +149,16 @@ Metazeilen. Das ist Notions eigener Wert, kein Fehler. Falls es stört:
 
 ## Nächster Schritt
 
-Schritt 3 der Roadmap: **Aufgaben und Termine bearbeiten** — die erste
-Nutzung des Bausteins durch ein Modul, das ihn nicht selbst gebaut hat.
-Damit zeigt sich, ob er trägt. Termine bleiben auf die beiden Werktage
-beschränkt.
+Schritt 5 der Roadmap: **Notizen mit Markdown**. Der Umwandler aus
+Schritt 2 deckt fünf Zeichen ab und wird dort um Links, Code und Zitat
+erweitert, statt neu geschrieben zu werden. Dazu Import und Export
+einzelner Notizen als `.md`.
 
-Danach Schritt 5 (Notizen mit Markdown; der Umwandler aus Schritt 2 wird
-dort erweitert) und Schritt 6 (Workflows; benutzt `felderMalen` dreimal).
+`ANLEITUNG.md` nennt Schritt 5 einen der drei, bei denen eine falsche
+Grundentscheidung teuer wird.
+
+Danach Schritt 6 (Workflows; benutzt `felderMalen` dreimal, Entwurf liegt
+unter `referenz/workflow-dialog.html`).
 
 Schritt 4 und 7 bleiben zurückgestellt, bis der Browsertest beantwortet
 ist.

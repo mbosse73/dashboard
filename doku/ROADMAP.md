@@ -68,8 +68,8 @@ Umgesetzt in zwei Ebenen statt einer:
   Rückfrage, Prüfung, die auf das schuldige Feld zeigt.
 
 Mehrzeilige Felder tragen eine Formatierungsleiste und verstehen
-Markdown: fett, kursiv, unterstrichen, Überschrift, Aufzählung,
-Trennlinie. Der Umwandler dahinter ist der Anfang von Schritt 5 und
+Markdown: fett, kursiv, Überschrift, Aufzählung, Trennlinie.
+Unterstreichen ist bewusst nicht dabei — Markdown kennt es nicht. Der Umwandler dahinter ist der Anfang von Schritt 5 und
 wird dort erweitert, nicht neu geschrieben.
 
 Kontakte, Aufgaben, Termine, Notizen, Bausteine, Apps und Bookmarks

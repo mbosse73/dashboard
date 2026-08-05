@@ -131,13 +131,12 @@ Module benutzen. Von außen soll er sich **genauso** verhalten wie vorher.
 
 ### Formatierungsleiste am Notizfeld
 
-- [ ] Über dem Notizfeld steht eine Leiste mit sechs Zeichen **[vorgeprüft]**
+- [ ] Über dem Notizfeld steht eine Leiste mit fünf Zeichen **[vorgeprüft]**
 - [ ] Wort markieren, **B** drücken — es wird zu `**Wort**`. Nochmal drücken nimmt es zurück **[vorgeprüft]**
 - [ ] Drei Zeilen markieren, **Aufzählung** drücken — jede bekommt ein `- ` **[vorgeprüft]**
 - [ ] **Überschrift** setzt `## `, **Trennlinie** setzt `---` auf eine eigene Zeile **[vorgeprüft]**
-- [ ] **Unterstreichen** setzt `<u>…</u>`. Markdown kennt keine Unterstreichung —
-      eingebettetes HTML ist der übliche Weg **[vorgeprüft]**
-- [ ] `Strg+B`, `Strg+I`, `Strg+U` wirken im Feld **[vorgeprüft]**
+- [ ] `Strg+B` und `Strg+I` wirken im Feld **[vorgeprüft]**
+- [ ] Es gibt **kein** Unterstreichen — Markdown kennt es nicht **[vorgeprüft]**
 - [ ] **Vorschau** drücken — der Text erscheint gesetzt. Nochmal drücken: das Feld ist
       unverändert zurück **[vorgeprüft]**
 - [ ] Speichern, Seite neu laden, Kontakt öffnen — der Markdown-Text steht noch da **[nur du]**

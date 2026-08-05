@@ -468,7 +468,6 @@ const IK={
   /* Zeichen der Formatierungsleiste */
   fett:  IKON('<path d="M6.5 4h6a3.8 3.8 0 0 1 0 7.6h-6z"/><path d="M6.5 11.6h6.8a4.2 4.2 0 0 1 0 8.4H6.5z"/>'),
   kursiv:IKON('<path d="M15.5 4h-6M14.5 20h-6M15 4 9 20"/>'),
-  unter: IKON('<path d="M6.5 3.5v7a5.5 5.5 0 0 0 11 0v-7"/><path d="M5 20.5h14"/>'),
   gross: IKON('<path d="M5.5 19V5h6.2M5.5 12h5.4"/><path d="M15 19v-8.5h4.5M15 15h3.6"/>'),
   liste: IKON('<path d="M9.5 6.5h11M9.5 12h11M9.5 17.5h11"/>'
         +'<path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/>'),
@@ -536,20 +535,19 @@ const nachNachnamen=(a,b)=>String(a.nach||"").localeCompare(String(b.nach||""),"
 /* ============================================================
    MARKDOWN IN MEHRZEILIGEN FELDERN
 
-   Sechs Zeichen, mehr nicht. Der vollständige Umwandler gehört
+   Fünf Zeichen, mehr nicht. Der vollständige Umwandler gehört
    nach doku/ROADMAP.md in Schritt 5 — dieser hier ist sein
    Anfang und wird dort um Links, Code und Zitat erweitert,
    statt neu geschrieben zu werden.
 
-   Unterstreichen kennt Markdown nicht: Weder `_x_` noch `__x__`
-   ergeben eine Unterstreichung, beide sind kursiv beziehungsweise
-   fett. Dafür steht `<u>…</u>`. Markdown erlaubt eingebettetes
-   HTML, der Text bleibt also gültiges Markdown.
+   Unterstreichen ist bewusst nicht dabei: Markdown kennt es nicht.
+   Weder `_x_` noch `__x__` ergeben eine Unterstreichung, beide sind
+   kursiv beziehungsweise fett. Es ginge nur über eingebettetes HTML,
+   und dafür ist es zu wenig wert.
    ============================================================ */
 const MDTAT=[
   {schl:"fett",  zeichen:"fett",  nm:"Fett",           taste:"b", um:["**","**"]},
   {schl:"kursiv",zeichen:"kursiv",nm:"Kursiv",         taste:"i", um:["*","*"]},
-  {schl:"unter", zeichen:"unter", nm:"Unterstrichen",  taste:"u", um:["<u>","</u>"]},
   {strich:true},
   {schl:"gross", zeichen:"gross", nm:"Überschrift",    vor:"## "},
   {schl:"liste", zeichen:"liste", nm:"Aufzählung",     vor:"- "},
@@ -600,7 +598,6 @@ function mdAnwenden(ta, def){
 function mdMalen(text){
   if(!String(text||"").trim()) return '<span class="leerhin">Noch nichts geschrieben.</span>';
   const zeile=s=>esc(s)
-    .replace(/&lt;u&gt;([\s\S]*?)&lt;\/u&gt;/g,"<u>$1</u>")
     .replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>")
     .replace(/\*([^*]+)\*/g,"<i>$1</i>");
   const aus=[]; let liste=null;

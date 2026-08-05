@@ -24,10 +24,14 @@ const ok   = (t) => console.log("  \u2713 " + t);
 const bad  = (t) => { console.log("  \u2717 " + t); fehler++; };
 const warn = (t) => { console.log("  ! " + t); warnungen++; };
 
+/* Der Skriptteil wird von hinten aufgetrennt: Steht das öffnende Tag
+   irgendwo vorher wörtlich im Text — in einem Kommentar etwa —, begänne
+   der Ausschnitt sonst dort, und der Syntaxcheck läse Prosa als Code. */
 function teile(html) {
-  const s = html.match(/<script>([\s\S]*?)<\/script>/);
   const c = html.match(/<style>([\s\S]*?)<\/style>/);
-  return { js: s ? s[1] : "", css: c ? c[1] : "" };
+  const zu = html.lastIndexOf("</scr" + "ipt>");
+  const auf = zu < 0 ? -1 : html.lastIndexOf("<scr" + "ipt>", zu);
+  return { js: auf < 0 ? "" : html.slice(auf + 8, zu), css: c ? c[1] : "" };
 }
 
 /* ---------- 1 Syntax ---------- */
@@ -58,7 +62,10 @@ function pruefeExtern(name, html) {
    U+2580–U+259F Blockelemente, U+25A0–U+25FF geometrische Formen.
    Keines davon eignet sich als Symbol; sie rendern als dunkle Flächen.
    Dazu eine kurze Liste einzelner Ausreißer aus anderen Blöcken.       */
-const EXTRA = "\u2691\u2690\u2b1b\u2b1c\u26ab\u26aa";
+/* U+2605 BLACK STAR und U+2606 WHITE STAR liegen knapp oberhalb des
+   gepr\u00fcften Bereichs und sind trotzdem genau der Fall, den Regel 6
+   meint: Ein Stern als Favoritenzeichen ist auf 16 Pixeln ein Klecks. */
+const EXTRA = "\u2691\u2690\u2b1b\u2b1c\u26ab\u26aa\u2605\u2606";
 function pruefeGlyphen(name, html) {
   const schlecht = new Set();
   for (const c of html) {

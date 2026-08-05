@@ -46,6 +46,10 @@
   --tinte-s:#ddebf1;            /* Notion blauer Blockhintergrund */
   --tinte-tx:#0b6e99;           /* Notion blauer Text */
 
+  /* „Kontaktweg hinterlegt“ — ein Zustand, keine Kategorie. Notions
+     blauer Blockhintergrund, eine Spur heller als --tinte-s. */
+  --weg-s:#e8f2f7; --weg-i:#0b6e99; --weg-r:rgba(11,110,153,.22);
+
   /* Dringlichkeit — Notions Rot statt eines eigenen Signaltons */
   --signal:#e03e3e;
   --signal-tx:#e03e3e;
@@ -135,6 +139,53 @@ input,textarea{font:inherit}
   display:grid;place-items:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px}
 .sig.fav{background:var(--tinte-s);color:var(--tinte-tx)}
 .leer{padding:8px 0;font-size:14px;color:var(--ink3);line-height:1.5}
+
+/* ---------- Kontaktkacheln ----------
+   Dieselbe Struktur wie in dashboard.html, nur Notions Maße:
+   kleine Rundung, dünne Linien, kein Schlagschatten im Ruhezustand. */
+.kkarten{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:6px}
+.kk{position:relative;display:flex;flex-direction:column;gap:9px;padding:11px 12px;
+  border:1px solid var(--rule);border-radius:var(--r-gross);background:var(--paper);
+  transition:background .1s}
+.kk:hover{background:var(--sheet)}
+.kk.ist-fav{border-left:2px solid var(--tinte)}
+.kk-o{display:flex;align-items:flex-start;gap:10px}
+.kk-b{flex:1;min-width:0}
+.kk-n{display:block;font-size:14px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
+.kk-f{display:block;font-size:12px;color:var(--ink3);margin-top:2px;line-height:1.4;
+  overflow-wrap:anywhere}
+.kk-u{display:flex;align-items:center;gap:5px;padding-top:1px}
+.kk-flaeche{position:absolute;inset:0;border-radius:var(--r-gross);z-index:1}
+.kk-u,.kk-stern{position:relative;z-index:2}
+.kk-stern{display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r);
+  color:var(--ink3);flex-shrink:0;margin:-1px -2px 0 0}
+.kk-stern:hover{background:var(--raise);color:var(--ink2)}
+.kk-stern.an,.kk-stern.an:hover{color:var(--tinte-tx)}
+.iknopf{position:relative;display:grid;place-items:center;width:32px;height:29px;
+  border:1px solid var(--weg-r);border-radius:var(--r);background:var(--weg-s);
+  color:var(--weg-i);transition:background .1s,border-color .1s,color .1s}
+.iknopf:hover{background:#d9eaf3;border-color:var(--weg-i)}
+.iknopf.leer{background:transparent;border-color:var(--rule);color:var(--ink3);opacity:.45;
+  cursor:default}
+.iknopf.leer:hover{background:transparent;border-color:var(--rule);color:var(--ink3)}
+.iknopf .blase{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;font-size:12px;line-height:1.35;white-space:nowrap;
+  padding:5px 9px;border-radius:var(--r);opacity:0;pointer-events:none;transition:opacity .1s;
+  z-index:40;font-family:var(--mono)}
+.iknopf .blase b{display:block;font-family:var(--ff);font-weight:600;margin-bottom:1px}
+.iknopf:hover .blase{opacity:1}
+
+/* ---------- Suche innerhalb eines Moduls ---------- */
+.msuche{position:relative;margin-top:2px}
+.msuche input{width:100%;border:1px solid var(--rule2);border-radius:var(--r);
+  padding:7px 38px 7px 34px;background:var(--paper);font-size:14px;color:var(--ink)}
+.msuche input:focus{outline:0;border-color:var(--tinte);
+  box-shadow:0 0 0 2px rgba(35,131,226,.24)}
+.msuche .lupe{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  color:var(--ink3);pointer-events:none;display:grid}
+.msuche .weg{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  color:var(--ink3);padding:4px 7px;border-radius:var(--r);font-size:12px}
+.msuche .weg:hover{background:var(--raise);color:var(--ink)}
 kbd{font-family:var(--mono);font-size:12px;background:var(--raise-fest);border:0;
   border-radius:var(--r);padding:1px 5px;color:var(--signal-tx)}
 
@@ -365,6 +416,82 @@ function zeile(x,opt){
   return r;
 }
 
+/* ---------- Zeichen ----------
+   Inline-SVG mit stroke="currentColor" und fill="none". Gefüllte
+   Unicode-Zeichen rendern auf dieser Größe als dunkle Blöcke —
+   Fehlerbuch Punkt 2. Das gilt auch für den Stern: U+2605 heißt im
+   Standard wörtlich BLACK STAR. */
+const IKON=d=>'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" '
+  +'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" '
+  +'stroke-linejoin="round" aria-hidden="true">'+d+'</svg>';
+const IK={
+  tel:  IKON('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6'
+       +' 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1'
+       +'-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
+  mail: IKON('<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>'
+       +'<path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/>'),
+  stern:IKON('<path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z"/>'),
+  lupe: IKON('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>')
+};
+
+/* ---------- Kontaktweg: anrufen und mailen ----------
+   Ein echter Verweis, kein window.open. Das ist der Weg, den Edge
+   bei file:// am verlässlichsten an Windows durchreicht. Fehlt der
+   Weg, bleibt der Knopf trotzdem stehen — nur blass und ohne Ziel.
+   So sitzen die Knöpfe auf jeder Kachel an derselben Stelle. */
+function wegKnopf(art, ziel){
+  const da=!!ziel, was = art==="tel" ? "Anrufen" : "Mailen";
+  const n=el(da?"a":"span","iknopf"+(da?"":" leer"));
+  if(da) n.href = art==="tel" ? telUri(ziel) : "mailto:"+ziel;
+  n.setAttribute("aria-label", da ? was+": "+ziel
+    : (art==="tel" ? "Keine Rufnummer hinterlegt" : "Keine Mailadresse hinterlegt"));
+  n.innerHTML=IK[art]+'<span class="blase"><b>'+was+'</b>'
+    +esc(da?ziel:"nicht hinterlegt")+'</span>';
+  n.onclick=e=>e.stopPropagation();
+  return n;
+}
+/* Aus einem Treffer der Leiste heraus gibt es kein <a> zum Anklicken.
+   Ein kurz eingehängter Verweis leistet dasselbe. */
+function oeffneWeg(url){
+  const a=document.createElement("a");
+  a.href=url; a.style.display="none";
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* ---------- Die Kontaktkachel ----------
+   Wird an zwei Stellen gebraucht: im Modul und im Ruhezustand der
+   Leiste. Deshalb steht sie hier und nicht in einem Modulblock. */
+function kontaktKachel(k){
+  const c=el("div","kk"+(k.fav?" ist-fav":""));
+  const f=el("button","kk-flaeche");
+  f.setAttribute("aria-label","Kontakt "+knm(k)+" öffnen");
+  f.onclick=()=>melde(knm(k)+" — Bearbeiten kommt mit dem Dialog");
+  c.appendChild(f);
+
+  const o=el("div","kk-o");
+  o.appendChild(el("span","sig"+(k.fav?" fav":""),ini(k)));
+  o.appendChild(el("span","kk-b",'<span class="kk-n">'+esc(knm(k))+'</span>'
+    +'<span class="kk-f">'+esc(k.firma||"—")+'</span>'));
+  const st=el("button","kk-stern"+(k.fav?" an":""),IK.stern);
+  st.setAttribute("aria-label",(k.fav?"Favorit aufheben: ":"Als Favorit markieren: ")+knm(k));
+  st.setAttribute("aria-pressed",String(!!k.fav));
+  st.onclick=e=>{ e.stopPropagation(); k.fav=!k.fav; bewahre(); male();
+    melde(k.fav ? knm(k)+" ist jetzt Favorit" : knm(k)+" ist kein Favorit mehr"); };
+  o.appendChild(st);
+  c.appendChild(o);
+
+  const u=el("div","kk-u");
+  u.append(wegKnopf("tel",k.tel), wegKnopf("mail",k.mail));
+  c.appendChild(u);
+  return c;
+}
+function kachelraster(liste){
+  const g=el("div","kkarten");
+  liste.forEach(k=>g.appendChild(kontaktKachel(k)));
+  return g;
+}
+const nachNachnamen=(a,b)=>String(a.nach||"").localeCompare(String(b.nach||""),"de");
+
 /* ============================================================
    2 — DATEN: EINE EINZIGE QUELLE
 
@@ -558,9 +685,18 @@ const DATEN = Z;                       /* DATEN.termine, .aufgaben, .notizen */
 /* Inhalt austauschen, ohne den Verweis zu zerreißen */
 function ersetze(ziel, neu){ ziel.length=0; neu.forEach(x=>ziel.push(x)); }
 
-const knm=k=>k.vor+" "+k.nach;
+/* Beide vertragen einen fehlenden Vornamen: Pflicht ist nur der
+   Nachname, und ohne diese Absicherung liefert ini() „undefinedM“. */
+const knm=k=>((k.vor||"")+" "+(k.nach||"")).trim();
 const kfind=id=>KONTAKTE.find(k=>k.id===id);
-const ini=k=>(k.vor[0]+k.nach[0]).toUpperCase();
+const ini=k=>(((k.vor||"")[0]||"")+((k.nach||"")[0]||"")).toUpperCase()||"?";
+/* Der einzige Weg, einen Kontakt für die Anzeige aufzulösen.
+   Kontakte sind das Rückgrat — Notizen, Aufgaben, Termine und
+   Workflows verweisen darauf. Zeigt ein Verweis ins Leere, darf das
+   die Zeichnung nicht abbrechen, sondern nur nichts anzeigen. */
+const kname=id=>{ const k=id?kfind(id):null; return k?knm(k):""; };
+/* tel: verträgt keine Leerzeichen und Bindestriche. */
+const telUri=t=>"tel:"+String(t||"").replace(/[^\d+]/g,"");
 /* Der aktive Schritt und alles, was daraus folgt */
 function wfSchritte(w){ const v=wfVorlage(w.vorlage); return v ? v.schritte : []; }
 function wfIndex(w){ return wfSchritte(w).findIndex(s=>s.schl===w.aktiv); }
@@ -619,39 +755,98 @@ registriere({
   zahl:()=>KONTAKTE.length,
   /* Favoriten ab dem ersten Buchstaben, übrige ab dem dritten.
      Ein Kontakt liefert zwei eigenständige Treffer. */
+  /* Treffer für die Leiste. Favoriten ab dem ersten Buchstaben, übrige
+     ab dem dritten; Favoriten stehen oben. Ein Kontakt liefert einen
+     Treffer je hinterlegtem Weg — wer weder Nummer noch Adresse hat,
+     bekommt stattdessen einen Treffer, der ihn im Modul zeigt. Sonst
+     fiele er aus der Suche heraus, ohne woanders aufzutauchen. */
   suche(q){
     const out=[];
     KONTAKTE.filter(k=>{
-      const f=(k.vor+" "+k.nach+" "+k.firma).toLowerCase();
+      const f=(knm(k)+" "+(k.firma||"")).toLowerCase();
       if(!f.includes(q)) return false;
       return k.fav ? q.length>=1 : q.length>=3;
-    }).forEach(k=>{
-      out.push(treff("Anrufen",knm(k),k.tel+" · "+k.firma+(k.fav?" · Favorit":""),"↵",
-        ()=>melde("Wähle "+k.tel)));
-      out.push(treff("Mailen",knm(k),k.mail,"↵",()=>melde("Neue Mail an "+k.mail)));
+    }).sort((a,b)=> (a.fav===b.fav) ? nachNachnamen(a,b) : (a.fav?-1:1))
+    .forEach(k=>{
+      const wo=(k.firma||"")+(k.fav?" · Favorit":"");
+      if(k.tel) out.push(treff("Anrufen",knm(k),k.tel+(wo?" · "+wo:""),"↵",
+        ()=>{ oeffneWeg(telUri(k.tel)); melde("Anruf an "+k.tel+" übergeben"); }));
+      if(k.mail) out.push(treff("Mailen",knm(k),k.mail,"↵",
+        ()=>{ oeffneWeg("mailto:"+k.mail); melde("Mail an "+k.mail+" übergeben"); }));
+      if(!k.tel&&!k.mail) out.push(treff("Kontakt",knm(k),
+        (wo?wo+" · ":"")+"kein Weg hinterlegt","↵",()=>zeigeFlaeche("kontakte")));
     });
     return out;
   },
   erfassen(d){ return [treff("Kontakt",d.titel,"als neuer Kontakt anlegen","↵",
     ()=>melde("Neuer Kontakt: "+d.titel))]; },
+
   flaeche(b){
-    b.appendChild(abschnitt("Favoriten", String(KONTAKTE.filter(k=>k.fav).length)));
-    KONTAKTE.filter(k=>k.fav).forEach(k=>b.appendChild(kontaktZeile(k)));
-    b.appendChild(abschnitt("Alle Kontakte", String(KONTAKTE.length)));
-    KONTAKTE.filter(k=>!k.fav).forEach(k=>b.appendChild(kontaktZeile(k)));
+    const q=kSuche.trim().toLowerCase();
+    const passt=k=>!q||((knm(k)+" "+(k.firma||"")+" "+(k.tel||"")+" "+(k.mail||"")
+      +" "+(k.notiz||"")).toLowerCase().includes(q));
+    const fav=KONTAKTE.filter(k=>k.fav&&passt(k)).sort(nachNachnamen);
+    const rest=KONTAKTE.filter(k=>!k.fav&&passt(k)).sort(nachNachnamen);
+
+    b.appendChild(abschnitt("Kontakte", String(KONTAKTE.length)));
+    b.appendChild(kSuchfeld());
+
+    if(q){
+      /* Ein einziger Ergebnisraum, Favoriten zuoberst. */
+      b.appendChild(abschnitt("Gefunden",(fav.length+rest.length)+" von "+KONTAKTE.length));
+      if(!fav.length&&!rest.length){
+        b.appendChild(el("div","leer","Kein Kontakt passt zu „"+esc(kSuche)+"“."));
+        return;
+      }
+      if(fav.length){
+        b.appendChild(el("div","hinweis","Favoriten stehen auch im Suchergebnis oben."));
+        b.appendChild(kachelraster(fav));
+      }
+      if(rest.length){
+        if(fav.length) b.appendChild(abschnitt("Weitere",String(rest.length)));
+        b.appendChild(kachelraster(rest));
+      }
+      return;
+    }
+
+    b.appendChild(abschnitt("Favoriten", fav.length?String(fav.length):null, "jetzt"));
+    if(fav.length){
+      b.appendChild(el("div","hinweis",
+        "Diese stehen in der Leiste als direkt verwendbare Kontakte."));
+      b.appendChild(kachelraster(fav));
+    } else b.appendChild(el("div","leer",
+      "Noch kein Favorit. Der Stern auf einer Kachel macht einen daraus."));
+
+    b.appendChild(abschnitt("Alle Kontakte", String(rest.length)));
+    if(rest.length) b.appendChild(kachelraster(rest));
+    else b.appendChild(el("div","leer","Außer den Favoriten ist niemand erfasst."));
   }
 });
 /* ===== ENDE kontakte ===== */
-function kontaktZeile(k){
-  const r=el("div","z");
-  r.append(el("span","sig"+(k.fav?" fav":""),ini(k)),
-    el("span","zb",'<span class="zt">'+esc(knm(k))+'</span>'
-      +'<span class="zm">'+esc(k.firma+" · "+k.tel)+'</span>'));
-  const a1=el("button","tat still","Anrufen"); a1.onclick=()=>melde("Wähle "+k.tel);
-  const a2=el("button","tat still","Mailen");  a2.onclick=()=>melde("Mail an "+k.mail);
-  a1.style.marginRight="4px";
-  r.append(a1,a2);
-  return r;
+
+/* Suchstand des Moduls. Bewusst außerhalb von Z: Er beschreibt die
+   Ansicht, nicht die Daten, und hat in einer Sicherung nichts verloren. */
+let kSuche="";
+function kSuchfeld(){
+  const s=el("div","msuche",'<span class="lupe">'+IK.lupe+'</span>');
+  const i=el("input");
+  i.type="text"; i.value=kSuche;
+  i.placeholder="Kontakte durchsuchen — Name, Firma, Nummer, Mail";
+  i.setAttribute("aria-label","Kontakte durchsuchen");
+  i.oninput=()=>{
+    const stelle=i.selectionStart;
+    kSuche=i.value; male();
+    /* male() baut die Fläche neu auf; das Feld ist danach ein anderes. */
+    const n=document.querySelector(".msuche input");
+    if(n){ n.focus(); n.setSelectionRange(stelle,stelle); }
+  };
+  s.appendChild(i);
+  if(kSuche){
+    const w=el("button","weg","zurücksetzen");
+    w.onclick=()=>{ kSuche=""; male(); };
+    s.appendChild(w);
+  }
+  return s;
 }
 
 /* ---------- 04 Aufgaben ---------- */
@@ -681,7 +876,7 @@ registriere({
       b.appendChild(abschnitt(nm,l.filter(a=>!a.fertig).length+" offen"));
       b.appendChild(el("div","hinweis",sub));
       l.forEach(a=>b.appendChild(zeile(a,{meta:(a.notiz||"")
-        +(a.kontakt?" · "+knm(kfind(a.kontakt)):""),
+        +(a.kontakt?" · "+kname(a.kontakt):""),
         rechts:frist(a), k:istSpaet(a)?"eilig":""})));
     });
   }
@@ -720,7 +915,7 @@ registriere({
   suche(q){
     return DATEN.notizen.filter(n=>(n.titel+" "+n.text).toLowerCase().includes(q)).map(n=>
       treff(n.art==="telefon"?"Telefonnotiz":"Notiz",n.titel,
-        n.text.slice(0,70)+(n.kontakt?" · "+knm(kfind(n.kontakt)):""),"↵",
+        n.text.slice(0,70)+(n.kontakt?" · "+kname(n.kontakt):""),"↵",
         ()=>zeigeFlaeche("notizen")));
   },
   erfassen(d){
@@ -740,7 +935,7 @@ registriere({
       const r=el("div","z");
       r.append(el("span","zb",'<span class="zt">'+esc(n.titel)+'</span>'
         +'<span class="zm">'+esc((n.art==="telefon"?"Telefonnotiz · ":"")+n.text
-        +(n.kontakt?" · "+knm(kfind(n.kontakt)):""))+'</span>'),
+        +(n.kontakt?" · "+kname(n.kontakt):""))+'</span>'),
         el("span","zr", n.d===HEUTE?("heute "+n.zeit):frist({d:n.d})));
       b.appendChild(r);
     });
@@ -871,7 +1066,7 @@ function wfKarte(w){
     +(wfFertig(w) ? "abgeschlossen" : (f ? (spaet?"überfällig":frist({d:f})) : "ohne Frist"))
     +'</span></div>'
     +'<div style="font-size:12.5px;color:var(--ink3);margin-top:5px">'+esc(wfStand(w))
-    +(w.werte.kontakt&&kfind(w.werte.kontakt)?" · "+esc(knm(kfind(w.werte.kontakt))):"")+'</div>';
+    +(w.werte.kontakt&&kfind(w.werte.kontakt)?" · "+esc(kname(w.werte.kontakt)):"")+'</div>';
 
   /* Fortschritt als Kette — zeigt sofort, wo der Ablauf steht */
   const kette=el("div");
@@ -1038,7 +1233,7 @@ function ueberfaellig(){
       .map(t=>({typ:"Termin",obj:t,titel:t.titel,verschieben:t,
         m:"war am "+t.d+" um "+t.zeit+(t.anm?" · "+t.anm:"")})),
     DATEN.aufgaben.filter(istSpaet).map(a=>({typ:"Aufgabe",obj:a,titel:a.titel,
-      m:(a.notiz||"")+(a.kontakt?" · "+knm(kfind(a.kontakt)):"")})),
+      m:(a.notiz||"")+(a.kontakt?" · "+kname(a.kontakt):"")})),
     WORKFLOWS.filter(wfSpaet).map(w=>({typ:"Workflow",obj:w,titel:w.titel,
       m:wfStand(w)}))
   );
@@ -1127,11 +1322,23 @@ function ruhezustand(box){
   if(nt){
     const diff=toMin(nt.zeit)-nowMin();
     w.innerHTML='<div class="naechst-t">'+esc(nt.titel)+'</div><div class="naechst-m">'
-      +esc((nt.anm||"")+(nt.kontakt?" · "+knm(kfind(nt.kontakt)):"")+" · "
+      +esc((nt.anm||"")+(nt.kontakt?" · "+kname(nt.kontakt):"")+" · "
       +(diff>0?"in "+diff+" Minuten":"läuft gerade"))+'</div>';
   } else w.innerHTML='<div class="naechst-t">Kein Termin mehr.</div>'
     +'<div class="naechst-m">Der Rest des Tages gehört dir.</div>';
   box.appendChild(w);
+
+  /* Favoriten stehen zwischen dem nächsten Termin und den Bookmarks:
+     erst was drängt, dann wen man am häufigsten braucht, dann der Rest. */
+  const favK=KONTAKTE.filter(k=>k.fav).sort(nachNachnamen);
+  const fa=abschnitt("Favoriten",null);
+  const alleK=el("button","n","alle "+KONTAKTE.length+" ›");
+  alleK.onclick=()=>zeigeFlaeche("kontakte"); fa.appendChild(alleK);
+  box.appendChild(fa);
+  if(favK.length) box.appendChild(kachelraster(favK));
+  else box.appendChild(el("div","leer",
+    "Noch kein Favorit. Im Modul Kontakte den Stern auf einer Kachel setzen — "
+    +"dann steht der Kontakt hier."));
 
   const a=abschnitt("Bookmarks",null);
   const alle=el("button","n","alle "+MARKEN.length+" ›");
@@ -1220,7 +1427,7 @@ function plannerMalen(rumpf){
       const lane=el("div","st-l");
       termine.filter(t=>toMin(t.zeit)>=h*60&&toMin(t.zeit)<(h+1)*60).forEach(t=>
         lane.appendChild(block(t,"termin",t.zeit+(t.anm?" · "+t.anm:"")
-          +(t.kontakt?" · "+knm(kfind(t.kontakt)):""))));
+          +(t.kontakt?" · "+kname(t.kontakt):""))));
       aufg.filter(a=>a.zeit&&toMin(a.zeit)>=h*60&&toMin(a.zeit)<(h+1)*60).forEach(a=>
         lane.appendChild(block(a,"aufgabe","Aufgabe · "+a.zeit)));
       st.appendChild(lane);
@@ -1260,7 +1467,7 @@ function vorratZeile(a){
   n.draggable=true;
   n.innerHTML='<span class="zb"><span class="zt">'+esc(a.titel)+'</span>'
     +'<span class="zm">'+esc((a.kat==="nach"?"Nachverfolgen · ":"")+frist(a)
-    +(a.kontakt?" · "+knm(kfind(a.kontakt)):""))+'</span></span>';
+    +(a.kontakt?" · "+kname(a.kontakt):""))+'</span></span>';
   n.addEventListener("dragstart",()=>{ zieht=a; n.classList.add("zieht"); });
   n.addEventListener("dragend",()=>{ n.classList.remove("zieht"); zieht=null;
     document.querySelectorAll(".stunde.ziel").forEach(s=>s.classList.remove("ziel")); });

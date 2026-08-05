@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mockup — Schritt 1: Kontakte</title>
+<style>
+/* ============================================================
+   MOCKUP zu Schritt 1 der Roadmap — Kontakte vollständig
+
+   Entwurf, nicht die Anwendung. Zeigt drei Flächen:
+   die Modulfläche, den Ausschnitt der Leiste und den Dialog.
+
+   Tokens, Klassennamen und Maße sind aus dashboard.html
+   übernommen, damit sich der Entwurf ohne Umrechnung
+   übertragen lässt. Neu sind allein .kkarten, .kk und .iknopf.
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#87837c;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --gut:#2b6b46;   --gut-s:#e3f0e8;
+}
+html,body{background:var(--paper)!important;color:var(--ink)!important;height:100%}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit;text-align:left}
+input,textarea,select{font:inherit}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--tinte);outline-offset:2px;border-radius:4px}
+*{scrollbar-color:var(--rule2) transparent;scrollbar-width:thin}
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:7px;
+  border:3px solid var(--paper);background-clip:padding-box}
+
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--paper)}
+.kopf{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:11px 22px;
+  background:var(--sheet);border-bottom:1px solid var(--rule)}
+.kopf .zeit{font-family:var(--mono);font-size:12px;letter-spacing:.07em;color:var(--ink2);
+  font-weight:600;font-variant-numeric:tabular-nums}
+.kopf .dat{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;color:var(--ink3)}
+.kopf .sp{flex:1}
+.kopf .mrk{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);border:1px solid var(--rule2);border-radius:6px;padding:3px 9px}
+.wechsel{display:flex;gap:2px;background:var(--raise);border-radius:9px;padding:3px}
+.wechsel button{font-size:12.5px;font-weight:550;color:var(--ink2);padding:6px 14px;
+  border-radius:7px}
+.wechsel button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
+  box-shadow:0 1px 2px rgba(26,26,24,.06)}
+.rumpf{flex:1;min-height:0;overflow-y:auto;background:var(--paper)}
+.mitte{max-width:860px;margin:0 auto;padding:0 26px 90px;width:100%}
+.weit{max-width:1180px}
+
+.abs{display:flex;align-items:center;gap:13px;padding:30px 0 11px}
+.abs h2{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--ink)}
+.abs h2.jetzt{color:var(--tinte)}
+.abs .r{flex:1;height:1px;background:var(--rule)}
+.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.abs button.n:hover{color:var(--ink)}
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px}
+.leer{padding:18px 2px;font-size:13px;color:var(--ink3);line-height:1.6}
+.sig{width:29px;height:29px;border-radius:50%;background:var(--raise);color:var(--ink2);
+  display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0;
+  font-family:var(--mono);letter-spacing:.02em}
+.sig.fav{background:var(--tinte-s);color:var(--tinte)}
+.tat{font-size:12.5px;font-weight:600;background:var(--tinte-s);color:var(--tinte);
+  border:1px solid var(--tinte);padding:7px 14px;border-radius:8px}
+.tat:hover{background:#d9dff1}
+.tat.still{background:transparent;color:var(--ink2);border-color:var(--rule2);font-weight:500}
+.tat.still:hover{background:var(--sheet);color:var(--ink)}
+.tat.weg{color:var(--signal);border-color:transparent;background:transparent;font-weight:500}
+.tat.weg:hover{background:var(--signal-s)}
+
+/* ---------- Suche im Modul ---------- */
+.msuche{position:relative;margin-top:4px}
+.msuche input{width:100%;border:1px solid var(--rule2);border-radius:10px;
+  padding:11px 40px 11px 38px;background:var(--sheet);font-size:14.5px;color:var(--ink)}
+.msuche input:focus{outline:0;border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.msuche .lupe{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--ink3);pointer-events:none;display:grid}
+.msuche .weg{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  color:var(--ink3);padding:5px 8px;border-radius:6px;font-size:12px}
+.msuche .weg:hover{background:var(--raise);color:var(--ink)}
+
+/* ---------- Kacheln ----------
+   auto-fill statt fester Spaltenzahl: Passt eine Kachel nicht
+   mehr in die Reihe, rutscht sie in die nächste. Es entsteht
+   nie ein waagerechter Balken.                                */
+.kkarten{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:9px}
+.kk{position:relative;display:flex;flex-direction:column;gap:10px;padding:13px 14px;
+  border:1px solid var(--rule);border-radius:11px;background:var(--sheet);
+  transition:border-color .12s,box-shadow .12s}
+.kk:hover{border-color:var(--rule2);box-shadow:0 2px 10px rgba(26,26,24,.05)}
+.kk.ist-fav{border-left:2px solid var(--tinte)}
+.kk-o{display:flex;align-items:flex-start;gap:11px}
+.kk-b{flex:1;min-width:0}
+.kk-n{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.01em;line-height:1.3;
+  overflow-wrap:anywhere}
+.kk-f{display:block;font-size:12px;color:var(--ink3);margin-top:3px;line-height:1.4;
+  overflow-wrap:anywhere}
+.kk-u{display:flex;align-items:center;gap:6px;padding-top:2px}
+.kk-u .sp{flex:1}
+
+/* Der Klickbereich für „Bearbeiten" liegt unter den Knöpfen und
+   deckt die ganze Kachel ab. Die Knöpfe liegen darüber. */
+.kk-flaeche{position:absolute;inset:0;border-radius:11px;z-index:1}
+.kk-u,.kk-stern{position:relative;z-index:2}
+
+.iknopf{position:relative;display:grid;place-items:center;width:34px;height:31px;
+  border:1px solid var(--rule2);border-radius:8px;color:var(--ink2);background:var(--paper)}
+.iknopf:hover{background:var(--tinte-s);border-color:var(--tinte);color:var(--tinte)}
+.iknopf[data-aus="1"]{opacity:.34;cursor:not-allowed}
+.iknopf[data-aus="1"]:hover{background:var(--paper);border-color:var(--rule2);color:var(--ink2)}
+/* Sprechblase: sagt, was der Klick auslöst, und mit welchem Ziel. */
+.iknopf .blase{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--sheet);font-size:11.5px;line-height:1.35;white-space:nowrap;
+  padding:6px 10px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity .13s;
+  z-index:40;font-family:var(--mono);letter-spacing:.01em}
+.iknopf .blase b{display:block;font-family:var(--ff);font-weight:600;letter-spacing:0;
+  margin-bottom:1px}
+.iknopf:hover .blase{opacity:1}
+.iknopf[data-aus="1"]:hover .blase{opacity:1}
+.kk-stern{display:grid;place-items:center;width:27px;height:27px;border-radius:7px;
+  color:var(--ink3);flex-shrink:0;margin:-2px -3px 0 0}
+.kk-stern:hover{background:var(--raise);color:var(--ink2)}
+.kk-stern.an,.kk-stern.an:hover{color:var(--tinte)}
+
+/* ---------- Dialog ---------- */
+.schleier{position:fixed;inset:0;background:rgba(26,26,24,.34);display:none;
+  place-items:center;padding:18px;z-index:500}
+.schleier.auf{display:grid}
+.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--sheet);
+  border:1px solid var(--rule2);border-radius:14px;box-shadow:0 24px 70px rgba(26,26,24,.22);
+  display:flex;flex-direction:column;overflow:hidden}
+.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:12px;padding:16px 22px 13px;
+  border-bottom:1px solid var(--rule)}
+.dlg-k .art{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink3);font-weight:700}
+.dlg-k h1{font-size:17px;font-weight:650;letter-spacing:-.02em}
+.dlg-k .sp{flex:1}
+.dlg-k .zu{font-size:19px;color:var(--ink3);line-height:1;padding:2px 8px;border-radius:6px}
+.dlg-k .zu:hover{background:var(--raise);color:var(--ink)}
+.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:16px 22px 20px}
+.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:12px 22px;
+  border-top:1px solid var(--rule);background:var(--paper)}
+.dlg-f .sp{flex:1}
+.raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 14px}
+.feld{display:flex;flex-direction:column;gap:5px}
+.feld.breit{grid-column:1/-1}
+.feld label{font-size:12px;color:var(--ink3);font-weight:500}
+.feld input,.feld textarea{border:1px solid var(--rule2);border-radius:8px;padding:8px 11px;
+  background:var(--paper);font-size:14px;color:var(--ink);width:100%}
+.feld input:focus,.feld textarea:focus{outline:0;border-color:var(--tinte);
+  box-shadow:0 0 0 3px var(--tinte-s);background:var(--sheet)}
+.feld textarea{min-height:74px;resize:vertical;line-height:1.5}
+.feld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
+  padding:9px 11px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
+.feld.schalter input{width:17px;height:17px;padding:0;accent-color:var(--tinte);flex-shrink:0}
+.feld.schalter label{font-size:14px;color:var(--ink)}
+.feld.schalter .sub{font-size:12px;color:var(--ink3);display:block;margin-top:2px}
+.merk{font-size:12.5px;color:var(--ink2);background:var(--raise);border-radius:9px;
+  padding:10px 12px;margin-top:14px;line-height:1.55}
+.merk.warn{color:var(--signal);background:var(--signal-s)}
+.merk b{font-weight:650}
+.merk ul{margin:6px 0 0 17px}
+.merk li{margin-top:2px}
+
+.zettel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:var(--ink);color:var(--sheet);font-size:13.5px;padding:11px 20px;border-radius:10px;
+  opacity:0;pointer-events:none;z-index:900;box-shadow:0 14px 40px rgba(26,26,24,.2);
+  transition:transform .24s cubic-bezier(.2,.8,.3,1),opacity .24s}
+.zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* ---------- Anmerkungen zum Entwurf ---------- */
+.note{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:9px;
+  background:var(--sheet);padding:12px 15px;margin-top:9px;font-size:13px;line-height:1.6;
+  color:var(--ink2)}
+.note b{color:var(--ink);font-weight:650}
+.note code{font-family:var(--mono);font-size:12px;background:var(--raise);
+  border-radius:4px;padding:1px 5px}
+.note.acht{border-left-color:var(--signal)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="kopf">
+    <span class="zeit">09:24</span>
+    <span class="dat">Mittwoch, 5. August</span>
+    <span class="mrk">Mockup · Schritt 1</span>
+    <span class="sp"></span>
+    <div class="wechsel" id="wechsel">
+      <button data-f="modul" aria-current="true">Modul Kontakte</button>
+      <button data-f="leiste">Leiste</button>
+      <button data-f="notizen">Anmerkungen</button>
+    </div>
+  </div>
+  <div class="rumpf">
+    <div class="mitte weit" id="mitte">
+      <!-- Ausgangszustand als echtes Markup, damit der Entwurf auch dort etwas
+           zeigt, wo kein Skript läuft — etwa in einer Vorschau, die Skriptblöcke
+           entfernt. Sobald das Skript läuft, ersetzt male() diesen Block.
+           Erzeugt aus der laufenden Seite, nicht von Hand geschrieben.
+           (Das Wort für einen Skriptblock steht hier bewusst nicht in spitzen
+           Klammern: pruefen.mjs schneidet den Skriptteil mit einer schlichten
+           Regex heraus und würde sonst diesen Kommentar für den Anfang des
+           Skripts halten.) -->
+      <div class="abs">
+      <h2>Kontakte</h2>
+      <span class="r">
+      </span>
+      <span class="n">11</span>
+      </div>
+      <div class="msuche">
+      <span class="lupe">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="11" cy="11" r="7">
+      </circle>
+      <path d="m20 20-3.9-3.9">
+      </path>
+      </svg>
+      </span>
+      <input type="text" placeholder="Kontakte durchsuchen — Name, Firma, Nummer, Mail">
+      </div>
+      <div class="abs">
+      <h2 class="jetzt">Favoriten</h2>
+      <span class="r">
+      </span>
+      <span class="n">4</span>
+      </div>
+      <div class="hinweis">Diese erscheinen in der Leiste als direkt verwendbare Kontakte.</div>
+      <div class="kkarten">
+      <div class="kk ist-fav">
+      <button class="kk-flaeche" aria-label="Kontakt Eva Bergmann bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig fav">EB</span>
+      <span class="kk-b">
+      <span class="kk-n">Eva Bergmann</span>
+      <span class="kk-f">Kanzlei Bergmann</span>
+      </span>
+      <button class="kk-stern an" aria-label="Favorit aufheben" aria-pressed="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:0391778200" data-aus="0" aria-label="Anrufen: 0391 77820-0">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 77820-0</span>
+      </a>
+      <a class="iknopf" href="mailto:kanzlei@bergmann.de" data-aus="0" aria-label="Mailen an: kanzlei@bergmann.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>kanzlei@bergmann.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk ist-fav">
+      <button class="kk-flaeche" aria-label="Kontakt Jan Kowalski bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig fav">JK</span>
+      <span class="kk-b">
+      <span class="kk-n">Jan Kowalski</span>
+      <span class="kk-f">Nordstern GmbH</span>
+      </span>
+      <button class="kk-stern an" aria-label="Favorit aufheben" aria-pressed="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:03915551241" data-aus="0" aria-label="Anrufen: 0391 55512-41">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 55512-41</span>
+      </a>
+      <a class="iknopf" href="mailto:j.kowalski@nordstern.de" data-aus="0" aria-label="Mailen an: j.kowalski@nordstern.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>j.kowalski@nordstern.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk ist-fav">
+      <button class="kk-flaeche" aria-label="Kontakt Lisa Meier bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig fav">LM</span>
+      <span class="kk-b">
+      <span class="kk-n">Lisa Meier</span>
+      <span class="kk-f">Nordstern GmbH</span>
+      </span>
+      <button class="kk-stern an" aria-label="Favorit aufheben" aria-pressed="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:03915551240" data-aus="0" aria-label="Anrufen: 0391 55512-40">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 55512-40</span>
+      </a>
+      <a class="iknopf" href="mailto:l.meier@nordstern.de" data-aus="0" aria-label="Mailen an: l.meier@nordstern.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>l.meier@nordstern.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk ist-fav">
+      <button class="kk-flaeche" aria-label="Kontakt Tobias Meinhardt bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig fav">TM</span>
+      <span class="kk-b">
+      <span class="kk-n">Tobias Meinhardt</span>
+      <span class="kk-f">Meinhardt IT</span>
+      </span>
+      <button class="kk-stern an" aria-label="Favorit aufheben" aria-pressed="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:0391300217" data-aus="0" aria-label="Anrufen: 0391 30021-7">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 30021-7</span>
+      </a>
+      <a class="iknopf" href="mailto:t@meinhardt-it.de" data-aus="0" aria-label="Mailen an: t@meinhardt-it.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>t@meinhardt-it.de</span>
+      </a>
+      </div>
+      </div>
+      </div>
+      <div class="abs">
+      <h2>Alle Kontakte</h2>
+      <span class="r">
+      </span>
+      <button class="n">neuer Kontakt +</button>
+      </div>
+      <div class="kkarten">
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Nadja Ahrens bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">NA</span>
+      <span class="kk-b">
+      <span class="kk-n">Nadja Ahrens</span>
+      <span class="kk-f">Stadtwerke</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:03914441031" data-aus="0" aria-label="Anrufen: 0391 44410-31">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 44410-31</span>
+      </a>
+      <a class="iknopf" href="mailto:n.ahrens@sw-md.de" data-aus="0" aria-label="Mailen an: n.ahrens@sw-md.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>n.ahrens@sw-md.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Ute Brandt bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">UB</span>
+      <span class="kk-b">
+      <span class="kk-n">Ute Brandt</span>
+      <span class="kk-f">Stadtwerke</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:0391444108" data-aus="0" aria-label="Anrufen: 0391 44410-8">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 44410-8</span>
+      </a>
+      <a class="iknopf" href="mailto:u.brandt@sw-md.de" data-aus="0" aria-label="Mailen an: u.brandt@sw-md.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>u.brandt@sw-md.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Petra Hoffmann bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">PH</span>
+      <span class="kk-b">
+      <span class="kk-n">Petra Hoffmann</span>
+      <span class="kk-f">Stadtwerke</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:03914441012" data-aus="0" aria-label="Anrufen: 0391 44410-12">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 44410-12</span>
+      </a>
+      <a class="iknopf" href="mailto:p.hoffmann@sw-md.de" data-aus="0" aria-label="Mailen an: p.hoffmann@sw-md.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>p.hoffmann@sw-md.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Wassili Petrov bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">WP</span>
+      <span class="kk-b">
+      <span class="kk-n">Wassili Petrov</span>
+      <span class="kk-f">Nordlicht Logistik</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <button class="iknopf" data-aus="1" aria-label="Anrufen: nicht hinterlegt">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>nicht hinterlegt</span>
+      </button>
+      <a class="iknopf" href="mailto:w.petrov@nordlicht.de" data-aus="0" aria-label="Mailen an: w.petrov@nordlicht.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>w.petrov@nordlicht.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Kai Richter bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">KR</span>
+      <span class="kk-b">
+      <span class="kk-n">Kai Richter</span>
+      <span class="kk-f">Nordstern GmbH</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:03915551242" data-aus="0" aria-label="Anrufen: 0391 55512-42">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 55512-42</span>
+      </a>
+      <a class="iknopf" href="mailto:k.richter@nordstern.de" data-aus="0" aria-label="Mailen an: k.richter@nordstern.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>k.richter@nordstern.de</span>
+      </a>
+      </div>
+      </div>
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Annegret Schuster-Lindemann bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">AS</span>
+      <span class="kk-b">
+      <span class="kk-n">Annegret Schuster-Lindemann</span>
+      <span class="kk-f">Kanzlei Bergmann</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:03917782014" data-aus="0" aria-label="Anrufen: 0391 77820-14">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 77820-14</span>
+      </a>
+      <button class="iknopf" data-aus="1" aria-label="Mailen an: nicht hinterlegt">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>nicht hinterlegt</span>
+      </button>
+      </div>
+      </div>
+      <div class="kk">
+      <button class="kk-flaeche" aria-label="Kontakt Ingo Vogt bearbeiten">
+      </button>
+      <div class="kk-o">
+      <span class="sig">IV</span>
+      <span class="kk-b">
+      <span class="kk-n">Ingo Vogt</span>
+      <span class="kk-f">Meinhardt IT</span>
+      </span>
+      <button class="kk-stern" aria-label="Als Favorit markieren" aria-pressed="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z">
+      </path>
+      </svg>
+      </button>
+      </div>
+      <div class="kk-u">
+      <a class="iknopf" href="tel:0391300219" data-aus="0" aria-label="Anrufen: 0391 30021-9">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Anrufen</b>0391 30021-9</span>
+      </a>
+      <a class="iknopf" href="mailto:i.vogt@meinhardt-it.de" data-aus="0" aria-label="Mailen an: i.vogt@meinhardt-it.de">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <rect x="2.5" y="4.5" width="19" height="15" rx="2.5">
+      </rect>
+      <path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7">
+      </path>
+      </svg>
+      <span class="blase">
+      <b>Mailen</b>i.vogt@meinhardt-it.de</span>
+      </a>
+      </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="schleier" id="schleier"><div class="dlg" role="dialog" aria-label="Kontakt">
+  <div class="dlg-k">
+    <span class="art" id="d-art">Kontakt</span>
+    <h1 id="d-titel">—</h1>
+    <span class="sp"></span>
+    <button class="zu" id="d-zu" aria-label="Schließen">×</button>
+  </div>
+  <div class="dlg-b" id="d-rumpf"></div>
+  <div class="dlg-f">
+    <button class="tat weg" id="d-loeschen">Löschen</button>
+    <span class="sp"></span>
+    <button class="tat still" id="d-abbrechen">Abbrechen</button>
+    <button class="tat" id="d-speichern">Speichern</button>
+  </div>
+</div></div>
+
+<div class="zettel" id="zettel" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,
+  c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let zT; function melde(m){const t=$("#zettel");t.textContent=m;t.classList.add("an");
+  clearTimeout(zT);zT=setTimeout(()=>t.classList.remove("an"),2400);}
+
+/* ============================================================
+   ICONS — Inline-SVG, stroke="currentColor" fill="none".
+
+   Regel 6 aus CLAUDE.md. Gefüllte Unicode-Zeichen rendern auf
+   kleinen Flächen als dunkle Blöcke. Auch der Stern ist SVG:
+   U+2605 heißt im Standard wörtlich BLACK STAR.
+   ============================================================ */
+const SVG=(d,extra)=>'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" '
+  +'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" '
+  +'stroke-linejoin="round" aria-hidden="true">'+d+(extra||"")+'</svg>';
+const IK={
+  tel:  SVG('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6'
+       +' 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1'
+       +'L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
+  mail: SVG('<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>'
+       +'<path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/>'),
+  stern:SVG('<path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z"/>'),
+  lupe: SVG('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>'),
+  plus: SVG('<path d="M12 5v14M5 12h14"/>')
+};
+
+/* ============================================================
+   DATEN — nur für den Entwurf. In der Anwendung sind die
+   Demodaten weg; vorgabe() liefert dann kontakte: [].
+   ============================================================ */
+const KONTAKTE=[
+ {id:"k1",nach:"Meier",vor:"Lisa",firma:"Nordstern GmbH",tel:"0391 55512-40",
+  mail:"l.meier@nordstern.de",fav:true,notiz:"Produktleitung. Erreichbar vormittags."},
+ {id:"k2",nach:"Kowalski",vor:"Jan",firma:"Nordstern GmbH",tel:"0391 55512-41",
+  mail:"j.kowalski@nordstern.de",fav:true,notiz:"Gestaltung"},
+ {id:"k4",nach:"Bergmann",vor:"Eva",firma:"Kanzlei Bergmann",tel:"0391 77820-0",
+  mail:"kanzlei@bergmann.de",fav:true,notiz:"Buchhaltung, Skontofristen beachten."},
+ {id:"k6",nach:"Meinhardt",vor:"Tobias",firma:"Meinhardt IT",tel:"0391 30021-7",
+  mail:"t@meinhardt-it.de",fav:true,notiz:"Serverwartung"},
+ {id:"k3",nach:"Richter",vor:"Kai",firma:"Nordstern GmbH",tel:"0391 55512-42",
+  mail:"k.richter@nordstern.de",fav:false,notiz:"Entwicklung"},
+ {id:"k5",nach:"Hoffmann",vor:"Petra",firma:"Stadtwerke",tel:"0391 44410-12",
+  mail:"p.hoffmann@sw-md.de",fav:false,notiz:"Vertragswesen"},
+ {id:"k7",nach:"Ahrens",vor:"Nadja",firma:"Stadtwerke",tel:"0391 44410-31",
+  mail:"n.ahrens@sw-md.de",fav:false,notiz:""},
+ {id:"k8",nach:"Petrov",vor:"Wassili",firma:"Nordlicht Logistik",tel:"",
+  mail:"w.petrov@nordlicht.de",fav:false,notiz:"Nur per Mail erreichbar."},
+ {id:"k9",nach:"Schuster-Lindemann",vor:"Annegret",firma:"Kanzlei Bergmann",
+  tel:"0391 77820-14",mail:"",fav:false,notiz:"Lange Namen brechen um."},
+ {id:"k10",nach:"Vogt",vor:"Ingo",firma:"Meinhardt IT",tel:"0391 30021-9",
+  mail:"i.vogt@meinhardt-it.de",fav:false,notiz:""},
+ {id:"k11",nach:"Brandt",vor:"Ute",firma:"Stadtwerke",tel:"0391 44410-8",
+  mail:"u.brandt@sw-md.de",fav:false,notiz:""}
+];
+const knm=k=>k.vor+" "+k.nach;
+const ini=k=>((k.vor[0]||"")+(k.nach[0]||"")).toUpperCase();
+/* tel: verträgt keine Leerzeichen und Bindestriche. */
+const telUri=t=>"tel:"+String(t).replace(/[^\d+]/g,"");
+
+let suche="", flaeche="modul", offen=null;
+
+/* ============================================================
+   DIE KACHEL — ein Baustein, drei Verwendungen
+   ============================================================ */
+function iknopf(art, ziel, was){
+  const aus=!ziel;
+  const a=el(aus?"button":"a","iknopf");
+  if(!aus){ a.href = art==="tel" ? telUri(ziel) : "mailto:"+ziel; }
+  a.dataset.aus=aus?"1":"0";
+  a.setAttribute("aria-label",(art==="tel"?"Anrufen: ":"Mailen an: ")+(ziel||"nicht hinterlegt"));
+  a.innerHTML=IK[art]+'<span class="blase"><b>'+(art==="tel"?"Anrufen":"Mailen")+'</b>'
+    +esc(ziel||"nicht hinterlegt")+'</span>';
+  a.onclick=ev=>{ ev.stopPropagation();
+    if(aus){ ev.preventDefault(); melde(was+" ist bei diesem Kontakt nicht hinterlegt."); return; }
+    melde((art==="tel"?"Übergabe an das Telefonprogramm: ":"Übergabe an das Mailprogramm: ")+ziel);
+  };
+  return a;
+}
+
+function kachel(k){
+  const c=el("div","kk"+(k.fav?" ist-fav":""));
+
+  /* Ganzflächiger Knopf zum Bearbeiten, liegt unter den Icons. */
+  const f=el("button","kk-flaeche");
+  f.setAttribute("aria-label","Kontakt "+knm(k)+" bearbeiten");
+  f.onclick=()=>dialog(k);
+  c.appendChild(f);
+
+  const o=el("div","kk-o");
+  o.appendChild(el("span","sig"+(k.fav?" fav":""),ini(k)));
+  o.appendChild(el("span","kk-b",'<span class="kk-n">'+esc(knm(k))+'</span>'
+    +'<span class="kk-f">'+esc(k.firma||"—")+'</span>'));
+  const st=el("button","kk-stern"+(k.fav?" an":""),IK.stern);
+  st.setAttribute("aria-label",k.fav?"Favorit aufheben":"Als Favorit markieren");
+  st.setAttribute("aria-pressed",String(!!k.fav));
+  st.onclick=ev=>{ ev.stopPropagation(); k.fav=!k.fav; male();
+    melde(k.fav?knm(k)+" ist jetzt Favorit":knm(k)+" ist kein Favorit mehr"); };
+  o.appendChild(st);
+  c.appendChild(o);
+
+  const u=el("div","kk-u");
+  u.appendChild(iknopf("tel",k.tel,"Eine Rufnummer"));
+  u.appendChild(iknopf("mail",k.mail,"Eine Mailadresse"));
+  c.appendChild(u);
+  return c;
+}
+
+function abs(t,n,kl){
+  const a=el("div","abs",'<h2'+(kl?' class="'+kl+'"':'')+'>'+esc(t)+'</h2><span class="r"></span>');
+  if(n) a.appendChild(el("span","n",esc(n)));
+  return a;
+}
+function raster(liste){
+  const g=el("div","kkarten");
+  liste.forEach(k=>g.appendChild(kachel(k)));
+  return g;
+}
+
+/* ============================================================
+   FLÄCHE 1 — Das Modul
+   ============================================================ */
+function flaecheModul(b){
+  const s=el("div","msuche");
+  s.innerHTML='<span class="lupe">'+IK.lupe+'</span>';
+  const i=el("input");
+  i.type="text"; i.placeholder="Kontakte durchsuchen — Name, Firma, Nummer, Mail";
+  i.value=suche;
+  i.oninput=()=>{ suche=i.value; male(); requestAnimationFrame(()=>{
+    const n=$(".msuche input"); if(n){ n.focus(); n.setSelectionRange(n.value.length,n.value.length); }
+  }); };
+  s.appendChild(i);
+  if(suche){ const w=el("button","weg","zurücksetzen");
+    w.onclick=()=>{ suche=""; male(); }; s.appendChild(w); }
+  b.appendChild(el("div","abs",'<h2>Kontakte</h2><span class="r"></span>'
+    +'<span class="n">'+KONTAKTE.length+'</span>'));
+  b.appendChild(s);
+
+  const q=suche.trim().toLowerCase();
+  const passt=k=>!q||((k.vor+" "+k.nach+" "+k.firma+" "+k.tel+" "+k.mail+" "+k.notiz)
+    .toLowerCase().includes(q));
+  const fav=KONTAKTE.filter(k=>k.fav&&passt(k)).sort((a,b2)=>a.nach<b2.nach?-1:1);
+  const rest=KONTAKTE.filter(k=>!k.fav&&passt(k)).sort((a,b2)=>a.nach<b2.nach?-1:1);
+
+  if(q){
+    /* Ein Ergebnisraum, Favoriten immer zuoberst. */
+    b.appendChild(abs("Gefunden", (fav.length+rest.length)+" von "+KONTAKTE.length));
+    if(!fav.length&&!rest.length){
+      b.appendChild(el("div","leer","Kein Kontakt passt zu „"+esc(suche)+"“."));
+      const n=el("button","tat",IK.plus+" „"+suche+"“ als neuen Kontakt anlegen");
+      n.style.marginTop="6px";
+      n.onclick=()=>dialog(null,suche);
+      b.appendChild(n);
+      return;
+    }
+    if(fav.length){
+      b.appendChild(el("div","hinweis","Favoriten stehen auch im Suchergebnis oben."));
+      b.appendChild(raster(fav));
+    }
+    if(rest.length){
+      if(fav.length) b.appendChild(abs("Weitere", String(rest.length)));
+      b.appendChild(raster(rest));
+    }
+    return;
+  }
+
+  b.appendChild(abs("Favoriten", fav.length?String(fav.length):null, "jetzt"));
+  if(fav.length){
+    b.appendChild(el("div","hinweis",
+      "Diese erscheinen in der Leiste als direkt verwendbare Kontakte."));
+    b.appendChild(raster(fav));
+  } else {
+    b.appendChild(el("div","leer",
+      "Noch kein Favorit. Der Stern auf einer Kachel macht einen daraus."));
+  }
+
+  const a=abs("Alle Kontakte", null);
+  const neu=el("button","n","neuer Kontakt +");
+  neu.onclick=()=>dialog(null);
+  a.appendChild(neu);
+  b.appendChild(a);
+  if(rest.length) b.appendChild(raster(rest));
+  else b.appendChild(el("div","leer","Außer den Favoriten ist niemand erfasst."));
+}
+
+/* ============================================================
+   FLÄCHE 2 — Der Ausschnitt der Leiste
+   ============================================================ */
+function flaecheLeiste(b){
+  b.appendChild(el("div","abs",'<h2 class="jetzt">Als Nächstes</h2><span class="r"></span>'));
+  b.appendChild(el("div",null,'<div style="font-size:16.5px;font-weight:600;'
+    +'letter-spacing:-.015em">Strategie-Call</div>'
+    +'<div style="font-size:12.5px;color:var(--ink3);margin-top:4px">'
+    +'Video · Lisa Meier · in 36 Minuten</div>'));
+
+  const fav=KONTAKTE.filter(k=>k.fav).sort((a,b2)=>a.nach<b2.nach?-1:1);
+  const a=abs("Favoriten", null);
+  const alle=el("button","n","alle "+KONTAKTE.length+" ›");
+  alle.onclick=()=>{ flaeche="modul"; male(); };
+  a.appendChild(alle);
+  b.appendChild(a);
+  if(fav.length) b.appendChild(raster(fav));
+  else b.appendChild(el("div","leer",
+    "Noch kein Favorit. Im Modul Kontakte einen Stern setzen — dann steht er hier."));
+
+  b.appendChild(abs("Bookmarks", null));
+  b.appendChild(el("div","hinweis",
+    "Ab hier unverändert. Der Entwurf zeigt nur, wo der neue Block sitzt: "
+    +"zwischen dem nächsten Termin und den Bookmarks."));
+
+  b.appendChild(el("div","note","<b>Warum an dieser Stelle.</b> Die Leiste zeigt von oben nach "
+    +"unten, was Aufmerksamkeit verlangt: erst Überfälliges, dann der nächste Termin, dann die "
+    +"Kontakte, die man am häufigsten braucht. Die Bookmarks rutschen dadurch eine Position "
+    +"nach unten, ihre Tastenkürzel <code>⌘1</code>–<code>⌘8</code> bleiben unberührt."));
+}
+
+/* ============================================================
+   FLÄCHE 3 — Anmerkungen
+   ============================================================ */
+const NOTIZEN=[
+ ["Die Kachel ersetzt die Zeile — aber nur bei Kontakten",
+  "Bisher zeichnet <code>kontaktZeile()</code> eine Zeile im Stil aller übrigen Listen. "
+  +"Kontakte sind der einzige Datensatz, bei dem man etwas <b>tun</b> will, ohne ihn zu öffnen: "
+  +"anrufen oder mailen. Dafür brauchen zwei Ziele nebeneinander Platz. Das Raster nutzt "
+  +"<code>repeat(auto-fill,minmax(236px,1fr))</code> — dieselbe Technik wie die Bookmarks weiter "
+  +"unten in der Leiste. Passt eine Kachel nicht mehr in die Reihe, rutscht sie in die nächste; "
+  +"ein waagerechter Balken kann gar nicht entstehen.",""],
+ ["Drei Klickziele auf einer Kachel, ohne dass sie sich ins Gehege kommen",
+  "Die ganze Kachel öffnet den Dialog. Darüber liegen drei kleinere Ziele: Telefon, Mail und der "
+  +"Stern. Sie rufen <code>stopPropagation()</code> auf, sonst öffnete jeder Anruf zugleich den "
+  +"Dialog. Die Sprechblase beim Überfahren nennt die tatsächliche Nummer beziehungsweise "
+  +"Adresse — man sieht vor dem Klick, was passieren wird.",""],
+ ["Anrufen und Mailen sind echte Verweise, keine Skriptaufrufe",
+  "Die beiden Knöpfe sind <code>&lt;a href=\"tel:…\"&gt;</code> und "
+  +"<code>&lt;a href=\"mailto:…\"&gt;</code>, kein <code>window.open</code>. Ein Verweis ist das, "
+  +"was Edge bei <code>file://</code> am verlässlichsten durchreicht. Aus der Nummer werden "
+  +"vorher alle Leerzeichen und Bindestriche entfernt: <code>0391 55512-40</code> wird zu "
+  +"<code>tel:039155512040</code>.",""],
+ ["Fehlt Nummer oder Adresse, bleibt der Knopf stehen",
+  "Er wird blass und nicht anklickbar, statt zu verschwinden. Zwei Kacheln haben immer zwei "
+  +"Knöpfe an derselben Stelle — das Auge muss nicht suchen. Probiere Wassili Petrov (keine "
+  +"Nummer) und Annegret Schuster-Lindemann (keine Adresse).",""],
+ ["Der Stern ist ein SVG, kein Schriftzeichen",
+  "Das Sternzeichen <code>U+2605</code> heißt im Standard wörtlich BLACK STAR und rendert auf "
+  +"16 Pixeln als dunkler Klecks — Fehlerbuch Punkt 2. <b>Was dabei auffällt:</b> "
+  +"<code>pruefen.mjs</code> würde ihn nicht bemängeln. Die Prüfung deckt <code>U+2580</code> bis "
+  +"<code>U+25FF</code> ab, BLACK STAR liegt knapp darüber. Bei der Umsetzung nehme ich "
+  +"<code>U+2605</code> und <code>U+2606</code> in die Liste <code>EXTRA</code> auf — damit ist "
+  +"aus diesem Entwurf eine automatisch prüfbare Regel geworden.","acht"],
+ ["Farbe: Tinte für Favoriten",
+  "<code>CLAUDE.md</code> verlangt, dass Farbe Dringlichkeit codiert und nicht Kategorie. Ein "
+  +"Favorit ist keine Kategorie, sondern die Auswahl „das brauche ich ständig“ — dieselbe Klasse "
+  +"wie „jetzt und aktiv“. Die Anwendung macht das heute schon so: <code>.sig.fav</code> ist "
+  +"bereits in Tinte gehalten. Der Entwurf bleibt dabei und fügt nur eine 2 Pixel schmale Kante "
+  +"links hinzu. Signalrot kommt auf der Fläche nicht vor.",""],
+ ["Der Dialog wird in Schritt 2 herausgezogen, nicht jetzt",
+  "Die sieben Felder sind schon als Liste von <code>{schl, nm, art}</code> beschrieben — genau "
+  +"das Format, das <code>ARCHITEKTUR.md</code> für den Baustein aus Schritt 2 und für die "
+  +"Workflow-Eigenschaften nennt. Der Dialog bleibt in diesem Schritt trotzdem kontaktspezifisch. "
+  +"<code>ANLEITUNG.md</code> Teil 4: „aus Schritt 1 herausziehen, nicht vorher erfinden“.",""]
+];
+function flaecheNotizen(b){
+  b.appendChild(abs("Was der Entwurf entscheidet", String(NOTIZEN.length)));
+  NOTIZEN.forEach(([t,x,kl])=>b.appendChild(el("div","note"+(kl?" "+kl:""),
+    "<b>"+t+".</b> "+x)));
+
+  b.appendChild(abs("Drei Funde im Bestand", "3"));
+  b.appendChild(el("div","note acht","<b>Die Demodaten lassen sich nicht einfach löschen.</b> "
+    +"Elf Einträge in Terminen, Aufgaben, Notizen und Workflows verweisen auf <code>k1</code> bis "
+    +"<code>k6</code>. Wird <code>kontakte</code> auf <code>[]</code> gesetzt, ohne diese Verweise "
+    +"mitzunehmen, stürzt die erste Zeichnung ab: <code>knm(kfind(id))</code> bekommt "
+    +"<code>undefined</code> und liest darauf <code>.vor</code>. Beides gehört in denselben Schritt."));
+  b.appendChild(el("div","note acht","<b>Sieben Stellen lösen einen Kontakt ungeschützt auf.</b> "
+    +"<code>knm(kfind(x))</code> steht neunmal in <code>dashboard.html</code>; nur zwei Stellen "
+    +"prüfen vorher, ob es den Kontakt noch gibt. Solange nie ein Kontakt gelöscht wurde, fällt "
+    +"das nicht auf. Schritt 1 führt das Löschen ein — deshalb bekommen alle neun Stellen "
+    +"denselben geschützten Helfer."));
+  b.appendChild(el("div","note acht","<b>Workflows verweisen auf zwei Ebenen auf Kontakte.</b> "
+    +"Einmal an der Instanz (<code>werte.kontakt</code>, Ansprechpartner) und einmal am "
+    +"Teilschritt (<code>schritte.freigabe.werte.durch</code>, Freigegeben durch). Eine "
+    +"Löschroutine, die nur die Instanz aufräumt, lässt die zweite Stelle ins Leere zeigen. "
+    +"Welche Schlüssel betroffen sind, steht nicht fest im Code — es ergibt sich aus "
+    +"<code>VORLAGEN</code>, aus allen Eigenschaften mit <code>art:\"kontakt\"</code>."));
+
+  b.appendChild(abs("Nicht in diesem Schritt", "4"));
+  b.appendChild(el("div","note","<b>Kein Dialog-Baustein</b> — das ist Schritt 2. "
+    +"<b>Keine Gruppen oder Kategorien</b> für Kontakte, die Firma reicht als Ordnung. "
+    +"<b>Kein Import</b> aus vCard oder CSV, davon steht nichts in der Roadmap. "
+    +"<b>Keine Änderung an der Leistensuche</b> — sie liefert schon heute je Kontakt zwei "
+    +"Treffer, „Anrufen“ und „Mailen“; die beiden führen künftig nur echt aus, statt zu melden."));
+}
+
+/* ============================================================
+   DIALOG — sieben Felder, kein Feld mehr
+   ============================================================ */
+const FELDER=[
+  {schl:"nach",  nm:"Nachname", art:"text"},
+  {schl:"vor",   nm:"Vorname",  art:"text"},
+  {schl:"firma", nm:"Firma",    art:"text"},
+  {schl:"tel",   nm:"Telefon",  art:"text"},
+  {schl:"mail",  nm:"E-Mail",   art:"text"},
+  {schl:"notiz", nm:"Notizen",  art:"mehrzeilig"},
+  {schl:"fav",   nm:"Als Favorit markieren", art:"schalter",
+   sub:"Favoriten stehen im Modul und in der Leiste oben."}
+];
+
+function dialog(k, vorbelegt){
+  offen = k || {id:null,nach:vorbelegt||"",vor:"",firma:"",tel:"",mail:"",fav:false,notiz:""};
+  const neu = !k;
+  $("#d-art").textContent = neu ? "Neuer Kontakt" : "Kontakt bearbeiten";
+  $("#d-titel").textContent = neu ? "—" : knm(k);
+  $("#d-loeschen").style.display = neu ? "none" : "";
+  const b=$("#d-rumpf"); b.innerHTML="";
+  const r=el("div","raster");
+  FELDER.forEach(def=>{
+    const f=el("div","feld"+(def.art==="mehrzeilig"?" breit":"")
+      +(def.art==="schalter"?" schalter":""));
+    let n;
+    if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=offen[def.schl]||""; }
+    else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!offen[def.schl]; }
+    else { n=el("input"); n.type="text"; n.value=offen[def.schl]||""; }
+    const lab=el("label",null,esc(def.nm)
+      +(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':''));
+    if(def.art==="schalter") f.append(n,lab); else f.append(lab,n);
+    n.oninput=n.onchange=()=>{
+      offen[def.schl] = def.art==="schalter" ? n.checked : n.value;
+      if(def.schl==="vor"||def.schl==="nach")
+        $("#d-titel").textContent = (offen.vor+" "+offen.nach).trim() || "—";
+    };
+    r.appendChild(f);
+  });
+  b.appendChild(r);
+  b.appendChild(el("div","merk","<b>Pflicht ist nur der Nachname.</b> Alles Übrige darf leer "
+    +"bleiben. Fehlt eine Nummer oder eine Adresse, bleibt der zugehörige Knopf auf der Kachel "
+    +"sichtbar, aber blass und ohne Wirkung."));
+  $("#schleier").classList.add("auf");
+}
+
+$("#d-zu").onclick=$("#d-abbrechen").onclick=()=>{
+  $("#schleier").classList.remove("auf"); offen=null; melde("Verworfen"); };
+$("#d-speichern").onclick=()=>{
+  if(!offen.nach.trim()){ melde("Ohne Nachnamen geht es nicht."); return; }
+  if(!offen.id){ offen.id="k"+(Date.now()%10000); KONTAKTE.push(offen);
+    melde(knm(offen)+" angelegt"); }
+  else melde(knm(offen)+" gespeichert");
+  $("#schleier").classList.remove("auf"); offen=null; suche=""; male();
+};
+$("#d-loeschen").onclick=()=>{
+  const k=offen, b=$("#d-rumpf");
+  b.innerHTML="";
+  b.appendChild(el("div","merk warn","<b>"+esc(knm(k))+" wirklich löschen?</b>"
+    +"<ul><li>Die Kachel verschwindet aus Modul und Leiste.</li>"
+    +"<li>In Aufgaben, Terminen, Notizen und Workflows wird der Verweis auf diesen Kontakt "
+    +"auf <em>leer</em> gesetzt — auch in den Teilschritten der Workflows.</li>"
+    +"<li>Die Einträge selbst bleiben erhalten. Es verschwindet nur der Name daneben.</li></ul>"));
+  const t=el("div"); t.style.cssText="display:flex;gap:9px;margin-top:14px";
+  const ja=el("button","tat weg","Ja, löschen");
+  ja.style.cssText="border:1px solid var(--signal);background:var(--signal-s)";
+  ja.onclick=()=>{ const i=KONTAKTE.indexOf(k); if(i>=0) KONTAKTE.splice(i,1);
+    $("#schleier").classList.remove("auf"); offen=null; male();
+    melde(knm(k)+" gelöscht · 3 Verweise geleert"); };
+  const nein=el("button","tat still","Abbrechen");
+  nein.onclick=()=>dialog(k);
+  t.append(ja,nein); b.appendChild(t);
+};
+$("#schleier").onclick=ev=>{ if(ev.target===$("#schleier")) $("#d-abbrechen").click(); };
+
+/* ============================================================
+   ZEICHNEN
+   ============================================================ */
+document.querySelectorAll("#wechsel button").forEach(n=>{
+  n.onclick=()=>{ flaeche=n.dataset.f; male(); };
+});
+function male(){
+  document.querySelectorAll("#wechsel button").forEach(n=>
+    n.setAttribute("aria-current",String(n.dataset.f===flaeche)));
+  const b=$("#mitte"); b.innerHTML="";
+  if(flaeche==="modul") flaecheModul(b);
+  else if(flaeche==="leiste") flaecheLeiste(b);
+  else flaecheNotizen(b);
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&$("#schleier").classList.contains("auf")) $("#d-abbrechen").click();
+});
+male();
+</script>
+</body>
+</html>

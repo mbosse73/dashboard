@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mockup — Knopffarben auf der Kontaktkachel</title>
+<style>
+/* ============================================================
+   Vier Fassungen der beiden Knöpfe, nebeneinander.
+
+   Ohne Skript. Alles, was hier steht, ist Markup und CSS —
+   die Seite zeigt auch dort etwas, wo kein Skript läuft.
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#87837c;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --gut:#2b6b46;   --gut-s:#e3f0e8;
+  /* Vorschlag für neue Token, falls B oder C gewählt wird */
+  --weg-s:#eef0f8;  --weg-i:#4a55a0;   /* ein Ton, „Weg vorhanden" */
+  --tel-s:#e8f0ea;  --tel-i:#3d7a58;   /* Telefon, gedämpftes Grün */
+  --mail-s:#eaeef7; --mail-i:#4a55a0;  /* Mail, gedämpftes Blau */
+}
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;padding:0 0 80px}
+.mitte{max-width:1080px;margin:0 auto;padding:40px 26px}
+h1{font-size:23px;font-weight:700;letter-spacing:-.025em}
+.lead{font-size:14.5px;color:var(--ink2);line-height:1.65;margin-top:11px;max-width:70ch}
+.lead code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  border-radius:4px;padding:1px 6px}
+
+.abs{display:flex;align-items:baseline;gap:13px;padding:34px 0 6px}
+.abs h2{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--ink);white-space:nowrap}
+.abs .r{flex:1;height:1px;background:var(--rule);align-self:center}
+.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap}
+.abs .n.ja{color:var(--gut)} .abs .n.nein{color:var(--signal)}
+.unter{font-size:13px;color:var(--ink3);line-height:1.6;padding:0 0 14px;max-width:72ch}
+.unter b{color:var(--ink2);font-weight:600}
+
+.reihe{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:9px}
+.kk{position:relative;display:flex;flex-direction:column;gap:10px;padding:13px 14px;
+  border:1px solid var(--rule);border-radius:11px;background:var(--sheet)}
+.kk.ist-fav{border-left:2px solid var(--tinte)}
+.kk-o{display:flex;align-items:flex-start;gap:11px}
+.kk-b{flex:1;min-width:0}
+.kk-n{display:block;font-size:14.5px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.kk-f{display:block;font-size:12px;color:var(--ink3);margin-top:3px;line-height:1.4}
+.kk-u{display:flex;align-items:center;gap:6px;padding-top:2px}
+.sig{width:29px;height:29px;border-radius:50%;background:var(--raise);color:var(--ink2);
+  display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0;
+  font-family:var(--mono)}
+.sig.fav{background:var(--tinte-s);color:var(--tinte)}
+
+/* ---------- Grundform des Knopfs, in allen Fassungen gleich ---------- */
+.ik{display:grid;place-items:center;width:34px;height:31px;border-radius:8px;
+  border:1px solid var(--rule2);background:var(--paper);color:var(--ink2);
+  transition:background .12s,border-color .12s,color .12s}
+.ik.leer{opacity:.34}
+
+/* 0 — wie es heute ist: alles grau, Farbe erst beim Überfahren */
+.f0 .ik:hover{background:var(--tinte-s);border-color:var(--tinte);color:var(--tinte)}
+
+/* A — ein Ton für „Weg vorhanden", regelkonform */
+.fA .ik{background:var(--weg-s);border-color:#d3d8ec;color:var(--weg-i)}
+.fA .ik.leer{background:var(--paper);border-color:var(--rule);color:var(--ink3);opacity:.45}
+.fA .ik:not(.leer):hover{background:#e0e5f5;border-color:var(--weg-i)}
+
+/* B — zwei Töne, je Kanal einer */
+.fB .ik.tel {background:var(--tel-s); border-color:#cfe0d5;color:var(--tel-i)}
+.fB .ik.mail{background:var(--mail-s);border-color:#d3d9ee;color:var(--mail-i)}
+.fB .ik.leer{background:var(--paper);border-color:var(--rule);color:var(--ink3);opacity:.45}
+
+/* C — zwei Töne, aber nur das Zeichen getönt, die Fläche bleibt neutral */
+.fC .ik.tel {color:var(--tel-i)}
+.fC .ik.mail{color:var(--mail-i)}
+.fC .ik.leer{color:var(--ink3);opacity:.4}
+.fC .ik:not(.leer):hover{background:var(--raise)}
+
+.legende{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
+.chip{font-family:var(--mono);font-size:11px;color:var(--ink2);background:var(--sheet);
+  border:1px solid var(--rule);border-radius:7px;padding:5px 10px}
+.chip b{color:var(--ink);font-weight:700}
+.note{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:9px;
+  background:var(--sheet);padding:13px 15px;margin-top:13px;font-size:13.5px;line-height:1.65;
+  color:var(--ink2);max-width:78ch}
+.note.acht{border-left-color:var(--signal)}
+.note b{color:var(--ink);font-weight:650}
+.note code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  border-radius:4px;padding:1px 5px}
+</style>
+</head>
+<body>
+<div class="mitte">
+
+<h1>Welche Farbe bekommen Anrufen und Mailen?</h1>
+<p class="lead">Vier Fassungen derselben drei Kacheln. <b>Eva Bergmann</b> hat Nummer und
+Adresse, <b>Wassili Petrov</b> keine Nummer, <b>Annegret Schuster-Lindemann</b> keine Adresse.
+Der fehlende Weg bleibt in jeder Fassung an seinem Platz stehen, nur blass — damit die Knöpfe
+auf allen Kacheln an derselben Stelle sitzen.</p>
+
+<!-- ============ 0 ============ -->
+<div class="abs"><h2>0 — wie es heute ist</h2><span class="r"></span>
+  <span class="n ja">regelkonform</span></div>
+<p class="unter">Alles in Graustufen, Farbe erst beim Überfahren. <b>Nachteil:</b> Ob ein Weg
+hinterlegt ist, erkennt man nur an der Blässe — ein schwaches Signal.</p>
+<div class="reihe f0">
+  <div class="kk ist-fav"><div class="kk-o"><span class="sig fav">EB</span>
+    <span class="kk-b"><span class="kk-n">Eva Bergmann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:0391778200" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <a class="ik mail" href="mailto:kanzlei@bergmann.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">WP</span>
+    <span class="kk-b"><span class="kk-n">Wassili Petrov</span>
+    <span class="kk-f">Nordlicht Logistik</span></span></div>
+    <div class="kk-u">
+      <span class="ik tel leer" aria-label="Keine Nummer hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+      <a class="ik mail" href="mailto:w.petrov@nordlicht.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">AS</span>
+    <span class="kk-b"><span class="kk-n">Annegret Schuster-Lindemann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:039177820014" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <span class="ik mail leer" aria-label="Keine Adresse hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></span>
+    </div></div>
+</div>
+
+<!-- ============ A ============ -->
+<div class="abs"><h2>A — ein Ton für „Weg vorhanden“</h2><span class="r"></span>
+  <span class="n ja">regelkonform</span></div>
+<p class="unter">Beide Knöpfe tragen denselben gedämpften Blauton, sobald etwas hinterlegt ist.
+Die Farbe sagt <b>„das kannst du jetzt tun“</b> — ein Zustand, keine Kategorie. Damit bleibt
+die Regel aus <code>CLAUDE.md</code> unangetastet.</p>
+<div class="reihe fA">
+  <div class="kk ist-fav"><div class="kk-o"><span class="sig fav">EB</span>
+    <span class="kk-b"><span class="kk-n">Eva Bergmann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:0391778200" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <a class="ik mail" href="mailto:kanzlei@bergmann.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">WP</span>
+    <span class="kk-b"><span class="kk-n">Wassili Petrov</span>
+    <span class="kk-f">Nordlicht Logistik</span></span></div>
+    <div class="kk-u">
+      <span class="ik tel leer" aria-label="Keine Nummer hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+      <a class="ik mail" href="mailto:w.petrov@nordlicht.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">AS</span>
+    <span class="kk-b"><span class="kk-n">Annegret Schuster-Lindemann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:039177820014" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <span class="ik mail leer" aria-label="Keine Adresse hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></span>
+    </div></div>
+</div>
+
+<!-- ============ B ============ -->
+<div class="abs"><h2>B — zwei Töne, je Kanal einer</h2><span class="r"></span>
+  <span class="n nein">weicht von der Farbregel ab</span></div>
+<p class="unter">Telefon in gedämpftem Grün, Mail in gedämpftem Blau. Man unterscheidet die
+beiden Wege schneller. <b>Preis:</b> Die Farbe codiert damit eine Kategorie, nicht mehr eine
+Dringlichkeit — genau das, was <code>CLAUDE.md</code> ausschließt.</p>
+<div class="reihe fB">
+  <div class="kk ist-fav"><div class="kk-o"><span class="sig fav">EB</span>
+    <span class="kk-b"><span class="kk-n">Eva Bergmann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:0391778200" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <a class="ik mail" href="mailto:kanzlei@bergmann.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">WP</span>
+    <span class="kk-b"><span class="kk-n">Wassili Petrov</span>
+    <span class="kk-f">Nordlicht Logistik</span></span></div>
+    <div class="kk-u">
+      <span class="ik tel leer" aria-label="Keine Nummer hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+      <a class="ik mail" href="mailto:w.petrov@nordlicht.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">AS</span>
+    <span class="kk-b"><span class="kk-n">Annegret Schuster-Lindemann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:039177820014" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <span class="ik mail leer" aria-label="Keine Adresse hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></span>
+    </div></div>
+</div>
+
+<!-- ============ C ============ -->
+<div class="abs"><h2>C — zwei Töne, nur das Zeichen</h2><span class="r"></span>
+  <span class="n nein">weicht von der Farbregel ab</span></div>
+<p class="unter">Wie B, aber die Fläche bleibt neutral und nur das Zeichen ist getönt. Das ist
+die zurückhaltendste Art, zwei Kanäle zu unterscheiden. <b>Nachteil:</b> Auf einer Kachel voller
+Text fällt ein getöntes Zeichen kaum noch auf — der Knopf verliert an Griffigkeit.</p>
+<div class="reihe fC">
+  <div class="kk ist-fav"><div class="kk-o"><span class="sig fav">EB</span>
+    <span class="kk-b"><span class="kk-n">Eva Bergmann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:0391778200" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <a class="ik mail" href="mailto:kanzlei@bergmann.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">WP</span>
+    <span class="kk-b"><span class="kk-n">Wassili Petrov</span>
+    <span class="kk-f">Nordlicht Logistik</span></span></div>
+    <div class="kk-u">
+      <span class="ik tel leer" aria-label="Keine Nummer hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+      <a class="ik mail" href="mailto:w.petrov@nordlicht.de" aria-label="Mailen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></a>
+    </div></div>
+  <div class="kk"><div class="kk-o"><span class="sig">AS</span>
+    <span class="kk-b"><span class="kk-n">Annegret Schuster-Lindemann</span>
+    <span class="kk-f">Kanzlei Bergmann</span></span></div>
+    <div class="kk-u">
+      <a class="ik tel" href="tel:039177820014" aria-label="Anrufen"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></a>
+      <span class="ik mail leer" aria-label="Keine Adresse hinterlegt"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/></svg></span>
+    </div></div>
+</div>
+
+<div class="abs"><h2>Kontrast</h2><span class="r"></span></div>
+<div class="legende">
+  <span class="chip"><b>A</b> Zeichen #4a55a0 auf #eef0f8 · 5,96 : 1</span>
+  <span class="chip"><b>B/C Telefon</b> #3d7a58 auf #e8f0ea · 4,39 : 1</span>
+  <span class="chip"><b>B/C Mail</b> #4a55a0 auf #eaeef7 · 5,83 : 1</span>
+  <span class="chip"><b>C auf Kachelgrund</b> #4a55a0 auf #fffefb · 6,72 : 1</span>
+  <span class="chip"><b>blass</b> #87837c auf #f7f5f0 · 3,46 : 1</span>
+</div>
+<p class="unter" style="padding-top:10px">Nachgerechnet, nicht geschätzt. Für Bedienelemente
+verlangt die Richtlinie 3 : 1, für tragenden Text 4,5 : 1. Alle Werte liegen über 4,3 — auch
+das gedämpfte Grün, das von den fünfen am knappsten ausfällt. Der blasse Zustand liegt bei
+3,46 : 1 bewusst dicht über der Grenze: erkennbar, aber deutlich zurückgenommen. Die Angaben
+gelten vor dem Abdunkeln durch <code>opacity</code>, das den blassen Zustand zusätzlich
+zurücknimmt.</p>
+
+<div class="note"><b>Meine Empfehlung ist A.</b> Der Gewinn deiner Anweisung liegt darin, auf
+einen Blick zu sehen, <em>ob</em> ein Weg hinterlegt ist — nicht darin, Telefon von Mail zu
+unterscheiden. Die beiden Zeichen sind ohnehin eindeutig, dafür braucht es keine Farbe. A
+liefert den Gewinn und lässt die Farbregel unangetastet.</div>
+
+<div class="note acht"><b>Wenn du B oder C willst, setze ich das um.</b> Dann halte ich in
+<code>CLAUDE.md</code> fest, dass die Kontaktwege eine benannte Ausnahme von der Farbregel
+sind — sonst widerspricht der Code der Regel, und beim nächsten Mal weiß niemand mehr, ob das
+Absicht war oder ein Versehen.</div>
+
+</div>
+</body>
+</html>

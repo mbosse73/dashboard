@@ -132,7 +132,40 @@ function pruefeSicherung(name, js) {
   else ok(name + ": alle " + bereiche.length + " Datenbereiche werden geladen");
 }
 
-/* ---------- 9 Notion-Fassung deckungsgleich ---------- */
+/* ---------- 9 Ein Klassenname gehört einem Bereich ----------
+   In einer einzigen Datei ohne Geltungsbereiche ist der Name die einzige
+   Trennung. Wird dieselbe Klasse an zwei weit auseinanderliegenden Stellen
+   beschrieben, sind es fast immer zwei verschiedene Dinge, und die
+   spätere Regel überschreibt die frühere still.
+
+   Genau so ist es passiert: Der Dialog aus Schritt 1b nannte seine
+   Eingaben .feld und sein Gitter .raster. Beide Namen gehörten längst
+   der Leiste und dem Planner. Das Ergebnis war ein Planner mit
+   Spaltenraster und Eingabefelder in 27 Pixeln — bei grünem Prüflauf. */
+function pruefeNamen(name, css) {
+  const wo = {};
+  css.split("\n").forEach((z, i) => {
+    const m = z.match(/^([.#][^{]*)\{/);
+    if (!m) return;
+    m[1].split(",").forEach(s => {
+      /* Erste Klasse der Kette. Am Punkt zu zerlegen liefert einen
+         leeren Namen, weil der Selektor mit einem Punkt beginnt. */
+      const k = s.trim().match(/^\.([\w-]+)/);
+      if (!k) return;
+      (wo["." + k[1]] = wo["." + k[1]] || []).push(i + 1);
+    });
+  });
+  const doppelt = Object.entries(wo)
+    .map(([k, l]) => [k, l[l.length - 1] - l[0], l])
+    .filter(([, spanne]) => spanne > 25);
+  if (doppelt.length)
+    bad(name + ": Klassenname in zwei Bereichen — "
+        + doppelt.map(([k, , l]) => k + " (Zeilen " + l[0] + " und " + l[l.length - 1] + ")")
+                 .join(", ") + "  (umbenennen, die spätere Regel gewinnt still)");
+  else ok(name + ": jeder Klassenname gehört einem Bereich");
+}
+
+/* ---------- 10 Notion-Fassung deckungsgleich ---------- */
 function pruefeFassungen() {
   if (!existsSync("dashboard.html") || !existsSync("referenz/theme-notion.html")) return;
   const a = teile(readFileSync("dashboard.html", "utf8"));
@@ -163,6 +196,7 @@ for (const f of DATEIEN) {
   pruefeSchema(f, css);
   pruefeSpezifitaet(f, css);
   pruefeFlaechen(f, css);
+  pruefeNamen(f, css);
   pruefeMarker(f, js);
   if (f === "dashboard.html") pruefeSicherung(f, js);
 }

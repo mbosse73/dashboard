@@ -168,6 +168,43 @@ existierte.
 
 ---
 
+## 11 — Ein Klassenname, zwei Bedeutungen
+
+**Erscheinung:** Der Dialog zeigt Eingabefelder in 27 Pixeln ohne Rahmen.
+Der Planner zeichnet sein Stundenraster als zweispaltiges Gitter mit
+Lücken. Beides bei grünem Prüflauf.
+
+**Ursache:** Der Dialog aus Schritt 1b nannte seine Eingaben `.feld` und
+sein Gitter `.raster`. Beide Namen gehörten längst der Leiste und dem
+Planner:
+
+```css
+.feld{display:flex;flex-direction:column}   /* Dialog, Zeile 177 */
+...
+.feld{display:flex;align-items:center}      /* Leiste, Zeile 240 */
+.feld input{font-size:27px;border:0}        /* gewinnt still */
+```
+
+In einer einzigen Datei ohne Geltungsbereiche ist der Name die einzige
+Trennung. Bei gleicher Spezifität gewinnt die spätere Regel — lautlos.
+
+**Warum es so lange unentdeckt blieb:** Die Prüfungen waren alle grün,
+und die eine Aufnahme, die ich mir angesehen hatte, zeigte die
+Löschrückfrage — die hat keine Felder. Der Fehler ging in Schritt 1b
+nach `main` und fiel erst in Schritt 2 auf, als jemand hinsah.
+
+**Lösung:** Die neuen Klassen heißen `.dfeld` und `.draster`. Dazu prüft
+`werkzeug/pruefen.mjs` jetzt, ob eine Klasse an zwei weit
+auseinanderliegenden Stellen beschrieben wird.
+
+**Regel daraus:** Ein Klassenname gehört einem Bereich. Wer einen
+allgemeinen Namen wie `feld`, `raster`, `zeile` oder `karte` vergeben
+will, sucht ihn vorher im Stylesheet. Und: Zusammengehörige Regeln
+bleiben beieinander — schiebt man einen fremden Block dazwischen,
+schlägt die Prüfung an.
+
+---
+
 ## Prüfmuster, die sich bewährt haben
 
 * **Zustandslogik gegen die Uhr testen.** Funktionen wie `frist()` mit

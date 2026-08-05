@@ -173,20 +173,51 @@ input,textarea{font:inherit}
 .dlg-f{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:12px 22px;
   border-top:1px solid var(--rule);background:var(--paper)}
 .dlg-f .sp{flex:1}
-.raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 14px}
-.feld{display:flex;flex-direction:column;gap:5px}
-.feld.breit{grid-column:1/-1}
-.feld label{font-size:12px;color:var(--ink3);font-weight:500}
-.feld input,.feld textarea{border:1px solid var(--rule2);border-radius:8px;padding:8px 11px;
-  background:var(--paper);font-size:14px;color:var(--ink);width:100%}
-.feld input:focus,.feld textarea:focus{outline:0;border-color:var(--tinte);
+.draster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 14px}
+.dfeld{display:flex;flex-direction:column;gap:5px}
+.dfeld.breit{grid-column:1/-1}
+.dfeld label{font-size:12px;color:var(--ink3);font-weight:500}
+.dfeld input,.dfeld textarea,.dfeld select{border:1px solid var(--rule2);border-radius:8px;
+  padding:8px 11px;background:var(--paper);font-size:14px;color:var(--ink);width:100%}
+.dfeld input:focus,.dfeld textarea:focus,.dfeld select:focus{outline:0;border-color:var(--tinte);
   box-shadow:0 0 0 3px var(--tinte-s);background:var(--sheet)}
-.feld textarea{min-height:74px;resize:vertical;line-height:1.5}
-.feld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
+.dfeld textarea{min-height:74px;resize:vertical;line-height:1.5}
+/* Die Prüfung zeigt auf das schuldige Feld, statt es nur zu melden. */
+.dfeld.schief input,.dfeld.schief textarea,.dfeld.schief select{border-color:var(--signal);
+  background:var(--signal-s)}
+
+.dfeld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
   padding:9px 11px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
-.feld.schalter input{width:17px;height:17px;padding:0;accent-color:var(--tinte);flex-shrink:0}
-.feld.schalter label{font-size:14px;color:var(--ink)}
-.feld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+.dfeld.schalter input{width:17px;height:17px;padding:0;accent-color:var(--tinte);flex-shrink:0}
+.dfeld.schalter label{font-size:14px;color:var(--ink)}
+.dfeld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+
+/* ---------- Formatierungsleiste über mehrzeiligen Feldern ---------- */
+.mdfeld{display:flex;flex-direction:column}
+.mdleiste{display:flex;align-items:center;gap:2px;padding:4px 5px;flex-wrap:wrap;
+  border:1px solid var(--rule2);border-bottom:0;border-radius:8px 8px 0 0;
+  background:var(--raise)}
+.mdfeld textarea{border-radius:0 0 8px 8px;min-height:104px}
+.mdknopf{display:grid;place-items:center;width:28px;height:26px;border-radius:6px;
+  color:var(--ink2);flex-shrink:0}
+.mdknopf:hover{background:var(--sheet);color:var(--ink)}
+.mdknopf svg{width:15px;height:15px}
+.mdstrich{width:1px;height:17px;background:var(--rule2);margin:0 3px;flex-shrink:0}
+.mdleiste .sp{flex:1}
+.mdschau{font-size:11.5px;color:var(--ink3);padding:4px 9px;border-radius:6px;
+  font-family:var(--mono);letter-spacing:.04em}
+.mdschau:hover{background:var(--sheet);color:var(--ink)}
+.mdschau[aria-pressed="true"]{background:var(--tinte-s);color:var(--tinte)}
+/* Vorschau: dieselbe Fläche wie das Feld, damit nichts springt. */
+.mdvor{border:1px solid var(--rule2);border-radius:0 0 8px 8px;background:var(--sheet);
+  padding:11px 12px;font-size:14px;line-height:1.6;min-height:104px;overflow-wrap:anywhere}
+.mdvor > :first-child{margin-top:0}
+.mdvor h3{font-size:15.5px;font-weight:650;letter-spacing:-.01em;margin:13px 0 5px}
+.mdvor p{margin:0 0 8px}
+.mdvor ul{margin:0 0 8px 19px}
+.mdvor li{margin-top:2px}
+.mdvor hr{border:0;border-top:1px solid var(--rule);margin:12px 0}
+.mdvor .leerhin{color:var(--ink3);font-style:italic}
 .merk{font-size:12.5px;color:var(--ink2);background:var(--raise);border-radius:9px;
   padding:10px 12px;margin-top:14px;line-height:1.55}
 .merk.warn{color:var(--signal);background:var(--signal-s)}
@@ -433,7 +464,15 @@ const IK={
   mail: IKON('<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>'
        +'<path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/>'),
   stern:IKON('<path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z"/>'),
-  lupe: IKON('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>')
+  lupe: IKON('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>'),
+  /* Zeichen der Formatierungsleiste */
+  fett:  IKON('<path d="M6.5 4h6a3.8 3.8 0 0 1 0 7.6h-6z"/><path d="M6.5 11.6h6.8a4.2 4.2 0 0 1 0 8.4H6.5z"/>'),
+  kursiv:IKON('<path d="M15.5 4h-6M14.5 20h-6M15 4 9 20"/>'),
+  unter: IKON('<path d="M6.5 3.5v7a5.5 5.5 0 0 0 11 0v-7"/><path d="M5 20.5h14"/>'),
+  gross: IKON('<path d="M5.5 19V5h6.2M5.5 12h5.4"/><path d="M15 19v-8.5h4.5M15 15h3.6"/>'),
+  liste: IKON('<path d="M9.5 6.5h11M9.5 12h11M9.5 17.5h11"/>'
+        +'<path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/>'),
+  linie: IKON('<path d="M3.5 12h17"/>')
 };
 
 /* ---------- Kontaktweg: anrufen und mailen ----------
@@ -493,6 +532,268 @@ function kachelraster(liste){
   return g;
 }
 const nachNachnamen=(a,b)=>String(a.nach||"").localeCompare(String(b.nach||""),"de");
+
+/* ============================================================
+   MARKDOWN IN MEHRZEILIGEN FELDERN
+
+   Sechs Zeichen, mehr nicht. Der vollständige Umwandler gehört
+   nach doku/ROADMAP.md in Schritt 5 — dieser hier ist sein
+   Anfang und wird dort um Links, Code und Zitat erweitert,
+   statt neu geschrieben zu werden.
+
+   Unterstreichen kennt Markdown nicht: Weder `_x_` noch `__x__`
+   ergeben eine Unterstreichung, beide sind kursiv beziehungsweise
+   fett. Dafür steht `<u>…</u>`. Markdown erlaubt eingebettetes
+   HTML, der Text bleibt also gültiges Markdown.
+   ============================================================ */
+const MDTAT=[
+  {schl:"fett",  zeichen:"fett",  nm:"Fett",           taste:"b", um:["**","**"]},
+  {schl:"kursiv",zeichen:"kursiv",nm:"Kursiv",         taste:"i", um:["*","*"]},
+  {schl:"unter", zeichen:"unter", nm:"Unterstrichen",  taste:"u", um:["<u>","</u>"]},
+  {strich:true},
+  {schl:"gross", zeichen:"gross", nm:"Überschrift",    vor:"## "},
+  {schl:"liste", zeichen:"liste", nm:"Aufzählung",     vor:"- "},
+  {schl:"linie", zeichen:"linie", nm:"Trennlinie",     block:"---"}
+];
+
+/* Setzt die Auszeichnung um die Auswahl. Ohne Auswahl wird ein
+   Beispielwort eingesetzt und markiert, damit man gleich tippen kann. */
+function mdUm(ta, auf, zu){
+  const a=ta.selectionStart, e=ta.selectionEnd, t=ta.value;
+  const gewaehlt=t.slice(a,e) || "Text";
+  const schon = t.slice(a-auf.length,a)===auf && t.slice(e,e+zu.length)===zu;
+  if(schon){                                  /* zweiter Klick nimmt es zurück */
+    ta.value = t.slice(0,a-auf.length)+gewaehlt+t.slice(e+zu.length);
+    ta.setSelectionRange(a-auf.length, a-auf.length+gewaehlt.length);
+  } else {
+    ta.value = t.slice(0,a)+auf+gewaehlt+zu+t.slice(e);
+    ta.setSelectionRange(a+auf.length, a+auf.length+gewaehlt.length);
+  }
+}
+/* Setzt ein Vorzeichen an jeden Anfang der berührten Zeilen. */
+function mdVor(ta, vor){
+  const t=ta.value;
+  const a=t.lastIndexOf("\n", ta.selectionStart-1)+1;
+  let e=t.indexOf("\n", ta.selectionEnd); if(e<0) e=t.length;
+  const zeilen=t.slice(a,e).split("\n");
+  const alle=zeilen.every(z=>z.startsWith(vor));
+  const neu=zeilen.map(z=>alle ? z.slice(vor.length) : vor+z).join("\n");
+  ta.value=t.slice(0,a)+neu+t.slice(e);
+  ta.setSelectionRange(a, a+neu.length);
+}
+function mdBlock(ta, block){
+  const a=ta.selectionStart, t=ta.value;
+  const davor = a===0 || t[a-1]==="\n" ? "" : "\n";
+  const text = davor+block+"\n";
+  ta.value = t.slice(0,a)+text+t.slice(ta.selectionEnd);
+  ta.setSelectionRange(a+text.length, a+text.length);
+}
+function mdAnwenden(ta, def){
+  if(def.um)        mdUm(ta, def.um[0], def.um[1]);
+  else if(def.vor)  mdVor(ta, def.vor);
+  else if(def.block)mdBlock(ta, def.block);
+  ta.focus();
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
+}
+
+/* Der knappe Umwandler. Deckt genau die sechs Zeichen der Leiste ab. */
+function mdMalen(text){
+  if(!String(text||"").trim()) return '<span class="leerhin">Noch nichts geschrieben.</span>';
+  const zeile=s=>esc(s)
+    .replace(/&lt;u&gt;([\s\S]*?)&lt;\/u&gt;/g,"<u>$1</u>")
+    .replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>")
+    .replace(/\*([^*]+)\*/g,"<i>$1</i>");
+  const aus=[]; let liste=null;
+  String(text).split("\n").forEach(z=>{
+    const t=z.trim();
+    if(/^-{3,}$/.test(t)){ if(liste){aus.push("</ul>");liste=null;} aus.push("<hr>"); return; }
+    const u=t.match(/^(#{1,6})\s+(.*)$/);
+    if(u){ if(liste){aus.push("</ul>");liste=null;} aus.push("<h3>"+zeile(u[2])+"</h3>"); return; }
+    const p=t.match(/^[-*]\s+(.*)$/);
+    if(p){ if(!liste){aus.push("<ul>");liste=1;} aus.push("<li>"+zeile(p[1])+"</li>"); return; }
+    if(liste){ aus.push("</ul>"); liste=null; }
+    if(t) aus.push("<p>"+zeile(t)+"</p>");
+  });
+  if(liste) aus.push("</ul>");
+  return aus.join("");
+}
+
+/* ============================================================
+   DER DIALOG ALS BAUSTEIN — zwei Ebenen
+
+   Ebene 1  feldMalen / felderMalen — eine Gruppe Eigenschaften
+            im Format {schl, nm, art, optionen}. Dasselbe Format
+            benutzen die Workflow-Vorlagen in VORLAGEN, deshalb
+            kommt Schritt 6 mit dieser Ebene allein aus.
+   Ebene 2  dialog — die Hülle darum: Kopf, Fuß, Escape, Klick
+            daneben, Löschen mit Rückfrage, Prüfung.
+   ============================================================ */
+function feldMalen(def, wert, setzen){
+  const breit = def.art==="mehrzeilig" || def.breit;
+  const f=el("div","dfeld"+(breit?" breit":"")+(def.art==="schalter"?" schalter":""));
+  let n, huelle=null;
+  if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=wert==null?"":wert; }
+  else if(def.art==="auswahl"||def.art==="kontakt"){
+    n=el("select");
+    const opt = def.art==="kontakt"
+      ? [["","— keiner —"]].concat(KONTAKTE.slice().sort(nachNachnamen).map(k=>[k.id,knm(k)]))
+      : [["","— ohne —"]].concat(def.optionen||[]);
+    opt.forEach(([w,t])=>{ const o=el("option",null,esc(t)); o.value=w;
+      if(String(w)===String(wert==null?"":wert)) o.selected=true; n.appendChild(o); });
+  }
+  else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!wert; }
+  else {
+    n=el("input");
+    n.type = def.art==="datum" ? "date" : def.art==="zeit" ? "time"
+           : def.art==="zahl"  ? "number" : "text";
+    n.value = wert==null ? "" : wert;
+  }
+  n.id="fd-"+def.schl+"-"+(++idZaehler);
+  const lab=el("label",null,esc(def.nm)+(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
+  lab.setAttribute("for",n.id);
+
+  if(def.art==="mehrzeilig" && def.ohneLeiste!==true){
+    huelle=el("div","mdfeld");
+    huelle.append(mdLeiste(n), n);
+    f.append(lab,huelle);
+  }
+  else if(def.art==="schalter") f.append(n,lab);
+  else f.append(lab,n);
+
+  n.oninput=n.onchange=()=>setzen(
+    def.art==="schalter" ? n.checked
+    : def.art==="zahl"   ? (n.value===""?null:Number(n.value))
+    : n.value);
+  f.dazu={knoten:n, def:def};
+  return f;
+}
+
+function mdLeiste(ta){
+  const l=el("div","mdleiste");
+  l.setAttribute("role","toolbar");
+  l.setAttribute("aria-label","Formatierung");
+  MDTAT.forEach(def=>{
+    if(def.strich){ l.appendChild(el("span","mdstrich")); return; }
+    const b=el("button","mdknopf",IK[def.zeichen]);
+    b.type="button";
+    b.title=def.nm+(def.taste?"  Strg+"+def.taste.toUpperCase():"");
+    b.setAttribute("aria-label",def.nm);
+    b.onclick=e=>{ e.preventDefault(); mdAnwenden(ta,def); };
+    l.appendChild(b);
+  });
+  l.appendChild(el("span","sp"));
+  /* Vorschau ist ein Blick, kein Zustand: Sie ersetzt das Feld,
+     solange sie an ist, und gibt es unverändert zurück. */
+  const vor=el("div","mdvor"); vor.hidden=true;
+  const schau=el("button","mdschau","Vorschau");
+  schau.type="button"; schau.setAttribute("aria-pressed","false");
+  schau.onclick=()=>{
+    const an = schau.getAttribute("aria-pressed")!=="true";
+    schau.setAttribute("aria-pressed",String(an));
+    if(an) vor.innerHTML=mdMalen(ta.value);
+    vor.hidden=!an; ta.hidden=an;
+    if(!an) ta.focus();
+  };
+  l.appendChild(schau);
+  ta.after ? null : null;
+  /* Die Vorschau wird gleich hinter das Feld gehängt, sobald es hängt. */
+  setTimeout(()=>{ if(ta.parentNode && !vor.parentNode) ta.after(vor); },0);
+
+  ta.addEventListener("keydown",e=>{
+    if(!(e.metaKey||e.ctrlKey)) return;
+    const def=MDTAT.find(d=>d.taste===e.key.toLowerCase());
+    if(def){ e.preventDefault(); e.stopPropagation(); mdAnwenden(ta,def); }
+  });
+  return l;
+}
+
+function felderMalen(felder, werte, beiAenderung){
+  const r=el("div","draster");
+  r.felder=[];
+  felder.forEach(def=>{
+    const f=feldMalen(def, werte[def.schl], v=>{
+      werte[def.schl]=v; f.classList.remove("schief");
+      if(beiAenderung) beiAenderung(werte, def);
+    });
+    r.felder.push(f); r.appendChild(f);
+  });
+  return r;
+}
+
+let dlgOffen=null;
+function dialogZu(){ if(dlgOffen){ dlgOffen.remove(); dlgOffen=null; } }
+
+function dialog(o){
+  dialogZu();
+  /* Am Entwurf wird gearbeitet, nie an den echten Daten. Sonst
+     hinterließe „Abbrechen“ die halbe Eingabe im Datenbestand. */
+  const w=Object.assign({}, o.werte);
+  const titel=()=> (typeof o.titel==="function" ? o.titel(w) : o.titel) || "—";
+
+  const d=el("div","dlg");
+  d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true");
+  d.setAttribute("aria-label", o.art||"Dialog");
+
+  const kopf=el("div","dlg-k",'<span class="art">'+esc(o.art||"")+'</span>'
+    +'<h2 class="dlg-t">'+esc(titel())+'</h2><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×");
+  zu.setAttribute("aria-label","Schließen"); zu.onclick=dialogZu;
+  kopf.appendChild(zu);
+  d.appendChild(kopf);
+
+  const rumpf=el("div","dlg-b");
+  const raster=felderMalen(o.felder, w, ()=>{
+    const t=d.querySelector(".dlg-t"); if(t) t.textContent=titel();
+  });
+  rumpf.appendChild(raster);
+  if(o.merk) rumpf.appendChild(el("div","merk",o.merk));
+  d.appendChild(rumpf);
+
+  const fuss=el("div","dlg-f");
+  if(o.loeschen){
+    const lo=el("button","tat weg","Löschen");
+    lo.onclick=()=>dlgLoeschfrage(o,w,rumpf,fuss);
+    fuss.appendChild(lo);
+  }
+  fuss.appendChild(el("span","sp"));
+  const ab=el("button","tat still","Abbrechen"); ab.onclick=dialogZu;
+  const sp=el("button","tat","Speichern");
+  sp.onclick=()=>{
+    const schief = o.pruefe ? o.pruefe(w) : null;
+    if(schief){
+      melde(schief.text||schief);
+      /* Das schuldige Feld wird gezeigt, nicht nur gemeldet. */
+      const ziel=raster.felder.find(f=>f.dazu.def.schl===schief.schl);
+      if(ziel){ ziel.classList.add("schief"); ziel.dazu.knoten.focus(); }
+      return;
+    }
+    o.speichern(w); dialogZu();
+  };
+  fuss.append(ab,sp);
+  d.appendChild(fuss);
+
+  const s=el("div","schleier auf");
+  s.appendChild(d);
+  s.onclick=ev=>{ if(ev.target===s) dialogZu(); };
+  document.body.appendChild(s);
+  dlgOffen=s;
+  const erstes=d.querySelector("input,textarea,select"); if(erstes) erstes.focus();
+  return d;
+}
+
+function dlgLoeschfrage(o,w,rumpf,fuss){
+  rumpf.innerHTML="";
+  rumpf.appendChild(el("div","merk warn",
+    typeof o.loeschen.frage==="function" ? o.loeschen.frage(w) : o.loeschen.frage));
+  fuss.innerHTML="";
+  const ja=el("button","tat weg ernst","Ja, löschen");
+  ja.onclick=()=>{ o.loeschen.tun(w); dialogZu(); };
+  fuss.appendChild(ja);
+  fuss.appendChild(el("span","sp"));
+  const nein=el("button","tat still","Doch nicht");
+  nein.onclick=()=>dialog(o);
+  fuss.appendChild(nein);
+}
 
 /* ============================================================
    2 — DATEN: EINE EINZIGE QUELLE
@@ -872,91 +1173,51 @@ const KFELDER=[
 ];
 const KLEER={id:null,nach:"",vor:"",firma:"",tel:"",mail:"",fav:false,notiz:""};
 
-let kSchleier=null;                      /* der offene Dialog, sonst null */
-function kSchliessen(){ if(kSchleier){ kSchleier.remove(); kSchleier=null; } }
-
+/* Der ganze Dialog ist jetzt ein Aufruf. Kopf, Fuß, Escape, Klick
+   daneben, Löschrückfrage und Prüfung stecken im Baustein. */
 function kontaktDialog(k, vorbelegt){
-  kSchliessen();
   const neu=!k;
-  /* Am Entwurf wird gearbeitet, nicht am Kontakt. Sonst hinterließe
-     „Abbrechen“ die halbe Eingabe im Datenbestand. */
-  const w=Object.assign({}, KLEER, k||{});
-  if(neu&&vorbelegt) w.nach=vorbelegt;
-
-  const s=el("div","schleier auf");
-  const d=el("div","dlg");
-  d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true");
-  d.setAttribute("aria-label", neu?"Neuen Kontakt anlegen":"Kontakt bearbeiten");
-
-  const kopf=el("div","dlg-k",'<span class="art">'
-    +(neu?"Neuer Kontakt":"Kontakt bearbeiten")+'</span>'
-    +'<h2 class="dlg-t">'+esc(knm(w)||"—")+'</h2><span class="sp"></span>');
-  const zu=el("button","dlg-zu","×");
-  zu.setAttribute("aria-label","Schließen"); zu.onclick=kSchliessen;
-  kopf.appendChild(zu);
-  d.appendChild(kopf);
-
-  const rumpf=el("div","dlg-b");
-  rumpf.appendChild(kFelder(w,d));
-  rumpf.appendChild(el("div","merk","<b>Pflicht ist nur der Nachname.</b> Alles Übrige darf "
-    +"leer bleiben. Fehlt eine Nummer oder eine Adresse, bleibt der zugehörige Knopf auf der "
-    +"Kachel sichtbar, aber blass und ohne Wirkung."));
-  d.appendChild(rumpf);
-
-  const fuss=el("div","dlg-f");
-  if(!neu){
-    const lo=el("button","tat weg","Löschen");
-    lo.onclick=()=>kLoeschfrage(k,rumpf,fuss);
-    fuss.appendChild(lo);
-  }
-  fuss.appendChild(el("span","sp"));
-  const ab=el("button","tat still","Abbrechen"); ab.onclick=kSchliessen;
-  const sp=el("button","tat","Speichern");       sp.onclick=()=>kSpeichern(w,neu);
-  fuss.append(ab,sp);
-  d.appendChild(fuss);
-
-  s.appendChild(d);
-  s.onclick=ev=>{ if(ev.target===s) kSchliessen(); };
-  document.body.appendChild(s);
-  kSchleier=s;
-  const erstes=d.querySelector("input"); if(erstes) erstes.focus();
-}
-
-function kFelder(w,d){
-  const r=el("div","raster");
-  KFELDER.forEach(def=>{
-    const f=el("div","feld"+(def.art==="mehrzeilig"?" breit":"")
-      +(def.art==="schalter"?" schalter":""));
-    let n;
-    if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=w[def.schl]||""; }
-    else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!w[def.schl]; }
-    else { n=el("input"); n.type="text"; n.value=w[def.schl]||""; }
-    n.id="kf-"+def.schl;
-    const lab=el("label",null,esc(def.nm)
-      +(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
-    lab.setAttribute("for",n.id);
-    if(def.art==="schalter") f.append(n,lab); else f.append(lab,n);
-    n.oninput=n.onchange=()=>{
-      w[def.schl] = def.art==="schalter" ? n.checked : n.value;
-      const t=d.querySelector(".dlg-t"); if(t) t.textContent=knm(w)||"—";
-    };
-    r.appendChild(f);
+  const start=Object.assign({}, KLEER, k||{});
+  if(neu&&vorbelegt) start.nach=vorbelegt;
+  dialog({
+    art: neu ? "Neuer Kontakt" : "Kontakt bearbeiten",
+    titel: w=>knm(w),
+    felder: KFELDER,
+    werte: start,
+    merk: "<b>Pflicht ist nur der Nachname.</b> Alles Übrige darf leer bleiben. Fehlt eine "
+      +"Nummer oder eine Adresse, bleibt der zugehörige Knopf auf der Kachel sichtbar, "
+      +"aber blass und ohne Wirkung.",
+    pruefe: w=>String(w.nach||"").trim() ? null
+      : {schl:"nach", text:"Ohne Nachnamen geht es nicht."},
+    loeschen: neu ? null : {
+      frage: w=>{
+        const n=kVerweise(k.id,false);
+        return "<b>"+esc(knm(w))+" wirklich löschen?</b><ul>"
+          +"<li>Die Kachel verschwindet aus dem Modul und aus der Leiste.</li>"
+          +"<li>"+(n
+            ? n+" Verweis"+(n>1?"e":"")+" in Aufgaben, Terminen, Notizen und Workflows "
+              +"werden geleert — auch in den Teilschritten der Workflows."
+            : "Kein Eintrag verweist auf diesen Kontakt.")+"</li>"
+          +"<li>Die Einträge selbst bleiben erhalten. Es verschwindet nur der Name daneben.</li>"
+          +"</ul>";
+      },
+      tun: ()=>kLoeschen(k)
+    },
+    speichern: w=>kSpeichern(w,neu)
   });
-  return r;
 }
 
 function kSpeichern(w,neu){
-  if(!String(w.nach||"").trim()){ melde("Ohne Nachnamen geht es nicht."); return; }
   ["nach","vor","firma","tel","mail"].forEach(s=>w[s]=String(w[s]||"").trim());
   if(neu){ w.id=neueId("k"); KONTAKTE.push(w); }
   else {
     /* An Ort und Stelle ändern. Ein Austausch des Eintrags im Array
        risse die Verweise ab, die anderswo auf dieses Objekt zeigen. */
     const z=kfind(w.id);
-    if(!z){ melde("Der Kontakt ist nicht mehr da."); kSchliessen(); male(); return; }
+    if(!z){ melde("Der Kontakt ist nicht mehr da."); male(); return; }
     Object.keys(KLEER).forEach(s=>{ z[s]=w[s]; });
   }
-  bewahre(); kSchliessen(); male();
+  bewahre(); male();
   melde(knm(w)+(neu?" angelegt":" gespeichert"));
 }
 
@@ -985,33 +1246,11 @@ function kVerweise(id, leeren){
   return n;
 }
 
-function kLoeschfrage(k, rumpf, fuss){
-  const n=kVerweise(k.id,false);
-  rumpf.innerHTML="";
-  rumpf.appendChild(el("div","merk warn",
-    "<b>"+esc(knm(k))+" wirklich löschen?</b><ul>"
-    +"<li>Die Kachel verschwindet aus dem Modul und aus der Leiste.</li>"
-    +"<li>"+(n
-      ? n+" Verweis"+(n>1?"e":"")+" in Aufgaben, Terminen, Notizen und Workflows "
-        +"werden geleert — auch in den Teilschritten der Workflows."
-      : "Kein Eintrag verweist auf diesen Kontakt.")+"</li>"
-    +"<li>Die Einträge selbst bleiben erhalten. Es verschwindet nur der Name daneben.</li>"
-    +"</ul>"));
-  fuss.innerHTML="";
-  const ja=el("button","tat weg ernst","Ja, löschen");
-  ja.onclick=()=>kLoeschen(k);
-  fuss.appendChild(ja);
-  fuss.appendChild(el("span","sp"));
-  const zurueck=el("button","tat still","Doch nicht");
-  zurueck.onclick=()=>kontaktDialog(k);
-  fuss.appendChild(zurueck);
-}
-
 function kLoeschen(k){
   const nm=knm(k), n=kVerweise(k.id,true);
   const i=KONTAKTE.indexOf(k);
   if(i>=0) KONTAKTE.splice(i,1);       /* splice, nie neu zuweisen */
-  bewahre(); kSchliessen(); male();
+  bewahre(); male();
   melde(nm+" gelöscht"+(n?" · "+n+" Verweis"+(n>1?"e":"")+" geleert":""));
 }
 
@@ -1646,7 +1885,7 @@ function vorratZeile(a){
    Aus einer Modulfläche führt ESC zurück zur Leiste.
    ============================================================ */
 let flaeche="leiste";
-function zeigeFlaeche(id){ kSchliessen(); flaeche=id; if(id==="leiste") eingabe=""; male(); }
+function zeigeFlaeche(id){ dialogZu(); flaeche=id; if(id==="leiste") eingabe=""; male(); }
 
 function male(){
   const rumpf=$("#rumpf"); rumpf.innerHTML="";
@@ -1799,8 +2038,8 @@ function standZeigen(){
    ============================================================ */
 document.addEventListener("keydown",e=>{
   const mod=e.metaKey||e.ctrlKey, imFeld=e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA";
-  if(kSchleier){
-    if(e.key==="Escape"){ e.preventDefault(); kSchliessen(); }
+  if(dlgOffen){
+    if(e.key==="Escape"){ e.preventDefault(); dialogZu(); }
     return; }
   if(mod&&e.key>="1"&&e.key<="8"){ e.preventDefault();
     const u=PINS[+e.key-1];

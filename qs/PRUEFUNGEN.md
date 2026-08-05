@@ -119,6 +119,42 @@ Kein Roadmap-Schritt. Die Anwendung wurde dabei nicht verändert, nur umbenannt.
 
 ---
 
+## Schritt 2 — Der Dialog als Baustein
+
+Der Kontaktdialog benutzt jetzt dieselbe Funktion, die künftig alle
+Module benutzen. Von außen soll er sich **genauso** verhalten wie vorher.
+
+- [ ] Kontakt öffnen — der Dialog sieht aus wie in Schritt 1b, sieben Felder **[vorgeprüft]**
+- [ ] Anlegen, Bearbeiten, Abbrechen, Löschen verhalten sich unverändert **[vorgeprüft]**
+- [ ] **Ohne Nachnamen speichern** — das Feld färbt sich rot und bekommt den Fokus.
+      Bisher kam nur eine Meldung **[vorgeprüft]**
+
+### Formatierungsleiste am Notizfeld
+
+- [ ] Über dem Notizfeld steht eine Leiste mit sechs Zeichen **[vorgeprüft]**
+- [ ] Wort markieren, **B** drücken — es wird zu `**Wort**`. Nochmal drücken nimmt es zurück **[vorgeprüft]**
+- [ ] Drei Zeilen markieren, **Aufzählung** drücken — jede bekommt ein `- ` **[vorgeprüft]**
+- [ ] **Überschrift** setzt `## `, **Trennlinie** setzt `---` auf eine eigene Zeile **[vorgeprüft]**
+- [ ] **Unterstreichen** setzt `<u>…</u>`. Markdown kennt keine Unterstreichung —
+      eingebettetes HTML ist der übliche Weg **[vorgeprüft]**
+- [ ] `Strg+B`, `Strg+I`, `Strg+U` wirken im Feld **[vorgeprüft]**
+- [ ] **Vorschau** drücken — der Text erscheint gesetzt. Nochmal drücken: das Feld ist
+      unverändert zurück **[vorgeprüft]**
+- [ ] Speichern, Seite neu laden, Kontakt öffnen — der Markdown-Text steht noch da **[nur du]**
+
+### Nachtest zum Fehlerbuch, Punkt 11
+
+Zwei Klassennamen kollidierten und haben seit Schritt 1b unbemerkt
+Schaden angerichtet. Bitte beides eigens ansehen:
+
+- [ ] **Planner öffnen** (`⌘P`). Das Stundenraster ist eine hohe, einspaltige Liste
+      von 7 bis 18 Uhr — **kein** zweispaltiges Gitter mit Lücken **[vorgeprüft]**
+- [ ] **Kontaktdialog öffnen.** Die Eingabefelder haben normale Schriftgröße und einen
+      Rahmen — nicht riesig und rahmenlos **[vorgeprüft]**
+- [ ] **Suchfeld der Leiste** ist unverändert groß und rahmenlos, so wie immer **[vorgeprüft]**
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.
@@ -137,8 +173,6 @@ Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bi
 
 Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 
-- **Schritt 2 — Dialog-Baustein:** Der Kontaktdialog benutzt danach dieselbe
-  Funktion wie ein neu gebauter Testdialog
 - **Schritt 3 — Aufgaben und Termine:** Ein im Planner angelegter Termin steht
   nach dem Neuladen an derselben Stelle
 - **Schritt 4 — Textbausteine:** Ein Baustein mit drei Platzhaltern liegt in vier

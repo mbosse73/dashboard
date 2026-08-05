@@ -57,7 +57,20 @@ Modul später nachgezogen werden müssen.
 
 ---
 
-## Schritt 2 — Der Dialog als Baustein
+## Schritt 2 — Der Dialog als Baustein · **erledigt**
+
+Umgesetzt in zwei Ebenen statt einer:
+
+* `felderMalen(felder, werte, beiAenderung)` — eine Gruppe Eigenschaften
+  im Format `{schl, nm, art, optionen}`, acht Feldarten. Schritt 6
+  braucht nur diese Ebene.
+* `dialog(o)` — die Hülle: Kopf, Fuß, Escape, Klick daneben, Löschen mit
+  Rückfrage, Prüfung, die auf das schuldige Feld zeigt.
+
+Mehrzeilige Felder tragen eine Formatierungsleiste und verstehen
+Markdown: fett, kursiv, unterstrichen, Überschrift, Aufzählung,
+Trennlinie. Der Umwandler dahinter ist der Anfang von Schritt 5 und
+wird dort erweitert, nicht neu geschrieben.
 
 Kontakte, Aufgaben, Termine, Notizen, Bausteine, Apps und Bookmarks
 brauchen alle dasselbe: eine Maske mit Feldern, Speichern und Abbrechen.

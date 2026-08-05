@@ -7,7 +7,24 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: Schritt 1 der Roadmap — Kontakte vollständig.** In zwei Zügen
+**Zuletzt: Schritt 2 — der Dialog als Baustein.** In zwei Ebenen statt
+einer: `felderMalen` erzeugt eine Gruppe Eigenschaften im Format
+`{schl, nm, art, optionen}`, `dialog` legt die Hülle darum. Der Grund ist
+Schritt 6 — der Workflow-Dialog braucht die Felder, aber nicht die Hülle,
+und er braucht sie dreimal in einem Dialog. Acht Feldarten. Mehrzeilige
+Felder tragen eine Formatierungsleiste und verstehen Markdown; der
+Umwandler dahinter ist der Anfang von Schritt 5.
+
+**Dabei kam ein Fehler ans Licht, der seit Schritt 1b in `main` stand.**
+Der Dialog nannte seine Eingaben `.feld` und sein Gitter `.raster` —
+beide Namen gehörten längst der Leiste und dem Planner. Die spätere Regel
+gewinnt still: Der Planner zeichnete sein Stundenraster als
+zweispaltiges Gitter, die Dialogfelder waren 27 Pixel hoch und rahmenlos.
+Alle Prüfungen waren dabei grün. Jetzt heißen sie `.dfeld` und
+`.draster`, `pruefen.mjs` schlägt bei solchen Kollisionen an, und der
+Fall steht als Punkt 11 im Fehlerbuch.
+
+**Davor: Schritt 1 der Roadmap — Kontakte vollständig.** In zwei Zügen
 umgesetzt. 1a: Kontakte erscheinen als Kacheln in einem umbrechenden
 Raster, das Modul hat eine eigene Suche, Favoriten stehen überall oben
 und zusätzlich im Ruhezustand der Leiste, und „Anrufen" und „Mailen"
@@ -113,17 +130,14 @@ Metazeilen. Das ist Notions eigener Wert, kein Fehler. Falls es stört:
 
 ## Nächster Schritt
 
-Schritt 2 der Roadmap: **den Dialog als Baustein**. Er wird aus dem
-Kontaktdialog herausgezogen, nicht neu erfunden — der steht seit
-Schritt 1b und beschreibt seine sieben Felder bereits im Zielformat
-`{schl, nm, art}`. Dasselbe Format tragen die Eigenschaften der
-Workflow-Vorlagen; deshalb muss Schritt 2 vor Schritt 6 liegen.
+Schritt 3 der Roadmap: **Aufgaben und Termine bearbeiten** — die erste
+Nutzung des Bausteins durch ein Modul, das ihn nicht selbst gebaut hat.
+Damit zeigt sich, ob er trägt. Termine bleiben auf die beiden Werktage
+beschränkt.
 
-`ANLEITUNG.md` nennt Schritt 2 einen der drei, bei denen eine falsche
-Grundentscheidung teuer wird. Der Plan gehört dort besonders sorgfältig
-vor die erste Änderung.
+Danach Schritt 5 (Notizen mit Markdown; der Umwandler aus Schritt 2 wird
+dort erweitert) und Schritt 6 (Workflows; benutzt `felderMalen` dreimal).
 
-Danach Schritt 3, Aufgaben und Termine, als erste Nutzung des Bausteins.
 Schritt 4 und 7 bleiben zurückgestellt, bis der Browsertest beantwortet
 ist.
 

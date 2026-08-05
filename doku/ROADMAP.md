@@ -28,7 +28,14 @@ Drei Ergebnisse entscheiden über spätere Schritte:
 
 ---
 
-## Schritt 1 — Kontakte vollständig
+## Schritt 1 — Kontakte vollständig · **erledigt**
+
+Umgesetzt in zwei Zügen: 1a Kacheln, eigene Suche, echtes `tel:` und
+`mailto:`, Favoriten in der Leiste. 1b Dialog, Anlegen, Bearbeiten,
+Löschen mit Verweisbereinigung.
+
+Die Demodaten sind bewusst stehen geblieben und werden später
+aufgeräumt. Die Prüfliste dazu steht in `qs/PRUEFUNGEN.md`.
 
 Alles verweist auf Kontakte. Bleiben sie unfertig, wird jedes weitere
 Modul später nachgezogen werden müssen.

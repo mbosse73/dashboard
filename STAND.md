@@ -7,6 +7,29 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
+**Zuletzt: Phase 0, das Fundament.** Die Anwendung selbst blieb dabei
+unberührt. Fünf Dinge im Umfeld waren nicht in Ordnung:
+
+* Die Anwendung lag als `index.html` im Repository, während alle zwölf
+  Dokumente und `werkzeug/pruefen.mjs` von `dashboard.html` sprachen. Der
+  Prüfer fand sie deshalb nicht, wertete das als Hinweis und meldete
+  trotzdem „Keine Fehler" — ein grüner Lauf, der die Anwendung nie
+  angesehen hatte. Sie heißt jetzt wieder `dashboard.html`; `index.html`
+  ist nur noch eine Weiterleitung für GitHub Pages, ohne Logik.
+* `pruefen.mjs` behandelt ein fehlendes Hauptdokument jetzt als Fehler
+  mit Rückgabewert 1 und schreibt am Ende, wie viele Dateien er
+  tatsächlich angesehen hat.
+* `.gitattributes` fehlte, obwohl `ANLEITUNG.md` Teil 6.3 sie als
+  vorhanden beschreibt. Ohne sie ist die Umfangsprüfung wertlos.
+* `.github/pull_request_template.md` fehlte.
+* `browsertest.html` sprach noch von „FlowBoard" und `C:\FlowBoard`.
+
+Dazu sind `referenz/theme-notion.html` und `referenz/workflow-dialog.html`
+nachgereicht worden. Damit läuft Prüfung 9 (Logik deckungsgleich) zum
+ersten Mal — sie ist grün, die Notion-Fassung ist zeichengenau dieselbe
+Logik — und Schritt 6 hat seine Dialogvorlage. Der Prüflauf sieht jetzt
+alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
+
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
 als Arbeitsfläche. Elf Module sind angemeldet, davon zwei fertig
 (Planner, Leiste) und neun als Gerüst. Sichern und Laden über JSON,

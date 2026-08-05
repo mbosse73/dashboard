@@ -1,0 +1,11 @@
+# Zeilenenden festnageln.
+#
+# Ohne diese Datei trägt Windows CRLF ein. Dann zeigt jeder Diff die
+# gesamte Datei als geändert, und die Umfangsprüfung aus
+# doku/ARBEITSWEISE.md §5 — „50 bis 200 Zeilen für ein Modul" — wird
+# wertlos. Sie ist die wichtigste Sicherung dagegen, dass dashboard.html
+# umgeschrieben statt blockweise ersetzt wird.
+#
+# Nicht löschen. Siehe ANLEITUNG.md Teil 6.3.
+
+* text=auto eol=lf

@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mockup — Schritt 2: Der Dialog als Baustein · Notion-nah</title>
+<style>
+/* ============================================================
+   MOCKUP zu Schritt 2 — Fassung B, Notion-nah
+
+   Zweite Fassung desselben Entwurfs. Der Skriptteil ist
+   zeichengenau der aus schritt-2-dialog.html; getauscht ist
+   allein dieser Block. Dieselbe Disziplin, die CLAUDE.md für
+   referenz/theme-notion.html verlangt.
+
+   Was von Notion kommt
+     Warmes Schwarzbraun statt Grau als Grundton
+     Notion-Blau #2383e2, Textblau #0b6e99
+     Winzige Rundungen: 3px, im Dialog 5px
+     Haarlinien mit Alpha statt fester Graustufen
+     Eingaben als gefüllte Fläche mit innerem Rahmen, nicht
+       als Kasten mit Außenkontur
+     Voll gefärbter Hauptknopf, nicht der zarte getönte
+     Dichtere Zeilen, 14 Pixel Grundgröße
+     Modalschatten ohne Rahmen
+
+   Was vom Dashboard bleibt
+     Der warme Papiergrund. Notion ist reinweiß; das hier ist
+       eine Anwendung, die stundenlang offen steht
+     Abschnittsköpfe in Kapitälchen mit Linie — Notion kennt
+       das nicht, aber es trägt die Gliederung der Leiste
+     Das Raster der Felder samt Umbruch
+     Signalrot bleibt der Dringlichkeit vorbehalten
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"SFMono-Regular",Menlo,Consolas,"PT Mono","Liberation Mono",monospace;
+
+  /* Flächen — Papier vom Dashboard, Blätter von Notion */
+  --paper:#f7f5f0;
+  --sheet:#ffffff;
+  --raise:rgba(55,53,47,.06);
+  --raise-fest:#efefee;
+  --fuellung:rgba(242,241,238,.7);      /* Notions Eingabefüllung */
+  --rule:rgba(55,53,47,.09);
+  --rule2:rgba(55,53,47,.16);
+
+  /* Text — Notions warmes Schwarzbraun */
+  --ink:rgb(55,53,47);
+  --ink2:rgba(55,53,47,.65);
+  --ink3:rgba(55,53,47,.45);
+
+  --tinte:#2383e2;               /* Notion-Blau: Fokusring, Akzente */
+  --tinte-s:#ddebf1;
+  --tinte-tx:#0b6e99;
+  --signal:#e03e3e;
+  --signal-s:#fbe4e4;
+  /* Gefüllte Knöpfe tragen weiße Schrift. Notions eigenes #2383e2
+     kommt damit auf 3,88:1 und sein Rot auf 4,26:1 — beides unter den
+     4,5:1, die CLAUDE.md für tragenden Text verlangt. Deshalb Notions
+     dunklere Geschwister: 5,67:1 und 5,59:1, und immer noch Notion. */
+  --knopf:#0b6e99;   --knopf-h:#095a7d;
+  --knopf-weg:#c23030;--knopf-weg-h:#a82a2a;
+  --gut:#0f7b6c;
+  --gut-s:#ddedea;
+
+  --r:3px;
+  --r-gross:5px;
+}
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+body{font-family:var(--ff);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  padding:0 0 90px}
+button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit;text-align:left}
+input,textarea,select{font:inherit}
+:focus-visible{outline:2px solid var(--tinte);outline-offset:1px;border-radius:var(--r)}
+::selection{background:rgba(35,131,226,.28)}
+.mitte{max-width:1080px;margin:0 auto;padding:40px 26px}
+h1{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.2}
+.lead{font-size:15px;color:var(--ink2);line-height:1.6;margin-top:12px;max-width:74ch}
+.lead code,.unter code,.note code,li code{font-family:var(--mono);font-size:85%;
+  background:var(--signal-s);color:#eb5757;border-radius:var(--r);padding:.2em .4em}
+
+/* Abschnittsköpfe: vom Dashboard übernommen, in Notions Ton */
+.abs{display:flex;align-items:baseline;gap:12px;padding:34px 0 6px}
+.abs h2{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  font-weight:600;color:var(--ink2);white-space:nowrap}
+.abs .r{flex:1;height:1px;background:var(--rule);align-self:center}
+.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap}
+.unter{font-size:14px;color:var(--ink2);line-height:1.6;padding:0 0 14px;max-width:76ch}
+.unter b{color:var(--ink);font-weight:600}
+
+pre{font-family:var(--mono);font-size:12.5px;line-height:1.6;background:var(--sheet);
+  border-radius:var(--r-gross);padding:14px 16px;overflow-x:auto;color:var(--ink2);
+  margin:4px 0 14px;box-shadow:0 0 0 1px var(--rule)}
+pre b{color:var(--ink);font-weight:600}
+pre .k{color:var(--ink3)}
+
+/* ---------- Dialog ---------- */
+.schleier{position:fixed;inset:0;background:rgba(15,15,15,.6);display:none;
+  place-items:center;padding:18px;z-index:500}
+.schleier.auf{display:grid}
+.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--sheet);
+  border-radius:var(--r-gross);box-shadow:0 14px 44px rgba(15,15,15,.16),
+  0 2px 6px rgba(15,15,15,.1);display:flex;flex-direction:column;overflow:hidden}
+.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:11px;padding:14px 18px 11px;
+  border-bottom:1px solid var(--rule)}
+.dlg-k .art{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink3);font-weight:500;white-space:nowrap}
+.dlg-t{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.dlg-k .sp{flex:1}
+.dlg-zu{font-size:18px;color:var(--ink3);line-height:1;padding:2px 7px;border-radius:var(--r)}
+.dlg-zu:hover{background:var(--raise);color:var(--ink)}
+.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:14px 18px 18px}
+.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:11px 18px;
+  border-top:1px solid var(--rule);background:#fbfbfa}
+.dlg-f .sp{flex:1}
+
+/* ---------- Felder ----------
+   Notion füllt Eingaben und setzt den Rahmen nach innen. Dadurch
+   springt beim Fokus nichts, und ruhende Felder treten zurück. */
+.raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px 12px}
+.feld{display:flex;flex-direction:column;gap:4px}
+.feld.breit{grid-column:1/-1}
+.feld label{font-size:12px;color:var(--ink3);font-weight:500}
+.feld input,.feld textarea,.feld select{border:0;border-radius:var(--r);padding:6px 9px;
+  background:var(--fuellung);font-size:14px;color:var(--ink);width:100%;
+  box-shadow:inset 0 0 0 1px rgba(15,15,15,.1)}
+.feld input:focus,.feld textarea:focus,.feld select:focus{outline:0;background:var(--sheet);
+  box-shadow:inset 0 0 0 1px rgba(35,131,226,.57), 0 0 0 2px rgba(35,131,226,.35)}
+.feld textarea{min-height:72px;resize:vertical;line-height:1.5}
+.feld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
+  padding:8px 9px;border-radius:var(--r);background:#fbfbfa;
+  box-shadow:inset 0 0 0 1px var(--rule)}
+.feld.schalter input{width:16px;height:16px;padding:0;accent-color:var(--tinte);flex-shrink:0;
+  box-shadow:none;background:none}
+.feld.schalter label{font-size:14px;color:var(--ink)}
+.feld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:1px}
+.feld.schief input,.feld.schief textarea,.feld.schief select{background:var(--signal-s);
+  box-shadow:inset 0 0 0 1px rgba(224,62,62,.5)}
+
+.merk{font-size:14px;color:var(--ink2);background:#fbfbfa;border-radius:var(--r);
+  padding:9px 11px;margin-top:12px;line-height:1.5;box-shadow:inset 0 0 0 1px var(--rule)}
+.merk.warn{color:var(--signal);background:var(--signal-s);box-shadow:none}
+.merk b{color:var(--ink);font-weight:600}
+.merk.warn b{color:var(--signal)}
+.merk ul{margin:5px 0 0 17px}
+.merk li{margin-top:2px}
+
+/* ---------- Knöpfe ----------
+   Notions Hauptknopf ist voll gefärbt, nicht zart getönt. */
+.tat{font-size:14px;font-weight:500;background:var(--knopf);color:#fff;border:0;
+  padding:6px 12px;border-radius:var(--r);box-shadow:0 1px 2px rgba(15,15,15,.1);
+  transition:background .1s}
+.tat:hover{background:var(--knopf-h)}
+.tat.still{background:var(--sheet);color:var(--ink);box-shadow:inset 0 0 0 1px var(--rule2),
+  0 1px 2px rgba(15,15,15,.06)}
+.tat.still:hover{background:var(--raise-fest)}
+.tat.weg{background:transparent;color:var(--signal);box-shadow:none;font-weight:500}
+.tat.weg:hover{background:var(--signal-s)}
+.tat.weg.ernst{background:var(--knopf-weg);color:#fff;box-shadow:0 1px 2px rgba(15,15,15,.1)}
+.tat.weg.ernst:hover{background:var(--knopf-weg-h)}
+
+.flach{position:static;box-shadow:0 0 0 1px var(--rule);max-height:none;width:100%;
+  margin-bottom:6px}
+.paar{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px;
+  align-items:start}
+.knopfreihe{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 10px}
+
+.note{border-radius:var(--r-gross);background:var(--sheet);padding:12px 14px;margin-top:10px;
+  font-size:14px;line-height:1.6;color:var(--ink2);max-width:80ch;
+  box-shadow:inset 3px 0 0 var(--tinte), 0 0 0 1px var(--rule)}
+.note.acht{box-shadow:inset 3px 0 0 var(--signal), 0 0 0 1px var(--rule)}
+.note.gut{box-shadow:inset 3px 0 0 var(--gut), 0 0 0 1px var(--rule)}
+.note b{color:var(--ink);font-weight:600}
+.note ul{margin:6px 0 0 18px}
+.note li{margin-top:3px}
+
+.zettel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:var(--ink);color:#fff;font-size:14px;padding:9px 16px;border-radius:var(--r);
+  opacity:0;pointer-events:none;z-index:900;box-shadow:0 8px 24px rgba(15,15,15,.2);
+  transition:transform .2s,opacity .2s}
+.zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="mitte">
+
+<h1>Der Dialog als Baustein <span style="color:var(--ink3);font-weight:400">· Fassung B</span></h1>
+<p class="lead">Dieselbe Seite wie <code>schritt-2-dialog.html</code>, <b>Zeichen für Zeichen
+derselbe Skriptteil</b> — getauscht ist allein das Stylesheet. So verlangt es
+<code>CLAUDE.md</code> für die Notion-Fassung, und so lässt sich der Unterschied ehrlich
+beurteilen: Was du hier anders siehst, ist Gestaltung und nicht Verhalten.</p>
+
+<div class="note"><b>Was von Notion kommt.</b> Warmes Schwarzbraun statt Grau als Grundton ·
+Notion-Blau und sein dunkleres Textblau · winzige Rundungen, 3&nbsp;px und 5&nbsp;px im Dialog ·
+Haarlinien mit Alpha statt fester Graustufen · Eingaben als <b>gefüllte Fläche mit innerem
+Rahmen</b> statt als Kasten mit Außenkontur, dadurch springt beim Fokus nichts · ein <b>voll
+gefärbter Hauptknopf</b> statt des zarten getönten · dichtere Zeilen bei 14&nbsp;px Grundgröße ·
+Modalschatten ganz ohne Rahmen.</div>
+
+<div class="note gut"><b>Was vom Dashboard bleibt.</b> Der <b>warme Papiergrund</b> — Notion ist
+reinweiß, aber das hier ist eine Anwendung, die stundenlang offen steht · die
+<b>Abschnittsköpfe in Kapitälchen mit Linie</b>, die Notion so nicht kennt, die aber die
+Gliederung der Leiste tragen · das umbrechende <b>Feldraster</b> · und <b>Signalrot bleibt
+der Dringlichkeit vorbehalten</b>, nie einer Kategorie.</div>
+
+<div class="note acht"><b>Eine Stelle, an der Notion die Vorgabe verfehlt.</b> Ein voll
+gefärbter Knopf trägt weiße Schrift. Notions eigenes Blau <code>#2383e2</code> kommt damit auf
+<b>3,88&nbsp;:&nbsp;1</b>, sein Rot <code>#e03e3e</code> auf <b>4,26&nbsp;:&nbsp;1</b> — beides
+unter den 4,5&nbsp;:&nbsp;1, die <code>CLAUDE.md</code> für tragenden Text verlangt. Diese
+Fassung nimmt deshalb Notions dunklere Geschwister, <code>#0b6e99</code> und
+<code>#c23030</code>: <b>5,67</b> und <b>5,59&nbsp;:&nbsp;1</b>, und immer noch unverkennbar
+Notion. Das helle Blau bleibt für den Fokusring, wo die 3&nbsp;:&nbsp;1 für Bedienelemente
+gelten. Nachgerechnet, nicht geschätzt.</div>
+
+<p class="lead">Alles auf dieser Seite ist lauffähig; die Dialoge sind zum Vergleich flach in
+die Seite gesetzt statt über sie gelegt.</p>
+
+<div id="inhalt">
+  <div class="abs">
+  <h2>Zwei Ebenen statt einer</h2>
+  <span class="r">
+  </span>
+  <span class="n">der Kern des Entwurfs</span>
+  </div>
+  <div class="unter">Die Roadmap nennt eine Funktion: <code>dialog(titel, felder, werte, beiSpeichern)</code>. Beim Bauen zeigte sich, dass darunter eine zweite Ebene liegt, die für sich nützlich ist — und die <b>Schritt 6 allein braucht</b>. Der Workflow-Dialog hat einen eigenen Aufbau mit Teilschrittliste; er will die Felder, aber nicht die Hülle.</div>
+  <pre>
+  <b>felderMalen(felder, werte, beiAenderung)</b>   <span class="k">→ ein .raster mit Bedienelementen</span>
+  <span class="k">kennt acht Arten: text · zahl · datum · zeit · auswahl · kontakt · mehrzeilig · schalter</span>
+  <span class="k">Format {schl, nm, art, optionen} — dasselbe wie in VORLAGEN</span>
+  
+  <b>dialog(o)</b>                              <span class="k">→ die Hülle darum</span>
+  <span class="k">Kopf, Fuß, Escape, Klick daneben, Löschen mit Rückfrage, Prüfung</span>
+  <span class="k">benutzt felderMalen für den Rumpf</span>
+  </pre>
+  <div class="note gut">
+  <b>Warum das der Unterschied ist, der zählt.</b> Mit nur einer Ebene müsste Schritt 6 entweder die Felderzeugung nachbauen — dann gibt es sie zweimal — oder die Hülle mit Sonderfällen aufblähen, damit eine Teilschrittliste hineinpasst. <code>ARCHITEKTUR.md</code> sagt dazu: „Ist der Baustein gebaut, zeigt er Workflow-Eigenschaften ohne Sonderbehandlung an.“ Genau das leistet Ebene 1 allein.</div>
+  <div class="abs">
+  <h2>Alle acht Feldarten</h2>
+  <span class="r">
+  </span>
+  <span class="n">Ebene 1</span>
+  </div>
+  <div class="unter">Ein Dialog, der jede Art einmal zeigt. Mehrzeilige Felder und Schalter nehmen von sich aus die volle Breite, alles andere ordnet sich in ein umbrechendes Raster.</div>
+  <div>
+  <div class="dlg flach" role="dialog" aria-label="Prüfdialog">
+  <div class="dlg-k">
+  <span class="art">Prüfdialog</span>
+  <h2 class="dlg-t">Alle Feldarten</h2>
+  <span class="sp">
+  </span>
+  <button class="dlg-zu" aria-label="Schließen">×</button>
+  </div>
+  <div class="dlg-b">
+  <div class="raster">
+  <div class="feld">
+  <label for="fd-text-ynec9">Text</label>
+  <input type="text" id="fd-text-ynec9">
+  </div>
+  <div class="feld">
+  <label for="fd-zahl-tqhi9">Zahl</label>
+  <input type="number" id="fd-zahl-tqhi9">
+  </div>
+  <div class="feld">
+  <label for="fd-datum-1x8hf">Datum</label>
+  <input type="date" id="fd-datum-1x8hf">
+  </div>
+  <div class="feld">
+  <label for="fd-zeit-oyxvh">Uhrzeit</label>
+  <input type="time" id="fd-zeit-oyxvh">
+  </div>
+  <div class="feld">
+  <label for="fd-wahl-oa0fs">Auswahl</label>
+  <select id="fd-wahl-oa0fs">
+  <option value="">— ohne —</option>
+  <option value="a">Erste Möglichkeit</option>
+  <option value="b">Zweite</option>
+  <option value="c">Dritte</option>
+  </select>
+  </div>
+  <div class="feld">
+  <label for="fd-wer-d32c0">Kontakt</label>
+  <select id="fd-wer-d32c0">
+  <option value="">— keiner —</option>
+  <option value="k1">Lisa Meier</option>
+  <option value="k2">Jan Kowalski</option>
+  <option value="k4">Eva Bergmann</option>
+  <option value="k6">Tobias Meinhardt</option>
+  </select>
+  </div>
+  <div class="feld breit">
+  <label for="fd-lang-iqa5b">Mehrzeilig</label>
+  <textarea id="fd-lang-iqa5b">
+  </textarea>
+  </div>
+  <div class="feld schalter">
+  <input type="checkbox" id="fd-an-9mob2">
+  <label for="fd-an-9mob2">Schalter<span class="sub">Ein Ja-Nein-Feld.</span>
+  </label>
+  </div>
+  </div>
+  <div class="merk">
+  <b>Das ist der Testdialog aus dem Abnahmekriterium.</b> Die Roadmap sagt: fertig, wenn der Kontaktdialog dieselbe Funktion benutzt wie ein danach gebauter Testdialog. Er steht hier — und benutzt keine Zeile eigenen Code.</div>
+  </div>
+  <div class="dlg-f">
+  <span class="sp">
+  </span>
+  <button class="tat still">Abbrechen</button>
+  <button class="tat">Speichern</button>
+  </div>
+  </div>
+  </div>
+  <div class="abs">
+  <h2>Derselbe Baustein, zwei Aufrufer</h2>
+  <span class="r">
+  </span>
+  <span class="n">Ebene 2</span>
+  </div>
+  <div class="unter">Links der Kontaktdialog aus Schritt 1, neu auf dem Baustein. Rechts ein Aufgabendialog, den es noch gar nicht gibt — er ist der Vorgriff auf Schritt 3 und zeigt, dass der Baustein trägt, ohne angefasst zu werden.</div>
+  <div class="paar">
+  <div>
+  <div class="dlg flach" role="dialog" aria-label="Kontakt bearbeiten">
+  <div class="dlg-k">
+  <span class="art">Kontakt bearbeiten</span>
+  <h2 class="dlg-t">Eva Bergmann</h2>
+  <span class="sp">
+  </span>
+  <button class="dlg-zu" aria-label="Schließen">×</button>
+  </div>
+  <div class="dlg-b">
+  <div class="raster">
+  <div class="feld">
+  <label for="fd-nach-3semy">Nachname</label>
+  <input type="text" id="fd-nach-3semy">
+  </div>
+  <div class="feld">
+  <label for="fd-vor-95b66">Vorname</label>
+  <input type="text" id="fd-vor-95b66">
+  </div>
+  <div class="feld">
+  <label for="fd-firma-nycpw">Firma</label>
+  <input type="text" id="fd-firma-nycpw">
+  </div>
+  <div class="feld">
+  <label for="fd-tel-riu7d">Telefon</label>
+  <input type="text" id="fd-tel-riu7d">
+  </div>
+  <div class="feld">
+  <label for="fd-mail-r6c77">E-Mail</label>
+  <input type="text" id="fd-mail-r6c77">
+  </div>
+  <div class="feld breit">
+  <label for="fd-notiz-44mva">Notizen</label>
+  <textarea id="fd-notiz-44mva">
+  </textarea>
+  </div>
+  <div class="feld schalter">
+  <input type="checkbox" id="fd-fav-dzi5q">
+  <label for="fd-fav-dzi5q">Als Favorit markieren<span class="sub">Favoriten stehen im Modul und in der Leiste oben.</span>
+  </label>
+  </div>
+  </div>
+  <div class="merk">
+  <b>Pflicht ist nur der Nachname.</b> Alles Übrige darf leer bleiben.</div>
+  </div>
+  <div class="dlg-f">
+  <button class="tat weg">Löschen</button>
+  <span class="sp">
+  </span>
+  <button class="tat still">Abbrechen</button>
+  <button class="tat">Speichern</button>
+  </div>
+  </div>
+  </div>
+  <div>
+  <div class="dlg flach" role="dialog" aria-label="Aufgabe bearbeiten">
+  <div class="dlg-k">
+  <span class="art">Aufgabe bearbeiten</span>
+  <h2 class="dlg-t">Rechnung 2026-114 freigeben</h2>
+  <span class="sp">
+  </span>
+  <button class="dlg-zu" aria-label="Schließen">×</button>
+  </div>
+  <div class="dlg-b">
+  <div class="raster">
+  <div class="feld breit">
+  <label for="fd-titel-977fs">Titel</label>
+  <input type="text" id="fd-titel-977fs">
+  </div>
+  <div class="feld">
+  <label for="fd-kat-f6m4n">Kategorie</label>
+  <select id="fd-kat-f6m4n">
+  <option value="">— ohne —</option>
+  <option value="todo">To-do — selbst abarbeiten</option>
+  <option value="nach">Nachverfolgen — liegt bei anderen</option>
+  </select>
+  </div>
+  <div class="feld">
+  <label for="fd-d-i38po">Fällig am<span class="sub">Darf leer bleiben.</span>
+  </label>
+  <input type="date" id="fd-d-i38po">
+  </div>
+  <div class="feld">
+  <label for="fd-zeit-p1jph">Uhrzeit</label>
+  <input type="time" id="fd-zeit-p1jph">
+  </div>
+  <div class="feld">
+  <label for="fd-kontakt-lyefo">Kontakt</label>
+  <select id="fd-kontakt-lyefo">
+  <option value="">— keiner —</option>
+  <option value="k1">Lisa Meier</option>
+  <option value="k2">Jan Kowalski</option>
+  <option value="k4">Eva Bergmann</option>
+  <option value="k6">Tobias Meinhardt</option>
+  </select>
+  </div>
+  <div class="feld breit">
+  <label for="fd-notiz-5a9sc">Notiz</label>
+  <textarea id="fd-notiz-5a9sc">
+  </textarea>
+  </div>
+  </div>
+  </div>
+  <div class="dlg-f">
+  <button class="tat weg">Löschen</button>
+  <span class="sp">
+  </span>
+  <button class="tat still">Abbrechen</button>
+  <button class="tat">Speichern</button>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div class="abs">
+  <h2>Prüfen zeigt auf das Feld</h2>
+  <span class="r">
+  </span>
+  <span class="n">nicht nur eine Meldung</span>
+  </div>
+  <div class="unter">Bisher meldete der Kontaktdialog nur „Ohne Nachnamen geht es nicht“ und ließ einen suchen. Der Baustein nimmt vom Prüfer nicht nur einen Text entgegen, sondern auch den Schlüssel des schuldigen Feldes — und färbt es ein, setzt den Fokus hinein.</div>
+  <pre>pruefe: w =&gt; w.nach.trim()
+  ? <b>null</b>                                     <span class="k">in Ordnung</span>
+  : <b>{schl:"nach", text:"Ohne Nachnamen …"}</b>   <span class="k">Feld wird rot und bekommt den Fokus</span>
+  </pre>
+  <div class="knopfreihe">
+  <button class="tat">Als echten Dialog öffnen</button>
+  <button class="tat still">Testdialog öffnen</button>
+  </div>
+  <div class="abs">
+  <h2>Was Schritt 6 daraus zieht</h2>
+  <span class="r">
+  </span>
+  <span class="n">Vorgriff</span>
+  </div>
+  <div class="unter">Der Workflow-Dialog aus <code>referenz/workflow-dialog.html</code> hat einen eigenen Aufbau: Instanzeigenschaften oben, darunter die Liste aller Teilschritte, darunter der gewählte Schritt. Er benutzt <b>nur Ebene 1</b> — dreimal, für drei Gruppen von Eigenschaften.</div>
+  <pre>
+  <span class="k">/* Schritt 6, später */</span>
+  rumpf.appendChild(<b>felderMalen</b>(VORLAGE.eigenschaften, instanz.werte, …));
+  rumpf.appendChild(teilschrittListe(instanz));       <span class="k">eigener Aufbau</span>
+  rumpf.appendChild(<b>felderMalen</b>(schritt.eigenschaften, werte, …));</pre>
+  <div class="abs">
+  <h2>Anmerkungen</h2>
+  <span class="r">
+  </span>
+  <span class="n">5</span>
+  </div>
+  <div class="note">
+  <b>Der Aufruf ist ein Objekt, keine vier Stellen.</b> Die Roadmap schreibt <code>dialog(titel, felder, werte, beiSpeichern)</code>. Vier Übergaben reichen nicht: Es fehlen die Kleinschrift im Kopf, der Hinweistext, die Prüfung und das Löschen. Als fünfte bis achte Stelle wäre das unlesbar — <code>dialog(a,b,c,d,null,null,e)</code>. Ein Objekt benennt jede Angabe und lässt weg, was nicht gebraucht wird.</div>
+  <div class="note">
+  <b>Löschen gehört in den Baustein.</b> Erst schien es Beiwerk. Aber <b>alle sieben</b> künftigen Aufrufer brauchen es, und alle sieben brauchen dieselbe zweistufige Rückfrage. Bliebe es außen, stünde derselbe Ablauf siebenmal da. Was sich unterscheidet, ist allein der Text — den gibt der Aufrufer.</div>
+  <div class="note">
+  <b>Gearbeitet wird an einer Kopie.</b> <code>dialog()</code> kopiert die Werte und gibt die Kopie erst beim Speichern heraus. Sonst hinterließe „Abbrechen“ die halbe Eingabe im Datenbestand. Der Aufrufer schreibt sie dann an Ort und Stelle in sein Objekt — nie durch Austausch, sonst rissen die Verweise ab.</div>
+  <div class="note">
+  <b>Zwei neue Feldarten gegenüber dem Workflow-Entwurf.</b> Der Entwurf unter <code>referenz/</code> kennt sieben Arten. Dazu kommt <code>zeit</code>, das die Roadmap ausdrücklich nennt und das Termine und Aufgaben brauchen. Und <code>breit</code> als Zusatz, damit ein Titelfeld die volle Zeile bekommt, ohne mehrzeilig zu sein.</div>
+  <div class="note">
+  <b>Was ich bewusst weglasse.</b> Keine Feldabhängigkeiten („zeige B nur, wenn A gesetzt ist“) — braucht kein Modul, und eine halbgare Fassung davon wäre später schwer loszuwerden. Keine Freitextprüfung je Feld; die eine Prüffunktion am Ende reicht. Keine Reiter im Dialog — sieben Felder passen auf eine Fläche.</div>
+  <div class="note acht">
+  <b>Die eine Entscheidung, die ich dir überlasse.</b> Der Baustein nimmt dem Aufrufer viel ab — Prüfung, Löschen, Kopie. Das macht die sieben Aufrufer klein, bindet sie aber an eine gemeinsame Form: Jeder Dialog sieht künftig gleich aus und verhält sich gleich. Wer später einen Sonderfall will, muss den Baustein erweitern statt danebenzubauen. Ich halte das für richtig — genau dafür gibt es ihn. Falls du es enger haben willst, nehme ich Löschen und Prüfung wieder heraus; dann bleiben die Aufrufer eigenständiger und größer.</div>
+</div>
+
+</div>
+<div class="zettel" id="zettel" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,
+  c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let zT; function melde(m){const t=$("#zettel");t.textContent=m;t.classList.add("an");
+  clearTimeout(zT);zT=setTimeout(()=>t.classList.remove("an"),2400);}
+const KONTAKTE=[{id:"k1",vor:"Lisa",nach:"Meier"},{id:"k2",vor:"Jan",nach:"Kowalski"},
+  {id:"k4",vor:"Eva",nach:"Bergmann"},{id:"k6",vor:"Tobias",nach:"Meinhardt"}];
+const knm=k=>((k.vor||"")+" "+(k.nach||"")).trim();
+
+/* ============================================================
+   EBENE 1 — feldMalen: eine Eigenschaft, ein Bedienelement
+
+   Kennt acht Arten. Das Format {schl, nm, art, optionen} ist
+   dasselbe, das die Workflow-Vorlagen in VORLAGEN benutzen —
+   deshalb kann Schritt 6 diese Ebene allein verwenden, ohne
+   die Dialoghülle darüber.
+   ============================================================ */
+function feldMalen(def, wert, setzen){
+  const breit = def.art==="mehrzeilig" || def.breit;
+  const f=el("div","feld"+(breit?" breit":"")+(def.art==="schalter"?" schalter":""));
+  let n;
+  if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=wert==null?"":wert; }
+  else if(def.art==="auswahl"||def.art==="kontakt"){
+    n=el("select");
+    const opt = def.art==="kontakt"
+      ? [["","— keiner —"]].concat(KONTAKTE.map(k=>[k.id,knm(k)]))
+      : [["","— ohne —"]].concat(def.optionen||[]);
+    opt.forEach(([w,t])=>{ const o=el("option",null,esc(t)); o.value=w;
+      if(String(w)===String(wert==null?"":wert)) o.selected=true; n.appendChild(o); });
+  }
+  else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!wert; }
+  else {
+    n=el("input");
+    n.type = def.art==="datum" ? "date" : def.art==="zeit" ? "time"
+           : def.art==="zahl"  ? "number" : "text";
+    n.value = wert==null ? "" : wert;
+  }
+  n.id="fd-"+def.schl+"-"+Math.random().toString(36).slice(2,7);
+  const lab=el("label",null,esc(def.nm)+(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
+  lab.setAttribute("for",n.id);
+  if(def.art==="schalter") f.append(n,lab); else f.append(lab,n);
+  n.oninput=n.onchange=()=>setzen(def.art==="schalter" ? n.checked
+    : def.art==="zahl" ? (n.value===""?null:Number(n.value)) : n.value, f);
+  f.dazu={knoten:n, def:def};
+  return f;
+}
+function felderMalen(felder, werte, beiAenderung){
+  const r=el("div","raster");
+  r.felder=[];
+  felder.forEach(def=>{
+    const f=feldMalen(def, werte[def.schl], (v)=>{
+      werte[def.schl]=v; f.classList.remove("schief");
+      if(beiAenderung) beiAenderung(werte, def);
+    });
+    r.felder.push(f); r.appendChild(f);
+  });
+  return r;
+}
+
+/* ============================================================
+   EBENE 2 — dialog: die Hülle um die Felder
+
+   Kopf, Rumpf, Fuß, Escania, Klick daneben, Löschen mit
+   Rückfrage, Prüfung vor dem Speichern. Alles, was sonst
+   siebenmal dastünde.
+   ============================================================ */
+let offen=null;
+function dialogZu(){ if(offen){ offen.remove(); offen=null; } }
+
+function dialog(o, flachIn){
+  if(!flachIn) dialogZu();
+  /* Am Entwurf wird gearbeitet, nie an den echten Daten. */
+  const w=Object.assign({}, o.werte);
+  const titel = () => typeof o.titel==="function" ? (o.titel(w)||"—") : (o.titel||"—");
+
+  const d=el("div","dlg"+(flachIn?" flach":""));
+  d.setAttribute("role","dialog"); d.setAttribute("aria-label",o.art||"Dialog");
+  if(!flachIn) d.setAttribute("aria-modal","true");
+
+  const kopf=el("div","dlg-k",'<span class="art">'+esc(o.art||"")+'</span>'
+    +'<h2 class="dlg-t">'+esc(titel())+'</h2><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×"); zu.setAttribute("aria-label","Schließen");
+  zu.onclick=()=>flachIn?melde("Im Entwurf flach eingesetzt"):dialogZu();
+  kopf.appendChild(zu);
+  d.appendChild(kopf);
+
+  const rumpf=el("div","dlg-b");
+  const raster=felderMalen(o.felder, w, ()=>{
+    const t=d.querySelector(".dlg-t"); if(t) t.textContent=titel();
+  });
+  rumpf.appendChild(raster);
+  if(o.merk) rumpf.appendChild(el("div","merk",o.merk));
+  d.appendChild(rumpf);
+
+  const fuss=el("div","dlg-f");
+  if(o.loeschen){
+    const lo=el("button","tat weg","Löschen");
+    lo.onclick=()=>loeschfrage(o,w,rumpf,fuss,d,flachIn);
+    fuss.appendChild(lo);
+  }
+  fuss.appendChild(el("span","sp"));
+  const ab=el("button","tat still","Abbrechen");
+  ab.onclick=()=>flachIn?melde("Verworfen"):dialogZu();
+  const sp=el("button","tat","Speichern");
+  sp.onclick=()=>{
+    const schief = o.pruefe ? o.pruefe(w) : null;
+    if(schief){
+      melde(schief.text||schief);
+      /* Das schuldige Feld wird gezeigt, nicht nur gemeldet. */
+      const ziel=raster.felder.find(f=>f.dazu.def.schl===schief.schl);
+      if(ziel){ ziel.classList.add("schief"); ziel.dazu.knoten.focus(); }
+      return;
+    }
+    o.speichern(w);
+    if(!flachIn) dialogZu();
+  };
+  fuss.append(ab,sp);
+  d.appendChild(fuss);
+
+  if(flachIn){ flachIn.appendChild(d); return d; }
+  const s=el("div","schleier auf");
+  s.appendChild(d);
+  s.onclick=ev=>{ if(ev.target===s) dialogZu(); };
+  document.body.appendChild(s);
+  offen=s;
+  const erstes=d.querySelector("input,textarea,select"); if(erstes) erstes.focus();
+  return d;
+}
+
+function loeschfrage(o,w,rumpf,fuss,d,flachIn){
+  rumpf.innerHTML="";
+  rumpf.appendChild(el("div","merk warn",
+    typeof o.loeschen.frage==="function" ? o.loeschen.frage(w) : o.loeschen.frage));
+  fuss.innerHTML="";
+  const ja=el("button","tat weg ernst","Ja, löschen");
+  ja.onclick=()=>{ o.loeschen.tun(w); if(!flachIn) dialogZu(); };
+  fuss.appendChild(ja);
+  fuss.appendChild(el("span","sp"));
+  const nein=el("button","tat still","Doch nicht");
+  nein.onclick=()=>{ const neu=dialog(o,flachIn?d.parentNode:null);
+    if(flachIn){ d.replaceWith(neu); } };
+  fuss.appendChild(nein);
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&offen){ e.preventDefault(); dialogZu(); }
+});
+
+/* ============================================================
+   DIE VIER BEISPIELE
+   ============================================================ */
+const F_ALLE=[
+  {schl:"text",  nm:"Text",            art:"text"},
+  {schl:"zahl",  nm:"Zahl",            art:"zahl"},
+  {schl:"datum", nm:"Datum",           art:"datum"},
+  {schl:"zeit",  nm:"Uhrzeit",         art:"zeit"},
+  {schl:"wahl",  nm:"Auswahl",         art:"auswahl",
+   optionen:[["a","Erste Möglichkeit"],["b","Zweite"],["c","Dritte"]]},
+  {schl:"wer",   nm:"Kontakt",         art:"kontakt"},
+  {schl:"lang",  nm:"Mehrzeilig",      art:"mehrzeilig"},
+  {schl:"an",    nm:"Schalter",        art:"schalter", sub:"Ein Ja-Nein-Feld."}
+];
+const F_KONTAKT=[
+  {schl:"nach",  nm:"Nachname", art:"text"},
+  {schl:"vor",   nm:"Vorname",  art:"text"},
+  {schl:"firma", nm:"Firma",    art:"text"},
+  {schl:"tel",   nm:"Telefon",  art:"text"},
+  {schl:"mail",  nm:"E-Mail",   art:"text"},
+  {schl:"notiz", nm:"Notizen",  art:"mehrzeilig"},
+  {schl:"fav",   nm:"Als Favorit markieren", art:"schalter",
+   sub:"Favoriten stehen im Modul und in der Leiste oben."}
+];
+const F_AUFGABE=[
+  {schl:"titel", nm:"Titel", art:"text", breit:true},
+  {schl:"kat",   nm:"Kategorie", art:"auswahl",
+   optionen:[["todo","To-do — selbst abarbeiten"],["nach","Nachverfolgen — liegt bei anderen"]]},
+  {schl:"d",     nm:"Fällig am", art:"datum", sub:"Darf leer bleiben."},
+  {schl:"zeit",  nm:"Uhrzeit", art:"zeit"},
+  {schl:"kontakt", nm:"Kontakt", art:"kontakt"},
+  {schl:"notiz", nm:"Notiz", art:"mehrzeilig"}
+];
+
+function beispiel(ziel, o, hinweis){
+  const kasten=el("div");
+  dialog(o, kasten);
+  if(hinweis) kasten.appendChild(el("div","unter",hinweis));
+  ziel.appendChild(kasten);
+}
+
+/* ============================================================
+   SEITE
+   ============================================================ */
+function abs(t,n){
+  const a=el("div","abs",'<h2>'+esc(t)+'</h2><span class="r"></span>');
+  if(n) a.appendChild(el("span","n",esc(n)));
+  return a;
+}
+const b=$("#inhalt");
+/* Der Ausgangszustand steht als Markup in der Seite, damit auch dort
+   etwas zu sehen ist, wo kein Skript läuft. Läuft eines, wird er hier
+   verworfen und neu aufgebaut — sonst stünde alles doppelt. */
+b.innerHTML="";
+
+/* --- 1 Die zwei Ebenen --- */
+b.appendChild(abs("Zwei Ebenen statt einer","der Kern des Entwurfs"));
+b.appendChild(el("div","unter",
+  "Die Roadmap nennt eine Funktion: <code>dialog(titel, felder, werte, beiSpeichern)</code>. "
+  +"Beim Bauen zeigte sich, dass darunter eine zweite Ebene liegt, die für sich nützlich ist "
+  +"— und die <b>Schritt 6 allein braucht</b>. Der Workflow-Dialog hat einen eigenen Aufbau "
+  +"mit Teilschrittliste; er will die Felder, aber nicht die Hülle."));
+b.appendChild(el("pre",null,
+'<b>felderMalen(felder, werte, beiAenderung)</b>   <span class="k">→ ein .raster mit Bedienelementen</span>\n'
++'  <span class="k">kennt acht Arten: text · zahl · datum · zeit · auswahl · kontakt · mehrzeilig · schalter</span>\n'
++'  <span class="k">Format {schl, nm, art, optionen} — dasselbe wie in VORLAGEN</span>\n'
++'\n'
++'<b>dialog(o)</b>                              <span class="k">→ die Hülle darum</span>\n'
++'  <span class="k">Kopf, Fuß, Escape, Klick daneben, Löschen mit Rückfrage, Prüfung</span>\n'
++'  <span class="k">benutzt felderMalen für den Rumpf</span>'));
+b.appendChild(el("div","note gut",
+  "<b>Warum das der Unterschied ist, der zählt.</b> Mit nur einer Ebene müsste Schritt 6 "
+  +"entweder die Felderzeugung nachbauen — dann gibt es sie zweimal — oder die Hülle mit "
+  +"Sonderfällen aufblähen, damit eine Teilschrittliste hineinpasst. <code>ARCHITEKTUR.md</code> "
+  +"sagt dazu: „Ist der Baustein gebaut, zeigt er Workflow-Eigenschaften ohne Sonderbehandlung "
+  +"an.“ Genau das leistet Ebene 1 allein."));
+
+/* --- 2 Alle acht Feldarten --- */
+b.appendChild(abs("Alle acht Feldarten","Ebene 1"));
+b.appendChild(el("div","unter",
+  "Ein Dialog, der jede Art einmal zeigt. Mehrzeilige Felder und Schalter nehmen von sich aus "
+  +"die volle Breite, alles andere ordnet sich in ein umbrechendes Raster."));
+beispiel(b, {
+  art:"Prüfdialog", titel:"Alle Feldarten",
+  felder:F_ALLE,
+  werte:{text:"Ein Text",zahl:42,datum:"2026-08-12",zeit:"09:30",wahl:"b",wer:"k4",
+         lang:"Mehrere Zeilen sind hier möglich.\nDie zweite.",an:true},
+  merk:"<b>Das ist der Testdialog aus dem Abnahmekriterium.</b> Die Roadmap sagt: fertig, "
+    +"wenn der Kontaktdialog dieselbe Funktion benutzt wie ein danach gebauter Testdialog. "
+    +"Er steht hier — und benutzt keine Zeile eigenen Code.",
+  speichern:w=>melde("Gespeichert: "+JSON.stringify(w).slice(0,60)+"…")
+});
+
+/* --- 3 Kontaktdialog auf dem Baustein --- */
+b.appendChild(abs("Derselbe Baustein, zwei Aufrufer","Ebene 2"));
+b.appendChild(el("div","unter",
+  "Links der Kontaktdialog aus Schritt 1, neu auf dem Baustein. Rechts ein Aufgabendialog, "
+  +"den es noch gar nicht gibt — er ist der Vorgriff auf Schritt 3 und zeigt, dass der "
+  +"Baustein trägt, ohne angefasst zu werden."));
+const paar=el("div","paar"); b.appendChild(paar);
+beispiel(paar, {
+  art:"Kontakt bearbeiten",
+  titel:w=>((w.vor||"")+" "+(w.nach||"")).trim(),
+  felder:F_KONTAKT,
+  werte:{nach:"Bergmann",vor:"Eva",firma:"Kanzlei Bergmann",tel:"0391 77820-0",
+         mail:"kanzlei@bergmann.de",fav:true,notiz:"Buchhaltung, Skontofristen beachten."},
+  merk:"<b>Pflicht ist nur der Nachname.</b> Alles Übrige darf leer bleiben.",
+  pruefe:w=>String(w.nach||"").trim()?null:{schl:"nach",text:"Ohne Nachnamen geht es nicht."},
+  loeschen:{
+    frage:w=>"<b>"+esc(((w.vor||"")+" "+(w.nach||"")).trim())+" wirklich löschen?</b><ul>"
+      +"<li>Die Kachel verschwindet aus Modul und Leiste.</li>"
+      +"<li>3 Verweise in Aufgaben, Terminen, Notizen und Workflows werden geleert — "
+      +"auch in den Teilschritten der Workflows.</li>"
+      +"<li>Die Einträge selbst bleiben erhalten.</li></ul>",
+    tun:()=>melde("Gelöscht · 3 Verweise geleert")
+  },
+  speichern:()=>melde("Kontakt gespeichert")
+});
+beispiel(paar, {
+  art:"Aufgabe bearbeiten", titel:w=>w.titel||"—",
+  felder:F_AUFGABE,
+  werte:{titel:"Rechnung 2026-114 freigeben",kat:"todo",d:"2026-08-04",zeit:"",
+         kontakt:"k4",notiz:"Skonto läuft"},
+  pruefe:w=>String(w.titel||"").trim()?null:{schl:"titel",text:"Ohne Titel geht es nicht."},
+  loeschen:{frage:"<b>Aufgabe löschen?</b> Sie ist danach weg.",tun:()=>melde("Gelöscht")},
+  speichern:()=>melde("Aufgabe gespeichert")
+});
+
+/* --- 4 Prüfen und Löschen --- */
+b.appendChild(abs("Prüfen zeigt auf das Feld","nicht nur eine Meldung"));
+b.appendChild(el("div","unter",
+  "Bisher meldete der Kontaktdialog nur „Ohne Nachnamen geht es nicht“ und ließ einen suchen. "
+  +"Der Baustein nimmt vom Prüfer nicht nur einen Text entgegen, sondern auch den Schlüssel "
+  +"des schuldigen Feldes — und färbt es ein, setzt den Fokus hinein."));
+b.appendChild(el("pre",null,
+'pruefe: w =&gt; w.nach.trim()\n'
++'  ? <b>null</b>                                     <span class="k">in Ordnung</span>\n'
++'  : <b>{schl:"nach", text:"Ohne Nachnamen …"}</b>   <span class="k">Feld wird rot und bekommt den Fokus</span>'));
+b.appendChild(el("div","knopfreihe"));
+const kn=b.lastElementChild;
+const echt=el("button","tat","Als echten Dialog öffnen");
+echt.onclick=()=>dialog({
+  art:"Kontakt bearbeiten", titel:w=>((w.vor||"")+" "+(w.nach||"")).trim(),
+  felder:F_KONTAKT, werte:{nach:"",vor:"",firma:"",tel:"",mail:"",fav:false,notiz:""},
+  merk:"Leer lassen und auf Speichern drücken — dann siehst du, was der Prüfer macht.",
+  pruefe:w=>String(w.nach||"").trim()?null:{schl:"nach",text:"Ohne Nachnamen geht es nicht."},
+  speichern:()=>melde("Angelegt")
+});
+kn.appendChild(echt);
+const kn2=el("button","tat still","Testdialog öffnen");
+kn2.onclick=()=>dialog({art:"Prüfdialog", titel:"Alle Feldarten", felder:F_ALLE, werte:{},
+  speichern:w=>melde("Gespeichert")});
+kn.appendChild(kn2);
+
+/* --- 5 Was Schritt 6 braucht --- */
+b.appendChild(abs("Was Schritt 6 daraus zieht","Vorgriff"));
+b.appendChild(el("div","unter",
+  "Der Workflow-Dialog aus <code>referenz/workflow-dialog.html</code> hat einen eigenen Aufbau: "
+  +"Instanzeigenschaften oben, darunter die Liste aller Teilschritte, darunter der gewählte "
+  +"Schritt. Er benutzt <b>nur Ebene 1</b> — dreimal, für drei Gruppen von Eigenschaften."));
+b.appendChild(el("pre",null,
+'<span class="k">/* Schritt 6, später */</span>\n'
++'rumpf.appendChild(<b>felderMalen</b>(VORLAGE.eigenschaften, instanz.werte, …));\n'
++'rumpf.appendChild(teilschrittListe(instanz));       <span class="k">eigener Aufbau</span>\n'
++'rumpf.appendChild(<b>felderMalen</b>(schritt.eigenschaften, werte, …));'));
+
+/* --- 6 Anmerkungen --- */
+b.appendChild(abs("Anmerkungen","5"));
+[
+ ["Der Aufruf ist ein Objekt, keine vier Stellen",
+  "Die Roadmap schreibt <code>dialog(titel, felder, werte, beiSpeichern)</code>. Vier "
+  +"Übergaben reichen nicht: Es fehlen die Kleinschrift im Kopf, der Hinweistext, die Prüfung "
+  +"und das Löschen. Als fünfte bis achte Stelle wäre das unlesbar — <code>dialog(a,b,c,d,null,"
+  +"null,e)</code>. Ein Objekt benennt jede Angabe und lässt weg, was nicht gebraucht wird.",""],
+ ["Löschen gehört in den Baustein",
+  "Erst schien es Beiwerk. Aber <b>alle sieben</b> künftigen Aufrufer brauchen es, und alle "
+  +"sieben brauchen dieselbe zweistufige Rückfrage. Bliebe es außen, stünde derselbe Ablauf "
+  +"siebenmal da. Was sich unterscheidet, ist allein der Text — den gibt der Aufrufer.",""],
+ ["Gearbeitet wird an einer Kopie",
+  "<code>dialog()</code> kopiert die Werte und gibt die Kopie erst beim Speichern heraus. "
+  +"Sonst hinterließe „Abbrechen“ die halbe Eingabe im Datenbestand. Der Aufrufer schreibt "
+  +"sie dann an Ort und Stelle in sein Objekt — nie durch Austausch, sonst rissen die "
+  +"Verweise ab.",""],
+ ["Zwei neue Feldarten gegenüber dem Workflow-Entwurf",
+  "Der Entwurf unter <code>referenz/</code> kennt sieben Arten. Dazu kommt <code>zeit</code>, "
+  +"das die Roadmap ausdrücklich nennt und das Termine und Aufgaben brauchen. Und "
+  +"<code>breit</code> als Zusatz, damit ein Titelfeld die volle Zeile bekommt, ohne "
+  +"mehrzeilig zu sein.",""],
+ ["Was ich bewusst weglasse",
+  "Keine Feldabhängigkeiten („zeige B nur, wenn A gesetzt ist“) — braucht kein Modul, und "
+  +"eine halbgare Fassung davon wäre später schwer loszuwerden. Keine Freitextprüfung je "
+  +"Feld; die eine Prüffunktion am Ende reicht. Keine Reiter im Dialog — sieben Felder "
+  +"passen auf eine Fläche.",""]
+].forEach(([t,x,kl])=>b.appendChild(el("div","note"+(kl?" "+kl:""),"<b>"+t+".</b> "+x)));
+
+b.appendChild(el("div","note acht",
+  "<b>Die eine Entscheidung, die ich dir überlasse.</b> Der Baustein nimmt dem Aufrufer viel ab "
+  +"— Prüfung, Löschen, Kopie. Das macht die sieben Aufrufer klein, bindet sie aber an eine "
+  +"gemeinsame Form: Jeder Dialog sieht künftig gleich aus und verhält sich gleich. Wer später "
+  +"einen Sonderfall will, muss den Baustein erweitern statt danebenzubauen. Ich halte das für "
+  +"richtig — genau dafür gibt es ihn. Falls du es enger haben willst, nehme ich Löschen und "
+  +"Prüfung wieder heraus; dann bleiben die Aufrufer eigenständiger und größer."));
+</script>
+</body>
+</html>

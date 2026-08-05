@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mockup — Schritt 3: Aufgaben und Termine</title>
+<style>
+/* ============================================================
+   MOCKUP zu Schritt 3 der Roadmap
+
+   Lauffähiger Entwurf. Der Dialog-Baustein und der
+   Markdown-Teil sind zeichengenau aus dashboard.html
+   übernommen — was hier läuft, läuft dort genauso.
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#87837c;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --gut:#2b6b46;   --gut-s:#e3f0e8;
+  --weg-s:#eef0f8; --weg-i:#4a55a0; --weg-r:#d3d8ec;
+}
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;padding:0 0 90px}
+button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit;text-align:left}
+input,textarea,select{font:inherit}
+:focus-visible{outline:2px solid var(--tinte);outline-offset:2px;border-radius:4px}
+.mitte{max-width:1080px;margin:0 auto;padding:40px 26px}
+h1{font-size:23px;font-weight:700;letter-spacing:-.025em}
+.lead{font-size:14.5px;color:var(--ink2);line-height:1.65;margin-top:11px;max-width:74ch}
+.lead code,.unter code,.note code,li code,td code{font-family:var(--mono);font-size:12.5px;
+  background:var(--raise);border-radius:4px;padding:1px 6px}
+.abs{display:flex;align-items:baseline;gap:13px;padding:36px 0 6px}
+.abs h2{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--ink);white-space:nowrap}
+.abs h2.eilig{color:var(--signal)}
+.abs .r{flex:1;height:1px;background:var(--rule);align-self:center}
+.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap}
+.unter{font-size:13.5px;color:var(--ink2);line-height:1.65;padding:0 0 12px;max-width:78ch}
+.unter b{color:var(--ink);font-weight:650}
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px}
+.leer{padding:16px 2px;font-size:13px;color:var(--ink3);line-height:1.6}
+
+/* ---------- Zeilen, wie in dashboard.html ---------- */
+.z{display:flex;align-items:flex-start;gap:12px;padding:10px 10px 10px 2px;border-radius:8px;
+  border-left:2px solid transparent}
+.z:hover{background:var(--sheet)}
+.z.eilig{border-left-color:var(--signal)}
+.z.fertig .zt{text-decoration:line-through;color:var(--ink3)}
+.kast{width:19px;height:19px;border-radius:5px;border:1.5px solid var(--rule2);
+  background:var(--sheet);display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.kast:hover{border-color:var(--tinte)}
+.kast svg{width:11px;height:11px;stroke:var(--sheet);stroke-width:2.4;fill:none}
+.z.fertig .kast{background:var(--gut);border-color:var(--gut)}
+.zb{flex:1;min-width:0}
+.zt{display:block;font-size:14.5px;line-height:1.4;overflow-wrap:anywhere}
+.zm{display:block;font-size:12px;color:var(--ink3);margin-top:3px;line-height:1.45}
+.zr{font-family:var(--mono);font-size:11.5px;color:var(--ink3);flex-shrink:0;padding-top:3px}
+.zr.eilig{color:var(--signal);font-weight:700}
+.tat{font-size:12.5px;font-weight:600;background:var(--tinte-s);color:var(--tinte);
+  border:1px solid var(--tinte);padding:7px 14px;border-radius:8px}
+.tat:hover{background:#d9dff1}
+.tat.still{background:transparent;color:var(--ink2);border-color:var(--rule2);font-weight:500}
+.tat.still:hover{background:var(--sheet);color:var(--ink)}
+.tat.weg{color:var(--signal);border-color:transparent;background:transparent;font-weight:500}
+.tat.weg:hover{background:var(--signal-s)}
+.tat.weg.ernst{border-color:var(--signal);background:var(--signal-s);font-weight:600}
+
+/* ---------- Kalender: zwei Tage nebeneinander ---------- */
+.tage{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.tag{border:1px solid var(--rule);border-radius:11px;background:var(--sheet);overflow:hidden}
+.tag-k{display:flex;align-items:baseline;gap:9px;padding:11px 14px;
+  border-bottom:1px solid var(--rule);background:var(--paper)}
+.tag-k .d{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.tag-k .h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--tinte);font-weight:700}
+.tag-k .sp{flex:1}
+.tag-k .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.tag-b{padding:6px 8px 10px}
+.tm{display:flex;align-items:flex-start;gap:11px;padding:8px 8px;border-radius:8px;width:100%;
+  text-align:left;border-left:2px solid transparent}
+.tm:hover{background:var(--paper)}
+.tm.jetzt{border-left-color:var(--tinte);background:var(--tinte-s)}
+.tm .u{font-family:var(--mono);font-size:12px;color:var(--ink2);font-weight:600;flex-shrink:0;
+  padding-top:1px;font-variant-numeric:tabular-nums}
+.tm .b{flex:1;min-width:0}
+.tm .t{display:block;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+.tm .w{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;padding-top:2px}
+.tagfuss{padding:4px 8px 8px}
+
+/* ---------- Planner-Ausschnitt ---------- */
+.pl{border:1px solid var(--rule);border-radius:11px;background:var(--sheet);overflow:hidden;
+  max-width:420px}
+.pl-k{padding:9px 12px;border-bottom:1px solid var(--rule);background:var(--paper);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+.stunde{display:flex;min-height:44px;border-top:1px solid var(--rule)}
+.stunde:first-child{border-top:0}
+.su{width:46px;flex-shrink:0;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
+  padding:5px 0 0 10px}
+.lane{flex:1;padding:4px 6px 4px 0;display:flex;flex-direction:column;gap:3px}
+.blk{border-radius:7px;padding:5px 9px;font-size:12.5px;background:var(--raise);
+  display:flex;align-items:flex-start;gap:8px}
+.blk.termin{background:var(--tinte-s);color:var(--tinte)}
+.blk.aufgabe{background:var(--raise);color:var(--ink2)}
+.blk.spaet{background:var(--signal-s);color:var(--signal)}
+.blk .t{font-weight:600}
+.blk .m{font-size:11px;opacity:.8}
+.blk .kast{width:15px;height:15px;border-radius:4px;margin-top:1px}
+.blk .kast svg{width:9px;height:9px}
+
+.note{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:9px;
+  background:var(--sheet);padding:13px 15px;margin-top:11px;font-size:13.5px;line-height:1.65;
+  color:var(--ink2);max-width:82ch}
+.note.acht{border-left-color:var(--signal)}
+.note.gut{border-left-color:var(--gut)}
+.note b{color:var(--ink);font-weight:650}
+.note ul{margin:7px 0 0 18px}
+.note li{margin-top:4px}
+table{border-collapse:collapse;margin:6px 0 12px;font-size:13.5px}
+th,td{text-align:left;padding:7px 14px 7px 0;border-bottom:1px solid var(--rule);
+  vertical-align:top;color:var(--ink2)}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+td b{color:var(--ink);font-weight:650}
+.knopfreihe{display:flex;flex-wrap:wrap;gap:9px;margin:2px 0 10px}
+.zettel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);
+  background:var(--ink);color:var(--sheet);font-size:13.5px;padding:11px 20px;border-radius:10px;
+  opacity:0;pointer-events:none;z-index:900;transition:transform .24s,opacity .24s}
+.zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ---------- Dialog ----------
+   Auf und Zu laufen über .schleier und .schleier.auf, niemals über
+   eine ID-Regel. Genau daran ist das Umschalten schon einmal
+   gebrochen — Fehlerbuch Punkt 6. */
+.schleier{position:fixed;inset:0;background:rgba(26,26,24,.34);display:none;
+  place-items:center;padding:18px;z-index:500}
+.schleier.auf{display:grid}
+.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--sheet);
+  border:1px solid var(--rule2);border-radius:14px;box-shadow:0 24px 70px rgba(26,26,24,.22);
+  display:flex;flex-direction:column;overflow:hidden}
+.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:12px;padding:16px 22px 13px;
+  border-bottom:1px solid var(--rule)}
+.dlg-k .art{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink3);font-weight:700;white-space:nowrap}
+.dlg-t{font-size:17px;font-weight:650;letter-spacing:-.02em;overflow-wrap:anywhere}
+.dlg-k .sp{flex:1}
+.dlg-zu{font-size:19px;color:var(--ink3);line-height:1;padding:2px 8px;border-radius:6px}
+.dlg-zu:hover{background:var(--raise);color:var(--ink)}
+.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:16px 22px 20px}
+.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:12px 22px;
+  border-top:1px solid var(--rule);background:var(--paper)}
+.dlg-f .sp{flex:1}
+.draster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px 14px}
+.dfeld{display:flex;flex-direction:column;gap:5px}
+.dfeld.breit{grid-column:1/-1}
+.dfeld label{font-size:12px;color:var(--ink3);font-weight:500}
+.dfeld input,.dfeld textarea,.dfeld select{border:1px solid var(--rule2);border-radius:8px;
+  padding:8px 11px;background:var(--paper);font-size:14px;color:var(--ink);width:100%}
+.dfeld input:focus,.dfeld textarea:focus,.dfeld select:focus{outline:0;border-color:var(--tinte);
+  box-shadow:0 0 0 3px var(--tinte-s);background:var(--sheet)}
+.dfeld textarea{min-height:74px;resize:vertical;line-height:1.5}
+/* Die Prüfung zeigt auf das schuldige Feld, statt es nur zu melden. */
+.dfeld.schief input,.dfeld.schief textarea,.dfeld.schief select{border-color:var(--signal);
+  background:var(--signal-s)}
+
+.dfeld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
+  padding:9px 11px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
+.dfeld.schalter input{width:17px;height:17px;padding:0;accent-color:var(--tinte);flex-shrink:0}
+.dfeld.schalter label{font-size:14px;color:var(--ink)}
+.dfeld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+
+/* ---------- Formatierungsleiste über mehrzeiligen Feldern ---------- */
+.mdfeld{display:flex;flex-direction:column}
+.mdleiste{display:flex;align-items:center;gap:2px;padding:4px 5px;flex-wrap:wrap;
+  border:1px solid var(--rule2);border-bottom:0;border-radius:8px 8px 0 0;
+  background:var(--raise)}
+.mdfeld textarea{border-radius:0 0 8px 8px;min-height:104px}
+.mdknopf{display:grid;place-items:center;width:28px;height:26px;border-radius:6px;
+  color:var(--ink2);flex-shrink:0}
+.mdknopf:hover{background:var(--sheet);color:var(--ink)}
+.mdknopf svg{width:15px;height:15px}
+.mdstrich{width:1px;height:17px;background:var(--rule2);margin:0 3px;flex-shrink:0}
+.mdleiste .sp{flex:1}
+.mdschau{font-size:11.5px;color:var(--ink3);padding:4px 9px;border-radius:6px;
+  font-family:var(--mono);letter-spacing:.04em}
+.mdschau:hover{background:var(--sheet);color:var(--ink)}
+.mdschau[aria-pressed="true"]{background:var(--tinte-s);color:var(--tinte)}
+/* Vorschau: dieselbe Fläche wie das Feld, damit nichts springt. */
+.mdvor{border:1px solid var(--rule2);border-radius:0 0 8px 8px;background:var(--sheet);
+  padding:11px 12px;font-size:14px;line-height:1.6;min-height:104px;overflow-wrap:anywhere}
+.mdvor > :first-child{margin-top:0}
+.mdvor h3{font-size:15.5px;font-weight:650;letter-spacing:-.01em;margin:13px 0 5px}
+.mdvor p{margin:0 0 8px}
+.mdvor ul{margin:0 0 8px 19px}
+.mdvor li{margin-top:2px}
+.mdvor hr{border:0;border-top:1px solid var(--rule);margin:12px 0}
+.mdvor .leerhin{color:var(--ink3);font-style:italic}
+</style>
+</head>
+<body>
+<div class="mitte">
+<h1>Aufgaben und Termine bearbeiten</h1>
+<p class="lead">Die erste Nutzung des Bausteins durch Module, die ihn nicht selbst gebaut
+haben. Der Dialog-Teil auf dieser Seite ist <b>zeichengenau der aus <code>dashboard.html</code></b>
+— was hier läuft, läuft dort genauso.</p>
+<div id="inhalt">
+  <div class="abs">
+  <h2>Modul Aufgaben</h2>
+  <span class="r">
+  </span>
+  <span class="n">zwei Kategorien</span>
+  </div>
+  <div class="unter">Überfällige Aufgaben tragen eine rote Kante links und eine rote Fälligkeit rechts. Abgehakte rutschen ans Ende ihrer Kategorie und bleiben stehen — sie verschwinden nicht, sonst wäre nicht mehr nachvollziehbar, was erledigt wurde.</div>
+  <div class="abs">
+  <h2>To-do</h2>
+  <span class="r">
+  </span>
+  <span class="n">4 offen</span>
+  <button class="n">neue Aufgabe +</button>
+  </div>
+  <div class="hinweis">Was du selbst abarbeitest.</div>
+  <div class="z eilig">
+  <button class="kast" aria-label="Erledigen: Rechnung 2026-114 freigeben">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Rechnung 2026-114 freigeben</span>
+  <span class="zm">Skonto läuft am 5. ab. · Eva Bergmann</span>
+  </button>
+  <span class="zr eilig">überfällig</span>
+  </div>
+  <div class="z">
+  <button class="kast" aria-label="Erledigen: Feature-Matrix erstellen">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Feature-Matrix erstellen</span>
+  <span class="zm">für Jan · Jan Kowalski</span>
+  </button>
+  <span class="zr">12:00</span>
+  </div>
+  <div class="z">
+  <button class="kast" aria-label="Erledigen: SWOT-Analyse">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">SWOT-Analyse</span>
+  <span class="zm">
+  </span>
+  </button>
+  <span class="zr">morgen</span>
+  </div>
+  <div class="z">
+  <button class="kast" aria-label="Erledigen: Backup-Skript testen">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Backup-Skript testen</span>
+  <span class="zm">
+  </span>
+  </button>
+  <span class="zr">ohne Frist</span>
+  </div>
+  <div class="z fertig">
+  <button class="kast" aria-label="Wieder öffnen: Ablage sortieren">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Ablage sortieren</span>
+  <span class="zm">
+  </span>
+  </button>
+  <span class="zr">überfällig</span>
+  </div>
+  <div class="abs">
+  <h2>Nachverfolgen</h2>
+  <span class="r">
+  </span>
+  <span class="n">3 offen</span>
+  <button class="n">neue Aufgabe +</button>
+  </div>
+  <div class="hinweis">Was bei anderen liegt und beobachtet wird.</div>
+  <div class="z eilig">
+  <button class="kast" aria-label="Erledigen: Rückruf Kanzlei">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Rückruf Kanzlei</span>
+  <span class="zm">seit Montag · Eva Bergmann</span>
+  </button>
+  <span class="zr eilig">überfällig</span>
+  </div>
+  <div class="z">
+  <button class="kast" aria-label="Erledigen: Angebot Meinhardt">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Angebot Meinhardt</span>
+  <span class="zm">warte auf Preis · Tobias Meinhardt</span>
+  </button>
+  <span class="zr">Samstag</span>
+  </div>
+  <div class="z">
+  <button class="kast" aria-label="Erledigen: Lizenzverlängerung">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <button class="zb">
+  <span class="zt">Lizenzverlängerung</span>
+  <span class="zm">
+  </span>
+  </button>
+  <span class="zr">19. Aug</span>
+  </div>
+  <div class="abs">
+  <h2>Kalender</h2>
+  <span class="r">
+  </span>
+  <span class="n">zwei Werktage</span>
+  </div>
+  <div class="hinweis">Termine sind an den aktuellen und den nächsten Werktag gebunden. Alles Weitere gehört in eine Aufgabe — die trägt jedes Datum oder gar keines.</div>
+  <div class="tage">
+  <div class="tag">
+  <div class="tag-k">
+  <span class="h">heute</span>
+  <span class="d">Mittwoch, 5. Aug</span>
+  <span class="sp">
+  </span>
+  <span class="n">3</span>
+  </div>
+  <div class="tag-b">
+  <button class="tm jetzt">
+  <span class="u">08:00</span>
+  <span class="b">
+  <span class="t">Standup</span>
+  <span class="m">Team</span>
+  </span>
+  <span class="w">30 min</span>
+  </button>
+  <button class="tm jetzt">
+  <span class="u">10:00</span>
+  <span class="b">
+  <span class="t">Strategie-Call</span>
+  <span class="m">Video · Lisa Meier</span>
+  </span>
+  <span class="w">60 min</span>
+  </button>
+  <button class="tm jetzt">
+  <span class="u">14:00</span>
+  <span class="b">
+  <span class="t">Abstimmung Layout</span>
+  <span class="m">Büro 2.14 · Jan Kowalski</span>
+  </span>
+  <span class="w">30 min</span>
+  </button>
+  </div>
+  <div class="tagfuss">
+  <button class="tat still">neuer Termin +</button>
+  </div>
+  </div>
+  <div class="tag">
+  <div class="tag-k">
+  <span class="d">Donnerstag, 6. Aug</span>
+  <span class="sp">
+  </span>
+  <span class="n">2</span>
+  </div>
+  <div class="tag-b">
+  <button class="tm">
+  <span class="u">09:00</span>
+  <span class="b">
+  <span class="t">Sprint-Planung</span>
+  <span class="m">Team</span>
+  </span>
+  <span class="w">60 min</span>
+  </button>
+  <button class="tm">
+  <span class="u">15:30</span>
+  <span class="b">
+  <span class="t">Vertragsgespräch</span>
+  <span class="m">Kanzlei · Eva Bergmann</span>
+  </span>
+  <span class="w">45 min</span>
+  </button>
+  </div>
+  <div class="tagfuss">
+  <button class="tat still">neuer Termin +</button>
+  </div>
+  </div>
+  </div>
+  <div class="abs">
+  <h2>Was der Planner dazubekommt</h2>
+  <span class="r">
+  </span>
+  <span class="n">drei Handgriffe</span>
+  </div>
+  <div class="unter">Der Planner zeichnet Aufgaben und Termine schon heute und lässt beide ziehen. Was fehlt, ist die Verbindung zum Dialog: Ein Klick auf einen Block tut bisher nichts.</div>
+  <div class="pl">
+  <div class="pl-k">Mittwoch, 5. Aug</div>
+  <div class="stunde">
+  <div class="su">08</div>
+  <div class="lane">
+  <div class="blk termin" style="cursor: pointer;">
+  <span class="b">
+  <span class="t">Standup</span>
+  <span class="m">08:00 · Team</span>
+  </span>
+  </div>
+  </div>
+  </div>
+  <div class="stunde">
+  <div class="su">09</div>
+  <div class="lane">
+  </div>
+  </div>
+  <div class="stunde">
+  <div class="su">10</div>
+  <div class="lane">
+  <div class="blk termin" style="cursor: pointer;">
+  <span class="b">
+  <span class="t">Strategie-Call</span>
+  <span class="m">10:00 · Video</span>
+  </span>
+  </div>
+  </div>
+  </div>
+  <div class="stunde">
+  <div class="su">11</div>
+  <div class="lane">
+  </div>
+  </div>
+  <div class="stunde">
+  <div class="su">12</div>
+  <div class="lane">
+  <div class="blk aufgabe" style="cursor: pointer;">
+  <button class="kast">
+  <svg viewBox="0 0 12 12">
+  <path d="M2 6.2 4.6 9 10 3">
+  </path>
+  </svg>
+  </button>
+  <span class="b">
+  <span class="t">Feature-Matrix erstellen</span>
+  <span class="m">Aufgabe · 12:00</span>
+  </span>
+  </div>
+  </div>
+  </div>
+  </div>
+  <div class="note">
+  <b>Klick auf einen Block öffnet den Dialog.</b> Termine wie Aufgaben. Der Planner ist die Fläche, auf der man beide am häufigsten sieht — dort nicht bearbeiten zu können, wäre der größte Umweg im ganzen Programm.</div>
+  <div class="note">
+  <b>Aufgabenblöcke bekommen ein Kästchen.</b> Abhaken, ohne die Fläche zu wechseln. Termine bekommen keines: Sie haben kein <code>fertig</code> im Datenmodell, und das soll auch so bleiben — ein vergangener Termin ist vorbei, nicht erledigt.</div>
+  <div class="note gut">
+  <b>Ziehen bleibt, wie es ist.</b> <b>Deine Vorgabe „Termine zwischen den beiden Tagen hin und her schieben“ ist bereits erfüllt</b> — im Planner, nicht im Kalender. Jeder Block ist <code>draggable</code>, und das Ablegen auf einer Stunde setzt Tag und Uhrzeit. Nur der Vorrat links nimmt ausschließlich Aufgaben an, damit ein Termin nicht datumslos werden kann.</div>
+  <div class="abs">
+  <h2>Was ich noch von dir brauche</h2>
+  <span class="r">
+  </span>
+  <span class="n">3</span>
+  </div>
+  <div class="note acht">
+  <b>Dauer beim Termin — behalten?</b> Du hast sie nicht genannt, aber sie steht im Datenmodell und in <code>ROADMAP.md</code>. Der Entwurf zeigt sie als Zahlenfeld. Soll sie raus, fällt ein Feld weg und <code>dauer</code> bleibt als Altlast im Modell.</div>
+  <div class="note acht">
+  <b>Uhrzeit bei der Aufgabe — im Dialog zeigen?</b> Du hast sie nicht genannt. Der Planner setzt sie beim Ziehen, sie steckt also ohnehin im Modell. Ohne Feld könnte man sie nie wieder loswerden, außer durch erneutes Ziehen in den Vorrat. Der Entwurf zeigt sie deshalb, mit einem Hinweis darunter.</div>
+  <div class="note acht">
+  <b>Abgehakte Aufgaben — für immer sichtbar?</b> Der Entwurf lässt sie am Ende ihrer Kategorie stehen. Nach einigen Monaten wird das lang. Möglich wäre ein Abschnitt „Erledigt“, der eingeklappt beginnt. Das wäre aber Neuland gegenüber der Roadmap, deshalb frage ich lieber.</div>
+</div>
+</div>
+<div class="zettel" id="zettel" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+/* ---------- Helfer, wie in dashboard.html ---------- */
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
+  if(h!=null)n.innerHTML=h; return n;};
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,
+  c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const p2=n=>String(n).padStart(2,"0");
+const iso=d=>d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
+const toMin=t=>{const[h,m]=String(t).split(":").map(Number);return h*60+m;};
+const TAGL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
+const MONK=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+let idZaehler=0;
+const neueId=p=>p+"-"+Date.now().toString(36)+"-"+(++idZaehler);
+let zT; function melde(m){const t=$("#zettel");t.textContent=m;t.classList.add("an");
+  clearTimeout(zT);zT=setTimeout(()=>t.classList.remove("an"),2400);}
+function istWerktag(d){const t=d.getDay();return t>=1&&t<=5;}
+function naechsterWerktag(v){const d=new Date(v);d.setHours(0,0,0,0);
+  do{d.setDate(d.getDate()+1);}while(!istWerktag(d));return d;}
+function planTage(){const h=new Date();h.setHours(0,0,0,0);
+  const a=istWerktag(h)?h:naechsterWerktag(h);return[a,naechsterWerktag(a)];}
+const HEUTE=iso(new Date());
+const tagPlus=n=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+n);return iso(d);};
+const K0=planTage().map(iso);
+function frist(x){
+  if(!x.d) return "ohne Frist";
+  const diff=Math.round((new Date(x.d+"T00:00:00")-new Date(HEUTE+"T00:00:00"))/86400000);
+  const d=new Date(x.d+"T00:00:00");
+  if(diff<0) return "überfällig";
+  if(diff===0) return x.zeit||"heute";
+  if(diff===1) return "morgen";
+  if(diff<7) return TAGL[d.getDay()];
+  return d.getDate()+". "+MONK[d.getMonth()];
+}
+const istSpaet=x=>!x.fertig&&x.d&&x.d<HEUTE;
+function bewahre(){}                        /* im Entwurf ohne Wirkung */
+function abschnitt(t,n,kl){
+  const a=el("div","abs",'<h2'+(kl?' class="'+kl+'"':'')+'>'+esc(t)+'</h2><span class="r"></span>');
+  if(n) a.appendChild(el("span","n",esc(n)));
+  return a;
+}
+const HAKEN='<svg viewBox="0 0 12 12"><path d="M2 6.2 4.6 9 10 3"/></svg>';
+
+/* ---------- Daten ---------- */
+const KONTAKTE=[
+  {id:"k1",vor:"Lisa",nach:"Meier"},{id:"k2",vor:"Jan",nach:"Kowalski"},
+  {id:"k4",vor:"Eva",nach:"Bergmann"},{id:"k6",vor:"Tobias",nach:"Meinhardt"}];
+const knm=k=>((k.vor||"")+" "+(k.nach||"")).trim();
+const kfind=id=>KONTAKTE.find(k=>k.id===id);
+const kname=id=>{const k=id?kfind(id):null;return k?knm(k):"";};
+const nachNachnamen=(a,b)=>String(a.nach||"").localeCompare(String(b.nach||""),"de");
+
+const AUFGABEN=[
+  {id:"a1",kat:"todo",titel:"Rechnung 2026-114 freigeben",d:tagPlus(-1),zeit:null,
+   notiz:"Skonto läuft am **5.** ab.",kontakt:"k4",fertig:false},
+  {id:"a2",kat:"todo",titel:"Feature-Matrix erstellen",d:K0[0],zeit:"12:00",
+   notiz:"für Jan",kontakt:"k2",fertig:false},
+  {id:"a3",kat:"todo",titel:"SWOT-Analyse",d:K0[1],zeit:null,notiz:"",kontakt:null,fertig:false},
+  {id:"a4",kat:"todo",titel:"Backup-Skript testen",d:null,zeit:null,notiz:"",kontakt:null,fertig:false},
+  {id:"a9",kat:"todo",titel:"Ablage sortieren",d:tagPlus(-3),zeit:null,notiz:"",kontakt:null,fertig:true},
+  {id:"a6",kat:"nach",titel:"Angebot Meinhardt",d:tagPlus(3),zeit:null,
+   notiz:"warte auf Preis",kontakt:"k6",fertig:false},
+  {id:"a7",kat:"nach",titel:"Rückruf Kanzlei",d:tagPlus(-2),zeit:null,
+   notiz:"seit Montag",kontakt:"k4",fertig:false},
+  {id:"a8",kat:"nach",titel:"Lizenzverlängerung",d:tagPlus(14),zeit:null,notiz:"",kontakt:null,fertig:false}
+];
+const TERMINE=[
+  {id:"t1",d:K0[0],zeit:"08:00",dauer:30,titel:"Standup",anm:"Team",kontakt:null},
+  {id:"t2",d:K0[0],zeit:"10:00",dauer:60,titel:"Strategie-Call",anm:"Video",kontakt:"k1"},
+  {id:"t3",d:K0[0],zeit:"14:00",dauer:30,titel:"Abstimmung Layout",anm:"Büro 2.14",kontakt:"k2"},
+  {id:"t4",d:K0[1],zeit:"09:00",dauer:60,titel:"Sprint-Planung",anm:"Team",kontakt:null},
+  {id:"t5",d:K0[1],zeit:"15:30",dauer:45,titel:"Vertragsgespräch",anm:"Kanzlei",kontakt:"k4"}
+];
+
+/* ============================================================
+   FELDER — beide Module beschreiben ihre Maske als Liste.
+   Kein eigener Dialogcode mehr, nur noch Beschreibung.
+   ============================================================ */
+const AFELDER=[
+  {schl:"titel", nm:"Titel", art:"text", breit:true},
+  {schl:"kat",   nm:"Kategorie", art:"auswahl",
+   optionen:[["todo","To-do — arbeite ich selbst ab"],
+             ["nach","Nachverfolgen — liegt bei anderen"]]},
+  {schl:"d",     nm:"Fällig am", art:"datum", sub:"Jedes Datum erlaubt, auch keines."},
+  {schl:"zeit",  nm:"Uhrzeit",   art:"zeit",  sub:"Setzt der Planner beim Ziehen."},
+  {schl:"kontakt",nm:"Kontakt",  art:"kontakt"},
+  {schl:"notiz", nm:"Notizen",   art:"mehrzeilig"}
+];
+const TFELDER=[
+  {schl:"titel", nm:"Titel", art:"text", breit:true},
+  {schl:"d",     nm:"Tag", art:"auswahl",
+   optionen:[[K0[0], TAGL[planTage()[0].getDay()]+", "+planTage()[0].getDate()+". "
+              +MONK[planTage()[0].getMonth()]],
+             [K0[1], TAGL[planTage()[1].getDay()]+", "+planTage()[1].getDate()+". "
+              +MONK[planTage()[1].getMonth()]]],
+   sub:"Nur diese beiden Werktage."},
+  {schl:"zeit",  nm:"Uhrzeit", art:"zeit"},
+  {schl:"dauer", nm:"Dauer in Minuten", art:"zahl"},
+  {schl:"kontakt",nm:"Kontakt", art:"kontakt"},
+  {schl:"anm",   nm:"Anmerkung", art:"mehrzeilig"}
+];
+
+/* ============================================================
+   MODUL AUFGABEN
+   ============================================================ */
+function aufgabeDialog(a){
+  const neu=!a;
+  const leer={id:null,kat:"todo",titel:"",d:null,zeit:null,notiz:"",kontakt:null,fertig:false};
+  dialog({
+    art: neu?"Neue Aufgabe":"Aufgabe bearbeiten",
+    titel: w=>w.titel,
+    felder: AFELDER,
+    werte: Object.assign({}, leer, a||{}),
+    merk: "<b>Pflicht ist nur der Titel.</b> Ohne Datum landet die Aufgabe im Vorrat des "
+      +"Planners und bleibt dort sichtbar, bis sie eingeplant oder abgehakt wird.",
+    pruefe: w=>String(w.titel||"").trim()?null:{schl:"titel",text:"Ohne Titel geht es nicht."},
+    loeschen: neu?null:{
+      frage: w=>"<b>„"+esc(w.titel)+"“ wirklich löschen?</b><ul>"
+        +"<li>Die Aufgabe verschwindet aus dem Modul, aus dem Planner und aus der Leiste.</li>"
+        +"<li>Abhaken wäre der schonendere Weg — abgehakte Aufgaben bleiben stehen.</li></ul>",
+      tun: w=>{ const i=AUFGABEN.findIndex(x=>x.id===w.id); if(i>=0) AUFGABEN.splice(i,1);
+        male(); melde("Aufgabe gelöscht"); }
+    },
+    speichern: w=>{
+      w.titel=String(w.titel).trim();
+      if(!w.d) w.zeit=null;                 /* ohne Tag keine Uhrzeit */
+      if(neu){ w.id=neueId("a"); AUFGABEN.push(w); }
+      else Object.keys(leer).forEach(s=>{ if(s!=="id") a[s]=w[s]; });
+      male(); melde(neu?"Aufgabe angelegt":"Aufgabe gespeichert");
+    }
+  });
+}
+function aufgabeZeile(a){
+  const r=el("div","z"+(a.fertig?" fertig":"")+(istSpaet(a)?" eilig":""));
+  const kast=el("button","kast",HAKEN);
+  kast.setAttribute("aria-label",(a.fertig?"Wieder öffnen: ":"Erledigen: ")+a.titel);
+  kast.onclick=e=>{ e.stopPropagation(); a.fertig=!a.fertig; male();
+    melde(a.fertig?"Abgehakt: "+a.titel:"Wieder offen: "+a.titel); };
+  r.appendChild(kast);
+  const b=el("button","zb",'<span class="zt">'+esc(a.titel)+'</span>'
+    +'<span class="zm">'+esc([a.notiz.replace(/[*_#]/g,""), kname(a.kontakt)]
+      .filter(Boolean).join(" · "))+'</span>');
+  b.onclick=()=>aufgabeDialog(a);
+  r.appendChild(b);
+  r.appendChild(el("span","zr"+(istSpaet(a)?" eilig":""),frist(a)));
+  return r;
+}
+function flaecheAufgaben(box){
+  [["todo","To-do","Was du selbst abarbeitest."],
+   ["nach","Nachverfolgen","Was bei anderen liegt und beobachtet wird."]].forEach(([kat,nm,sub])=>{
+    const l=AUFGABEN.filter(a=>a.kat===kat).sort((x,y)=>
+      (x.fertig?1:0)-(y.fertig?1:0) || ((x.d||"9999")<(y.d||"9999")?-1:1));
+    const a=abschnitt(nm, l.filter(x=>!x.fertig).length+" offen");
+    const neu=el("button","n","neue Aufgabe +");
+    neu.onclick=()=>aufgabeDialog(null); a.appendChild(neu);
+    box.appendChild(a);
+    box.appendChild(el("div","hinweis",sub));
+    if(!l.length) box.appendChild(el("div","leer","Nichts hier."));
+    l.forEach(x=>box.appendChild(aufgabeZeile(x)));
+  });
+}
+
+/* ============================================================
+   MODUL KALENDER — nur die beiden Werktage
+   ============================================================ */
+function terminDialog(t, tagVor){
+  const neu=!t;
+  const leer={id:null,d:tagVor||K0[0],zeit:"09:00",dauer:30,titel:"",anm:"",kontakt:null};
+  dialog({
+    art: neu?"Neuer Termin":"Termin bearbeiten",
+    titel: w=>w.titel,
+    felder: TFELDER,
+    werte: Object.assign({}, leer, t||{}),
+    merk: "<b>Termine gibt es nur für den aktuellen und den nächsten Werktag.</b> Deshalb "
+      +"ist der Tag eine Auswahl aus zweien und kein freies Datum — ein Termin kann gar "
+      +"nicht erst irgendwo landen, wo ihn niemand sieht.",
+    pruefe: w=>{
+      if(!String(w.titel||"").trim()) return {schl:"titel",text:"Ohne Titel geht es nicht."};
+      if(!w.zeit) return {schl:"zeit",text:"Ein Termin braucht eine Uhrzeit."};
+      return null;
+    },
+    loeschen: neu?null:{
+      frage: w=>"<b>„"+esc(w.titel)+"“ wirklich löschen?</b> Der Termin verschwindet aus "
+        +"dem Kalender und aus dem Planner.",
+      tun: w=>{ const i=TERMINE.findIndex(x=>x.id===w.id); if(i>=0) TERMINE.splice(i,1);
+        male(); melde("Termin gelöscht"); }
+    },
+    speichern: w=>{
+      w.titel=String(w.titel).trim();
+      w.dauer=Number(w.dauer)||30;
+      if(neu){ w.id=neueId("t"); TERMINE.push(w); }
+      else Object.keys(leer).forEach(s=>{ if(s!=="id") t[s]=w[s]; });
+      male(); melde(neu?"Termin angelegt":"Termin gespeichert");
+    }
+  });
+}
+function flaecheKalender(box){
+  const tage=planTage();
+  const a=abschnitt("Kalender","zwei Werktage");
+  box.appendChild(a);
+  box.appendChild(el("div","hinweis",
+    "Termine sind an den aktuellen und den nächsten Werktag gebunden. Alles Weitere gehört "
+    +"in eine Aufgabe — die trägt jedes Datum oder gar keines."));
+  const g=el("div","tage");
+  tage.forEach(d=>{
+    const key=iso(d), heute=key===HEUTE;
+    const l=TERMINE.filter(t=>t.d===key).sort((x,y)=>toMin(x.zeit)-toMin(y.zeit));
+    const s=el("div","tag");
+    s.appendChild(el("div","tag-k",
+      (heute?'<span class="h">heute</span>':'')
+      +'<span class="d">'+TAGL[d.getDay()]+", "+d.getDate()+". "+MONK[d.getMonth()]+'</span>'
+      +'<span class="sp"></span><span class="n">'+l.length+'</span>'));
+    const b=el("div","tag-b");
+    if(!l.length) b.appendChild(el("div","leer","Nichts geplant."));
+    l.forEach(t=>{
+      const n=el("button","tm"+(heute?" jetzt":""),
+        '<span class="u">'+esc(t.zeit)+'</span>'
+        +'<span class="b"><span class="t">'+esc(t.titel)+'</span>'
+        +'<span class="m">'+esc([t.anm.replace(/[*_#]/g,""),kname(t.kontakt)]
+           .filter(Boolean).join(" · "))+'</span></span>'
+        +'<span class="w">'+t.dauer+' min</span>');
+      n.onclick=()=>terminDialog(t);
+      b.appendChild(n);
+    });
+    s.appendChild(b);
+    const f=el("div","tagfuss");
+    const neu=el("button","tat still","neuer Termin +");
+    neu.onclick=()=>terminDialog(null,key);
+    f.appendChild(neu); s.appendChild(f);
+    g.appendChild(s);
+  });
+  box.appendChild(g);
+}
+
+/* ============================================================
+   PLANNER — nur der Ausschnitt, um die Ergänzungen zu zeigen
+   ============================================================ */
+function flaechePlanner(box){
+  box.appendChild(abschnitt("Was der Planner dazubekommt","drei Handgriffe"));
+  box.appendChild(el("div","unter",
+    "Der Planner zeichnet Aufgaben und Termine schon heute und lässt beide ziehen. Was fehlt, "
+    +"ist die Verbindung zum Dialog: Ein Klick auf einen Block tut bisher nichts."));
+  const [d1]=planTage(); const key=iso(d1);
+  const pl=el("div","pl");
+  pl.appendChild(el("div","pl-k",TAGL[d1.getDay()]+", "+d1.getDate()+". "+MONK[d1.getMonth()]));
+  [8,9,10,11,12].forEach(h=>{
+    const st=el("div","stunde");
+    st.appendChild(el("div","su",p2(h)));
+    const lane=el("div","lane");
+    TERMINE.filter(t=>t.d===key&&toMin(t.zeit)>=h*60&&toMin(t.zeit)<(h+1)*60).forEach(t=>{
+      const n=el("div","blk termin",'<span class="b"><span class="t">'+esc(t.titel)
+        +'</span><span class="m">'+esc(t.zeit+(t.anm?" · "+t.anm:""))+'</span></span>');
+      n.style.cursor="pointer"; n.onclick=()=>terminDialog(t);
+      lane.appendChild(n);
+    });
+    AUFGABEN.filter(a=>a.d===key&&a.zeit&&toMin(a.zeit)>=h*60&&toMin(a.zeit)<(h+1)*60)
+      .forEach(a=>{
+        const n=el("div","blk aufgabe"+(istSpaet(a)?" spaet":"")+(a.fertig?" fertig":""));
+        const kast=el("button","kast",HAKEN);
+        kast.onclick=e=>{ e.stopPropagation(); a.fertig=!a.fertig; male();
+          melde(a.fertig?"Abgehakt: "+a.titel:"Wieder offen: "+a.titel); };
+        n.appendChild(kast);
+        const b=el("span","b",'<span class="t">'+esc(a.titel)+'</span>'
+          +'<span class="m">Aufgabe · '+esc(a.zeit)+'</span>');
+        n.appendChild(b);
+        n.style.cursor="pointer"; n.onclick=()=>aufgabeDialog(a);
+        lane.appendChild(n);
+      });
+    st.appendChild(lane);
+    pl.appendChild(st);
+  });
+  box.appendChild(pl);
+  [["Klick auf einen Block öffnet den Dialog",
+    "Termine wie Aufgaben. Der Planner ist die Fläche, auf der man beide am häufigsten sieht — "
+    +"dort nicht bearbeiten zu können, wäre der größte Umweg im ganzen Programm.",""],
+   ["Aufgabenblöcke bekommen ein Kästchen",
+    "Abhaken, ohne die Fläche zu wechseln. Termine bekommen keines: Sie haben kein "
+    +"<code>fertig</code> im Datenmodell, und das soll auch so bleiben — ein vergangener "
+    +"Termin ist vorbei, nicht erledigt.",""],
+   ["Ziehen bleibt, wie es ist",
+    "<b>Deine Vorgabe „Termine zwischen den beiden Tagen hin und her schieben“ ist bereits "
+    +"erfüllt</b> — im Planner, nicht im Kalender. Jeder Block ist <code>draggable</code>, und "
+    +"das Ablegen auf einer Stunde setzt Tag und Uhrzeit. Nur der Vorrat links nimmt "
+    +"ausschließlich Aufgaben an, damit ein Termin nicht datumslos werden kann.","gut"]
+  ].forEach(([t,x,kl])=>box.appendChild(el("div","note"+(kl?" "+kl:""),"<b>"+t+".</b> "+x)));
+}
+
+/* Escape schließt den Dialog. In der Anwendung steht das in
+   Abschnitt 10, hier muss es eigens dabei sein. */
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&dlgOffen){ e.preventDefault(); dialogZu(); }
+});
+
+/* ============================================================
+   SEITE
+   ============================================================ */
+function male(){
+  const b=$("#inhalt"); b.innerHTML="";
+  b.appendChild(abschnitt("Modul Aufgaben","zwei Kategorien"));
+  b.appendChild(el("div","unter",
+    "Überfällige Aufgaben tragen eine rote Kante links und eine rote Fälligkeit rechts. "
+    +"Abgehakte rutschen ans Ende ihrer Kategorie und bleiben stehen — sie verschwinden "
+    +"nicht, sonst wäre nicht mehr nachvollziehbar, was erledigt wurde."));
+  flaecheAufgaben(b);
+  flaecheKalender(b);
+  flaechePlanner(b);
+
+  b.appendChild(abschnitt("Was ich noch von dir brauche","3"));
+  b.appendChild(el("div","note acht",
+    "<b>Dauer beim Termin — behalten?</b> Du hast sie nicht genannt, aber sie steht im "
+    +"Datenmodell und in <code>ROADMAP.md</code>. Der Entwurf zeigt sie als Zahlenfeld. "
+    +"Soll sie raus, fällt ein Feld weg und <code>dauer</code> bleibt als Altlast im Modell."));
+  b.appendChild(el("div","note acht",
+    "<b>Uhrzeit bei der Aufgabe — im Dialog zeigen?</b> Du hast sie nicht genannt. Der "
+    +"Planner setzt sie beim Ziehen, sie steckt also ohnehin im Modell. Ohne Feld könnte man "
+    +"sie nie wieder loswerden, außer durch erneutes Ziehen in den Vorrat. Der Entwurf zeigt "
+    +"sie deshalb, mit einem Hinweis darunter."));
+  b.appendChild(el("div","note acht",
+    "<b>Abgehakte Aufgaben — für immer sichtbar?</b> Der Entwurf lässt sie am Ende ihrer "
+    +"Kategorie stehen. Nach einigen Monaten wird das lang. Möglich wäre ein Abschnitt "
+    +"„Erledigt“, der eingeklappt beginnt. Das wäre aber Neuland gegenüber der Roadmap, "
+    +"deshalb frage ich lieber."));
+}
+male();
+/* ---------- Zeichen, aus dashboard.html ---------- */
+const IKON=d=>'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" '
+  +'stroke="currentColor" stroke-width="1.7" stroke-linecap="round" '
+  +'stroke-linejoin="round" aria-hidden="true">'+d+'</svg>';
+const IK={
+  tel:  IKON('<path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6'
+       +' 19.8 19.8 0 0 1-3.1-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1'
+       +'-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/>'),
+  mail: IKON('<rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/>'
+       +'<path d="m3 7 8.1 5.6a1.6 1.6 0 0 0 1.8 0L21 7"/>'),
+  stern:IKON('<path d="m12 3.2 2.7 5.5 6.1.9-4.4 4.3 1 6-5.4-2.8-5.4 2.8 1-6L3.2 9.6l6.1-.9z"/>'),
+  lupe: IKON('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.9-3.9"/>'),
+  /* Zeichen der Formatierungsleiste */
+  fett:  IKON('<path d="M6.5 4h6a3.8 3.8 0 0 1 0 7.6h-6z"/><path d="M6.5 11.6h6.8a4.2 4.2 0 0 1 0 8.4H6.5z"/>'),
+  kursiv:IKON('<path d="M15.5 4h-6M14.5 20h-6M15 4 9 20"/>'),
+  gross: IKON('<path d="M5.5 19V5h6.2M5.5 12h5.4"/><path d="M15 19v-8.5h4.5M15 15h3.6"/>'),
+  liste: IKON('<path d="M9.5 6.5h11M9.5 12h11M9.5 17.5h11"/>'
+        +'<path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/>'),
+  linie: IKON('<path d="M3.5 12h17"/>')
+};
+
+
+/* ============================================================
+   MARKDOWN IN MEHRZEILIGEN FELDERN
+
+   Fünf Zeichen, mehr nicht. Der vollständige Umwandler gehört
+   nach doku/ROADMAP.md in Schritt 5 — dieser hier ist sein
+   Anfang und wird dort um Links, Code und Zitat erweitert,
+   statt neu geschrieben zu werden.
+
+   Unterstreichen ist bewusst nicht dabei: Markdown kennt es nicht.
+   Weder `_x_` noch `__x__` ergeben eine Unterstreichung, beide sind
+   kursiv beziehungsweise fett. Es ginge nur über eingebettetes HTML,
+   und dafür ist es zu wenig wert.
+   ============================================================ */
+const MDTAT=[
+  {schl:"fett",  zeichen:"fett",  nm:"Fett",           taste:"b", um:["**","**"]},
+  {schl:"kursiv",zeichen:"kursiv",nm:"Kursiv",         taste:"i", um:["*","*"]},
+  {strich:true},
+  {schl:"gross", zeichen:"gross", nm:"Überschrift",    vor:"## "},
+  {schl:"liste", zeichen:"liste", nm:"Aufzählung",     vor:"- "},
+  {schl:"linie", zeichen:"linie", nm:"Trennlinie",     block:"---"}
+];
+
+/* Setzt die Auszeichnung um die Auswahl. Ohne Auswahl wird ein
+   Beispielwort eingesetzt und markiert, damit man gleich tippen kann. */
+function mdUm(ta, auf, zu){
+  const a=ta.selectionStart, e=ta.selectionEnd, t=ta.value;
+  const gewaehlt=t.slice(a,e) || "Text";
+  const schon = t.slice(a-auf.length,a)===auf && t.slice(e,e+zu.length)===zu;
+  if(schon){                                  /* zweiter Klick nimmt es zurück */
+    ta.value = t.slice(0,a-auf.length)+gewaehlt+t.slice(e+zu.length);
+    ta.setSelectionRange(a-auf.length, a-auf.length+gewaehlt.length);
+  } else {
+    ta.value = t.slice(0,a)+auf+gewaehlt+zu+t.slice(e);
+    ta.setSelectionRange(a+auf.length, a+auf.length+gewaehlt.length);
+  }
+}
+/* Setzt ein Vorzeichen an jeden Anfang der berührten Zeilen. */
+function mdVor(ta, vor){
+  const t=ta.value;
+  const a=t.lastIndexOf("\n", ta.selectionStart-1)+1;
+  let e=t.indexOf("\n", ta.selectionEnd); if(e<0) e=t.length;
+  const zeilen=t.slice(a,e).split("\n");
+  const alle=zeilen.every(z=>z.startsWith(vor));
+  const neu=zeilen.map(z=>alle ? z.slice(vor.length) : vor+z).join("\n");
+  ta.value=t.slice(0,a)+neu+t.slice(e);
+  ta.setSelectionRange(a, a+neu.length);
+}
+function mdBlock(ta, block){
+  const a=ta.selectionStart, t=ta.value;
+  const davor = a===0 || t[a-1]==="\n" ? "" : "\n";
+  const text = davor+block+"\n";
+  ta.value = t.slice(0,a)+text+t.slice(ta.selectionEnd);
+  ta.setSelectionRange(a+text.length, a+text.length);
+}
+function mdAnwenden(ta, def){
+  if(def.um)        mdUm(ta, def.um[0], def.um[1]);
+  else if(def.vor)  mdVor(ta, def.vor);
+  else if(def.block)mdBlock(ta, def.block);
+  ta.focus();
+  ta.dispatchEvent(new Event("input",{bubbles:true}));
+}
+
+/* Der knappe Umwandler. Deckt genau die sechs Zeichen der Leiste ab. */
+function mdMalen(text){
+  if(!String(text||"").trim()) return '<span class="leerhin">Noch nichts geschrieben.</span>';
+  const zeile=s=>esc(s)
+    .replace(/\*\*([^*]+)\*\*/g,"<b>$1</b>")
+    .replace(/\*([^*]+)\*/g,"<i>$1</i>");
+  const aus=[]; let liste=null;
+  String(text).split("\n").forEach(z=>{
+    const t=z.trim();
+    if(/^-{3,}$/.test(t)){ if(liste){aus.push("</ul>");liste=null;} aus.push("<hr>"); return; }
+    const u=t.match(/^(#{1,6})\s+(.*)$/);
+    if(u){ if(liste){aus.push("</ul>");liste=null;} aus.push("<h3>"+zeile(u[2])+"</h3>"); return; }
+    const p=t.match(/^[-*]\s+(.*)$/);
+    if(p){ if(!liste){aus.push("<ul>");liste=1;} aus.push("<li>"+zeile(p[1])+"</li>"); return; }
+    if(liste){ aus.push("</ul>"); liste=null; }
+    if(t) aus.push("<p>"+zeile(t)+"</p>");
+  });
+  if(liste) aus.push("</ul>");
+  return aus.join("");
+}
+
+/* ============================================================
+   DER DIALOG ALS BAUSTEIN — zwei Ebenen
+
+   Ebene 1  feldMalen / felderMalen — eine Gruppe Eigenschaften
+            im Format {schl, nm, art, optionen}. Dasselbe Format
+            benutzen die Workflow-Vorlagen in VORLAGEN, deshalb
+            kommt Schritt 6 mit dieser Ebene allein aus.
+   Ebene 2  dialog — die Hülle darum: Kopf, Fuß, Escape, Klick
+            daneben, Löschen mit Rückfrage, Prüfung.
+   ============================================================ */
+function feldMalen(def, wert, setzen){
+  const breit = def.art==="mehrzeilig" || def.breit;
+  const f=el("div","dfeld"+(breit?" breit":"")+(def.art==="schalter"?" schalter":""));
+  let n, huelle=null;
+  if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=wert==null?"":wert; }
+  else if(def.art==="auswahl"||def.art==="kontakt"){
+    n=el("select");
+    const opt = def.art==="kontakt"
+      ? [["","— keiner —"]].concat(KONTAKTE.slice().sort(nachNachnamen).map(k=>[k.id,knm(k)]))
+      : [["","— ohne —"]].concat(def.optionen||[]);
+    opt.forEach(([w,t])=>{ const o=el("option",null,esc(t)); o.value=w;
+      if(String(w)===String(wert==null?"":wert)) o.selected=true; n.appendChild(o); });
+  }
+  else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!wert; }
+  else {
+    n=el("input");
+    n.type = def.art==="datum" ? "date" : def.art==="zeit" ? "time"
+           : def.art==="zahl"  ? "number" : "text";
+    n.value = wert==null ? "" : wert;
+  }
+  n.id="fd-"+def.schl+"-"+(++idZaehler);
+  const lab=el("label",null,esc(def.nm)+(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
+  lab.setAttribute("for",n.id);
+
+  if(def.art==="mehrzeilig" && def.ohneLeiste!==true){
+    huelle=el("div","mdfeld");
+    huelle.append(mdLeiste(n), n);
+    f.append(lab,huelle);
+  }
+  else if(def.art==="schalter") f.append(n,lab);
+  else f.append(lab,n);
+
+  n.oninput=n.onchange=()=>setzen(
+    def.art==="schalter" ? n.checked
+    : def.art==="zahl"   ? (n.value===""?null:Number(n.value))
+    : n.value);
+  f.dazu={knoten:n, def:def};
+  return f;
+}
+
+function mdLeiste(ta){
+  const l=el("div","mdleiste");
+  l.setAttribute("role","toolbar");
+  l.setAttribute("aria-label","Formatierung");
+  MDTAT.forEach(def=>{
+    if(def.strich){ l.appendChild(el("span","mdstrich")); return; }
+    const b=el("button","mdknopf",IK[def.zeichen]);
+    b.type="button";
+    b.title=def.nm+(def.taste?"  Strg+"+def.taste.toUpperCase():"");
+    b.setAttribute("aria-label",def.nm);
+    b.onclick=e=>{ e.preventDefault(); mdAnwenden(ta,def); };
+    l.appendChild(b);
+  });
+  l.appendChild(el("span","sp"));
+  /* Vorschau ist ein Blick, kein Zustand: Sie ersetzt das Feld,
+     solange sie an ist, und gibt es unverändert zurück. */
+  const vor=el("div","mdvor"); vor.hidden=true;
+  const schau=el("button","mdschau","Vorschau");
+  schau.type="button"; schau.setAttribute("aria-pressed","false");
+  schau.onclick=()=>{
+    const an = schau.getAttribute("aria-pressed")!=="true";
+    schau.setAttribute("aria-pressed",String(an));
+    if(an) vor.innerHTML=mdMalen(ta.value);
+    vor.hidden=!an; ta.hidden=an;
+    if(!an) ta.focus();
+  };
+  l.appendChild(schau);
+  ta.after ? null : null;
+  /* Die Vorschau wird gleich hinter das Feld gehängt, sobald es hängt. */
+  setTimeout(()=>{ if(ta.parentNode && !vor.parentNode) ta.after(vor); },0);
+
+  ta.addEventListener("keydown",e=>{
+    if(!(e.metaKey||e.ctrlKey)) return;
+    const def=MDTAT.find(d=>d.taste===e.key.toLowerCase());
+    if(def){ e.preventDefault(); e.stopPropagation(); mdAnwenden(ta,def); }
+  });
+  return l;
+}
+
+function felderMalen(felder, werte, beiAenderung){
+  const r=el("div","draster");
+  r.felder=[];
+  felder.forEach(def=>{
+    const f=feldMalen(def, werte[def.schl], v=>{
+      werte[def.schl]=v; f.classList.remove("schief");
+      if(beiAenderung) beiAenderung(werte, def);
+    });
+    r.felder.push(f); r.appendChild(f);
+  });
+  return r;
+}
+
+let dlgOffen=null;
+function dialogZu(){ if(dlgOffen){ dlgOffen.remove(); dlgOffen=null; } }
+
+function dialog(o){
+  dialogZu();
+  /* Am Entwurf wird gearbeitet, nie an den echten Daten. Sonst
+     hinterließe „Abbrechen“ die halbe Eingabe im Datenbestand. */
+  const w=Object.assign({}, o.werte);
+  const titel=()=> (typeof o.titel==="function" ? o.titel(w) : o.titel) || "—";
+
+  const d=el("div","dlg");
+  d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true");
+  d.setAttribute("aria-label", o.art||"Dialog");
+
+  const kopf=el("div","dlg-k",'<span class="art">'+esc(o.art||"")+'</span>'
+    +'<h2 class="dlg-t">'+esc(titel())+'</h2><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×");
+  zu.setAttribute("aria-label","Schließen"); zu.onclick=dialogZu;
+  kopf.appendChild(zu);
+  d.appendChild(kopf);
+
+  const rumpf=el("div","dlg-b");
+  const raster=felderMalen(o.felder, w, ()=>{
+    const t=d.querySelector(".dlg-t"); if(t) t.textContent=titel();
+  });
+  rumpf.appendChild(raster);
+  if(o.merk) rumpf.appendChild(el("div","merk",o.merk));
+  d.appendChild(rumpf);
+
+  const fuss=el("div","dlg-f");
+  if(o.loeschen){
+    const lo=el("button","tat weg","Löschen");
+    lo.onclick=()=>dlgLoeschfrage(o,w,rumpf,fuss);
+    fuss.appendChild(lo);
+  }
+  fuss.appendChild(el("span","sp"));
+  const ab=el("button","tat still","Abbrechen"); ab.onclick=dialogZu;
+  const sp=el("button","tat","Speichern");
+  sp.onclick=()=>{
+    const schief = o.pruefe ? o.pruefe(w) : null;
+    if(schief){
+      melde(schief.text||schief);
+      /* Das schuldige Feld wird gezeigt, nicht nur gemeldet. */
+      const ziel=raster.felder.find(f=>f.dazu.def.schl===schief.schl);
+      if(ziel){ ziel.classList.add("schief"); ziel.dazu.knoten.focus(); }
+      return;
+    }
+    o.speichern(w); dialogZu();
+  };
+  fuss.append(ab,sp);
+  d.appendChild(fuss);
+
+  const s=el("div","schleier auf");
+  s.appendChild(d);
+  s.onclick=ev=>{ if(ev.target===s) dialogZu(); };
+  document.body.appendChild(s);
+  dlgOffen=s;
+  const erstes=d.querySelector("input,textarea,select"); if(erstes) erstes.focus();
+  return d;
+}
+
+function dlgLoeschfrage(o,w,rumpf,fuss){
+  rumpf.innerHTML="";
+  rumpf.appendChild(el("div","merk warn",
+    typeof o.loeschen.frage==="function" ? o.loeschen.frage(w) : o.loeschen.frage));
+  fuss.innerHTML="";
+  const ja=el("button","tat weg ernst","Ja, löschen");
+  ja.onclick=()=>{ o.loeschen.tun(w); dialogZu(); };
+  fuss.appendChild(ja);
+  fuss.appendChild(el("span","sp"));
+  const nein=el("button","tat still","Doch nicht");
+  nein.onclick=()=>dialog(o);
+  fuss.appendChild(nein);
+}
+</script>
+</body>
+</html>

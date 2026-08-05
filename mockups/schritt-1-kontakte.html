@@ -206,9 +206,13 @@ a{color:inherit;text-decoration:none}
   <div class="rumpf">
     <div class="mitte weit" id="mitte">
       <!-- Ausgangszustand als echtes Markup, damit der Entwurf auch dort etwas
-           zeigt, wo kein Skript laeuft — etwa in einer Vorschau, die <script>
-           entfernt. Sobald das Skript laeuft, ersetzt male() diesen Block.
-           Erzeugt aus der laufenden Seite, nicht von Hand geschrieben. -->
+           zeigt, wo kein Skript läuft — etwa in einer Vorschau, die Skriptblöcke
+           entfernt. Sobald das Skript läuft, ersetzt male() diesen Block.
+           Erzeugt aus der laufenden Seite, nicht von Hand geschrieben.
+           (Das Wort für einen Skriptblock steht hier bewusst nicht in spitzen
+           Klammern: pruefen.mjs schneidet den Skriptteil mit einer schlichten
+           Regex heraus und würde sonst diesen Kommentar für den Anfang des
+           Skripts halten.) -->
       <div class="abs">
       <h2>Kontakte</h2>
       <span class="r">

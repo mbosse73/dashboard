@@ -7,7 +7,39 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: Schritt 5 — Notizen mit Markdown.** Zwei Arten,
+**Zuletzt: eine Zwischenprüfung des erreichten Stands.** Kein
+Roadmap-Schritt — ein Durchgang durch alle Flächen, die Datenwege und die
+Farben. Fünf Befunde:
+
+* **Ein Absturz.** Eine Sicherung mit einem Termin ohne `zeit` riss
+  `toMin` auf und nahm Leiste **und** Planner gleichzeitig mit — die
+  Anwendung war leer, ohne Weg zurück. Behoben auf zwei Ebenen: `toMin`
+  verträgt einen fehlenden Wert, und `heile(Z)` zieht Termine einmal
+  gerade, beim Start wie beim Laden einer Datei. Fehlerbuch Punkt 12.
+* **`--ink3` verfehlte die eigene Kontrastregel** — `#87837c` sind
+  3,46 : 1, gefordert sind 4,5. Das Token trägt jede Metazeile, jeden
+  Hinweis, jeden Zähler. Jetzt `#6b675e`, 5,17 : 1. In der Notion-Fassung
+  waren `--ink2`, `--ink3` und das Rot ebenso zu hell; auch das ist
+  nachgezogen, mit Notions eigenen dunkleren Tönen.
+* **Fünf Gerüste sahen fertig aus.** Liste, Knöpfe, Demodaten, und ein
+  Klick meldete „Öffne …", „Starte …", „Kopiert" — nichts davon geschah.
+  Ein Modul meldet jetzt mit `geruest:"…"` an, was ihm fehlt; `male()`
+  setzt daraus ein Band über die Fläche und die Modulliste eine Marke.
+  Die Meldungen sagen die Wahrheit. Fehlerbuch Punkt 9.
+* **⌘1 bis ⌘8** meldeten „Öffne …" und öffneten nichts. Jetzt „Noch
+  nicht eingebaut". Das Öffnen selbst gehört zu Schritt 7 und hängt am
+  Browsertest.
+* **Das README war überholt** — „zehn Fehler", „neun Module als Gerüst".
+  Ursache war eine Ersetzung ohne Prüfung, die nichts traf, nichts tat
+  und trotzdem als erledigt abgehakt wurde. `pruefen.mjs` zählt die drei
+  Zahlen jetzt selbst nach. Fehlerbuch Punkt 13.
+
+Bewusst offen geblieben: Aufgaben und Kalender haben keine eigene
+Modulsuche, Kontakte und Notizen schon. Und ein Eintrag ohne Titel
+zeichnet eine leere Zeile — erreichbar nur über eine von Hand bearbeitete
+Sicherung.
+
+**Davor: Schritt 5 — Notizen mit Markdown.** Zwei Arten,
 Telefonnotiz vorbelegt; Datum und Uhrzeit stehen zusätzlich im Text,
 damit sie beim Ausleiten erhalten bleiben. Der Anrufer kommt aus der
 Kontaktliste oder wird frei eingetragen. Die Vorschau steht in der
@@ -112,8 +144,8 @@ alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
 
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
 als Arbeitsfläche. Elf Module sind angemeldet, davon sechs fertig
-(Planner, Leiste, Kontakte, Aufgaben, Kalender, Notizen) und fünf als
-Gerüst. Sichern und Laden über JSON,
+(Kontakte, Aufgaben, Kalender, Notizen, Rechner, Code-Beautifier) und
+fünf als Gerüst — die sagen das auf ihrer Fläche jetzt selbst. Sichern und Laden über JSON,
 Markdown-Export einbahnig. Alle Modulblöcke tragen Marker.
 
 Ein Entwurf für den Workflow-Dialog liegt unter
@@ -162,11 +194,11 @@ bestimmen, wie drei Dinge gebaut werden müssen:
 
 **Bis das geklärt ist, Schritt 4 und Schritt 7 der Roadmap zurückstellen.**
 
-### 2. Notion-Fassung: Kontrast
+### 2. Notion-Fassung: Kontrast — erledigt
 
-Notions Tertiärton hat 2,5 : 1 auf Weiß und trifft Zeitangaben und
-Metazeilen. Das ist Notions eigener Wert, kein Fehler. Falls es stört:
-`--ink3` von `.45` auf `.6` — eine Zahl.
+`--ink3` steht auf `.7`, `--ink2` auf `.8`, `--signal-tx` auf `#c23030`.
+Alle drei halten jetzt 4,5 : 1 auf Weiß, `--sheet` und `--raise`. Bleibt
+nachzusehen, ob die Fassung dadurch zu schwer wirkt.
 
 ---
 

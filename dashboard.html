@@ -13,7 +13,11 @@
   --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
   --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
   --rule:#e2ded4;  --rule2:#cbc6ba;
-  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#87837c;
+  /* --ink3 trägt jede Metazeile, jeden Hinweis und jeden Zähler — also
+     tragenden Text. #87837c kam auf 3,46 : 1 und verfehlte damit die
+     eigene Regel von 4,5 : 1. #6b675e liegt bei 5,17 / 5,59 / 4,77 auf
+     paper / sheet / raise und sieht fast gleich aus. */
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
   --tinte:#2f3a8c; --tinte-s:#e7eaf6;
   /* „Kontaktweg hinterlegt“ — ein Zustand, keine Kategorie. Telefon und
      Mail tragen bewusst denselben Ton; die beiden Zeichen unterscheiden
@@ -70,6 +74,14 @@ input,textarea{font:inherit}
 .abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
 .abs button.n:hover{color:var(--ink)}
 .hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px}
+/* Ein Gerüst sieht fertig aus — Liste, Knöpfe, Demodaten. Dieses Band
+   sagt, was daran noch nicht trägt. Graustufen, keine eigene Farbe:
+   „unfertig“ ist keine Dringlichkeit. */
+.geruest{display:flex;gap:9px;align-items:baseline;margin:0 0 14px;padding:9px 11px;
+  border:1px dashed var(--rule2);border-radius:8px;background:var(--raise)}
+.geruest b{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink2);flex-shrink:0}
+.geruest span{font-size:12.5px;color:var(--ink2);line-height:1.5}
 
 .z{display:flex;align-items:flex-start;gap:12px;padding:10px 10px 10px 2px;border-radius:8px;
   border-left:2px solid transparent}
@@ -278,7 +290,7 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .mk:hover b{color:var(--tinte)}
 .mk span{font-size:13.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mk:hover span{color:var(--ink)}
-.modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(184px,1fr));gap:1px}
+.modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
 .ml{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:7px}
 .ml:hover{background:var(--sheet)}
 .ml b{font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:18px}
@@ -286,6 +298,8 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .ml:hover span{color:var(--ink)}
 .ml em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
   margin-left:auto}
+.ml em.gz{margin-left:8px;border:1px dashed var(--rule2);border-radius:5px;
+  padding:1px 5px;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase}
 
 /* ---------- Planner ---------- */
 .planer{flex:1;min-height:0;display:flex;overflow:hidden;background:var(--paper)}
@@ -466,7 +480,14 @@ const el = (t,c,h)=>{const n=document.createElement(t); if(c)n.className=c;
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const p2 = n => String(n).padStart(2,"0");
 const iso = d => d.getFullYear()+"-"+p2(d.getMonth()+1)+"-"+p2(d.getDate());
-const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
+/* Eine Sicherung von Hand oder aus einer älteren Fassung kann einen Termin
+   ohne `zeit` enthalten. Ungeschützt brach hier die ganze Zeichnung ab und
+   nahm Leiste und Planner mit — die Anwendung war leer, ohne Weg zurück.
+   Ein fehlender oder unsinniger Wert gilt jetzt als 0:00. */
+const toMin = t => {
+  const [h,m]=String(t==null?"":t).split(":").map(Number);
+  return (h>=0?h:0)*60+(m>=0?m:0);
+};
 const nowMin = () => { const d=new Date(); return d.getHours()*60+d.getMinutes(); };
 const TAGL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Samstag"];
 const MONL=["Januar","Februar","März","April","Mai","Juni","Juli","August",
@@ -475,6 +496,10 @@ const MONK=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","
 let melT;
 function melde(m){ const t=$("#zettel"); t.textContent=m; t.classList.add("an");
   clearTimeout(melT); melT=setTimeout(()=>t.classList.remove("an"),2200); }
+/* Fehlerbuch Punkt 9 — eine Beschriftung erst setzen, wenn sie hält.
+   Die Gerüstmodule melden bislang „Öffne …“, „Starte …“, „Kopiert“ und
+   taten nichts davon. Solange die Tat fehlt, sagen sie das. */
+const nochNicht = was => "Noch nicht eingebaut" + (was ? " · " + was : "");
 
 const LS_OK=(()=>{ try{localStorage.setItem("db-probe","1");
   localStorage.removeItem("db-probe"); return true;}catch(e){return false;} })();
@@ -1151,6 +1176,24 @@ const Z = (()=>{
   gesichert.format = 1;
   return gesichert;
 })();
+
+/* Nachbessern, was das Zeichnen sonst umwirft.
+   Eine Sicherung kommt von der Platte — von Hand bearbeitet, aus einer
+   älteren Fassung, halb geschrieben. Ein Termin ohne `zeit` hat früher
+   `toMin` zerrissen und damit Leiste und Planner gleichzeitig geleert;
+   ein Termin ohne `dauer` verschwindet still aus „Läuft gerade". Beides
+   wird hier einmal geradegezogen, nicht an jeder Lesestelle einzeln.
+   Läuft über Z, also für den Start aus localStorage und für das Laden
+   einer Datei gleichermaßen. */
+function heile(z){
+  let n=0;
+  (z.termine||[]).forEach(t=>{
+    if(!/^\d{1,2}:\d{2}$/.test(String(t.zeit))){ t.zeit="09:00"; n++; }
+    if(!(Number(t.dauer)>0)){ t.dauer=30; n++; }
+  });
+  return n;
+}
+heile(Z);
 
 /* Kurznamen: dieselben Arrays, nicht Kopien */
 const KONTAKTE=Z.kontakte, WORKFLOWS=Z.workflows, BAUSTEINE=Z.bausteine,
@@ -1835,13 +1878,15 @@ function notizZeile(n){
 /* ===== MODUL bausteine ===== */
 registriere({
   id:"bausteine", nr:"05", nm:"Textbausteine",
+  geruest:"Die Bausteine lassen sich ansehen. Anlegen, Bearbeiten und das "
+    +"Einsetzen in die Zwischenablage fehlen noch.",
   zahl:()=>BAUSTEINE.length,
   suche(q){
     return BAUSTEINE.filter(b=>(b.titel+" "+b.text).toLowerCase().includes(q)).map(b=>{
       const pl=[...new Set((b.text.match(/\{(\w+)\}/g)||[]).map(x=>x.slice(1,-1)))];
       return treff("Baustein",b.titel,
         b.grp+(pl.length?" · Platzhalter: "+pl.join(", "):" · ohne Platzhalter"),"↵",
-        ()=>melde(pl.length?"Maske für "+pl.length+" Platzhalter":"In die Zwischenablage kopiert"));
+        ()=>melde(nochNicht(b.titel)));
     });
   },
   flaeche(b){
@@ -1854,7 +1899,7 @@ registriere({
         r.append(el("span","zb",'<span class="zt">'+esc(x.titel)+'</span>'
           +'<span class="zm">'+esc(x.text.split("\n")[0].slice(0,80))+'</span>'));
         const t=el("button","tat still", pl.length?pl.length+" Platzhalter":"Kopieren");
-        t.onclick=()=>melde(pl.length?"Maske: "+pl.join(", "):"Kopiert");
+        t.onclick=()=>melde(nochNicht(x.titel));
         r.appendChild(t);
         b.appendChild(r);
       });
@@ -1867,10 +1912,11 @@ registriere({
 /* ===== MODUL apps ===== */
 registriere({
   id:"apps", nr:"08", nm:"Appstarter",
+  geruest:"Die Liste steht. Starten, Anlegen und Bearbeiten fehlen noch.",
   zahl:()=>APPS.length,
   suche(q){
     return APPS.filter(a=>a.titel.toLowerCase().includes(q)).map(a=>
-      treff("App starten",a.titel,a.url,"↵",()=>melde("Starte "+a.titel+" in neuem Tab")));
+      treff("App starten",a.titel,a.url,"↵",()=>melde(nochNicht(a.titel))));
   },
   flaeche(b){
     b.appendChild(abschnitt("Apps",String(APPS.length)));
@@ -1879,7 +1925,7 @@ registriere({
       const r=el("div","z");
       r.append(el("span","zb",'<span class="zt">'+esc(a.titel)+'</span>'
         +'<span class="zm">'+esc(a.url)+'</span>'));
-      const t=el("button","tat still","Starten"); t.onclick=()=>melde("Starte "+a.titel);
+      const t=el("button","tat still","Starten"); t.onclick=()=>melde(nochNicht(a.titel));
       r.appendChild(t); b.appendChild(r);
     });
   }
@@ -1890,14 +1936,16 @@ registriere({
 /* ===== MODUL marken ===== */
 registriere({
   id:"marken", nr:"09", nm:"Bookmarks",
+  geruest:"Anheften und Lösen tragen bereits. Öffnen, Anlegen und Bearbeiten "
+    +"fehlen noch — auch hinter ⌘1 bis ⌘8 passiert deshalb nichts.",
   zahl:()=>MARKEN.length,
   suche(q){
     return MARKEN.filter(m=>(m.t+" "+m.u).toLowerCase().includes(q)).slice(0,6).map(m=>
-      treff("Bookmark",m.t,m.u+" · "+m.g,"↵",()=>melde("Öffne "+m.t)));
+      treff("Bookmark",m.t,m.u+" · "+m.g,"↵",()=>melde(nochNicht(m.u))));
   },
   flaeche(b){
     b.appendChild(el("div","hinweis",
-      "Angeheftetes liegt auf der Leiste und auf ⌘1 bis ⌘8. Acht Plätze, mehr nicht."));
+      "Angeheftetes bekommt einen Platz auf der Leiste. Acht Plätze, mehr nicht."));
     [...new Set(MARKEN.map(m=>m.g))].forEach(g=>{
       const l=MARKEN.filter(m=>m.g===g);
       b.appendChild(abschnitt(g,String(l.length)));
@@ -1912,7 +1960,7 @@ registriere({
           else { if(PINS.length>=8){ melde("Acht Plätze belegt"); return; } PINS.push(m.u); }
           bewahre(); male(); };
         r.appendChild(t);
-        r.onclick=()=>melde("Öffne "+m.t);
+        r.onclick=()=>melde(nochNicht(m.u));
         b.appendChild(r);
       });
     });
@@ -1924,6 +1972,8 @@ registriere({
 /* ===== MODUL workflows ===== */
 registriere({
   id:"workflows", nr:"13", nm:"Workflows",
+  geruest:"Weiterschalten trägt bereits und bleibt erhalten. Anlegen, "
+    +"Bearbeiten und die Eigenschaften je Teilschritt fehlen noch.",
   zahl:()=>WORKFLOWS.filter(w=>!wfFertig(w)).length,
   suche(q){
     return WORKFLOWS.filter(w=>w.titel.toLowerCase().includes(q)).map(w=>
@@ -2018,6 +2068,7 @@ function rechne(text){
 /* ===== MODUL outliner ===== */
 registriere({
   id:"outliner", nr:"15", nm:"Outliner",
+  geruest:"Die Gliederung lässt sich ansehen, aber noch nicht bearbeiten.",
   zahl:()=>BAUM.length,
   suche(q){
     return BAUM.filter(k=>k.t.toLowerCase().includes(q)).slice(0,4).map(k=>
@@ -2031,7 +2082,7 @@ registriere({
       const n=el("div","knoten",'<span class="pkt"></span>'
         +'<span class="tx" style="font-weight:'+(k.ebene===0?650:400)+'">'+esc(k.t)+'</span>');
       n.style.paddingLeft=(k.ebene*22+8)+"px";
-      n.onclick=()=>melde(k.t);
+      n.onclick=()=>melde(nochNicht(k.t));
       baum.appendChild(n);
     });
     b.appendChild(baum);
@@ -2254,7 +2305,7 @@ function ruhezustand(box){
   PINS.forEach((u,i)=>{
     const m=MARKEN.find(x=>x.u===u); if(!m) return;
     const n=el("button","mk",'<b>⌘'+(i+1)+'</b><span>'+esc(m.t)+'</span>');
-    n.onclick=()=>melde("Öffne "+m.t); g.appendChild(n);
+    n.onclick=()=>melde(nochNicht(m.u)); g.appendChild(n);
   });
   if(!PINS.length) g.appendChild(el("div","leer","Nichts angeheftet."));
   box.appendChild(g);
@@ -2265,7 +2316,9 @@ function ruhezustand(box){
   const ml=el("div","modliste");
   MODULE.filter(m=>!m.versteckt).sort((a,b)=>a.nr<b.nr?-1:1).forEach(m=>{
     const n=el("button","ml",'<b>'+esc(m.nr)+'</b><span>'+esc(m.nm)+'</span>'
-      +(m.zahl?'<em>'+m.zahl()+'</em>':''));
+      +(m.zahl?'<em>'+m.zahl()+'</em>':'')
+      +(m.geruest?'<em class="gz"'+(m.zahl?'':' style="margin-left:auto"')
+        +' title="'+esc(m.geruest)+'">Gerüst</em>':''));
     n.onclick=()=> m.flaeche ? zeigeFlaeche(m.id) : melde(m.nm+" — keine eigene Fläche");
     ml.appendChild(n);
   });
@@ -2423,6 +2476,10 @@ function male(){
   zur.onclick=()=>zeigeFlaeche("leiste");
   b.appendChild(zur);
   b.appendChild(abschnitt(m.nr+" · "+m.nm,null));
+  /* Ein Modul, das sich als Gerüst anmeldet, sagt das auf seiner Fläche —
+     an einer Stelle für alle, damit kein Gerüst es vergessen kann. */
+  if(m.geruest) b.appendChild(el("div","geruest",
+    "<b>Gerüst</b><span>"+esc(m.geruest)+"</span>"));
   if(m.flaeche) m.flaeche(b); else b.appendChild(el("div","leer","Keine eigene Fläche."));
   rumpf.appendChild(b);
 }
@@ -2485,8 +2542,10 @@ $("#laden").onchange=e=>{
     ["schmierzettel"].forEach(k=>{
       if(typeof neu[k]==="string"){ Z[k]=neu[k]; if(neu[k]) zahl++; }
     });
+    const heil=heile(Z);
     bewahre(); male();
-    melde(zahl+" Einträge aus "+f.name+" geladen");
+    melde(zahl+" Einträge aus "+f.name+" geladen"
+      +(heil?" · "+heil+(heil>1?" Felder":" Feld")+" ergänzt":""));
   };
   r.onerror=()=>melde("Datei konnte nicht gelesen werden");
   r.readAsText(f,"utf-8"); e.target.value="";
@@ -2584,7 +2643,7 @@ document.addEventListener("keydown",e=>{
     return; }
   if(mod&&e.key>="1"&&e.key<="8"){ e.preventDefault();
     const u=PINS[+e.key-1];
-    if(u){ const m=MARKEN.find(x=>x.u===u); melde("Öffne "+(m?m.t:u)); }
+    if(u){ const m=MARKEN.find(x=>x.u===u); melde(nochNicht(m?m.t:u)); }
     else melde("Platz ⌘"+e.key+" ist frei");
     return; }
   if(mod&&e.key==="k"){ e.preventDefault(); zeigeFlaeche("leiste"); return; }

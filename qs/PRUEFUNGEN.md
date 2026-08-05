@@ -200,6 +200,51 @@ Schaden angerichtet. Bitte beides eigens ansehen:
 
 ---
 
+## Schritt 5 — Notizen mit Markdown
+
+### Schmierzettel an beiden Stellen
+
+- [ ] In der **Leiste** steht ein kompakter Schmierzettel zwischen „Als Nächstes“
+      und „Favoriten“ **[vorgeprüft]**
+- [ ] Dort etwas tippen, ins **Modul Notizen** wechseln — derselbe Text steht oben **[vorgeprüft]**
+- [ ] Im Modul ändern, zurück zur Leiste — die Änderung ist dort **[vorgeprüft]**
+- [ ] **Seite neu laden** — der Text steht noch da **[vorgeprüft]**
+- [ ] **Sichern**, Schmierzettel ändern, **Laden** — der gesicherte Text kommt zurück.
+      Das ist die Stelle, die um ein Haar still nicht geladen worden wäre **[nur du]**
+- [ ] „leeren“ räumt ab, „im Modul öffnen“ wechselt hinüber **[vorgeprüft]**
+
+### Notizen
+
+- [ ] Notizen sind nach Datum sortiert, **neueste zuerst** **[vorgeprüft]**
+- [ ] Die Liste zeigt den Text **gesetzt**, nicht als Rohtext **[vorgeprüft]**
+- [ ] **Neue Notiz** ist eine Telefonnotiz, Datum und Uhrzeit stehen schon im Text **[vorgeprüft]**
+- [ ] Art auf „Allgemeine Notiz“ umstellen und speichern **[nur du]**
+- [ ] Anrufer **aus der Kontaktliste** wählen · alternativ **frei eintragen** **[nur du]**
+- [ ] Beides gefüllt — es gewinnt die Auswahl aus der Liste **[nur du]**
+- [ ] Suche nach einem frei eingetragenen Namen findet die Notiz **[vorgeprüft]**
+- [ ] Bearbeiten und Löschen **[nur du]**
+
+### Der Weg als .md hinaus und zurück
+
+- [ ] Bei einer Notiz **„als .md ausleiten“** (erscheint beim Überfahren) —
+      es entsteht eine Datei mit Kopfblock **[nur du]**
+- [ ] **„Notiz aus .md einlesen“** mit derselben Datei — Text, Titel, Datum und Uhrzeit
+      kommen unverändert zurück **[nur du]**
+- [ ] Der **Kontakt** kommt *nicht* zurück, der Name steht als Text da. Das ist Absicht:
+      die Gegenseite kennt unsere Kennungen nicht **[vorgeprüft]**
+- [ ] Eine **fremde** `.md` einlesen, die keinen Kopfblock hat — der Titel kommt aus der
+      ersten Überschrift oder aus dem Dateinamen **[vorgeprüft]**
+- [ ] Eine Notiz anlegen, deren Titel einen **Gedankenstrich** enthält, und eine, deren
+      Text mit `---` beginnt. Ausleiten, einlesen — beide überleben.
+      Das ist Fehlerbuch Punkt 5 **[vorgeprüft]**
+
+### Nebenbei behoben
+
+- [ ] **Laden** drücken — der Dateidialog zeigt jetzt `.json` an. Vorher filterte er auf
+      `.md` und hätte die Sicherungsdatei ausgeblendet **[nur du]**
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.
@@ -220,7 +265,6 @@ Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 
 - **Schritt 4 — Textbausteine:** Ein Baustein mit drei Platzhaltern liegt in vier
   Klicks als fertiger Text in der Zwischenablage. *Braucht Schritt 0*
-- **Schritt 5 — Notizen:** Eine exportierte Notiz sieht nach dem Import identisch aus
 - **Schritt 6 — Workflows:** Neue Instanz hat sofort alle acht Teilschritte mit leeren
   Werten · Durchlauf bis zum Ende klickbar · überfälliger aktiver Schritt erscheint in
   Leiste und Planner · Klick auf Schritt 6 ändert den Stand **nicht**

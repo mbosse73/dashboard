@@ -7,7 +7,29 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: Schritt 3 — Aufgaben und Termine bearbeiten.** Beide Module
+**Zuletzt: Schritt 5 — Notizen mit Markdown.** Zwei Arten,
+Telefonnotiz vorbelegt; Datum und Uhrzeit stehen zusätzlich im Text,
+damit sie beim Ausleiten erhalten bleiben. Der Anrufer kommt aus der
+Kontaktliste oder wird frei eingetragen. Die Vorschau steht in der
+Liste — eine Notiz ist ihr Text. Der Umwandler aus Schritt 2 wurde
+erweitert, nicht neu geschrieben.
+
+**Export und Import als `.md`** mit einem Kopfblock, dessen Grenze hart
+gezogen ist: `---` in Zeile 1, ein zweites `---` innerhalb von zehn
+Zeilen, dazwischen ausschließlich `schlüssel: wert`. Sonst ist alles
+Text. Gegengeprüft mit den beiden Fällen aus Fehlerbuch Punkt 5 — Titel
+mit Gedankenstrich und ein Text, der selbst mit `---` beginnt.
+
+**Der Schmierzettel** ist ein einzelner Text, groß im Modul und kompakt
+in der Leiste, beide auf dieselbe Stelle. Er wäre um ein Haar still
+nicht geladen worden: Die Ladeliste prüfte `Array.isArray`, und
+`pruefen.mjs` suchte nach `name: [`. Beides ist nachgezogen — der Prüfer
+zählt jetzt elf Datenbereiche statt zehn.
+
+Nebenbei behoben: Der Dateiwähler fürs Laden filterte auf `.md`, obwohl
+JSON geladen wird, und hätte die Sicherungsdatei ausgeblendet.
+
+**Davor: Schritt 3 — Aufgaben und Termine bearbeiten.** Beide Module
 beschreiben ihre Maske nur noch als Liste von `{schl, nm, art}`; eigenen
 Dialogcode gibt es nicht mehr. Der Baustein aus Schritt 2 hat sich damit
 bewährt — er wurde für Schritt 3 nicht ein einziges Mal angefasst.
@@ -89,8 +111,9 @@ Logik — und Schritt 6 hat seine Dialogvorlage. Der Prüflauf sieht jetzt
 alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
 
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
-als Arbeitsfläche. Elf Module sind angemeldet, davon fünf fertig
-(Planner, Leiste, Kontakte, Aufgaben, Kalender) und sechs als Gerüst. Sichern und Laden über JSON,
+als Arbeitsfläche. Elf Module sind angemeldet, davon sechs fertig
+(Planner, Leiste, Kontakte, Aufgaben, Kalender, Notizen) und fünf als
+Gerüst. Sichern und Laden über JSON,
 Markdown-Export einbahnig. Alle Modulblöcke tragen Marker.
 
 Ein Entwurf für den Workflow-Dialog liegt unter
@@ -149,16 +172,18 @@ Metazeilen. Das ist Notions eigener Wert, kein Fehler. Falls es stört:
 
 ## Nächster Schritt
 
-Schritt 5 der Roadmap: **Notizen mit Markdown**. Der Umwandler aus
-Schritt 2 deckt fünf Zeichen ab und wird dort um Links, Code und Zitat
-erweitert, statt neu geschrieben zu werden. Dazu Import und Export
-einzelner Notizen als `.md`.
+Schritt 6 der Roadmap: **Workflows vollständig**. Der Entwurf liegt seit
+Phase 0 unter `referenz/workflow-dialog.html`, das Datenmodell ist
+umgestellt, und `felderMalen` wurde in Schritt 2 eigens so gebaut, dass
+der Workflow-Dialog es **dreimal** benutzen kann: für die
+Instanzeigenschaften, für die Teilschrittliste und für den gewählten
+Schritt.
 
-`ANLEITUNG.md` nennt Schritt 5 einen der drei, bei denen eine falsche
+`ANLEITUNG.md` nennt Schritt 6 einen der drei, bei denen eine falsche
 Grundentscheidung teuer wird.
 
-Danach Schritt 6 (Workflows; benutzt `felderMalen` dreimal, Entwurf liegt
-unter `referenz/workflow-dialog.html`).
+Danach Schritt 8 (Hilfe, baut sich aus dem Register auf) und Schritt 9
+(Outliner).
 
 Schritt 4 und 7 bleiben zurückgestellt, bis der Browsertest beantwortet
 ist.

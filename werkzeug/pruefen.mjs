@@ -122,10 +122,16 @@ function pruefeMarker(name, js) {
 function pruefeSicherung(name, js) {
   const v = js.match(/function vorgabe\(\)\s*\{\s*return\s*\{([\s\S]*?)\n\};\}/);
   if (!v) { warn(name + ": vorgabe() nicht gefunden"); return; }
-  const bereiche = [...v[1].matchAll(/^\s*(\w+)\s*:\s*\[/gm)].map(m => m[1]);
-  const l = js.match(/\[([^\]]*?)\]\.forEach\(k=>\{\s*if\(Array\.isArray\(neu\[k\]\)\)/);
-  if (!l) { warn(name + ": Liste im Ladevorgang nicht gefunden"); return; }
-  const geladen = [...l[1].matchAll(/"(\w+)"/g)].map(m => m[1]);
+  /* Jeder Schlüssel der obersten Ebene, nicht nur die Arrays. Ein
+     einzelner Text — der Schmierzettel etwa — stünde sonst zwar in der
+     Sicherung, käme beim Laden aber nie zurück, und diese Prüfung
+     hätte ihn gar nicht erst bemerkt. `format` wird eigens behandelt. */
+  const bereiche = [...v[1].matchAll(/^ (\w+)\s*:/gm)]      /* genau ein Einzug */
+    .map(m => m[1]).filter(k => k !== "format");
+  /* Der ganze Ladeblock, gleich wie viele Listen er enthält. */
+  const l = js.match(/\$\("#laden"\)\.onchange[\s\S]*?bewahre\(\); male\(\);/);
+  if (!l) { warn(name + ": Ladevorgang nicht gefunden"); return; }
+  const geladen = [...l[0].matchAll(/"(\w+)"/g)].map(m => m[1]);
   const fehlt = bereiche.filter(b => !geladen.includes(b));
   if (fehlt.length)
     bad(name + ": Bereich wird gesichert, aber nicht geladen \u2014 " + fehlt.join(", "));

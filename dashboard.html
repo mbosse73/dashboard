@@ -382,6 +382,50 @@ textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
 .tm .t{display:block;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
 .tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;overflow-wrap:anywhere}
 .tm .w{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;padding-top:2px}
+
+/* ---------- Notizen ---------- */
+textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
+.nz{position:relative;border:1px solid var(--rule);border-radius:11px;background:var(--sheet);
+  margin-bottom:8px;overflow:hidden}
+.nz:hover{border-color:var(--rule2)}
+.nz.tel{border-left:2px solid var(--tinte)}
+.nz-b{display:block;width:100%;padding:12px 14px}
+.nz-k{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+.nz-t{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.nz-a{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+.nz-w{font-size:12px;color:var(--tinte);background:var(--tinte-s);border-radius:5px;
+  padding:1px 7px}
+.nz-k .sp{flex:1}
+.nz-d{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap}
+.nz-v{display:block;font-size:13.5px;line-height:1.6;color:var(--ink2);overflow-wrap:anywhere}
+.nz-v > :first-child{margin-top:0}
+.nz-v h3{font-size:14.5px;font-weight:650;color:var(--ink);margin:11px 0 4px}
+.nz-v p{margin:0 0 7px}
+.nz-v ul{margin:0 0 7px 19px}
+.nz-v li{margin-top:2px}
+.nz-v hr{border:0;border-top:1px solid var(--rule);margin:10px 0}
+.nz-v .leerhin{color:var(--ink3);font-style:italic}
+.nz-aus{position:absolute;top:10px;right:12px;font-size:11.5px;color:var(--ink3);
+  padding:4px 9px;border-radius:6px;opacity:0}
+.nz:hover .nz-aus,.nz-aus:focus-visible{opacity:1}
+.nz-aus:hover{background:var(--raise);color:var(--ink)}
+
+/* ---------- Schmierzettel, kompakt in der Leiste ----------
+   Bewusst ärmer als im Modul: keine Formatierungsleiste, keine
+   Vorschau, feste Zeilenschrift. Wer hier schreibt, will eine
+   Nummer festhalten, kein Dokument setzen. */
+.szk{border:1px solid var(--rule2);border-radius:10px;background:var(--sheet);overflow:hidden}
+.szk textarea{width:100%;border:0;outline:0;background:transparent;resize:vertical;
+  min-height:76px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;
+  line-height:1.55;color:var(--ink)}
+.szk:focus-within{border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.szk-f{display:flex;align-items:center;gap:9px;padding:6px 10px;
+  border-top:1px solid var(--rule);background:var(--paper)}
+.szk-f .h{font-size:11.5px;color:var(--ink3)}
+.szk-f .sp{flex:1}
+.szk-f button{font-size:11.5px;color:var(--ink3);padding:3px 8px;border-radius:6px}
+.szk-f button:hover{background:var(--raise);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -395,7 +439,10 @@ textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
     <button class="akt" id="sichern">Sichern</button>
     <button class="akt" id="ladenBtn">Laden</button>
     <button class="akt" id="export">Export</button>
-    <input type="file" id="laden" accept=".md,.markdown,.txt" hidden>
+    <!-- Gesichert wird JSON. Der Filter stand auf .md und hätte die
+         Sicherungsdatei im Windows-Dialog ausgeblendet. -->
+    <input type="file" id="laden" accept=".json,application/json" hidden>
+    <input type="file" id="mdlesen" accept=".md,.markdown,.txt" hidden>
     <div class="wechsel" role="group" aria-label="Oberfläche">
       <button id="w-leiste"  aria-current="true">Leiste</button>
       <button id="w-planner" aria-current="false">Planner</button>
@@ -559,6 +606,97 @@ function kachelraster(liste){
   return g;
 }
 const nachNachnamen=(a,b)=>String(a.nach||"").localeCompare(String(b.nach||""),"de");
+function datumLang(d){ const x=new Date(d+"T00:00:00");
+  return TAGL[x.getDay()]+", "+x.getDate()+". "+MONK[x.getMonth()]; }
+
+/* ============================================================
+   EINE NOTIZ ALS .md — hinaus und zurück
+
+   doku/FEHLERBUCH.md Punkt 5: Ein selbst geschriebener Parser hat
+   einen Titel mit Gedankenstrich zerrissen. Deshalb hat der
+   Kopfblock hier eine harte Grenze. Er gilt nur, wenn
+
+     die Datei mit --- in Zeile 1 beginnt,
+     ein zweites --- innerhalb der ersten zehn Zeilen folgt,
+     und dazwischen ausschließlich `schlüssel: wert` steht.
+
+   Trifft eines davon nicht zu, ist die ganze Datei Text. Verloren
+   geht dabei nichts — es wandert höchstens in den Rumpf.
+
+   Das ist kein Sicherungsformat. Gesichert wird weiter über JSON;
+   diese Dateien sind für den Weg nach draußen.
+   ============================================================ */
+const KOPFFELDER=["art","titel","d","zeit","wer"];
+function notizAlsMd(n){
+  const k=["---"];
+  KOPFFELDER.forEach(s=>{ if(n[s]) k.push(s+": "+String(n[s]).replace(/\n/g," ")); });
+  const w=notizWer(n); if(w && !n.wer) k.push("wer: "+w);   /* Kontaktnamen ausschreiben */
+  k.push("---","");
+  return k.join("\n")+String(n.text||"").replace(/\s+$/,"")+"\n";
+}
+function notizAusMd(text, dateiname){
+  const z=String(text).replace(/\r\n/g,"\n").split("\n");
+  const n=Object.assign({},NLEER,{art:"allgemein",d:HEUTE});
+  let ab=0;
+  if(z[0].trim()==="---"){
+    const zu=z.slice(1,11).findIndex(x=>x.trim()==="---");
+    if(zu>=0){
+      const kopf=z.slice(1,zu+1);
+      if(kopf.length && kopf.every(x=>/^[a-zäöüß]+:\s/.test(x.trim()))){
+        kopf.forEach(x=>{ const i=x.indexOf(":");
+          const sc=x.slice(0,i).trim(), v=x.slice(i+1).trim();
+          if(KOPFFELDER.indexOf(sc)>=0) n[sc]=v; });
+        ab=zu+2;
+        while(z[ab]!==undefined && z[ab].trim()==="") ab++;
+      }
+    }
+  }
+  n.text=z.slice(ab).join("\n").replace(/\s+$/,"");
+  if(!n.titel){
+    const u=n.text.match(/^#{1,6}\s+(.+)$/m);
+    n.titel = u ? u[1].trim()
+      : String(dateiname||"").replace(/\.md$/i,"").replace(/^\d{4}-\d\d-\d\d[ _-]*/,"")
+        || "Ohne Titel";
+  }
+  n.id=neueId("n");
+  /* Ein Kontaktverweis überlebt den Weg nach draußen nicht — die
+     Gegenseite kennt unsere Kennungen nicht. Der Name bleibt als Text. */
+  n.kontakt=null;
+  return n;
+}
+
+/* ============================================================
+   DER SCHMIERZETTEL — ein Text, zwei Fenster darauf
+
+   Beide schreiben in dieselbe Stelle. Zwei getrennte Zettel, die
+   sich stillschweigend widersprechen, wären das Schlimmste daran.
+   ============================================================ */
+function schmierGross(){
+  const k=el("div","mdfeld");
+  const ta=el("textarea"); ta.className="sz"; ta.value=Z.schmierzettel||"";
+  ta.setAttribute("aria-label","Schmierzettel");
+  ta.oninput=()=>{ Z.schmierzettel=ta.value; bewahre(); };
+  k.append(mdLeiste(ta), ta);
+  return k;
+}
+function schmierKlein(){
+  const k=el("div","szk");
+  const ta=el("textarea"); ta.value=Z.schmierzettel||"";
+  ta.setAttribute("aria-label","Schmierzettel");
+  ta.placeholder="Schnell etwas merken …";
+  ta.oninput=()=>{ Z.schmierzettel=ta.value; bewahre(); };
+  k.appendChild(ta);
+  const f=el("div","szk-f",'<span class="h">speichert beim Tippen</span>'
+    +'<span class="sp"></span>');
+  const gross=el("button",null,"im Modul öffnen ›");
+  gross.onclick=()=>zeigeFlaeche("notizen");
+  f.appendChild(gross);
+  const leeren=el("button",null,"leeren");
+  leeren.onclick=()=>{ Z.schmierzettel=""; bewahre(); male(); melde("Schmierzettel geleert"); };
+  f.appendChild(leeren);
+  k.appendChild(f);
+  return k;
+}
 
 /* ============================================================
    MARKDOWN IN MEHRZEILIGEN FELDERN
@@ -929,11 +1067,20 @@ function vorgabe(){ return {
   {id:"a8",kat:"nach",titel:"Lizenzverlängerung",d:tagPlus(14),zeit:null,notiz:"läuft aus",kontakt:null,fertig:false}
  ],
  notizen:[
-  {id:"n1",art:"telefon",titel:"Preismodell Staffeln",d:HEUTE,zeit:"09:42",kontakt:"k1",text:"Umstellung auf Staffeln ab Q4, Details folgen per Mail."},
-  {id:"n2",art:"telefon",titel:"Rückfrage Skonto",d:tagPlus(-1),zeit:"16:20",kontakt:"k4",text:"Skontofrist endet am 5., Rechnung muss vorher raus."},
-  {id:"n3",art:"allgemein",titel:"Wettbewerbs-Research",d:tagPlus(-1),zeit:"11:05",kontakt:null,text:"Vier Anbieter geprüft, zwei relevant."},
-  {id:"n4",art:"allgemein",titel:"Architekturskizze",d:tagPlus(-4),zeit:"08:30",kontakt:null,text:"Einzeldatei bleibt, Module als Ansichten."}
+  {id:"n1",art:"telefon",titel:"Preismodell Staffeln",d:HEUTE,zeit:"09:42",kontakt:"k1",wer:"",
+   text:"Umstellung auf Staffeln ab Q4.\n\n- Details folgen per Mail\n- Rückruf nächste Woche"},
+  {id:"n2",art:"telefon",titel:"Rückfrage Skonto",d:tagPlus(-1),zeit:"16:20",kontakt:"k4",wer:"",
+   text:"Skontofrist endet am 5., Rechnung muss vorher raus."},
+  {id:"n3",art:"telefon",titel:"Anruf Zentrale",d:tagPlus(-1),zeit:"11:05",kontakt:null,
+   wer:"Frau Wenzel, Empfang",text:"Ruft morgen wieder an. Steht nicht in der Kontaktliste."},
+  {id:"n4",art:"allgemein",titel:"Wettbewerbs-Research",d:tagPlus(-1),zeit:"",kontakt:null,wer:"",
+   text:"## Vier Anbieter geprüft\n\n- zwei relevant\n- zwei zu teuer\n\n---\n\nNächster Schritt: *Feature-Matrix*."},
+  {id:"n5",art:"allgemein",titel:"Architekturskizze",d:tagPlus(-4),zeit:"",kontakt:null,wer:"",
+   text:"Einzeldatei bleibt. Module als Ansichten."}
  ],
+ /* Der Schmierzettel ist ein einzelner Text, kein Array. Die Ladeliste
+    in Abschnitt 9 muss ihn deshalb eigens behandeln — siehe dort. */
+ schmierzettel:"Sitzungsraum 2.14 ab 14 Uhr\nCode Drucker: 4417",
  workflows:[
   {id:"i1", vorlage:"vertrag", titel:"Vertrag Meinhardt IT", aktiv:"rueckfragen",
    werte:{kontakt:"k6", volumen:24000, akte:"2026-114"},
@@ -1536,35 +1683,153 @@ registriere({
   id:"notizen", nr:"01", nm:"Notizen",
   zahl:()=>DATEN.notizen.length,
   suche(q){
-    return DATEN.notizen.filter(n=>(n.titel+" "+n.text).toLowerCase().includes(q)).map(n=>
+    return DATEN.notizen.filter(n=>(n.titel+" "+n.text+" "+notizWer(n))
+      .toLowerCase().includes(q)).map(n=>
       treff(n.art==="telefon"?"Telefonnotiz":"Notiz",n.titel,
-        n.text.slice(0,70)+(n.kontakt?" · "+kname(n.kontakt):""),"↵",
-        ()=>zeigeFlaeche("notizen")));
+        [notizWer(n), n.text.replace(/[*#>-]/g," ").replace(/\s+/g," ").trim().slice(0,60)]
+          .filter(Boolean).join(" · "),"↵", ()=>notizDialog(n)));
   },
   erfassen(d){
     return [treff("Telefonnotiz",d.titel,"mit Datum und Uhrzeit","↵",
-      ()=>{ const jetzt=new Date();
-        DATEN.notizen.unshift({id:neueId("n"),art:"telefon",titel:d.titel,d:HEUTE,
-          zeit:p2(jetzt.getHours())+":"+p2(jetzt.getMinutes()),kontakt:null,text:""});
-        bewahre(); melde("Telefonnotiz angelegt"); }),
+      ()=>notizDialog(null,d.titel,"telefon")),
       treff("Notiz",d.titel,"als allgemeine Notiz","↵",
-      ()=>{ DATEN.notizen.unshift({id:neueId("n"),art:"allgemein",titel:d.titel,d:HEUTE,
-          zeit:"",kontakt:null,text:""});
-        bewahre(); melde("Notiz angelegt"); })];
+      ()=>notizDialog(null,d.titel,"allgemein"))];
   },
   flaeche(b){
-    b.appendChild(abschnitt("Notizen", DATEN.notizen.length+" · neueste zuerst"));
-    DATEN.notizen.forEach(n=>{
-      const r=el("div","z");
-      r.append(el("span","zb",'<span class="zt">'+esc(n.titel)+'</span>'
-        +'<span class="zm">'+esc((n.art==="telefon"?"Telefonnotiz · ":"")+n.text
-        +(n.kontakt?" · "+kname(n.kontakt):""))+'</span>'),
-        el("span","zr", n.d===HEUTE?("heute "+n.zeit):frist({d:n.d})));
-      b.appendChild(r);
-    });
+    /* --- Schmierzettel --- */
+    b.appendChild(abschnitt("Schmierzettel","eine einzige, immer dieselbe"));
+    b.appendChild(el("div","hinweis",
+      "Zum schnellen Merken. Kein Titel, kein Datum, keine Liste — was hier steht, steht "
+      +"beim nächsten Start wieder da. Speichert bei jedem Tastendruck. Derselbe Text "
+      +"steht kompakt in der Leiste."));
+    b.appendChild(schmierGross());
+
+    /* --- Notizen --- */
+    const q=nSuche.trim().toLowerCase();
+    const passt=n=>!q||((n.titel+" "+n.text+" "+notizWer(n)).toLowerCase().includes(q));
+    /* Nach Datum und Uhrzeit, neueste zuerst. Ohne die Uhrzeit stünden
+       zwei Notizen desselben Tages in beliebiger Reihenfolge. */
+    const l=DATEN.notizen.filter(passt)
+      .sort((x,y)=>(y.d+(y.zeit||"")).localeCompare(x.d+(x.zeit||"")));
+
+    const k=abschnitt("Notizen", l.length+" von "+DATEN.notizen.length+" · neueste zuerst");
+    const neu=el("button","n","neue Notiz +");
+    neu.onclick=()=>notizDialog(null); k.appendChild(neu);
+    b.appendChild(k);
+    b.appendChild(nSuchfeld());
+
+    const reihe=el("div","knopfreihe");
+    const imp=el("button","tat still","Notiz aus .md einlesen");
+    imp.onclick=()=>$("#mdlesen").click();
+    reihe.appendChild(imp);
+    b.appendChild(reihe);
+
+    if(!l.length) b.appendChild(el("div","leer",
+      q ? "Keine Notiz passt zu „"+esc(nSuche)+"“." : "Noch keine Notiz."));
+    l.forEach(n=>b.appendChild(notizZeile(n)));
   }
 });
 /* ===== ENDE notizen ===== */
+
+const NLEER={id:null,art:"telefon",titel:"",d:null,zeit:"",kontakt:null,wer:"",text:""};
+const notizWer=n=>kname(n.kontakt)||n.wer||"";
+let nSuche="";
+
+function nSuchfeld(){
+  const s=el("div","msuche",'<span class="lupe">'+IK.lupe+'</span>');
+  const i=el("input"); i.type="text"; i.value=nSuche;
+  i.placeholder="Notizen durchsuchen — Titel, Text, Anrufer";
+  i.setAttribute("aria-label","Notizen durchsuchen");
+  i.oninput=()=>{ const st=i.selectionStart; nSuche=i.value; male();
+    const n=document.querySelector(".msuche input");
+    if(n){ n.focus(); n.setSelectionRange(st,st); } };
+  s.appendChild(i);
+  if(nSuche){ const w=el("button","weg","zurücksetzen");
+    w.onclick=()=>{ nSuche=""; male(); }; s.appendChild(w); }
+  return s;
+}
+
+function nFelder(){
+  return [
+    {schl:"titel", nm:"Titel", art:"text", breit:true},
+    {schl:"art",   nm:"Art", art:"auswahl",
+     optionen:[["telefon","Telefonnotiz"],["allgemein","Allgemeine Notiz"]],
+     sub:"Neue Notizen sind Telefonnotizen."},
+    {schl:"d",     nm:"Datum", art:"datum"},
+    {schl:"zeit",  nm:"Uhrzeit", art:"zeit"},
+    {schl:"kontakt",nm:"Kontakt aus der Liste", art:"kontakt"},
+    {schl:"wer",   nm:"…oder frei eintragen", art:"text",
+     sub:"Für Anrufer, die nicht in der Kontaktliste stehen."},
+    {schl:"text",  nm:"Text", art:"mehrzeilig"}
+  ];
+}
+
+function notizDialog(n, vorbelegt, artVor){
+  const neu=!n;
+  const jetzt=new Date();
+  const start=Object.assign({},NLEER,n||{});
+  if(neu){
+    start.titel=vorbelegt||"";
+    start.art=artVor||"telefon";
+    start.d=HEUTE;
+    start.zeit=p2(jetzt.getHours())+":"+p2(jetzt.getMinutes());
+    /* Datum und Uhrzeit stehen zusätzlich im Text. So wandern sie in die
+       .md-Datei und stehen dort, wo man sie beim Lesen sucht. Beim späteren
+       Ändern des Datumsfelds wird die Zeile bewusst nicht nachgeschrieben —
+       sonst überschriebe sie, was von Hand angepasst wurde. */
+    if(start.art==="telefon")
+      start.text="**"+datumLang(start.d)+", "+start.zeit+"**\n\n";
+  }
+  dialog({
+    art: neu?"Neue Notiz":"Notiz bearbeiten",
+    titel: w=>w.titel,
+    felder: nFelder(),
+    werte: start,
+    merk:"<b>Neue Notizen sind Telefonnotizen</b> — das ist der häufigere Fall. Datum und "
+      +"Uhrzeit stehen zusätzlich im Text, damit sie beim Ausleiten als <code>.md</code> "
+      +"erhalten bleiben. Ein Anrufer kann aus der Kontaktliste kommen oder frei "
+      +"eingetragen werden; wird beides gefüllt, gewinnt die Auswahl.",
+    pruefe: w=>String(w.titel||"").trim()?null:{schl:"titel",text:"Ohne Titel geht es nicht."},
+    loeschen: neu?null:{
+      frage: w=>"<b>„"+esc(w.titel)+"“ wirklich löschen?</b> Auf Notizen verweist nichts, "
+        +"es bleibt nirgends etwas zurück. Vorher als <code>.md</code> ausleiten?",
+      tun: w=>{ const i=DATEN.notizen.findIndex(x=>x.id===w.id);
+        if(i>=0) DATEN.notizen.splice(i,1);
+        bewahre(); male(); melde("Notiz gelöscht"); }
+    },
+    speichern: w=>{
+      w.titel=String(w.titel).trim();
+      w.wer=String(w.wer||"").trim();
+      if(w.kontakt) w.wer="";                  /* Auswahl schlägt Freitext */
+      if(neu){ w.id=neueId("n"); DATEN.notizen.push(w); }
+      else { const z=DATEN.notizen.find(x=>x.id===w.id);
+        if(!z){ melde("Die Notiz ist nicht mehr da."); male(); return; }
+        Object.keys(NLEER).forEach(s=>{ if(s!=="id") z[s]=w[s]; }); }
+      bewahre(); male(); melde(neu?"Notiz angelegt":"Notiz gespeichert");
+    }
+  });
+}
+
+function notizZeile(n){
+  const r=el("div","nz"+(n.art==="telefon"?" tel":""));
+  const b=el("button","nz-b",
+    '<span class="nz-k"><span class="nz-t">'+esc(n.titel)+'</span>'
+    +'<span class="nz-a">'+(n.art==="telefon"?"Telefonnotiz":"Notiz")+'</span>'
+    +(notizWer(n)?'<span class="nz-w">'+esc(notizWer(n))+'</span>':"")
+    +'<span class="sp"></span>'
+    +'<span class="nz-d">'+esc(datumLang(n.d)+(n.zeit?" · "+n.zeit:""))+'</span></span>'
+    +'<span class="nz-v">'+mdMalen(n.text)+'</span>');
+  b.setAttribute("aria-label","Notiz bearbeiten: "+n.titel);
+  b.onclick=()=>notizDialog(n);
+  r.appendChild(b);
+  const aus=el("button","nz-aus","als .md ausleiten");
+  aus.onclick=e=>{ e.stopPropagation();
+    datei(n.d+"-"+n.titel.toLowerCase().replace(/[^\wäöüß]+/g,"-").replace(/^-|-$/g,"")+".md",
+      notizAlsMd(n), "text/markdown");
+    melde("Notiz ausgeleitet"); };
+  r.appendChild(aus);
+  return r;
+}
 
 /* ---------- 05 Textbausteine ---------- */
 /* ===== MODUL bausteine ===== */
@@ -1963,6 +2228,15 @@ function ruhezustand(box){
   /* Favoriten stehen zwischen dem nächsten Termin und den Bookmarks:
      erst was drängt, dann wen man am häufigsten braucht, dann der Rest. */
   const favK=KONTAKTE.filter(k=>k.fav).sort(nachNachnamen);
+  /* Der Schmierzettel steht hier, weil die Leiste von oben nach unten
+     von „drängt“ zu „liegt bereit“ geht — und er das Einzige ist, in
+     das man schreibt. Derselbe Text steht groß im Modul Notizen. */
+  const sa=abschnitt("Schmierzettel",null);
+  const zumModul=el("button","n","Notizen ›");
+  zumModul.onclick=()=>zeigeFlaeche("notizen"); sa.appendChild(zumModul);
+  box.appendChild(sa);
+  box.appendChild(schmierKlein());
+
   const fa=abschnitt("Favoriten",null);
   const alleK=el("button","n","alle "+KONTAKTE.length+" ›");
   alleK.onclick=()=>zeigeFlaeche("kontakte"); fa.appendChild(alleK);
@@ -2205,6 +2479,12 @@ $("#laden").onchange=e=>{
      "bausteine","apps","marken","pins","baum"].forEach(k=>{
       if(Array.isArray(neu[k])){ ersetze(Z[k], neu[k]); zahl+=neu[k].length; }
     });
+    /* Einzelwerte. Sie brauchen kein ersetze() — auf sie zeigt kein
+       Kurzname, den man abreißen könnte. Ohne diese Zeilen stünden sie
+       zwar in der Sicherung, kämen beim Laden aber nie zurück. */
+    ["schmierzettel"].forEach(k=>{
+      if(typeof neu[k]==="string"){ Z[k]=neu[k]; if(neu[k]) zahl++; }
+    });
     bewahre(); male();
     melde(zahl+" Einträge aus "+f.name+" geladen");
   };
@@ -2270,6 +2550,20 @@ function alsMarkdown(){
 $("#export").onclick=()=>{
   datei("tagesplan-"+iso(new Date())+".md", alsMarkdown(), "text/markdown");
   melde("Tagesplan exportiert");
+};
+
+/* Eine einzelne Notiz einlesen. Kein Ersatz fuer die Sicherung — die
+   bleibt JSON. Dieser Weg ist fuer Dateien von aussen. */
+$("#mdlesen").onchange=e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const n=notizAusMd(String(r.result), f.name);
+    DATEN.notizen.push(n); bewahre(); zeigeFlaeche("notizen");
+    melde('"'+n.titel+'" eingelesen');
+  };
+  r.onerror=()=>melde("Datei konnte nicht gelesen werden");
+  r.readAsText(f,"utf-8"); e.target.value="";
 };
 
 function standZeigen(){

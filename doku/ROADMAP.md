@@ -126,7 +126,22 @@ fertiger Text in der Zwischenablage liegt.
 
 ---
 
-## Schritt 5 — Notizen mit Markdown
+## Schritt 5 — Notizen mit Markdown · **erledigt**
+
+Zwei Arten, Telefonnotiz vorbelegt. Datum und Uhrzeit stehen zusätzlich
+im Text, damit sie beim Ausleiten erhalten bleiben. Der Anrufer kommt aus
+der Kontaktliste oder wird frei eingetragen.
+
+Der Umwandler aus Schritt 2 ist erweitert worden, nicht neu geschrieben.
+Die Vorschau steht **in der Liste** — eine Notiz ist ihr Text.
+
+Export und Import als `.md` mit einem Kopfblock, der eine harte Grenze
+hat: `---` in Zeile 1, ein zweites `---` innerhalb von zehn Zeilen,
+dazwischen ausschließlich `schlüssel: wert`. Sonst ist alles Text.
+Gegengeprüft mit den beiden Fällen aus `FEHLERBUCH.md` Punkt 5.
+
+Dazu der **Schmierzettel**: ein einzelner Text, groß im Modul und
+kompakt in der Leiste, beide auf dieselbe Stelle.
 
 * Bearbeiten mit Vorschau
 * Eigener Markdown-Umwandler — **keine Bibliothek**. Es genügen

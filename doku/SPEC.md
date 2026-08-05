@@ -21,15 +21,30 @@ Oberflächen aufgegangen:
 
 ---
 
-## 01 Notizen — Gerüst
+## 01 Notizen — fertig
 
 Zwei Arten:
 
 * **Telefonnotiz** — Datum, Uhrzeit und Kontakt werden automatisch gesetzt
 * **Allgemeine Notiz** — nur Titel und Text
 
-**Fehlt noch:** Bearbeiten im Markdown-Format mit Vorschau, Import und
-Export einzelner Notizen, Verknüpfung mit einem Kontakt im Bearbeiten-Dialog.
+Bei einer Telefonnotiz stehen Datum und Uhrzeit zusätzlich **im Text**,
+damit sie beim Ausleiten als `.md` erhalten bleiben. Beim späteren Ändern
+des Datumsfelds wird die Zeile bewusst nicht nachgeschrieben.
+
+Der Anrufer kommt aus der Kontaktliste (`kontakt`) oder wird frei
+eingetragen (`wer`). Wird beides gefüllt, gewinnt die Auswahl.
+
+Sortiert nach Datum und Uhrzeit, neueste zuerst. Eigene Suche über Titel,
+Text und Anrufer. Die Vorschau steht in der Liste.
+
+**Export und Import als `.md`** je Notiz, mit einem Kopfblock, dessen
+Grenze hart gezogen ist. Der Kontaktverweis überlebt den Weg nach draußen
+nicht — der Name bleibt als Text.
+
+**Der Schmierzettel** ist eine einzelne Notiz ohne Titel und Datum, zum
+schnellen Merken. Er steht groß im Modul und kompakt in der Leiste;
+beide schreiben auf dieselbe Stelle.
 
 ---
 

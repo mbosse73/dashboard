@@ -95,13 +95,14 @@ Z = {
   kontakte:  [{id, nach, vor, firma, tel, mail, fav, notiz}],
   termine:   [{id, d, zeit, dauer, titel, anm, kontakt}],
   aufgaben:  [{id, kat, titel, d, zeit, notiz, kontakt, fertig}],
-  notizen:   [{id, art, titel, d, zeit, kontakt, text}],
+  notizen:   [{id, art, titel, d, zeit, kontakt, wer, text}],
   workflows: [{id, vorlage, titel, aktiv, werte, schritte}],
   bausteine: [{id, grp, titel, text}],
   apps:      [{id, titel, url}],
   marken:    [{t, u, g}],
   pins:      ["url", ...],
-  baum:      [{ebene, t}]
+  baum:      [{ebene, t}],
+  schmierzettel: ""            /* ein einzelner Text, kein Array */
 }
 ```
 
@@ -113,6 +114,14 @@ Z = {
 * `kontakt` — ID aus `kontakte` oder `null`
 * `aktiv` — **Schlüssel** des laufenden Teilschritts, nicht seine Position
 * `art` bei Notizen — `"telefon"` oder `"allgemein"`
+* `wer` bei Notizen — frei eingetragener Anrufer, wenn er nicht in der
+  Kontaktliste steht. Ist `kontakt` gesetzt, bleibt `wer` leer
+
+**Einzelwerte im Ladevorgang.** `schmierzettel` ist ein Text und kein
+Array. Der Ladevorgang in Abschnitt 9 hat deshalb eine **zweite Liste**
+für Einzelwerte — die erste prüft `Array.isArray` und hätte ihn still
+übersprungen. `werkzeug/pruefen.mjs` erfasst seit Schritt 5 jeden
+Schlüssel der obersten Ebene, nicht mehr nur die Arrays.
 
 **Termine haben kein `fertig`.** Ein vergangener Termin ist vorbei, nicht
 abgearbeitet. Er erscheint unter „Überfällig" und bietet dort zwei Wege

@@ -34,6 +34,13 @@ registriere({
   nm:"Beispiel",        // Anzeigename
   versteckt:false,      // true = taucht nicht in der Modulliste auf
 
+  // Solange das Modul nur ansehen kann: ein Satz, was noch nicht trägt.
+  // male() setzt daraus ein Band über die Fläche, die Modulliste auf der
+  // Leiste eine Marke. Ein Gerüst mit Demodaten und Knöpfen sieht sonst
+  // fertig aus — siehe Fehlerbuch Punkt 9. Fehlt der Schlüssel, gilt das
+  // Modul als fertig; die drei Zahlen im README zählt pruefen.mjs daraus.
+  geruest:"Die Liste steht. Anlegen und Bearbeiten fehlen noch.",
+
   zahl(){ return Z.beispiel.length; },
 
   // Treffer für die Leiste. q ist kleingeschrieben, roh im Original.
@@ -65,8 +72,11 @@ registriere({
 1. Datenbereich in `vorgabe()` ergänzen: `beispiel: []`
 2. In der Liste in Abschnitt 9 (`ladenBtn.onchange`) den Schlüssel
    `"beispiel"` eintragen, damit er beim Laden ersetzt wird
-3. Den Modulblock samt Markern in Abschnitt 4 einfügen
-4. Fertig. An Leiste, Planner, Kopfzeile und Navigation ändert sich nichts
+3. Den Modulblock samt Markern in Abschnitt 4 einfügen — solange er nur
+   ansehen kann, mit `geruest`
+4. Trägt das Modul später Anlegen und Bearbeiten, `geruest` entfernen und
+   die Zahlen im README nachziehen (`node werkzeug/pruefen.mjs` prüft sie)
+5. Fertig. An Leiste, Planner, Kopfzeile und Navigation ändert sich nichts
 
 Vergisst du Schritt 1 oder 2, funktioniert das Modul — aber seine Daten
 werden nicht gesichert. Das ist der häufigste Fehler.

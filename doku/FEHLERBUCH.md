@@ -205,6 +205,56 @@ schlägt die Prüfung an.
 
 ---
 
+## 12 — Die Sicherungsdatei ist Fremdeingabe
+
+**Erscheinung:** Nach dem Laden einer von Hand bearbeiteten Sicherung
+sind Leiste **und** Planner leer. Kein Fehlertext, kein Weg zurück außer
+Handarbeit im localStorage.
+
+**Ursache:** Ein Termin ohne `zeit`. `toMin` machte daraus
+`undefined.split(":")` und riss die ganze Zeichnung ab — beide
+Oberflächen lesen Termine, also fielen beide gleichzeitig aus.
+
+```js
+const toMin = t => { const [h,m]=t.split(":").map(Number); return h*60+m; };
+```
+
+Alle anderen Verstümmelungen überlebten: Kontakt ohne Namensfelder,
+ungültiges Datum, Notiz ohne Felder, Workflow mit unbekannter Vorlage.
+Für die gab es schon Absicherungen — für diese eine nicht.
+
+**Lösung:** Zwei Ebenen. `toMin` verträgt jetzt einen fehlenden Wert, und
+`heile(Z)` zieht Termine einmal gerade — beim Start aus localStorage und
+beim Laden einer Datei. Nicht an jeder Lesestelle einzeln.
+
+**Regel daraus:** Was von der Platte kommt, ist Fremdeingabe, auch wenn
+das Programm es selbst geschrieben hat. Zwischen Einlesen und Zeichnen
+gehört eine Stelle, die geradezieht — und ein fehlendes Feld darf nie
+mehr als seinen eigenen Eintrag kosten.
+
+---
+
+## 13 — Eine Ersetzung, die nichts trifft
+
+**Erscheinung:** Im README stand nach Schritt 2 unverändert „zehn Fehler"
+und „neun Module als Gerüst", obwohl im Schrittbericht „README
+nachgezogen" abgehakt war.
+
+**Ursache:** Die Änderung lief über ein `replace()` ohne Prüfung. Der
+Weißraum passte nicht, die Ersetzung fand nichts, tat nichts und meldete
+nichts. Abgehakt wurde trotzdem.
+
+**Lösung:** Zwei Dinge. Jede maschinelle Ersetzung prüft vorher, dass sie
+genau einmal zutrifft, und bricht sonst ab. Und `pruefen.mjs` zählt die
+drei Zahlen im README selbst nach — Fehlerbucheinträge, angemeldete
+Module, Gerüste.
+
+**Regel daraus:** Eine Änderung gilt erst als geschehen, wenn etwas
+anderes als der Ausführende sie bestätigt. „Abgehakt" ist kein Beleg.
+Was sich nachzählen lässt, wird nachgezählt statt beschrieben.
+
+---
+
 ## Prüfmuster, die sich bewährt haben
 
 * **Zustandslogik gegen die Uhr testen.** Funktionen wie `frist()` mit

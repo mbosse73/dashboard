@@ -245,6 +245,64 @@ Schaden angerichtet. Bitte beides eigens ansehen:
 
 ---
 
+## Zwischenprüfung — Fehler, Inkonsistenzen, UI
+
+Kein Roadmap-Schritt, sondern ein Durchgang über den erreichten Stand.
+Fünf Befunde wurden behoben.
+
+### Absturz: Termin ohne Uhrzeit (Fehlerbuch Punkt 12)
+
+- [ ] Eine Sicherung schreiben, sie in einem Texteditor öffnen und bei einem
+      Termin die Zeile `"zeit": "…"` **löschen**. Datei laden.
+      Erwartet: Leiste und Planner stehen weiter, der Termin liegt auf 09:00,
+      die Meldung nennt die ergänzten Felder. Vorher blieben **beide**
+      Oberflächen leer, ohne Weg zurück **[vorgeprüft]**
+- [ ] Dasselbe mit gelöschtem `"dauer"` — der Termin dauert dann 30 Minuten
+      **[vorgeprüft]**
+
+### Kontrast
+
+- [ ] Metazeilen, Hinweise und Zähler ansehen — sie sind dunkler als vorher
+      (`--ink3` von `#87837c` auf `#6b675e`, 3,46 : 1 → 5,17 : 1).
+      Auf dem Windows-Bildschirm bei Tageslicht lesbar? **[nur du]**
+- [ ] `referenz/theme-notion.html` daneben halten: dort sind `--ink2`,
+      `--ink3` und das Rot nachgezogen. Sieht es noch nach Notion aus,
+      oder ist es zu schwer geworden? **[nur du]**
+
+### Gerüste sagen jetzt, was sie nicht können
+
+- [ ] Textbausteine, Appstarter, Bookmarks, Workflows, Outliner öffnen —
+      über jeder Fläche steht ein gestricheltes Band **Gerüst** mit einem
+      Satz dazu **[vorgeprüft]**
+- [ ] Auf der Leiste in der Modulliste: genau diese fünf tragen die Marke
+      **Gerüst**, die sechs fertigen nicht **[vorgeprüft]**
+- [ ] Die Modulliste bricht sauber um, die Marke ragt in keiner Breite über
+      die Zeile hinaus **[vorgeprüft]**
+
+### Keine Beschriftung ohne Tat (Fehlerbuch Punkt 9)
+
+- [ ] `⌘1` drücken. Erwartet: „Noch nicht eingebaut · developer.mozilla.org“.
+      Vorher stand dort „Öffne MDN Web Docs“, und es passierte nichts
+      **[nur du — ⌘ fängt der Browser ab, nicht im Test prüfbar]**
+- [ ] In Textbausteinen „Kopieren“, in Apps „Starten“, in Bookmarks eine
+      Zeile anklicken — überall dieselbe ehrliche Meldung **[vorgeprüft]**
+
+### README stimmt wieder
+
+- [ ] `node werkzeug/pruefen.mjs` prüft neu, ob die drei Zahlen im README
+      (Fehlerbucheinträge, angemeldete Module, Gerüste) zur Anwendung
+      passen. Zum Ausprobieren eine Zahl im README verfälschen — der Lauf
+      muss anschlagen **[vorgeprüft]**
+
+### Offen geblieben, bewusst
+
+- Aufgaben und Kalender haben keine eigene Modulsuche, Kontakte und Notizen
+  schon. Zurückgestellt.
+- Ein Eintrag ohne Titel zeichnet eine leere Zeile. Nur über eine von Hand
+  bearbeitete Sicherung erreichbar. Zurückgestellt.
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.

@@ -58,12 +58,14 @@ doku/ARCHITEKTUR.md       Modulvertrag, Datenmodell, Formate
 doku/SPEC.md              alle Module und ihr Stand
 doku/ROADMAP.md           Reihenfolge der Arbeit
 doku/ARBEITSWEISE.md      wie Claude Code einen Schritt abarbeitet
-doku/FEHLERBUCH.md        zehn Fehler, die schon passiert sind
+doku/FEHLERBUCH.md        13 Fehler, die schon passiert sind
 
 referenz/theme-notion.html      dieselbe Anwendung im Notion-Stil
 referenz/workflow-dialog.html   Entwurf des Workflow-Dialogs
 
 werkzeug/pruefen.mjs      Regelprüfung, ohne Abhängigkeiten
+qs/PRUEFUNGEN.md          Prüfungen am Rechner, zum Abhaken
+mockups/                  Entwürfe je Schritt, vor der Umsetzung
 ```
 
 ---
@@ -99,8 +101,14 @@ sodass sich einzelne Teile ersetzen lassen, ohne die Datei anzufassen.
 
 ## Stand
 
-Zwei Oberflächen fertig, neun Module als Gerüst. Anlegen, Bearbeiten und
-Löschen fehlt noch fast überall — die Reihenfolge dafür steht in
-`doku/ROADMAP.md`, angefangen wird bei den Kontakten.
+Beide Oberflächen stehen. 11 Module angemeldet,
+davon 6 fertig und 5 als Gerüst.
+Fertig heißt: Anlegen, Bearbeiten und Löschen tragen — Kontakte,
+Aufgaben, Kalender, Notizen, Rechner, Code-Beautifier. Die übrigen fünf
+sagen auf ihrer Fläche selbst, was ihnen noch fehlt. Die Reihenfolge
+steht in `doku/ROADMAP.md`.
+
+Diese drei Zahlen prüft `werkzeug/pruefen.mjs` gegen die Anwendung — eine
+Ersetzung in diesem Dokument, die still danebengeht, fällt damit auf.
 
 Privates Projekt, keine Lizenz, keine Beiträge von außen vorgesehen.

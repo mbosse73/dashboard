@@ -189,6 +189,41 @@ function pruefeFassungen() {
   if (fehlt.length) warn("Notion-Fassung: Regeln fehlen \u2014 " + fehlt.join(", "));
 }
 
+/* ---------- 11 README gegen die Anwendung ----------
+   Eine Zahl im README veraltet lautlos. Schlimmer: Eine Ersetzung, die
+   den Text nicht trifft, tut nichts und meldet nichts — genau so stand
+   dort nach Schritt 2 weiter „zehn Fehler" und „neun Module als Gerüst",
+   während im Schrittbericht „README nachgezogen" abgehakt war.
+   Deshalb zählt der Prüfer die drei Zahlen selbst nach. ---------- */
+function pruefeReadme() {
+  if (!existsSync("README.md") || !existsSync("dashboard.html")) return;
+  /* Zeilenumbrüche glätten: Der Satz darf im Dokument umbrechen, wo er will. */
+  const rm = readFileSync("README.md", "utf8").replace(/\s+/g, " ");
+  const js = teile(readFileSync("dashboard.html", "utf8")).js;
+
+  const abw = [];
+  const vgl = (was, ist, muster) => {
+    const t = rm.match(muster);
+    if (!t) abw.push(was + ": Angabe im README nicht gefunden");
+    else if (Number(t[1]) !== ist)
+      abw.push(was + ": README sagt " + t[1] + ", tatsächlich " + ist);
+  };
+
+  if (existsSync("doku/FEHLERBUCH.md")) {
+    const fb = readFileSync("doku/FEHLERBUCH.md", "utf8");
+    vgl("Fehlerbuch", (fb.match(/^## \d+ \u2014 /gm) || []).length,
+        /(\d+) Fehler, die schon passiert sind/);
+  }
+  const module = (js.match(/registriere\(\{/g) || []).length;
+  const geruest = (js.match(/^\s*geruest\s*:/gm) || []).length;
+  vgl("Module",  module,           /(\d+) Module angemeldet/);
+  vgl("fertig",  module - geruest, /Module angemeldet, davon (\d+) fertig/);
+  vgl("Gerüst",  geruest,          /davon \d+ fertig und (\d+) als Ger/);
+
+  if (abw.length) bad("README: " + abw.join(" \u00b7 "));
+  else ok("README: Zahlen stimmen mit der Anwendung überein");
+}
+
 /* ============================================================ */
 console.log("\nPrüfung nach CLAUDE.md\n" + "\u2500".repeat(52));
 let gesehen = 0;
@@ -213,6 +248,7 @@ for (const f of DATEIEN) {
 }
 console.log("\nÜbergreifend");
 pruefeFassungen();
+pruefeReadme();
 
 console.log("\n" + "\u2500".repeat(52));
 if (fehler) {

@@ -98,6 +98,43 @@ textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
 .note.acht{border-left-color:var(--signal)}
 .note.gut{border-left-color:var(--gut)}
 .note b{color:var(--ink);font-weight:650}
+/* ---------- Flächenwechsel des Entwurfs ---------- */
+.wechsel{display:flex;gap:2px;background:var(--raise);border-radius:9px;padding:3px;
+  margin:18px 0 4px;width:fit-content}
+.wechsel button{font-size:12.5px;font-weight:550;color:var(--ink2);padding:6px 14px;
+  border-radius:7px}
+.wechsel button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
+  box-shadow:0 1px 2px rgba(26,26,24,.06)}
+
+/* ---------- Schmierzettel, kompakt in der Leiste ---------- */
+.szk{border:1px solid var(--rule2);border-radius:10px;background:var(--sheet);overflow:hidden}
+.szk textarea{width:100%;border:0;outline:0;background:transparent;resize:vertical;
+  min-height:76px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;
+  line-height:1.55;color:var(--ink)}
+.szk:focus-within{border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.szk-f{display:flex;align-items:center;gap:9px;padding:6px 10px;border-top:1px solid var(--rule);
+  background:var(--paper)}
+.szk-f .h{font-size:11.5px;color:var(--ink3)}
+.szk-f .sp{flex:1}
+.szk-f button{font-size:11.5px;color:var(--ink3);padding:3px 8px;border-radius:6px}
+.szk-f button:hover{background:var(--raise);color:var(--ink)}
+
+/* ---------- Leiste, nur so viel wie nötig ---------- */
+.lz-t{font-size:16.5px;font-weight:600;letter-spacing:-.015em}
+.lz-m{font-size:12.5px;color:var(--ink3);margin-top:4px}
+.lz-e{display:flex;align-items:flex-start;gap:11px;padding:9px 10px 9px 2px;
+  border-left:2px solid var(--signal);border-radius:8px}
+.lz-e .b{flex:1}
+.lz-e .t{display:block;font-size:14.5px}
+.lz-e .m{display:block;font-size:12px;color:var(--ink3);margin-top:3px}
+.lz-e .r{font-family:var(--mono);font-size:11.5px;color:var(--signal);font-weight:700}
+.marken{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
+.mk{display:flex;align-items:baseline;gap:10px;padding:8px 10px;border-radius:8px;
+  border-left:2px solid transparent}
+.mk:hover{background:var(--sheet);border-left-color:var(--tinte)}
+.mk b{font-family:var(--mono);font-size:10.5px;color:var(--ink3);min-width:20px}
+.mk span{font-size:13.5px;color:var(--ink2)}
+
 .zettel{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(70px);
   background:var(--ink);color:var(--sheet);font-size:13.5px;padding:11px 20px;border-radius:10px;
   opacity:0;pointer-events:none;z-index:900;transition:transform .24s,opacity .24s}
@@ -190,6 +227,10 @@ textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
 <b>zeichengenau derselbe Code</b>. Neu sind hier: die Vorschau <i>in</i> der Liste, der
 Anrufer wahlweise aus der Kontaktliste oder frei, der Weg als <code>.md</code> hinaus und
 zurück, und der Schmierzettel.</p>
+<div class="wechsel" id="wechsel">
+  <button data-f="modul" aria-current="true">Modul Notizen</button>
+  <button data-f="leiste">Leiste</button>
+</div>
 <div id="inhalt">
   <div class="abs">
   <h2>Schmierzettel</h2>
@@ -197,7 +238,7 @@ zurück, und der Schmierzettel.</p>
   </span>
   <span class="n">eine einzige, immer dieselbe</span>
   </div>
-  <div class="hinweis">Zum schnellen Merken. Kein Titel, kein Datum, keine Liste — was hier steht, steht beim nächsten Start wieder da. Speichert bei jedem Tastendruck.</div>
+  <div class="hinweis">Zum schnellen Merken. Kein Titel, kein Datum, keine Liste — was hier steht, steht beim nächsten Start wieder da. Speichert bei jedem Tastendruck. Derselbe Text steht kompakt in der Leiste.</div>
   <div class="mdfeld">
   <div class="mdleiste" role="toolbar" aria-label="Formatierung">
   <button class="mdknopf" type="button" title="Fett  Strg+B" aria-label="Fett">
@@ -475,6 +516,7 @@ const NOTIZEN=[
 ];
 let SCHMIERZETTEL="Sitzungsraum 2.14 ab 14 Uhr\nCode Drucker: 4417\n\n- Rückruf Meinhardt";
 let nSuche="";
+let flaeche="modul";
 
 /* ============================================================
    FELDER
@@ -609,13 +651,9 @@ function flaecheNotizen(box){
   box.appendChild(abschnitt("Schmierzettel","eine einzige, immer dieselbe"));
   box.appendChild(el("div","hinweis",
     "Zum schnellen Merken. Kein Titel, kein Datum, keine Liste — was hier steht, "
-    +"steht beim nächsten Start wieder da. Speichert bei jedem Tastendruck."));
-  const sz=el("div","mdfeld");
-  const ta=el("textarea"); ta.value=SCHMIERZETTEL; ta.className="sz";
-  ta.setAttribute("aria-label","Schmierzettel");
-  ta.oninput=()=>{ SCHMIERZETTEL=ta.value; bewahre(); };
-  sz.append(mdLeiste(ta), ta);
-  box.appendChild(sz);
+    +"steht beim nächsten Start wieder da. Speichert bei jedem Tastendruck. "
+    +"Derselbe Text steht kompakt in der Leiste."));
+  box.appendChild(schmierGross());
 
   /* --- Suche --- */
   const q=nSuche.trim().toLowerCase();
@@ -650,13 +688,98 @@ function flaecheNotizen(box){
 }
 
 /* ============================================================
+   DER SCHMIERZETTEL AN BEIDER STELLE
+
+   Ein Text, zwei Fenster darauf. Beide schreiben in dieselbe
+   Stelle und zeichnen einander nach — sonst hätte man zwei
+   Schmierzettel, die sich stillschweigend widersprechen.
+   ============================================================ */
+function schmierGross(){
+  const k=el("div","mdfeld");
+  const ta=el("textarea"); ta.className="sz"; ta.value=SCHMIERZETTEL;
+  ta.setAttribute("aria-label","Schmierzettel");
+  ta.oninput=()=>{ SCHMIERZETTEL=ta.value; bewahre(); };
+  k.append(mdLeiste(ta), ta);
+  return k;
+}
+function schmierKlein(){
+  const k=el("div","szk");
+  const ta=el("textarea"); ta.value=SCHMIERZETTEL;
+  ta.setAttribute("aria-label","Schmierzettel");
+  ta.placeholder="Schnell etwas merken …";
+  ta.oninput=()=>{ SCHMIERZETTEL=ta.value; bewahre(); };
+  k.appendChild(ta);
+  const f=el("div","szk-f",'<span class="h">speichert beim Tippen</span>'
+    +'<span class="sp"></span>');
+  const gross=el("button",null,"im Modul öffnen ›");
+  gross.onclick=()=>{ flaeche="modul"; male(); };
+  f.appendChild(gross);
+  const leeren=el("button",null,"leeren");
+  leeren.onclick=()=>{ SCHMIERZETTEL=""; bewahre(); male(); melde("Schmierzettel geleert"); };
+  f.appendChild(leeren);
+  k.appendChild(f);
+  return k;
+}
+
+/* ============================================================
+   LEISTE — nur so viel Umgebung, wie zum Beurteilen nötig ist
+   ============================================================ */
+function flaecheLeiste(box){
+  box.appendChild(abschnitt("Überfällig","2","eilig"));
+  [["Rechnung 2026-114 freigeben","Aufgabe · Skonto läuft · Eva Bergmann"],
+   ["Vertrag Meinhardt IT","Workflow · Schritt 4 von 8 · Rückfragen geklärt"]]
+   .forEach(([t,m])=>box.appendChild(el("div","lz-e",
+     '<span class="b"><span class="t">'+esc(t)+'</span>'
+     +'<span class="m">'+esc(m)+'</span></span><span class="r">überfällig</span>')));
+
+  box.appendChild(abschnitt("Als Nächstes",null,"jetzt"));
+  box.appendChild(el("div",null,'<div class="lz-t">Strategie-Call</div>'
+    +'<div class="lz-m">Video · Lisa Meier · in 36 Minuten</div>'));
+
+  const a=abschnitt("Schmierzettel",null);
+  const alle=el("button","n","Notizen ›");
+  alle.onclick=()=>{ flaeche="modul"; male(); }; a.appendChild(alle);
+  box.appendChild(a);
+  box.appendChild(schmierKlein());
+
+  box.appendChild(abschnitt("Favoriten",null));
+  box.appendChild(el("div","hinweis",
+    "Ab hier unverändert. Der Entwurf zeigt nur, wo der neue Block sitzt."));
+  box.appendChild(abschnitt("Bookmarks",null));
+  const g=el("div","marken");
+  [["⌘1","MDN Web Docs"],["⌘2","GitHub"],["⌘3","Excalidraw"],["⌘4","Linear Docs"]]
+    .forEach(([k,t])=>g.appendChild(el("button","mk",'<b>'+k+'</b><span>'+esc(t)+'</span>')));
+  box.appendChild(g);
+
+  box.appendChild(el("div","note",
+    "<b>Warum an dieser Stelle.</b> Die Leiste geht von oben nach unten von „drängt“ zu "
+    +"„liegt bereit“: erst Überfälliges, dann der nächste Termin, dann der Schmierzettel — "
+    +"das Einzige hier, in das man <em>schreibt</em> —, dann Kontakte und Bookmarks. Weiter "
+    +"unten wäre er beim Hinwerfen zu weit weg, weiter oben verdrängte er das, was drängt."));
+  box.appendChild(el("div","note gut",
+    "<b>Ein Text, zwei Fenster darauf.</b> Tippe hier etwas und wechsle zum Modul — es steht "
+    +"dort. Und umgekehrt. Beide schreiben in dieselbe Stelle; zwei getrennte Schmierzettel, "
+    +"die sich stillschweigend widersprechen, wären das Schlimmste an dieser Sache."));
+  box.appendChild(el("div","note",
+    "<b>Bewusst schlichter als im Modul.</b> Keine Formatierungsleiste, keine Vorschau, feste "
+    +"Zeilenschrift. Wer hier schreibt, will eine Nummer festhalten, kein Dokument setzen — "
+    +"und die Leiste soll nicht zur zweiten Arbeitsfläche werden."));
+}
+
+/* ============================================================
    SEITE
    ============================================================ */
 document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&dlgOffen){ e.preventDefault(); dialogZu(); }
 });
+document.querySelectorAll("#wechsel button").forEach(n=>{
+  n.onclick=()=>{ flaeche=n.dataset.f; male(); };
+});
 function male(){
+  document.querySelectorAll("#wechsel button").forEach(n=>
+    n.setAttribute("aria-current",String(n.dataset.f===flaeche)));
   const b=$("#inhalt"); b.innerHTML="";
+  if(flaeche==="leiste"){ flaecheLeiste(b); return; }
   flaecheNotizen(b);
 
   b.appendChild(abschnitt("Der Weg nach draußen und zurück","Export und Import"));
@@ -991,8 +1114,7 @@ function dlgLoeschfrage(o,w,rumpf,fuss){
   fuss.appendChild(nein);
 }
 /* Zuletzt zeichnen: Der Baustein oben benutzt const-Werte, die erst
-   hier oberhalb stehen. Ein Aufruf davor liefe in die Zeitzone vor der
-   Initialisierung. */
+   hier oberhalb stehen. */
 male();
 </script>
 </body>

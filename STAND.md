@@ -7,7 +7,29 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: Phase 0, das Fundament.** Die Anwendung selbst blieb dabei
+**Zuletzt: Schritt 1 der Roadmap — Kontakte vollständig.** In zwei Zügen
+umgesetzt. 1a: Kontakte erscheinen als Kacheln in einem umbrechenden
+Raster, das Modul hat eine eigene Suche, Favoriten stehen überall oben
+und zusätzlich im Ruhezustand der Leiste, und „Anrufen" und „Mailen"
+führen als echte `tel:`- und `mailto:`-Verweise aus statt nur zu melden.
+1b: Dialog zum Anlegen und Bearbeiten, Löschen mit Rückfrage und
+vollständiger Verweisbereinigung.
+
+Zwei Dinge daran sind erwähnenswert. Erstens lief `knm(kfind(x))` an
+sieben von neun Stellen ungeschützt — beim ersten gelöschten Kontakt wäre
+die Zeichnung abgebrochen; `kname()` fängt das jetzt ab. Zweitens hängen
+Kontakte in Workflows auf **zwei** Ebenen, an der Instanz und am
+Teilschritt. Welche Schlüssel betroffen sind, leitet `kVerweise()` aus
+`VORLAGEN` ab statt sie fest einzutragen, sonst bräche die Bereinigung
+still, sobald eine Vorlage wächst.
+
+Die Demodaten sind auf Wunsch stehen geblieben, Kontakte eingeschlossen.
+Das wird später aufgeräumt.
+
+**Neu: `qs/PRUEFUNGEN.md`.** Jede Prüfung, die am Rechner nachzusehen ist,
+als Liste zum Abhaken. Wächst mit jedem Schritt mit.
+
+**Davor: Phase 0, das Fundament.** Die Anwendung selbst blieb dabei
 unberührt. Fünf Dinge im Umfeld waren nicht in Ordnung:
 
 * Die Anwendung lag als `index.html` im Repository, während alle zwölf
@@ -31,8 +53,8 @@ Logik — und Schritt 6 hat seine Dialogvorlage. Der Prüflauf sieht jetzt
 alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
 
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
-als Arbeitsfläche. Elf Module sind angemeldet, davon zwei fertig
-(Planner, Leiste) und neun als Gerüst. Sichern und Laden über JSON,
+als Arbeitsfläche. Elf Module sind angemeldet, davon drei fertig
+(Planner, Leiste, Kontakte) und acht als Gerüst. Sichern und Laden über JSON,
 Markdown-Export einbahnig. Alle Modulblöcke tragen Marker.
 
 Ein Entwurf für den Workflow-Dialog liegt unter
@@ -91,12 +113,19 @@ Metazeilen. Das ist Notions eigener Wert, kein Fehler. Falls es stört:
 
 ## Nächster Schritt
 
-Schritt 1 der Roadmap: **Kontakte vollständig**, mit Anlegen, Bearbeiten
-und Löschen. Zuerst, weil Notizen, Aufgaben, Termine und Workflows alle
-darauf verweisen.
+Schritt 2 der Roadmap: **den Dialog als Baustein**. Er wird aus dem
+Kontaktdialog herausgezogen, nicht neu erfunden — der steht seit
+Schritt 1b und beschreibt seine sieben Felder bereits im Zielformat
+`{schl, nm, art}`. Dasselbe Format tragen die Eigenschaften der
+Workflow-Vorlagen; deshalb muss Schritt 2 vor Schritt 6 liegen.
 
-Danach Schritt 2, den Dialog-Baustein, aus dem Kontaktdialog
-herausziehen — nicht vorher erfinden.
+`ANLEITUNG.md` nennt Schritt 2 einen der drei, bei denen eine falsche
+Grundentscheidung teuer wird. Der Plan gehört dort besonders sorgfältig
+vor die erste Änderung.
+
+Danach Schritt 3, Aufgaben und Termine, als erste Nutzung des Bausteins.
+Schritt 4 und 7 bleiben zurückgestellt, bis der Browsertest beantwortet
+ist.
 
 ---
 

@@ -1,0 +1,153 @@
+# Prüfungen
+
+Alles, was **du** am Rechner nachsehen sollst. Eine Liste zum Abhaken, die
+über das ganze Projekt mitwächst — am Ende steht hier jede Prüfung, die je
+nötig war.
+
+Wird bei jedem Schritt fortgeschrieben. Neue Abschnitte kommen unten dazu,
+erledigte bleiben stehen: Sie sind der Nachweis, dass es einmal lief, und
+die Grundlage für einen späteren Nachtest.
+
+---
+
+## Wie das hier gemeint ist
+
+**Ein grüner Prüflauf sagt nichts über die Darstellung.** Sämtliche schwarzen
+Flächen aus `doku/FEHLERBUCH.md` haben `node werkzeug/pruefen.mjs` bestanden.
+Deshalb diese Liste.
+
+`dashboard.html` immer per **Doppelklick** im Explorer öffnen. Nicht in ein
+offenes Edge-Fenster ziehen — das erzeugt eine andere Herkunft und verfälscht
+localStorage, Zwischenablage und den Appstarter.
+
+Zwei Marken hinter den Punkten:
+
+| Marke | Bedeutung |
+|---|---|
+| **[nur du]** | Kann ich nicht prüfen. Braucht Windows, Edge oder ein Auge. |
+| **[vorgeprüft]** | Habe ich in einem Chromium automatisch durchgefahren. Bitte trotzdem ansehen — die Automatik sieht keine Farben und kein Windows. |
+
+Fällt eine Prüfung durch: Punkt hier stehen lassen, Beobachtung darunter
+notieren und mir sagen. Wenn es ein neuer Fehlertyp ist, gehört er zusätzlich
+in `doku/FEHLERBUCH.md`.
+
+---
+
+## Schritt 0 — Browsertest · **offen, blockiert Schritt 4 und 7**
+
+`browsertest.html` per Doppelklick öffnen, alle Knöpfe der Reihe nach drücken.
+
+- [ ] **localStorage nutzbar** — Abschnitt „Speicherwege“, läuft ohne Knopfdruck **[nur du]**
+      → Ergebnis: `________`  ·  Bei *nein*: vor jedem Schließen sichern
+- [ ] **Zwischenablage** — Knopf „Kopieren testen“ **[nur du]**
+      → Ergebnis: `ja` / `notweg` / `nein`: `________`
+      Bei *notweg* oder *nein*: Textbausteine brauchen ein verstecktes Textfeld
+- [ ] **Andere lokale Datei öffnen** — Knopf „Appstart testen“, vorher eine beliebige
+      `test2.html` danebenlegen **[nur du]**
+      → Ergebnis: `________`  ·  Bei *nein*: Appstarter braucht einen Link statt `window.open`
+- [ ] **Anrufen und Mailen** — Knöpfe „Anruf-Übergabe“ und „Mail-Übergabe“ **[nur du]**
+      → Ergebnis: `________`  ·  Steht nicht in der Roadmap, ist aber seit Schritt 1a
+      echter Code und keine Meldung mehr
+
+**Die drei ersten Ergebnisse gehören anschließend in `doku/ROADMAP.md`, Schritt 0.**
+
+---
+
+## Phase 0 — Fundament
+
+Kein Roadmap-Schritt. Die Anwendung wurde dabei nicht verändert, nur umbenannt.
+
+- [ ] `dashboard.html` per Doppelklick — Leiste und Planner sehen aus wie vorher,
+      keine dunklen Flächen **[nur du]**
+- [ ] `index.html` per Doppelklick — leitet sofort auf `dashboard.html` weiter **[vorgeprüft]**
+- [ ] `referenz/theme-notion.html` per Doppelklick — dieselbe Anwendung im hellen
+      Notion-Stil **[nur du]**
+- [ ] In PowerShell `node werkzeug/pruefen.mjs` — läuft ohne Fehler durch und meldet
+      „4 von 4 Dateien angesehen“ **[vorgeprüft]**
+- [ ] `git diff --stat` nach einer eigenen Änderung zeigt **nur** die geänderten Zeilen,
+      nicht die ganze Datei. Zeigt er alles, greift `.gitattributes` nicht **[nur du]**
+
+---
+
+## Schritt 1a — Kacheln, Suche, Anrufen und Mailen
+
+- [ ] **Leiste:** Der Block **Favoriten** steht zwischen „Als Nächstes“ und „Bookmarks“.
+      Drei helle Kacheln, keine dunklen Flächen **[vorgeprüft]**
+- [ ] **Telefonknopf überfahren** — die Sprechblase nennt die Rufnummer **[vorgeprüft]**
+- [ ] **Telefonknopf anklicken** — Edge übergibt an dein Telefonprogramm.
+      Kommt eine Rückfrage von Windows, zählt das als bestanden **[nur du]**
+- [ ] **Mailknopf anklicken** — dein Mailprogramm öffnet sich mit der Adresse **[nur du]**
+- [ ] **Modul Kontakte** öffnen — Favoriten oben, darunter alle übrigen **[vorgeprüft]**
+- [ ] Ins Suchfeld `nordstern` tippen — es filtert mit, und der **Cursor bleibt im Feld** **[vorgeprüft]**
+- [ ] Suchen nach etwas, das es nicht gibt — es erscheint „Kein Kontakt passt zu …“,
+      keine leere Fläche **[vorgeprüft]**
+- [ ] Bei **Kai Richter** den Stern setzen — er rutscht zu den Favoriten **[vorgeprüft]**
+- [ ] Zur Leiste wechseln — Kai Richter steht dort **[vorgeprüft]**
+- [ ] **Seite neu laden** — ist er noch Favorit? **[vorgeprüft]**
+- [ ] Fenster **schmal ziehen** — die Kacheln brechen in die nächste Reihe um.
+      Es darf **kein** waagerechter Rollbalken erscheinen **[vorgeprüft]**
+- [ ] In der Leiste `mei` tippen — die Treffer „Anrufen“ und „Mailen“ führen wirklich
+      aus, statt nur zu melden **[nur du]**
+- [ ] `referenz/theme-notion.html` — dieselben Kacheln in Notions Stil, hell und lesbar **[nur du]**
+
+---
+
+## Schritt 1b — Anlegen, Bearbeiten, Löschen
+
+- [ ] **Neuen Kontakt anlegen**, nur den Nachnamen ausfüllen. Er erscheint sofort,
+      und im Namenskreis steht ein sinnvoller Buchstabe — **nicht** `undefinedM` **[vorgeprüft]**
+- [ ] **Seite neu laden** — ist er noch da? **[vorgeprüft]**
+- [ ] Kontakt öffnen, etwas ändern, **Abbrechen** drücken — die Änderung ist verworfen **[vorgeprüft]**
+- [ ] Kontakt öffnen, Vorname und Telefon eintragen, **Speichern** — die Kachel
+      zeigt beides, und der Telefonknopf ist nicht mehr blass **[vorgeprüft]**
+- [ ] **Ohne Nachnamen speichern** — es kommt die Meldung „Ohne Nachnamen geht es nicht“,
+      nichts wird angelegt **[vorgeprüft]**
+- [ ] **Escape** schließt den Dialog **[vorgeprüft]**
+- [ ] Klick **neben** den Dialog schließt ihn ebenfalls **[nur du]**
+- [ ] **Löschen** drücken — die Rückfrage nennt die Zahl der betroffenen Verweise
+      und sagt, dass die Einträge selbst bleiben **[vorgeprüft]**
+- [ ] **„Doch nicht“** führt zurück in den Dialog, nichts ist gelöscht **[vorgeprüft]**
+- [ ] Einen Kontakt löschen, **der in einer Aufgabe hängt** (etwa Eva Bergmann):
+      Die Aufgabe bleibt, nur der Name daneben ist weg **[vorgeprüft]**
+- [ ] Nach dem Löschen durch **alle** Flächen gehen — Leiste, Planner, Aufgaben,
+      Notizen, Kalender, Workflows. Nirgends steht `undefined`, `null` oder eine
+      leere Zeile, wo ein Name war **[nur du]**
+- [ ] **Sichern** drücken, Datei irgendwo ablegen. **Laden** drücken, dieselbe Datei
+      wählen — alle Daten kommen unverändert zurück **[vorgeprüft]**
+- [ ] `referenz/theme-notion.html` — derselbe Dialog in Notions Stil, keine dunklen
+      Flächen, Löschrückfrage lesbar **[nur du]**
+
+---
+
+## Nach jeder Sitzung
+
+Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.
+
+- [ ] `node werkzeug/pruefen.mjs` läuft ohne Fehler durch
+- [ ] `git diff --stat` — für ein Modul 50 bis 200 Zeilen. Über 500 heißt:
+      Die Datei wurde umgeschrieben statt ein Block ersetzt → zurücknehmen
+- [ ] Die geänderte Fläche per Doppelklick angesehen. Hell und lesbar?
+- [ ] **Seite neu laden** — ist die Änderung noch da?
+- [ ] Sichern, Laden — kommt alles zurück?
+- [ ] `doku/ROADMAP.md`, `STAND.md` und diese Datei nachgezogen
+
+---
+
+## Noch nicht fällig
+
+Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
+
+- **Schritt 2 — Dialog-Baustein:** Der Kontaktdialog benutzt danach dieselbe
+  Funktion wie ein neu gebauter Testdialog
+- **Schritt 3 — Aufgaben und Termine:** Ein im Planner angelegter Termin steht
+  nach dem Neuladen an derselben Stelle
+- **Schritt 4 — Textbausteine:** Ein Baustein mit drei Platzhaltern liegt in vier
+  Klicks als fertiger Text in der Zwischenablage. *Braucht Schritt 0*
+- **Schritt 5 — Notizen:** Eine exportierte Notiz sieht nach dem Import identisch aus
+- **Schritt 6 — Workflows:** Neue Instanz hat sofort alle acht Teilschritte mit leeren
+  Werten · Durchlauf bis zum Ende klickbar · überfälliger aktiver Schritt erscheint in
+  Leiste und Planner · Klick auf Schritt 6 ändert den Stand **nicht**
+- **Schritt 7 — Bookmarks und Apps:** *Braucht Schritt 0*
+- **Schritt 8 — Hilfe:** Baut sich aus dem Register auf, ein neues Modul erscheint
+  dort von selbst
+- **Schritt 9 — Outliner:** `Tab` rückt ein, `Umschalt+Tab` aus

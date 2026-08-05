@@ -186,6 +186,52 @@ input,textarea{font:inherit}
 .msuche .weg{position:absolute;right:6px;top:50%;transform:translateY(-50%);
   color:var(--ink3);padding:4px 7px;border-radius:var(--r);font-size:12px}
 .msuche .weg:hover{background:var(--raise);color:var(--ink)}
+
+/* ---------- Dialog ----------
+   Notion legt Dialoge auf Weiß mit weichem Schatten und fast ohne
+   Rahmen. Auf und Zu laufen über .schleier und .schleier.auf,
+   niemals über eine ID-Regel — Fehlerbuch Punkt 6. */
+.schleier{position:fixed;inset:0;background:rgba(15,15,15,.6);display:none;
+  place-items:center;padding:18px;z-index:500}
+.schleier.auf{display:grid}
+.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--paper);
+  border-radius:var(--r-gross);box-shadow:0 14px 44px rgba(15,15,15,.16),
+  0 2px 6px rgba(15,15,15,.1);display:flex;flex-direction:column;overflow:hidden}
+.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:11px;padding:14px 18px 11px;
+  border-bottom:1px solid var(--rule)}
+.dlg-k .art{font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink3);font-weight:600;white-space:nowrap}
+.dlg-t{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.dlg-k .sp{flex:1}
+.dlg-zu{font-size:18px;color:var(--ink3);line-height:1;padding:2px 7px;border-radius:var(--r)}
+.dlg-zu:hover{background:var(--raise);color:var(--ink)}
+.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:14px 18px 18px}
+.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:11px 18px;
+  border-top:1px solid var(--rule);background:var(--sheet)}
+.dlg-f .sp{flex:1}
+.raster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px 12px}
+.feld{display:flex;flex-direction:column;gap:4px}
+.feld.breit{grid-column:1/-1}
+.feld label{font-size:12px;color:var(--ink3);font-weight:500}
+.feld input,.feld textarea{border:1px solid var(--rule2);border-radius:var(--r);
+  padding:6px 9px;background:var(--paper);font-size:14px;color:var(--ink);width:100%}
+.feld input:focus,.feld textarea:focus{outline:0;border-color:var(--tinte);
+  box-shadow:0 0 0 2px rgba(35,131,226,.24)}
+.feld textarea{min-height:72px;resize:vertical;line-height:1.5}
+.feld.schalter{flex-direction:row;align-items:center;gap:8px;grid-column:1/-1;
+  padding:8px 9px;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
+.feld.schalter input{width:16px;height:16px;padding:0;accent-color:var(--tinte);flex-shrink:0}
+.feld.schalter label{font-size:14px;color:var(--ink)}
+.feld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:1px}
+.merk{font-size:14px;color:var(--ink2);background:var(--sheet);border-radius:var(--r);
+  padding:9px 11px;margin-top:12px;line-height:1.5}
+.merk.warn{color:var(--signal-tx);background:var(--signal-s)}
+.merk b{font-weight:600}
+.merk ul{margin:5px 0 0 17px}
+.merk li{margin-top:2px}
+.tat.weg{color:var(--signal-tx);border-color:transparent;background:transparent}
+.tat.weg:hover{background:var(--signal-s)}
+.tat.weg.ernst{border-color:rgba(224,62,62,.4);background:var(--signal-s);font-weight:600}
 kbd{font-family:var(--mono);font-size:12px;background:var(--raise-fest);border:0;
   border-radius:var(--r);padding:1px 5px;color:var(--signal-tx)}
 
@@ -465,7 +511,7 @@ function kontaktKachel(k){
   const c=el("div","kk"+(k.fav?" ist-fav":""));
   const f=el("button","kk-flaeche");
   f.setAttribute("aria-label","Kontakt "+knm(k)+" öffnen");
-  f.onclick=()=>melde(knm(k)+" — Bearbeiten kommt mit dem Dialog");
+  f.onclick=()=>kontaktDialog(k);
   c.appendChild(f);
 
   const o=el("div","kk-o");
@@ -779,7 +825,7 @@ registriere({
     return out;
   },
   erfassen(d){ return [treff("Kontakt",d.titel,"als neuer Kontakt anlegen","↵",
-    ()=>melde("Neuer Kontakt: "+d.titel))]; },
+    ()=>kontaktDialog(null, d.titel))]; },
 
   flaeche(b){
     const q=kSuche.trim().toLowerCase();
@@ -817,7 +863,11 @@ registriere({
     } else b.appendChild(el("div","leer",
       "Noch kein Favorit. Der Stern auf einer Kachel macht einen daraus."));
 
-    b.appendChild(abschnitt("Alle Kontakte", String(rest.length)));
+    const a=abschnitt("Alle Kontakte", null);
+    const neu=el("button","n","neuer Kontakt +");
+    neu.onclick=()=>kontaktDialog(null);
+    a.appendChild(neu);
+    b.appendChild(a);
     if(rest.length) b.appendChild(kachelraster(rest));
     else b.appendChild(el("div","leer","Außer den Favoriten ist niemand erfasst."));
   }
@@ -847,6 +897,166 @@ function kSuchfeld(){
     s.appendChild(w);
   }
   return s;
+}
+
+/* ---------- Der Kontaktdialog ----------
+   Bewusst kontaktspezifisch. In Schritt 2 der Roadmap wird daraus der
+   gemeinsame Baustein — die Felder sind deshalb schon in seinem Format
+   beschrieben: {schl, nm, art}. Dasselbe Format tragen die
+   Eigenschaften der Workflow-Vorlagen. */
+const KFELDER=[
+  {schl:"nach",  nm:"Nachname", art:"text"},
+  {schl:"vor",   nm:"Vorname",  art:"text"},
+  {schl:"firma", nm:"Firma",    art:"text"},
+  {schl:"tel",   nm:"Telefon",  art:"text"},
+  {schl:"mail",  nm:"E-Mail",   art:"text"},
+  {schl:"notiz", nm:"Notizen",  art:"mehrzeilig"},
+  {schl:"fav",   nm:"Als Favorit markieren", art:"schalter",
+   sub:"Favoriten stehen im Modul und in der Leiste oben."}
+];
+const KLEER={id:null,nach:"",vor:"",firma:"",tel:"",mail:"",fav:false,notiz:""};
+
+let kSchleier=null;                      /* der offene Dialog, sonst null */
+function kSchliessen(){ if(kSchleier){ kSchleier.remove(); kSchleier=null; } }
+
+function kontaktDialog(k, vorbelegt){
+  kSchliessen();
+  const neu=!k;
+  /* Am Entwurf wird gearbeitet, nicht am Kontakt. Sonst hinterließe
+     „Abbrechen“ die halbe Eingabe im Datenbestand. */
+  const w=Object.assign({}, KLEER, k||{});
+  if(neu&&vorbelegt) w.nach=vorbelegt;
+
+  const s=el("div","schleier auf");
+  const d=el("div","dlg");
+  d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true");
+  d.setAttribute("aria-label", neu?"Neuen Kontakt anlegen":"Kontakt bearbeiten");
+
+  const kopf=el("div","dlg-k",'<span class="art">'
+    +(neu?"Neuer Kontakt":"Kontakt bearbeiten")+'</span>'
+    +'<h2 class="dlg-t">'+esc(knm(w)||"—")+'</h2><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×");
+  zu.setAttribute("aria-label","Schließen"); zu.onclick=kSchliessen;
+  kopf.appendChild(zu);
+  d.appendChild(kopf);
+
+  const rumpf=el("div","dlg-b");
+  rumpf.appendChild(kFelder(w,d));
+  rumpf.appendChild(el("div","merk","<b>Pflicht ist nur der Nachname.</b> Alles Übrige darf "
+    +"leer bleiben. Fehlt eine Nummer oder eine Adresse, bleibt der zugehörige Knopf auf der "
+    +"Kachel sichtbar, aber blass und ohne Wirkung."));
+  d.appendChild(rumpf);
+
+  const fuss=el("div","dlg-f");
+  if(!neu){
+    const lo=el("button","tat weg","Löschen");
+    lo.onclick=()=>kLoeschfrage(k,rumpf,fuss);
+    fuss.appendChild(lo);
+  }
+  fuss.appendChild(el("span","sp"));
+  const ab=el("button","tat still","Abbrechen"); ab.onclick=kSchliessen;
+  const sp=el("button","tat","Speichern");       sp.onclick=()=>kSpeichern(w,neu);
+  fuss.append(ab,sp);
+  d.appendChild(fuss);
+
+  s.appendChild(d);
+  s.onclick=ev=>{ if(ev.target===s) kSchliessen(); };
+  document.body.appendChild(s);
+  kSchleier=s;
+  const erstes=d.querySelector("input"); if(erstes) erstes.focus();
+}
+
+function kFelder(w,d){
+  const r=el("div","raster");
+  KFELDER.forEach(def=>{
+    const f=el("div","feld"+(def.art==="mehrzeilig"?" breit":"")
+      +(def.art==="schalter"?" schalter":""));
+    let n;
+    if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=w[def.schl]||""; }
+    else if(def.art==="schalter"){ n=el("input"); n.type="checkbox"; n.checked=!!w[def.schl]; }
+    else { n=el("input"); n.type="text"; n.value=w[def.schl]||""; }
+    n.id="kf-"+def.schl;
+    const lab=el("label",null,esc(def.nm)
+      +(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
+    lab.setAttribute("for",n.id);
+    if(def.art==="schalter") f.append(n,lab); else f.append(lab,n);
+    n.oninput=n.onchange=()=>{
+      w[def.schl] = def.art==="schalter" ? n.checked : n.value;
+      const t=d.querySelector(".dlg-t"); if(t) t.textContent=knm(w)||"—";
+    };
+    r.appendChild(f);
+  });
+  return r;
+}
+
+function kSpeichern(w,neu){
+  if(!String(w.nach||"").trim()){ melde("Ohne Nachnamen geht es nicht."); return; }
+  ["nach","vor","firma","tel","mail"].forEach(s=>w[s]=String(w[s]||"").trim());
+  if(neu){ w.id=neueId("k"); KONTAKTE.push(w); }
+  else {
+    /* An Ort und Stelle ändern. Ein Austausch des Eintrags im Array
+       risse die Verweise ab, die anderswo auf dieses Objekt zeigen. */
+    const z=kfind(w.id);
+    if(!z){ melde("Der Kontakt ist nicht mehr da."); kSchliessen(); male(); return; }
+    Object.keys(KLEER).forEach(s=>{ z[s]=w[s]; });
+  }
+  bewahre(); kSchliessen(); male();
+  melde(knm(w)+(neu?" angelegt":" gespeichert"));
+}
+
+/* ---------- Verweise auf einen Kontakt ----------
+   Mit leeren=false wird nur gezählt, sonst auf null gesetzt.
+
+   Die betroffenen Schlüssel der Workflows stehen absichtlich nicht
+   fest im Code. Sie ergeben sich aus VORLAGEN — aus jeder Eigenschaft
+   mit art:"kontakt", auf Instanz- wie auf Teilschrittebene. Fest
+   eingetragene Namen brächen still, sobald eine Vorlage wächst. */
+function kVerweise(id, leeren){
+  let n=0;
+  const pruef=(o,s)=>{ if(o&&o[s]===id){ n++; if(leeren) o[s]=null; } };
+  [DATEN.termine, DATEN.aufgaben, DATEN.notizen].forEach(l=>
+    l.forEach(x=>pruef(x,"kontakt")));
+  WORKFLOWS.forEach(w=>{
+    const v=wfVorlage(w.vorlage); if(!v) return;
+    (v.eigenschaften||[]).forEach(e=>{
+      if(e.art==="kontakt") pruef(w.werte, e.schl); });
+    (v.schritte||[]).forEach(s=>{
+      const st=w.schritte&&w.schritte[s.schl];
+      (s.eigenschaften||[]).forEach(e=>{
+        if(e.art==="kontakt") pruef(st&&st.werte, e.schl); });
+    });
+  });
+  return n;
+}
+
+function kLoeschfrage(k, rumpf, fuss){
+  const n=kVerweise(k.id,false);
+  rumpf.innerHTML="";
+  rumpf.appendChild(el("div","merk warn",
+    "<b>"+esc(knm(k))+" wirklich löschen?</b><ul>"
+    +"<li>Die Kachel verschwindet aus dem Modul und aus der Leiste.</li>"
+    +"<li>"+(n
+      ? n+" Verweis"+(n>1?"e":"")+" in Aufgaben, Terminen, Notizen und Workflows "
+        +"werden geleert — auch in den Teilschritten der Workflows."
+      : "Kein Eintrag verweist auf diesen Kontakt.")+"</li>"
+    +"<li>Die Einträge selbst bleiben erhalten. Es verschwindet nur der Name daneben.</li>"
+    +"</ul>"));
+  fuss.innerHTML="";
+  const ja=el("button","tat weg ernst","Ja, löschen");
+  ja.onclick=()=>kLoeschen(k);
+  fuss.appendChild(ja);
+  fuss.appendChild(el("span","sp"));
+  const zurueck=el("button","tat still","Doch nicht");
+  zurueck.onclick=()=>kontaktDialog(k);
+  fuss.appendChild(zurueck);
+}
+
+function kLoeschen(k){
+  const nm=knm(k), n=kVerweise(k.id,true);
+  const i=KONTAKTE.indexOf(k);
+  if(i>=0) KONTAKTE.splice(i,1);       /* splice, nie neu zuweisen */
+  bewahre(); kSchliessen(); male();
+  melde(nm+" gelöscht"+(n?" · "+n+" Verweis"+(n>1?"e":"")+" geleert":""));
 }
 
 /* ---------- 04 Aufgaben ---------- */
@@ -1480,7 +1690,7 @@ function vorratZeile(a){
    Aus einer Modulfläche führt ESC zurück zur Leiste.
    ============================================================ */
 let flaeche="leiste";
-function zeigeFlaeche(id){ flaeche=id; if(id==="leiste") eingabe=""; male(); }
+function zeigeFlaeche(id){ kSchliessen(); flaeche=id; if(id==="leiste") eingabe=""; male(); }
 
 function male(){
   const rumpf=$("#rumpf"); rumpf.innerHTML="";
@@ -1633,6 +1843,9 @@ function standZeigen(){
    ============================================================ */
 document.addEventListener("keydown",e=>{
   const mod=e.metaKey||e.ctrlKey, imFeld=e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA";
+  if(kSchleier){
+    if(e.key==="Escape"){ e.preventDefault(); kSchliessen(); }
+    return; }
   if(mod&&e.key>="1"&&e.key<="8"){ e.preventDefault();
     const u=PINS[+e.key-1];
     if(u){ const m=MARKEN.find(x=>x.u===u); melde("Öffne "+(m?m.t:u)); }

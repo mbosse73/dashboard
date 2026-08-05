@@ -33,14 +33,27 @@ Export einzelner Notizen, Verknüpfung mit einem Kontakt im Bearbeiten-Dialog.
 
 ---
 
-## 02 Kontakte — Gerüst
+## 02 Kontakte — fertig
 
 Felder: Nachname, Vorname, Firma, Telefon, Mail, Notizen, Favorit.
+Pflicht ist nur der Nachname.
 
-Favoriten stehen oben. Jede Zeile bietet „Anrufen" und „Mailen".
+Kontakte erscheinen als **Kacheln** in einem Raster, das umbricht statt
+waagerecht zu rollen. Favoriten stehen oben — im Modul wie im
+Suchergebnis — und zusätzlich im Ruhezustand der Leiste. Der Stern auf
+der Kachel setzt und löst den Favoriten.
 
-**Fehlt noch:** Anlegen, Bearbeiten, Löschen. Eigene Suche innerhalb des
-Moduls.
+Jede Kachel bietet „Anrufen" und „Mailen" als echte `tel:`- und
+`mailto:`-Verweise. Fehlt ein Weg, bleibt der Knopf blass an seinem
+Platz stehen. Beide tragen denselben Farbton: Er sagt „hinterlegt", also
+einen Zustand, keine Kategorie.
+
+Eigene Suche im Modul über Name, Firma, Nummer, Mail und Notiz.
+
+Beim Löschen werden alle Verweise auf den Kontakt geleert — in Terminen,
+Aufgaben, Notizen und in Workflows auf **beiden** Ebenen. Welche
+Schlüssel das sind, ergibt sich aus `VORLAGEN`, aus jeder Eigenschaft mit
+`art:"kontakt"`, und steht bewusst nicht fest im Code.
 
 **Wichtig:** Kontakte sind das Rückgrat — Notizen, Aufgaben, Termine und
 Workflows verweisen darauf. Beim Löschen müssen diese Verweise auf `null`

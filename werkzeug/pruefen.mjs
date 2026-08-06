@@ -10,7 +10,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
 
-const DATEIEN = ["dashboard.html", "referenz/theme-notion.html",
+const DATEIEN = ["dashboard.html", "referenz/theme-basecamp.html",
                  "referenz/workflow-dialog.html", "browsertest.html"];
 
 /* Fehlt eine Datei aus dieser Liste, ist das ein Fehler und kein Hinweis.
@@ -176,17 +176,17 @@ function pruefeNamen(name, css) {
   else ok(name + ": jeder Klassenname gehört einem Bereich");
 }
 
-/* ---------- 10 Notion-Fassung deckungsgleich ---------- */
+/* ---------- 10 Basecamp-Fassung deckungsgleich ---------- */
 function pruefeFassungen() {
-  if (!existsSync("dashboard.html") || !existsSync("referenz/theme-notion.html")) return;
+  if (!existsSync("dashboard.html") || !existsSync("referenz/theme-basecamp.html")) return;
   const a = teile(readFileSync("dashboard.html", "utf8"));
-  const b = teile(readFileSync("referenz/theme-notion.html", "utf8"));
+  const b = teile(readFileSync("referenz/theme-basecamp.html", "utf8"));
   if (a.js !== b.js)
-    bad("Notion-Fassung: Logik weicht ab \u2014 Stylesheet neu übertragen");
-  else ok("Notion-Fassung: Logik deckungsgleich");
+    bad("Basecamp-Fassung: Logik weicht ab \u2014 Stylesheet neu übertragen");
+  else ok("Basecamp-Fassung: Logik deckungsgleich");
   const klassen = (css) => new Set([...css.matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]));
   const fehlt = [...klassen(a.css)].filter(k => !klassen(b.css).has(k));
-  if (fehlt.length) warn("Notion-Fassung: Regeln fehlen \u2014 " + fehlt.join(", "));
+  if (fehlt.length) warn("Basecamp-Fassung: Regeln fehlen \u2014 " + fehlt.join(", "));
 }
 
 /* ---------- 11 README gegen die Anwendung ----------

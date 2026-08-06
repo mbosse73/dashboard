@@ -141,8 +141,8 @@ Ausführlich in `doku/ARCHITEKTUR.md`, Entwurf unter
   stehen nebeneinander, nie in verschiedenen Zeilen. Mehrzeiliges zuletzt
   und breit, Schalter darunter. Kein Feld bleibt allein in einer halben
   Zeile stehen. Erklärungen stehen **unter** dem Feld, nie im Label.
-* Eine Alternativfassung im Notion-Stil liegt unter
-  `referenz/theme-notion.html`. Dort ist **nur** das Stylesheet getauscht,
+* Eine Alternativfassung im Basecamp-Stil liegt unter
+  `referenz/theme-basecamp.html`. Dort ist **nur** das Stylesheet getauscht,
   Struktur und Logik sind identisch. Wer eine davon ändert, ändert beide.
 
 ---
@@ -159,7 +159,7 @@ Abhängigkeiten. Rückgabewert 1, wenn etwas nicht stimmt.
 Geprüft werden: Syntax, externe Abhängigkeiten, gefüllte Zeichen als
 Symbole, `color-scheme`, `display` in ID-Regeln, bemalte Flächen,
 paarige Modulmarker, ob jeder Datenbereich beim Laden ersetzt wird, und
-ob die Notion-Fassung logisch deckungsgleich ist.
+ob die Basecamp-Fassung logisch deckungsgleich ist.
 
 **Danach die Datei im Browser öffnen und die geänderte Fläche ansehen.**
 Sämtliche schwarzen Flächen aus dem Fehlerbuch haben diese Prüfung

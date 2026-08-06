@@ -1,0 +1,240 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Anytype-Fassung — Home</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   AB HIER: Anytype, konsequent. Eigener Geltungsbereich.
+   Dunkle Seitenleiste, farbige Objektsymbole statt Emoji,
+   das Home-Widget-Brett statt einer Leiste.
+   ============================================================ */
+.at{max-width:1420px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);display:flex;height:870px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:#1c1b1a}
+
+.gi{border-radius:8px;flex-shrink:0}
+.gi-1{background:radial-gradient(circle at 30% 28%, #ffdca8, #ff7a45 72%)}
+.gi-2{background:radial-gradient(circle at 30% 28%, #bdf2da, #12ad86 72%)}
+.gi-3{background:radial-gradient(circle at 30% 28%, #cfd8ff, #4436e1 72%)}
+.gi-4{background:radial-gradient(circle at 30% 28%, #ffd7ec, #d6409f 72%)}
+.gi-5{background:radial-gradient(circle at 30% 28%, #fff2ad, #eab308 72%)}
+.gi-6{background:radial-gradient(circle at 30% 28%, #cdeeff, #0ea5e9 72%)}
+.gi-7{background:radial-gradient(circle at 30% 28%, #e3d9ff, #8b5cf6 72%)}
+.gi svg{width:60%;height:60%;stroke:#fff;stroke-width:1.9;fill:none;margin:20% auto;display:block}
+
+/* ---------- Seitenleiste ---------- */
+.a-side{width:250px;flex-shrink:0;background:#232220;color:#d8d5cd;display:flex;
+  flex-direction:column;padding:12px 10px}
+.a-space{display:flex;align-items:center;gap:9px;padding:6px 7px;border-radius:7px}
+.a-space:hover{background:#2f2e2b}
+.a-space .gi{width:24px;height:24px}
+.a-space b{font-size:14px;color:#fff}
+.a-space svg.chev{width:12px;height:12px;stroke:#87847c;stroke-width:2;fill:none;margin-left:auto}
+.a-such{display:flex;align-items:center;gap:8px;padding:7px 8px;margin:8px 0;border-radius:7px;
+  background:#2b2a27;font-size:13px;color:#8f8c84}
+.a-such svg{width:14px;height:14px;stroke:#8f8c84;stroke-width:1.9;fill:none}
+.a-such kbd{margin-left:auto;font-size:10.5px;background:#3a3936;border-radius:4px;padding:1px 5px;
+  color:#a19d94;font-family:inherit}
+.a-row{display:flex;align-items:center;gap:9px;padding:6px 8px;border-radius:7px;font-size:13.5px}
+.a-row:hover{background:#2b2a27}
+.a-row svg{width:15px;height:15px;stroke:#9c988f;stroke-width:1.8;fill:none;flex-shrink:0}
+.a-row.aktiv{background:#31302c;color:#fff}
+.a-row.aktiv svg{stroke:#fff}
+.a-sek{display:flex;align-items:center;padding:12px 8px 4px;font-size:11px;font-weight:600;
+  letter-spacing:.03em;color:#726f66;text-transform:uppercase}
+.a-sek svg{width:11px;height:11px;stroke:#726f66;stroke-width:2.2;fill:none;margin-right:5px}
+.a-obj{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:7px;font-size:13.5px}
+.a-obj:hover{background:#2b2a27}
+.a-obj .gi{width:18px;height:18px;border-radius:5px}
+.a-obj .zahl{margin-left:auto;font-size:11px;color:#726f66}
+.a-obj .art{margin-left:auto;font-size:9.5px;color:#726f66;background:#2f2e2b;padding:1px 6px;
+  border-radius:4px;font-weight:600;letter-spacing:.02em}
+.a-fuss{margin-top:auto;display:flex;align-items:center;gap:8px;padding:8px;border-radius:7px;
+  font-size:12.5px;color:#a19d94}
+.a-fuss:hover{background:#2b2a27}
+.a-fuss .av{width:20px;height:20px;border-radius:50%;background:#8b5cf6;flex-shrink:0}
+.a-neu{display:flex;align-items:center;justify-content:center;gap:7px;margin:6px 4px 2px;
+  padding:8px;border-radius:8px;background:#31302c;color:#fff;font-size:13px;font-weight:500}
+.a-neu svg{width:13px;height:13px;stroke:#fff;stroke-width:2.2;fill:none}
+
+/* ---------- Hauptfläche ---------- */
+.a-main{flex:1;min-width:0;overflow-y:auto;background:#fbfaf7}
+.a-top{display:flex;align-items:center;gap:12px;padding:12px 30px;border-bottom:1px solid #eae7e0}
+.a-top .re{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:12px;color:#8b877d}
+.a-top .lok{display:flex;align-items:center;gap:6px}
+.a-top .lok .punkt{width:6px;height:6px;border-radius:50%;background:#12ad86}
+.a-top svg{width:15px;height:15px;stroke:#8b877d;stroke-width:1.8;fill:none}
+.a-body{padding:26px 44px 60px;max-width:960px}
+.a-hallo{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:4px}
+.a-unter{font-size:13.5px;color:#8b877d;margin-bottom:22px}
+.a-suchfeld{display:flex;align-items:center;gap:10px;border:1px solid #e5e2d9;background:#fff;
+  border-radius:10px;padding:11px 15px;font-size:14px;color:#a19d94;margin-bottom:30px}
+.a-suchfeld svg{width:16px;height:16px;stroke:#a19d94;stroke-width:1.8;fill:none;flex-shrink:0}
+
+.a-wtitel{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#57544c;
+  margin:0 0 10px}
+.a-wtitel svg{width:14px;height:14px;stroke:#8b877d;stroke-width:1.9;fill:none}
+.a-wtitel .art{margin-left:auto;font-size:10px;font-weight:600;letter-spacing:.03em;color:#a19d94;
+  background:#eeece5;padding:2px 7px;border-radius:5px;text-transform:uppercase}
+
+.a-widget{border:1px solid #eae7e0;border-radius:11px;background:#fff;margin-bottom:26px;
+  overflow:hidden}
+.a-wr{display:flex;align-items:center;gap:11px;padding:10px 15px;border-bottom:1px solid #f0eee7}
+.a-wr:last-child{border-bottom:0}
+.a-wr .gi{width:26px;height:26px;border-radius:6px}
+.a-wr .tt{font-weight:600;font-size:13.5px}
+.a-wr .mm{color:#a19d94;font-size:12px;margin-top:1px}
+.a-wr .re{margin-left:auto;display:flex;align-items:center;gap:8px}
+.a-tag{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px}
+.a-tag.rot{background:#fde3e0;color:#c23e35}
+.a-tag.blau{background:#e2e6fb;color:#4436e1}
+
+.a-favzeile{display:flex;gap:10px;flex-wrap:wrap}
+.a-fav{display:flex;align-items:center;gap:8px;border:1px solid #eae7e0;border-radius:9px;
+  padding:8px 12px;background:#fff;font-size:13px;font-weight:500}
+.a-fav .gi{width:20px;height:20px;border-radius:5px}
+
+.a-setgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.a-set{border:1px solid #eae7e0;border-radius:10px;padding:12px 13px;background:#fff;
+  display:flex;align-items:center;gap:10px}
+.a-set .gi{width:30px;height:30px;border-radius:7px}
+.a-set .tt{font-weight:600;font-size:13.5px}
+.a-set .mm{font-size:11.5px;color:#a19d94}
+.a-set .zahl{margin-left:auto;font-size:12px;color:#a19d94;font-weight:600}
+.a-set .art{font-size:9px;font-weight:700;letter-spacing:.03em;color:#a19d94;
+  background:#f2f0e9;padding:1px 6px;border-radius:4px;text-transform:uppercase;margin-left:6px}
+</style>
+
+<div class="meta">
+  <b>Anytype-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a class="hier" href="home.html">Home</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Anytype denkt in Objekten, Typen und
+Sets statt in Modulen. Der Einstieg wird zum Space-Home mit Widgets — Favoriten, ein
+Anstehend-Widget aus dem Kalender-Set, und die Module als Sets bzw. Collections in der
+Seitenleiste. Rechts oben ein Hinweis, den Anytype tatsächlich zeigt: lokal, nicht
+synchronisiert — dieselbe Haltung wie unser eigenes Projekt.</p>
+
+<div class="at">
+  <aside class="a-side">
+    <div class="a-space"><span class="gi gi-3" style="width:24px;height:24px"></span><b>Dashboard</b>
+      <svg class="chev" viewBox="0 0 12 12"><path d="M3 4.5 6 7.5 9 4.5"/></svg></div>
+    <div class="a-such">
+      <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>
+      Suchen <kbd>Strg K</kbd>
+    </div>
+    <div class="a-row aktiv">
+      <svg viewBox="0 0 20 20"><path d="M3 9.5 10 4l7 5.5"/><path d="M5 9v7h10V9"/></svg>Home
+    </div>
+    <div class="a-row">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><circle cx="10" cy="10" r="3"/><circle cx="10" cy="4" r="1"/><circle cx="10" cy="16" r="1"/><circle cx="4" cy="10" r="1"/><circle cx="16" cy="10" r="1"/></svg>Graph
+    </div>
+    <div class="a-sek">
+      <svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg>
+      Favoriten
+    </div>
+    <div class="a-obj"><span class="gi gi-4" style="width:18px;height:18px"></span>Eva Bergmann</div>
+    <div class="a-obj"><span class="gi gi-6" style="width:18px;height:18px"></span>Jan Kowalski</div>
+    <div class="a-obj"><span class="gi gi-5" style="width:18px;height:18px"></span>Lisa Meier</div>
+
+    <div class="a-sek">
+      <svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M3 8h14"/></svg>
+      Sets
+    </div>
+    <div class="a-obj"><span class="gi gi-4" style="width:18px;height:18px"></span>Kontakte<span class="zahl">6</span></div>
+    <div class="a-obj"><span class="gi gi-2" style="width:18px;height:18px"></span>Aufgaben<span class="zahl">8</span></div>
+    <div class="a-obj"><span class="gi gi-3" style="width:18px;height:18px"></span>Kalender<span class="zahl">5</span></div>
+    <div class="a-obj"><span class="gi gi-5" style="width:18px;height:18px"></span>Notizen<span class="zahl">5</span></div>
+
+    <div class="a-sek">
+      <svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2.5"/><path d="M3 8h14"/></svg>
+      Collections
+    </div>
+    <div class="a-obj"><span class="gi gi-7" style="width:18px;height:18px"></span>Textbausteine<span class="art">Gerüst</span></div>
+    <div class="a-obj"><span class="gi gi-6" style="width:18px;height:18px"></span>Bookmarks<span class="art">Gerüst</span></div>
+    <div class="a-obj"><span class="gi gi-1" style="width:18px;height:18px"></span>Workflows<span class="art">Gerüst</span></div>
+    <div class="a-obj"><span class="gi gi-5" style="width:18px;height:18px"></span>Outliner<span class="art">Gerüst</span></div>
+
+    <div class="a-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>Neues Objekt</div>
+    <div class="a-fuss"><span class="av"></span>Marco Bosse</div>
+  </aside>
+
+  <main class="a-main">
+    <div class="a-top">
+      <span style="font-size:13px;color:#8b877d">Dashboard</span>
+      <div class="re">
+        <span class="lok"><span class="punkt"></span>Lokal · nicht synchronisiert</span>
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+      </div>
+    </div>
+    <div class="a-body">
+      <div class="a-hallo">Guten Morgen, Marco</div>
+      <div class="a-unter">Donnerstag, 6. August</div>
+      <div class="a-suchfeld">
+        <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>
+        Suchen, rechnen, erfassen …
+      </div>
+
+      <div class="a-wtitel">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+        Anstehend
+        <span class="art">Set · Kalender + Aufgaben</span>
+      </div>
+      <div class="a-widget">
+        <div class="a-wr"><span class="gi gi-2" style="width:26px;height:26px"></span>
+          <div><div class="tt">Rechnung 2026-114 freigeben</div><div class="mm">Aufgabe · Eva Bergmann</div></div>
+          <span class="re"><span class="a-tag rot">Überfällig</span></span></div>
+        <div class="a-wr"><span class="gi gi-3" style="width:26px;height:26px"></span>
+          <div><div class="tt">Standup</div><div class="mm">08:00 · Team</div></div></div>
+        <div class="a-wr"><span class="gi gi-3" style="width:26px;height:26px"></span>
+          <div><div class="tt">Strategie-Call</div><div class="mm">10:00 · Lisa Meier</div></div></div>
+      </div>
+
+      <div class="a-wtitel">
+        <svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg>
+        Favoriten
+      </div>
+      <div class="a-favzeile" style="margin-bottom:26px">
+        <div class="a-fav"><span class="gi gi-4"></span>Eva Bergmann</div>
+        <div class="a-fav"><span class="gi gi-6"></span>Jan Kowalski</div>
+        <div class="a-fav"><span class="gi gi-5"></span>Lisa Meier</div>
+      </div>
+
+      <div class="a-wtitel">
+        <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1.3"/><rect x="11" y="3" width="6" height="6" rx="1.3"/><rect x="3" y="11" width="6" height="6" rx="1.3"/><rect x="11" y="11" width="6" height="6" rx="1.3"/></svg>
+        Sets &amp; Collections
+      </div>
+      <div class="a-setgrid">
+        <div class="a-set"><span class="gi gi-4"></span><div><div class="tt">Kontakte</div><div class="mm">Set</div></div><span class="zahl">6</span></div>
+        <div class="a-set"><span class="gi gi-2"></span><div><div class="tt">Aufgaben</div><div class="mm">Set</div></div><span class="zahl">8</span></div>
+        <div class="a-set"><span class="gi gi-3"></span><div><div class="tt">Kalender</div><div class="mm">Set</div></div><span class="zahl">5</span></div>
+        <div class="a-set"><span class="gi gi-5"></span><div><div class="tt">Notizen</div><div class="mm">Set</div></div><span class="zahl">5</span></div>
+        <div class="a-set"><span class="gi gi-7"></span><div><div class="tt">Textbausteine</div><div class="mm">Collection</div></div><span class="art">Gerüst</span></div>
+        <div class="a-set"><span class="gi gi-6"></span><div><div class="tt">Bookmarks</div><div class="mm">Collection</div></div><span class="art">Gerüst</span></div>
+        <div class="a-set"><span class="gi gi-1"></span><div><div class="tt">Workflows</div><div class="mm">Collection</div></div><span class="art">Gerüst</span></div>
+        <div class="a-set"><span class="gi gi-5"></span><div><div class="tt">Outliner</div><div class="mm">Collection</div></div><span class="art">Gerüst</span></div>
+      </div>
+    </div>
+  </main>
+</div>

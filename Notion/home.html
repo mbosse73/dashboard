@@ -1,0 +1,247 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notion-Fassung — Home</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+
+/* ---------- Meta-Leiste, nicht Teil des Mockups ---------- */
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1400px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   AB HIER: Notion, konsequent — eigener Geltungsbereich, eigene
+   Typografie. Nichts von außen greift hier hinein.
+   ============================================================ */
+.notion{max-width:1400px;margin:16px auto 60px;background:#fff;border:1px solid #e7e6e3;
+  border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(15,15,15,.06);
+  display:flex;height:860px;
+  font-family:ui-sans-serif,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:rgb(55,53,47)}
+
+/* ---------- Seitenleiste ---------- */
+.n-side{width:246px;flex-shrink:0;background:#fbfbfa;border-right:1px solid rgba(55,53,47,.09);
+  display:flex;flex-direction:column;padding:8px 8px 12px}
+.n-ws{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:14px;
+  font-weight:600}
+.n-ws:hover{background:rgba(55,53,47,.06)}
+.n-ws-ic{width:20px;height:20px;border-radius:5px;background:linear-gradient(135deg,#6b5cff,#ff7dc0);
+  flex-shrink:0}
+.n-ws svg{width:13px;height:13px;stroke:rgba(55,53,47,.5);stroke-width:2;fill:none;margin-left:auto}
+.n-row{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;font-size:14px;
+  color:rgba(55,53,47,.8);cursor:default}
+.n-row:hover{background:rgba(55,53,47,.06)}
+.n-row svg{width:15px;height:15px;stroke:rgba(55,53,47,.55);stroke-width:1.8;fill:none;flex-shrink:0}
+.n-row.aktiv{background:rgba(35,131,226,.09);color:rgb(35,131,226);font-weight:500}
+.n-row.aktiv svg{stroke:rgb(35,131,226)}
+.n-such{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;font-size:14px;
+  color:rgba(55,53,47,.6);margin:2px 0}
+.n-such svg{width:14px;height:14px;stroke:rgba(55,53,47,.5);stroke-width:1.8;fill:none}
+.n-such kbd{margin-left:auto;font-size:11px;background:rgba(55,53,47,.06);border-radius:4px;
+  padding:1px 5px;font-family:inherit;color:rgba(55,53,47,.5)}
+.n-lueck{height:14px}
+.n-sek{display:flex;align-items:center;padding:6px 8px 3px;font-size:11.5px;font-weight:600;
+  color:rgba(55,53,47,.45);text-transform:none}
+.n-seite{display:flex;align-items:center;gap:8px;padding:5px 8px 5px 10px;border-radius:6px;
+  font-size:14px;color:rgba(55,53,47,.75)}
+.n-seite:hover{background:rgba(55,53,47,.06)}
+.n-seite .ic{font-size:15px;width:18px;text-align:center;flex-shrink:0}
+.n-seite .zahl{margin-left:auto;font-size:11px;color:rgba(55,53,47,.4)}
+.n-fuss{margin-top:auto;display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;
+  font-size:13px;color:rgba(55,53,47,.55)}
+.n-fuss:hover{background:rgba(55,53,47,.06)}
+.n-fuss .av{width:20px;height:20px;border-radius:5px;background:#dfa46b;flex-shrink:0}
+
+/* ---------- Hauptfläche: Home ---------- */
+.n-main{flex:1;min-width:0;overflow-y:auto;background:#fff}
+.n-top{display:flex;align-items:center;gap:10px;padding:10px 28px;border-bottom:1px solid transparent;
+  font-size:13px;color:rgba(55,53,47,.5)}
+.n-top .re{margin-left:auto;display:flex;gap:14px;align-items:center}
+.n-top svg{width:15px;height:15px;stroke:rgba(55,53,47,.5);stroke-width:1.8;fill:none}
+.n-body{padding:28px 64px 60px;max-width:900px}
+.n-hallo{font-size:29px;font-weight:600;letter-spacing:-.01em;margin-bottom:22px}
+.n-suchfeld{display:flex;align-items:center;gap:10px;border:1px solid rgba(55,53,47,.16);
+  border-radius:8px;padding:11px 15px;font-size:14px;color:rgba(55,53,47,.4);margin-bottom:34px;
+  box-shadow:0 1px 2px rgba(15,15,15,.03)}
+.n-suchfeld svg{width:16px;height:16px;stroke:rgba(55,53,47,.4);stroke-width:1.8;fill:none;
+  flex-shrink:0}
+
+.n-h2{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;
+  color:rgba(55,53,47,.65);margin:0 0 12px}
+.n-h2 svg{width:14px;height:14px;stroke:rgba(55,53,47,.5);stroke-width:1.8;fill:none}
+
+/* Anstehendes — genau die Rolle, die bei uns die Leiste übernimmt */
+.n-events{border:1px solid rgba(55,53,47,.09);border-radius:8px;margin-bottom:38px;overflow:hidden}
+.n-ev{display:flex;align-items:center;gap:12px;padding:11px 15px;font-size:14px;
+  border-bottom:1px solid rgba(55,53,47,.07)}
+.n-ev:last-child{border-bottom:0}
+.n-ev .balken{width:3px;align-self:stretch;border-radius:2px;background:rgb(35,131,226);flex-shrink:0}
+.n-ev.spaet .balken{background:rgb(235,87,87)}
+.n-ev .zeit{font-variant-numeric:tabular-nums;color:rgba(55,53,47,.5);width:52px;flex-shrink:0}
+.n-ev.spaet .zeit{color:rgb(235,87,87);font-weight:600}
+.n-ev .tt{font-weight:500}
+.n-ev .mm{color:rgba(55,53,47,.5);margin-left:6px}
+.n-ev .tag-spaet{margin-left:auto;font-size:11.5px;font-weight:600;color:rgb(235,87,87);
+  background:rgba(235,87,87,.09);padding:2px 8px;border-radius:4px}
+
+/* Kartenraster — Favoriten und Module als Notion-Seitenkarten */
+.n-karten{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;
+  margin-bottom:38px}
+.n-karte{border:1px solid rgba(55,53,47,.1);border-radius:8px;padding:13px 14px 15px;
+  display:flex;flex-direction:column;gap:9px;background:#fff}
+.n-karte:hover{box-shadow:0 2px 8px rgba(15,15,15,.09);border-color:rgba(55,53,47,.16)}
+.n-karte .kopf{display:flex;align-items:center;gap:8px}
+.n-karte .kopf .ic{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;
+  font-size:15px;flex-shrink:0;background:rgba(55,53,47,.05)}
+.n-karte .kopf .stern{margin-left:auto;color:rgb(35,131,226)}
+.n-karte .tt{font-weight:600;font-size:14.5px}
+.n-karte .mm{font-size:12.5px;color:rgba(55,53,47,.5)}
+.n-karte .wege{display:flex;gap:6px;margin-top:2px}
+.n-karte .wege span{width:24px;height:24px;border-radius:6px;background:rgba(35,131,226,.09);
+  color:rgb(11,110,153);display:grid;place-items:center}
+.n-karte .wege svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none}
+
+.n-modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:2px}
+.n-mod{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:6px;font-size:14px}
+.n-mod:hover{background:rgba(55,53,47,.06)}
+.n-mod .ic{font-size:16px;width:20px;text-align:center;flex-shrink:0}
+.n-mod .tt{font-weight:500}
+.n-mod .zahl{margin-left:auto;font-size:12px;color:rgba(55,53,47,.4)}
+.n-mod .ger{font-size:10px;font-weight:600;color:rgba(55,53,47,.4);background:rgba(55,53,47,.07);
+  padding:1px 6px;border-radius:4px;margin-left:6px}
+</style>
+
+<div class="meta">
+  <b>Notion-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a class="hier" href="home.html">Home</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Nicht nur andere Farben — das
+Notion-Paradigma konsequent zu Ende gedacht. Statt einer eigenen Leiste bekommt die
+Anwendung die Notion-Startseite: Seitenleiste mit den Modulen als Seiten, „Anstehendes“
+aus dem Kalender, Favoriten und Module als Seitenkarten.</p>
+
+<div class="notion">
+  <aside class="n-side">
+    <div class="n-ws"><span class="n-ws-ic"></span>Dashboard
+      <svg viewBox="0 0 12 12"><path d="M3 4.5 6 7.5 9 4.5"/></svg>
+    </div>
+    <div class="n-such">
+      <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>
+      Suchen <kbd>Strg K</kbd>
+    </div>
+    <div class="n-row aktiv">
+      <svg viewBox="0 0 20 20"><path d="M3 9.5 10 4l7 5.5"/><path d="M5 9v7h10V9"/></svg>
+      Home
+    </div>
+    <div class="n-row">
+      <svg viewBox="0 0 20 20"><rect x="4" y="4" width="12" height="13" rx="2"/><path d="M4 8h12"/></svg>
+      Planner
+    </div>
+    <div class="n-lueck"></div>
+    <div class="n-sek">Arbeitsbereich</div>
+    <div class="n-seite"><span class="ic">👥</span>Kontakte<span class="zahl">6</span></div>
+    <div class="n-seite"><span class="ic">✅</span>Aufgaben<span class="zahl">8</span></div>
+    <div class="n-seite"><span class="ic">📅</span>Kalender<span class="zahl">5</span></div>
+    <div class="n-seite"><span class="ic">📝</span>Notizen<span class="zahl">5</span></div>
+    <div class="n-seite"><span class="ic">🧷</span>Textbausteine<span class="zahl">5</span></div>
+    <div class="n-seite"><span class="ic">🔖</span>Bookmarks<span class="zahl">24</span></div>
+    <div class="n-seite"><span class="ic">🔁</span>Workflows<span class="zahl">2</span></div>
+    <div class="n-seite"><span class="ic">🗂️</span>Outliner<span class="zahl">8</span></div>
+    <div class="n-fuss"><span class="av"></span>Marco Bosse</div>
+  </aside>
+
+  <main class="n-main">
+    <div class="n-top">
+      <span>Home</span>
+      <div class="re">
+        <svg viewBox="0 0 20 20"><path d="M4 8c2-4 10-4 12 0M4 12c2 4 10 4 12 0"/></svg>
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+      </div>
+    </div>
+    <div class="n-body">
+      <div class="n-hallo">Guten Morgen, Marco</div>
+      <div class="n-suchfeld">
+        <svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>
+        Suchen, rechnen, erfassen …
+      </div>
+
+      <div class="n-h2">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+        Anstehendes
+      </div>
+      <div class="n-events">
+        <div class="n-ev spaet"><span class="balken"></span>
+          <span class="zeit">Heute</span><span class="tt">Rechnung 2026-114 freigeben</span>
+          <span class="mm">Aufgabe · Eva Bergmann</span><span class="tag-spaet">Überfällig</span></div>
+        <div class="n-ev"><span class="balken"></span>
+          <span class="zeit">08:00</span><span class="tt">Standup</span>
+          <span class="mm">Team</span></div>
+        <div class="n-ev"><span class="balken"></span>
+          <span class="zeit">10:00</span><span class="tt">Strategie-Call</span>
+          <span class="mm">Video · Lisa Meier</span></div>
+      </div>
+
+      <div class="n-h2">
+        <svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg>
+        Favoriten
+      </div>
+      <div class="n-karten">
+        <div class="n-karte">
+          <div class="kopf"><span class="ic">👤</span><span class="stern">★</span></div>
+          <div class="tt">Eva Bergmann</div><div class="mm">Kanzlei Bergmann</div>
+          <div class="wege">
+            <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+            <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+          </div>
+        </div>
+        <div class="n-karte">
+          <div class="kopf"><span class="ic">👤</span><span class="stern">★</span></div>
+          <div class="tt">Jan Kowalski</div><div class="mm">Nordstern GmbH</div>
+          <div class="wege">
+            <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+            <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+          </div>
+        </div>
+        <div class="n-karte">
+          <div class="kopf"><span class="ic">👤</span><span class="stern">★</span></div>
+          <div class="tt">Lisa Meier</div><div class="mm">Nordstern GmbH</div>
+          <div class="wege">
+            <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+            <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="n-h2">
+        <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1.3"/><rect x="11" y="3" width="6" height="6" rx="1.3"/><rect x="3" y="11" width="6" height="6" rx="1.3"/><rect x="11" y="11" width="6" height="6" rx="1.3"/></svg>
+        Module
+      </div>
+      <div class="n-modliste">
+        <div class="n-mod"><span class="ic">👥</span><span class="tt">Kontakte</span><span class="zahl">6</span></div>
+        <div class="n-mod"><span class="ic">✅</span><span class="tt">Aufgaben</span><span class="zahl">8</span></div>
+        <div class="n-mod"><span class="ic">📅</span><span class="tt">Kalender</span><span class="zahl">5</span></div>
+        <div class="n-mod"><span class="ic">📝</span><span class="tt">Notizen</span><span class="zahl">5</span></div>
+        <div class="n-mod"><span class="ic">🧷</span><span class="tt">Textbausteine</span><span class="ger">Gerüst</span></div>
+        <div class="n-mod"><span class="ic">🔖</span><span class="tt">Bookmarks</span><span class="ger">Gerüst</span></div>
+        <div class="n-mod"><span class="ic">🔁</span><span class="tt">Workflows</span><span class="ger">Gerüst</span></div>
+        <div class="n-mod"><span class="ic">🗂️</span><span class="tt">Outliner</span><span class="ger">Gerüst</span></div>
+      </div>
+    </div>
+  </main>
+</div>

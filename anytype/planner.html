@@ -1,0 +1,154 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Anytype-Fassung — Planner</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Anytype kennt kein Stundenraster — es kennt das Kanban-Board.
+   Der Planner wird zum Set „Kalender + Aufgaben“, nach Tag
+   gruppiert, mit Uhrzeit als Relation auf der Karte.
+   ============================================================ */
+.at{max-width:1420px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  color:#1c1b1a;background:#fbfaf7}
+
+.gi{border-radius:7px;flex-shrink:0}
+.gi-1{background:radial-gradient(circle at 30% 28%, #ffdca8, #ff7a45 72%)}
+.gi-2{background:radial-gradient(circle at 30% 28%, #bdf2da, #12ad86 72%)}
+.gi-3{background:radial-gradient(circle at 30% 28%, #cfd8ff, #4436e1 72%)}
+.gi-4{background:radial-gradient(circle at 30% 28%, #ffd7ec, #d6409f 72%)}
+.gi-5{background:radial-gradient(circle at 30% 28%, #fff2ad, #eab308 72%)}
+.gi-6{background:radial-gradient(circle at 30% 28%, #cdeeff, #0ea5e9 72%)}
+
+.a-kopf{padding:22px 34px 0}
+.a-krume{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#a19d94;margin-bottom:10px}
+.a-titelz{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.a-titelz .gi{width:32px;height:32px}
+.a-titel{font-size:24px;font-weight:700;letter-spacing:-.01em}
+.a-typ{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  color:#4436e1;background:#e2e6fb;padding:2px 8px;border-radius:5px;margin-left:4px}
+.a-unter{font-size:13px;color:#a19d94;margin-bottom:16px}
+
+.a-toolbar{display:flex;align-items:center;gap:4px;padding:0 34px;border-bottom:1px solid #eae7e0}
+.a-tab{font-size:13px;padding:8px 5px;border-bottom:2px solid transparent;color:#a19d94;
+  display:flex;align-items:center;gap:6px}
+.a-tab.aktiv{color:#1c1b1a;border-color:#1c1b1a;font-weight:600}
+.a-tab svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.9;fill:none}
+.a-toolbar .re{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:12.5px;color:#8b877d}
+.a-neu{background:#1c1b1a;color:#fff;font-weight:600;padding:6px 14px;border-radius:7px;font-size:12.5px}
+
+.a-board{display:flex;gap:16px;padding:20px 34px 40px;align-items:flex-start}
+.a-spalte{flex:1;min-width:0;background:#f2f0e9;border-radius:10px;padding:11px}
+.a-spalte.schmal{flex:0 0 250px}
+.a-sp-k{display:flex;align-items:center;gap:8px;padding:2px 4px 11px;font-size:12.5px;
+  font-weight:700;color:#57544c}
+.a-sp-k .punkt{width:8px;height:8px;border-radius:50%}
+.a-sp-k.rot .punkt{background:#e35548}
+.a-sp-k.blau .punkt{background:#4436e1}
+.a-sp-k.grau .punkt{background:#a19d94}
+.a-sp-k .zahl{margin-left:auto;color:#a19d94;font-weight:600}
+.a-karten{display:flex;flex-direction:column;gap:8px}
+.a-karte{background:#fff;border:1px solid #eae7e0;border-radius:9px;padding:10px 11px}
+.a-karte .kopf{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.a-karte .gi{width:20px;height:20px}
+.a-karte .tt{font-weight:600;font-size:13px}
+.a-karte .rel{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#8b877d;margin-top:3px}
+.a-karte .rel svg{width:11px;height:11px;stroke:#a19d94;stroke-width:1.9;fill:none}
+.a-karte.spaet{box-shadow:inset 3px 0 0 #e35548}
+.a-karte .kast{width:15px;height:15px;border:1.5px solid #d8d5cd;border-radius:4px;flex-shrink:0}
+.a-neuzeile{display:flex;align-items:center;gap:6px;font-size:12.5px;color:#a19d94;padding:6px 4px}
+.a-neuzeile svg{width:12px;height:12px;stroke:#a19d94;stroke-width:2.2;fill:none}
+</style>
+
+<div class="meta">
+  <b>Anytype-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Home</a>
+    <a class="hier" href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Anytype hat kein Stundenraster,
+sondern das Kanban-Board — seine Antwort auf fast jede Ordnungsfrage. Der Planner wird zum
+Set aus Terminen und Aufgaben, gruppiert nach Tag; die Uhrzeit steht als Relation auf der
+Karte, nicht als Position im Raster. Das ist eine echte Strukturentscheidung, keine bloße
+Umfärbung: Anytype würde diese Fläche anders bauen als Notion.</p>
+
+<div class="at">
+  <div class="a-kopf">
+    <div class="a-krume">🗂 Dashboard ／ Planner</div>
+    <div class="a-titelz"><span class="gi gi-3" style="width:32px;height:32px"></span>
+      <span class="a-titel">Planner</span><span class="a-typ">Set</span></div>
+    <div class="a-unter">Termine und Aufgaben · gruppiert nach Tag</div>
+  </div>
+  <div class="a-toolbar">
+    <div class="a-tab"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="1.5"/><path d="M3 8h14"/></svg>Tabelle</div>
+    <div class="a-tab aktiv"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="4" height="12" rx="1"/><rect x="8" y="4" width="4" height="8" rx="1"/><rect x="13" y="4" width="4" height="10" rx="1"/></svg>Kanban</div>
+    <div class="a-tab"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 8v9"/></svg>Kalender</div>
+    <div class="re">
+      <span>Gruppiert: Tag</span><span>Sortiert: Uhrzeit</span>
+      <span class="a-neu">+ Neu</span>
+    </div>
+  </div>
+  <div class="a-board">
+    <div class="a-spalte schmal">
+      <div class="a-sp-k"><span class="punkt grau"></span>Ohne Termin<span class="zahl">6</span></div>
+      <div class="a-karten">
+        <div class="a-karte spaet"><div class="kopf"><span class="kast"></span><span class="tt">Rechnung 2026-114 freigeben</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>Überfällig</div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.5 3-6 6-6s6 2.5 6 6"/></svg>Eva Bergmann</div></div>
+        <div class="a-karte"><div class="kopf"><span class="kast"></span><span class="tt">Backup-Skript testen</span></div>
+          <div class="rel">Ohne Frist</div></div>
+        <div class="a-karte"><div class="kopf"><span class="kast"></span><span class="tt">KR 1.2 Review vorbereiten</span></div>
+          <div class="rel">15. Aug</div></div>
+        <div class="a-neuzeile"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>Neu</div>
+      </div>
+    </div>
+    <div class="a-spalte">
+      <div class="a-sp-k"><span class="punkt blau"></span>Heute · Donnerstag, 6. Aug<span class="zahl">4</span></div>
+      <div class="a-karten">
+        <div class="a-karte"><div class="kopf"><span class="gi gi-3" style="width:20px;height:20px"></span><span class="tt">Standup</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>08:00 · 30 Min</div>
+          <div class="rel">Team</div></div>
+        <div class="a-karte"><div class="kopf"><span class="gi gi-3" style="width:20px;height:20px"></span><span class="tt">Strategie-Call</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>10:00 · 60 Min</div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.5 3-6 6-6s6 2.5 6 6"/></svg>Lisa Meier</div></div>
+        <div class="a-karte"><div class="kopf"><span class="kast"></span><span class="tt">Feature-Matrix erstellen</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>12:00 · Aufgabe</div></div>
+        <div class="a-karte"><div class="kopf"><span class="gi gi-3" style="width:20px;height:20px"></span><span class="tt">Abstimmung Layout</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>14:00 · 30 Min</div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.5 3-6 6-6s6 2.5 6 6"/></svg>Jan Kowalski</div></div>
+        <div class="a-neuzeile"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>Neu</div>
+      </div>
+    </div>
+    <div class="a-spalte">
+      <div class="a-sp-k"><span class="punkt grau"></span>Danach · Freitag, 7. Aug<span class="zahl">3</span></div>
+      <div class="a-karten">
+        <div class="a-karte"><div class="kopf"><span class="gi gi-3" style="width:20px;height:20px"></span><span class="tt">Sprint-Planung</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>09:00 · 60 Min</div>
+          <div class="rel">Team</div></div>
+        <div class="a-karte"><div class="kopf"><span class="gi gi-3" style="width:20px;height:20px"></span><span class="tt">Vertragsgespräch</span></div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4l3 2"/></svg>15:30 · 45 Min</div>
+          <div class="rel"><svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.5 3-6 6-6s6 2.5 6 6"/></svg>Eva Bergmann</div></div>
+        <div class="a-neuzeile"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>Neu</div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,177 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notion-Fassung — Kontakte</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1400px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Kontakte als Notion-Datenbank: Ansichtenleiste, Galerie mit
+   Eigenschaften als Zeilen, Tags als farbige Pillen.
+   ============================================================ */
+.notion{max-width:1400px;margin:16px auto 60px;background:#fff;border:1px solid #e7e6e3;
+  border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(15,15,15,.06);
+  font-family:ui-sans-serif,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:rgb(55,53,47)}
+.n-kopf{padding:26px 40px 0}
+.n-krume{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(55,53,47,.5);
+  margin-bottom:14px}
+.n-titelz{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.n-ic{font-size:30px}
+.n-titel{font-size:29px;font-weight:700;letter-spacing:-.01em}
+.n-unter{font-size:13.5px;color:rgba(55,53,47,.5);margin-bottom:18px}
+
+.n-toolbar{display:flex;align-items:center;gap:4px;padding:0 40px;border-bottom:1px solid rgba(55,53,47,.09)}
+.n-tab{font-size:13.5px;padding:8px 4px;border-bottom:2px solid transparent;color:rgba(55,53,47,.5);
+  display:flex;align-items:center;gap:6px}
+.n-tab.aktiv{color:rgb(55,53,47);border-color:rgb(55,53,47);font-weight:500}
+.n-tab svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.8;fill:none}
+.n-toolbar .re{margin-left:auto;display:flex;gap:14px;align-items:center;font-size:13px;
+  color:rgba(55,53,47,.55)}
+.n-neu{background:rgb(35,131,226);color:#fff;font-weight:500;padding:6px 13px;border-radius:6px;
+  font-size:13px}
+
+.n-galerie{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;
+  padding:22px 40px 40px}
+.n-karte{border:1px solid rgba(55,53,47,.1);border-radius:9px;overflow:hidden}
+.n-karte .band{height:56px;background:linear-gradient(135deg,#dcecf9,#eef2fb)}
+.n-karte.fav .band{background:linear-gradient(135deg,#ffe9c7,#ffd9e6)}
+.n-kk{padding:12px 13px 14px}
+.n-kk .zeile1{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.n-kk .av{width:30px;height:30px;border-radius:50%;background:rgba(55,53,47,.08);
+  display:grid;place-items:center;font-size:12.5px;font-weight:700;color:rgba(55,53,47,.55);
+  flex-shrink:0;margin-top:-22px;border:2.5px solid #fff}
+.n-kk .tt{font-weight:600;font-size:14.5px}
+.n-kk .stern{margin-left:auto;color:rgb(35,131,226);font-size:13px}
+.n-prop{display:flex;align-items:center;gap:7px;font-size:12.5px;color:rgba(55,53,47,.6);
+  padding:2px 0}
+.n-prop svg{width:12px;height:12px;stroke:rgba(55,53,47,.4);stroke-width:1.8;fill:none;flex-shrink:0}
+.n-pill{display:inline-flex;align-items:center;background:#fdecc8;color:#976922;font-size:11.5px;
+  font-weight:500;padding:1px 8px;border-radius:4px}
+.n-wege{display:flex;gap:6px;margin-top:9px}
+.n-wege span{width:26px;height:26px;border-radius:6px;background:rgba(35,131,226,.09);
+  color:rgb(11,110,153);display:grid;place-items:center}
+.n-wege span.blass{background:rgba(55,53,47,.05);color:rgba(55,53,47,.25)}
+.n-wege svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none}
+</style>
+
+<div class="meta">
+  <b>Notion-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="planner.html">Planner</a>
+    <a class="hier" href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Ein Modul ist in Notion keine
+eigene Fläche mit eigener Logik, sondern eine Datenbank mit Ansichten. Kontakte wird zur
+Galerie: jede Kachel ein Eintrag, „Firma“ als farbige Auswahl-Pille, Favorit als
+Notion-typischer Stern in der Kopfzeile der Karte.</p>
+
+<div class="notion">
+  <div class="n-kopf">
+    <div class="n-krume">📁 Dashboard <span>／</span> 👥 Kontakte</div>
+    <div class="n-titelz"><span class="n-ic">👥</span><span class="n-titel">Kontakte</span></div>
+    <div class="n-unter">6 Einträge · zuletzt bearbeitet heute</div>
+  </div>
+  <div class="n-toolbar">
+    <div class="n-tab"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="1.5"/><path d="M3 8h14"/></svg>Tabelle</div>
+    <div class="n-tab aktiv"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Galerie</div>
+    <div class="re">
+      <span>Filter</span><span>Sortieren</span>
+      <span class="n-neu">+ Neu</span>
+    </div>
+  </div>
+  <div class="n-galerie">
+    <div class="n-karte fav">
+      <div class="band"></div>
+      <div class="n-kk">
+        <div class="zeile1"><span class="av">EB</span><span class="tt">Eva Bergmann</span><span class="stern">★</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="9" rx="1.5"/><path d="M7 6V4h6v2"/></svg><span class="n-pill">Kanzlei Bergmann</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg>0391 77820-0</div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg>kanzlei@bergmann.de</div>
+        <div class="n-wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="n-karte fav">
+      <div class="band"></div>
+      <div class="n-kk">
+        <div class="zeile1"><span class="av">JK</span><span class="tt">Jan Kowalski</span><span class="stern">★</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="9" rx="1.5"/><path d="M7 6V4h6v2"/></svg><span class="n-pill">Nordstern GmbH</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg>0391 55010-2</div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg>j.kowalski@nordstern.de</div>
+        <div class="n-wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="n-karte fav">
+      <div class="band"></div>
+      <div class="n-kk">
+        <div class="zeile1"><span class="av">LM</span><span class="tt">Lisa Meier</span><span class="stern">★</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="9" rx="1.5"/><path d="M7 6V4h6v2"/></svg><span class="n-pill">Nordstern GmbH</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg>0391 55010-5</div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg>l.meier@nordstern.de</div>
+        <div class="n-wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="n-karte">
+      <div class="band"></div>
+      <div class="n-kk">
+        <div class="zeile1"><span class="av">TM</span><span class="tt">Tobias Meinhardt</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="9" rx="1.5"/><path d="M7 6V4h6v2"/></svg><span class="n-pill" style="background:#e2e8f0;color:#475569">Meinhardt IT</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg>0391 88 210</div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg>t.meinhardt@meinhardt-it.de</div>
+        <div class="n-wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="n-karte">
+      <div class="band"></div>
+      <div class="n-kk">
+        <div class="zeile1"><span class="av">PH</span><span class="tt">Petra Hoffmann</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="9" rx="1.5"/><path d="M7 6V4h6v2"/></svg><span class="n-pill" style="background:#e2e8f0;color:#475569">Stadtwerke</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg>0391 40 300</div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg>hoffmann@stadtwerke.de</div>
+        <div class="n-wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+    </div>
+    <div class="n-karte">
+      <div class="band"></div>
+      <div class="n-kk">
+        <div class="zeile1"><span class="av">?</span><span class="tt">Ohne Nummer</span></div>
+        <div class="n-prop"><svg viewBox="0 0 20 20"><rect x="3" y="6" width="14" height="9" rx="1.5"/><path d="M7 6V4h6v2"/></svg><span class="n-pill" style="background:rgba(55,53,47,.06);color:rgba(55,53,47,.4)">Leer</span></div>
+        <div class="n-wege">
+          <span class="blass"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span class="blass"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

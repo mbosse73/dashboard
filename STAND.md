@@ -7,7 +7,33 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: im Planner lässt sich etwas anlegen.** Bis eben ging das
+**Zuletzt: der Jahreskalender.** Ein neues Modul 14 mit eigenem Bestand
+`Z.jahrestermine`, bewusst getrennt vom Kalender (06) und vom Planner —
+in beide Richtungen. Ein Eintrag hat Start- und Enddatum, keine Uhrzeit,
+keinen Kontakt, und eine von zwei Kategorien: Urlaub oder sonstiger
+Termin. Alle 365 Tage als 12 × 31 Raster.
+
+**Die Fläche ist ein schwebendes Fenster, kein Rumpfbereich.** Es trägt
+sich selbst in `dlgOffen` ein, damit Escape und der Klick daneben ohne
+zweite Mechanik greifen — geöffnet wird es aber nicht über `dialog()`.
+Das beginnt mit `dialogZu()` und schlösse sich selbst, sobald man einen
+Tag anklickt; nach dem Speichern stünde man wieder vor der Leiste. Der
+Eintrag klappt deshalb **im Fenster** auf. Wer dort etwas ändert, sollte
+das wissen: Ein zweiter Dialog über dem Fenster ist konstruktiv
+ausgeschlossen, nicht bloß unschön.
+
+**Dabei gefunden und behoben:** Ein Klick auf einen Tag mit zwei
+Einträgen öffnete immer nur den ersten. Der zweite war weder zu
+bearbeiten noch zu löschen, und ein Löschversuch traf still den
+falschen. Der Eingabebereich trägt jetzt einen Streifen mit allen
+Einträgen des Tages.
+
+**Davor: der Themen-Umschalter.** Basecamp ist kein zweites File mehr,
+sondern ein Knopf im Kopf, der `data-theme="basecamp"` auf `body` setzt.
+`referenz/theme-basecamp.html` ist entfallen; es gibt keine zweite
+Fassung mehr, die auseinanderlaufen könnte.
+
+**Davor: im Planner lässt sich etwas anlegen.** Bis eben ging das
 überhaupt nicht — der Planner konnte nur mit dem umgehen, was schon da
 war. Jetzt trägt jede der drei Spalten in ihrer Kopfzeile einen runden
 Plus-Knopf, und ein Klick in eine freie Stunde legt dort einen Termin an,
@@ -23,7 +49,7 @@ iOS Safari feuert diese Ereignisse nicht. Einplanen geht dort über den
 Dialog — Block antippen, Tag und Uhrzeit setzen. So entschieden; ein
 Umbau auf Zeigerereignisse wäre ein eigener Schritt.
 
-**Davor: die Anordnung der Dialogfelder.** Alle vier folgen jetzt
+**Und davor: die Anordnung der Dialogfelder.** Alle vier folgen jetzt
 derselben Ordnung — **Was → Wann → Wer → Dazu**. Datum und Uhrzeit standen
 in Aufgabe und Notiz in verschiedenen Zeilen, obwohl sie eine Angabe sind;
 die Dauer eines Termins stand neben dem Kontakt statt neben der Uhrzeit;
@@ -65,9 +91,9 @@ Farben. Fünf Befunde:
   gerade, beim Start wie beim Laden einer Datei. Fehlerbuch Punkt 12.
 * **`--ink3` verfehlte die eigene Kontrastregel** — `#87837c` sind
   3,46 : 1, gefordert sind 4,5. Das Token trägt jede Metazeile, jeden
-  Hinweis, jeden Zähler. Jetzt `#6b675e`, 5,17 : 1. In der Notion-Fassung
-  waren `--ink2`, `--ink3` und das Rot ebenso zu hell; auch das ist
-  nachgezogen, mit Notions eigenen dunkleren Tönen.
+  Hinweis, jeden Zähler. Jetzt `#6b675e`, 5,17 : 1. In der damaligen
+  Notion-Fassung waren `--ink2`, `--ink3` und das Rot ebenso zu hell und
+  wurden mitgezogen; diese Fassung ist inzwischen entfallen.
 * **Fünf Gerüste sahen fertig aus.** Liste, Knöpfe, Demodaten, und ein
   Klick meldete „Öffne …", „Starte …", „Kopiert" — nichts davon geschah.
   Ein Modul meldet jetzt mit `geruest:"…"` an, was ihm fehlt; `male()`
@@ -184,10 +210,12 @@ unberührt. Fünf Dinge im Umfeld waren nicht in Ordnung:
 * `browsertest.html` sprach noch von „FlowBoard" und `C:\FlowBoard`.
 
 Dazu sind `referenz/theme-notion.html` und `referenz/workflow-dialog.html`
-nachgereicht worden. Damit läuft Prüfung 9 (Logik deckungsgleich) zum
-ersten Mal — sie ist grün, die Notion-Fassung ist zeichengenau dieselbe
-Logik — und Schritt 6 hat seine Dialogvorlage. Der Prüflauf sieht jetzt
-alle vier Dateien an und meldet keinen einzigen Hinweis mehr.
+nachgereicht worden, und Schritt 6 hatte damit seine Dialogvorlage.
+
+> **Überholt:** Die zweite Fassung unter `referenz/` gibt es nicht mehr —
+> das Thema ist ein Umschalter in der Anwendung geworden. Mit ihr ist auch
+> die Prüfung „Logik deckungsgleich" entfallen; der Prüflauf sieht heute
+> drei Dateien an, nicht vier.
 
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
 als Arbeitsfläche. Elf Module sind angemeldet, davon sechs fertig
@@ -220,9 +248,17 @@ Das Datenmodell für Workflows ist bereits umgestellt.
 * **Schrittnavigation im Dialog: Liste**, nicht Leiste.
 * **Speicherung über localStorage.** Der Browsertest hat ergeben, dass
   Edge aus einer lokal geöffneten Datei keinen Dateizugriff erlaubt.
-* **Farbe codiert Dringlichkeit**, nicht Kategorie.
-* Eine Alternativfassung im Notion-Stil liegt unter
-  `referenz/theme-notion.html`, Logik identisch.
+* **Farbe codiert Dringlichkeit**, nicht Kategorie. **Eine einzige
+  Ausnahme:** die beiden Kategorien im Jahreskalender. Sie steht in
+  `CLAUDE.md` und ist dort ausdrücklich als nicht übertragbar
+  gekennzeichnet — Kategorien anderswo bleiben in Graustufen.
+* **Ein zweites Thema, kein zweites File.** Basecamp ist ein Umschalter
+  im Kopf. Die Wahl liegt für sich in `localStorage` unter `"thema"`,
+  nicht im Objekt `Z`, und taucht deshalb nicht in Sicherung und Export
+  auf. Die frühere Notion-Fassung unter `referenz/` ist entfallen.
+* **Der Jahreskalender führt einen eigenen Bestand.** Keine
+  wechselseitige Anzeige mit Kalender oder Planner. So gewollt, keine
+  Lücke.
 
 ---
 
@@ -241,11 +277,18 @@ bestimmen, wie drei Dinge gebaut werden müssen:
 
 **Bis das geklärt ist, Schritt 4 und Schritt 7 der Roadmap zurückstellen.**
 
-### 2. Notion-Fassung: Kontrast — erledigt
+### 2. Ziehen im Planner geht auf dem iPad nicht
 
-`--ink3` steht auf `.7`, `--ink2` auf `.8`, `--signal-tx` auf `#c23030`.
-Alle drei halten jetzt 4,5 : 1 auf Weiß, `--sheet` und `--raise`. Bleibt
-nachzusehen, ob die Fassung dadurch zu schwer wirkt.
+Der Planner benutzt HTML5-Drag-and-Drop, iOS Safari feuert diese
+Ereignisse nicht. Einplanen geht dort über den Dialog. Ein Umbau auf
+Zeigerereignisse wäre ein eigener Schritt — bewusst offen.
+
+### 3. Der Jahreskalender ist noch nicht am Rechner geprüft
+
+Angesehen wurde er nur im Prüfbrowser. Am eigenen Gerät fehlt der Blick
+auf die Datumsfelder: Sie zeigten dort US-Format, was an der Spracheinstellung
+des Prüfbrowsers liegen dürfte — auf deutschem Edge sollte `22.04.2026`
+stehen. Betrifft alle Datumsfelder der Anwendung, nicht nur dieses Modul.
 
 ---
 

@@ -60,7 +60,7 @@ doku/ROADMAP.md           Reihenfolge der Arbeit
 doku/ARBEITSWEISE.md      wie Claude Code einen Schritt abarbeitet
 doku/FEHLERBUCH.md        14 Fehler, die schon passiert sind
 
-referenz/theme-notion.html      dieselbe Anwendung im Notion-Stil
+referenz/theme-basecamp.html    dieselbe Anwendung im Basecamp-Stil
 referenz/workflow-dialog.html   Entwurf des Workflow-Dialogs
 
 werkzeug/pruefen.mjs      Regelprüfung, ohne Abhängigkeiten

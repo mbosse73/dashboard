@@ -1,0 +1,148 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Basecamp-Fassung — Leiste</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1180px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Basecamps eigene Optik: eine Projektseite mit Karten-Raster,
+   sehr ruhig, sehr wenig Farbe. Die Karten zeigen aber unsere
+   eigenen Funktionen — Überfällig, Heute, Module, Favoriten —
+   nicht Basecamps sechs feste Werkzeuge.
+   ============================================================ */
+.bc{max-width:1180px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#0f2b1d;background:#ffffff}
+
+.bc-top{display:flex;align-items:center;gap:14px;padding:16px 34px;border-bottom:1px solid #ece4cf;
+  background:#ffffff}
+.bc-ic{width:34px;height:34px;border-radius:8px;background:#1d7a5f;display:grid;place-items:center;
+  color:#fff;font-weight:800}
+.bc-top h1{font-size:19px;font-weight:800}
+.bc-top .re{margin-left:auto;font-size:12.5px;color:#8a8368}
+
+.bc-body{padding:26px 34px 40px}
+.bc-lead{font-size:14px;color:#5f5847;margin-bottom:22px;max-width:70ch}
+.bc-lead b{color:#0f2b1d}
+
+.bc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bc-karte{border:1px solid #ece4cf;border-radius:12px;padding:16px 17px;background:#fff}
+.bc-karte .kopf{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.bc-karte .kopf svg{width:19px;height:19px;stroke:#1d7a5f;stroke-width:1.8;fill:none}
+.bc-karte .kopf b{font-size:14.5px}
+.bc-karte .kopf .zahl{margin-left:auto;font-size:12px;color:#8a8368;font-weight:700}
+.bc-zeile{display:flex;align-items:baseline;gap:8px;font-size:12.5px;color:#5f5847;padding:3px 0}
+.bc-zeile .p{color:#c2a63b;font-weight:700}
+.bc-zeile.spaet{color:#b8433a;font-weight:600}
+.bc-mehr{font-size:12px;color:#1d7a5f;font-weight:700;margin-top:8px}
+.bc-ger{font-size:10px;font-weight:700;color:#8a8368;background:#ffffff;border:1px solid #ece4cf;
+  padding:1px 7px;border-radius:8px;margin-left:auto}
+
+.bc-leute{display:flex;align-items:center;gap:9px;padding:6px 0;flex-wrap:wrap}
+.bc-leute .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:10px;font-weight:700;flex-shrink:0}
+.bc-leute .name{font-size:12.5px;color:#5f5847}
+</style>
+
+<div class="meta">
+  <b>Basecamp-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a class="hier" href="home.html">Leiste</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselben Funktionen wie in der
+Anwendung — Überfällig, der Tagesplan, die Module, Favoriten — in Basecamps eigenem
+Karten-Raster: eine Projektseite mit ruhigen weißen Karten, jede mit einer
+Vorschau des Neuesten. Nicht Basecamps sechs feste Werkzeuge, nur sein Erscheinungsbild.</p>
+
+<div class="bc">
+  <div class="bc-top">
+    <span class="bc-ic">D</span>
+    <h1>Dashboard</h1>
+    <span class="re">Donnerstag, 6. August</span>
+  </div>
+  <div class="bc-body">
+    <p class="bc-lead"><b>Ohne Eingabe zeigt die Leiste Überfälliges, den Tagesplan und
+    die Module.</b> Eine Suche oder Eingabe würde diese Ansicht ersetzen.</p>
+
+    <div class="bc-grid">
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg><b>Überfällig</b><span class="zahl">2</span></div>
+        <div class="bc-zeile spaet"><span class="p">●</span>Rechnung 2026-114 freigeben</div>
+        <div class="bc-zeile spaet"><span class="p">●</span>Vertrag Meinhardt IT · Workflow 4/8</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 3v4"/></svg><b>Heute</b><span class="zahl">2</span></div>
+        <div class="bc-zeile">08:00 · Standup</div>
+        <div class="bc-zeile">10:00 · Strategie-Call, Lisa Meier</div>
+        <div class="bc-mehr">Planner öffnen →</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg><b>Favoriten</b></div>
+        <div class="bc-leute">
+          <span class="av" style="background:#e8384f">EB</span><span class="name">Eva Bergmann</span>
+        </div>
+        <div class="bc-leute">
+          <span class="av" style="background:#4573d2">JK</span><span class="name">Jan Kowalski</span>
+        </div>
+        <div class="bc-leute">
+          <span class="av" style="background:#e0a72e">LM</span><span class="name">Lisa Meier</span>
+        </div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M4 15V5a2 2 0 0 1 2-2h4l2 2h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/></svg><b>Kontakte</b><span class="zahl">6</span></div>
+        <div class="bc-zeile">Eva Bergmann, Jan Kowalski, Lisa Meier …</div>
+        <div class="bc-mehr">Alle Kontakte →</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="m6 10 3 3 6-6"/></svg><b>Aufgaben</b><span class="zahl">8</span></div>
+        <div class="bc-zeile">Backup-Skript testen</div>
+        <div class="bc-zeile">KR 1.2 Review vorbereiten</div>
+        <div class="bc-mehr">Alle 8 ansehen →</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M6 8h8M6 11h5"/></svg><b>Notizen</b><span class="zahl">5</span></div>
+        <div class="bc-zeile">Architekturskizze</div>
+        <div class="bc-zeile">4 weitere Notizen</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v4M13 3v4M3 9h14"/></svg><b>Textbausteine</b><span class="bc-ger">Gerüst</span></div>
+        <div class="bc-zeile">Noch ohne Inhalt</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1"/></svg><b>Bookmarks</b><span class="bc-ger">Gerüst</span></div>
+        <div class="bc-zeile">Noch ohne Inhalt</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M4 10a6 6 0 0 1 10-4.5M16 10a6 6 0 0 1-10 4.5"/><path d="m14 4 .5 2-2-.3M6 16l-.5-2 2 .3"/></svg><b>Workflows</b><span class="bc-ger">Gerüst</span></div>
+        <div class="bc-zeile">Noch ohne Inhalt</div>
+      </div>
+    </div>
+  </div>
+</div>

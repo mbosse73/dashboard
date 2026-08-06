@@ -3,254 +3,225 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dashboard — Notion-Stil</title>
+<title>Dashboard — Basecamp-Stil</title>
 <style>
-/* ============================================================
-   NOTION-VARIANTE
-
-   Farben und Maße nach Notions hellem Thema. Alles liegt in
-   diesem einen Block — nichts weiter unten ist hart codiert.
-   Vergleich am besten mit einem Farbwähler nebeneinander und
-   hier oben nachjustieren.
-
-   Was ich nicht nachbauen kann: Notions Serifenschrift
-   (Lyon Text) und Monospace (iA Writer Mono) sind lizenziert.
-   Die UI-Schrift dagegen ist auch bei Notion ein System-Stack,
-   die stimmt also überein.
-   ============================================================ */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   color-scheme:light;
 
-  /* Notions eigener Stack. Auf Windows greift Segoe UI. */
-  --ff:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,
-       "Apple Color Emoji",Arial,sans-serif;
-  --serif:Lyon-Text,Georgia,ui-serif,serif;          /* Ersatz: Georgia */
-  --mono:"SFMono-Regular",Menlo,Consolas,"PT Mono","Liberation Mono",monospace;
+  /* Basecamps eigener Stack. Auf Windows greift Segoe UI. */
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:Georgia,"Iowan Old Style","Palatino Linotype",Palatino,ui-serif,serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
 
-  /* Flächen */
-  --paper:#ffffff;              /* Hauptfläche */
-  --sheet:#fbfbfa;              /* Seitenleiste, ruhige Blöcke */
-  --raise:rgba(55,53,47,.06);   /* Hover — Notion arbeitet mit Transparenz */
-  --raise-fest:#efefee;
-  --rule:rgba(55,53,47,.09);    /* Trennlinien */
-  --rule2:rgba(55,53,47,.16);   /* Rahmen von Eingaben */
+  /* Flächen — reinweiß statt Creme, Basecamp trennt Flächen über
+     Rahmen, nicht über Tonstufen. */
+  --paper:#ffffff; --sheet:#ffffff; --raise:#f2f0ea;
+  --rule:#ece7d8;  --rule2:#ddd5bd;
 
-  /* Text — Notions Grundton ist warmes Schwarzbraun, nicht Grau */
-  --ink:rgb(55,53,47);
-  /* .65 sind 4,18 : 1 auf Weiß und 3,98 auf --raise — knapp unter der
-     Regel. .8 hält sie überall (6,57 / 6,37 / 6,11) und lässt --ink3
-     mit .7 noch als eigene Stufe erkennbar. */
-  --ink2:rgba(55,53,47,.8);
-  /* Notion selbst nimmt .45 — das sind 2,49 : 1 auf Weiß und damit weit
-     unter den geforderten 4,5 : 1. .7 hält die Regel auf allen drei
-     Flächen (4,82 / 4,77 / 4,60) und bleibt Notions Grauton. */
-  --ink3:rgba(55,53,47,.7);
+  /* Text — warmes Schwarzgrün statt neutralem Grau. #8a8368 (Basecamps
+     eigener Meta-Ton) kommt auf 3,8 : 1 auf Weiß und verfehlt die
+     eigene Regel von 4,5 : 1. #5f5847 liegt bei 7,06 / 6,05 auf
+     paper / raise und trägt denselben warmen Ton. */
+  --ink:#0f2b1d;   --ink2:#3d3826;  --ink3:#5f5847;
 
-  /* Akzent */
-  --tinte:#2383e2;              /* Notion-Blau */
-  --tinte-s:#ddebf1;            /* Notion blauer Blockhintergrund */
-  --tinte-tx:#0b6e99;           /* Notion blauer Text */
-
-  /* „Kontaktweg hinterlegt“ — ein Zustand, keine Kategorie. Notions
-     blauer Blockhintergrund, eine Spur heller als --tinte-s. */
-  --weg-s:#e8f2f7; --weg-i:#0b6e99; --weg-r:rgba(11,110,153,.22);
-
-  /* Dringlichkeit — Notions Rot statt eines eigenen Signaltons */
-  --signal:#e03e3e;
-  /* Notions Rot trägt als Fläche, aber nicht als Text: #e03e3e kommt auf
-     4,26 : 1. #c23030 ist Notions eigener dunklerer Ton, 5,59 : 1. */
-  --signal-tx:#c23030;
-  --signal-s:#fbe4e4;
-  --gut:#0f7b6c;                /* Notion Grün */
-  --gut-s:#ddedea;
-
-  --r:3px;                      /* Notions kleine Rundung */
-  --r-gross:5px;
+  /* Akzent — Basecamps Grün trägt „jetzt und aktiv“ statt Blau. */
+  --tinte:#1d7a5f; --tinte-s:#eaf5ee;
+  /* „Kontaktweg hinterlegt“ bleibt ein eigener Zustand, trägt hier
+     aber denselben Grünton wie die Tinte — Basecamp kennt kein Blau. */
+  --weg-s:#eaf5ee; --weg-i:#1d7a5f; --weg-r:#cfe8db;
+  /* #b8433a auf der eigenen Signalfläche kam auf 4,32 : 1 — knapp unter
+     der Regel. Eine Idee heller (#fceeea) hält 4,76 : 1. */
+  --signal:#b8433a;--signal-s:#fceeea;
+  /* Nur als Balkenfarbe verwendet, nie als Text — deshalb darf sie
+     Basecamps Gold sein, das als Fließtext die Regel verfehlen würde. */
+  --gut:#c2a63b;   --gut-s:#faf3df;
 }
 html,body{background:var(--paper)!important;color:var(--ink)!important;height:100%}
-body{font-family:var(--ff);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
-  overflow:hidden;letter-spacing:normal}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;overflow:hidden}
 button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit;text-align:left}
 input,textarea{font:inherit}
-:focus-visible{outline:2px solid var(--tinte);outline-offset:1px;border-radius:var(--r)}
-::selection{background:rgba(35,131,226,.28)}
-*{scrollbar-color:rgba(55,53,47,.2) transparent;scrollbar-width:thin}
+:focus-visible{outline:2px solid var(--tinte);outline-offset:2px;border-radius:4px}
+::selection{background:var(--tinte-s);color:var(--ink)}
+*{scrollbar-color:var(--rule2) transparent;scrollbar-width:thin}
 ::-webkit-scrollbar{width:12px;height:12px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(55,53,47,.2);border-radius:6px;
+::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:7px;
   border:3px solid var(--paper);background-clip:padding-box}
-::-webkit-scrollbar-thumb:hover{background:rgba(55,53,47,.3);background-clip:padding-box}
 
 .app{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--paper)}
 
-/* ---------- Kopf: Notions Topbar ist flach und leise ---------- */
-.kopf{flex-shrink:0;display:flex;align-items:center;gap:10px;padding:0 14px;height:45px;
-  background:var(--paper);border-bottom:1px solid var(--rule)}
-.kopf .zeit{font-size:14px;color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
-.kopf .dat{font-size:14px;color:var(--ink3)}
+/* ---------- Kopf ---------- */
+.kopf{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:12px 24px;
+  background:var(--sheet);border-bottom:1px solid var(--rule)}
+.kopf .zeit{font-family:var(--ff);font-size:13px;color:var(--ink2);
+  font-weight:700;font-variant-numeric:tabular-nums}
+.kopf .dat{font-family:var(--ff);font-size:12px;color:var(--ink3)}
 .kopf .sp{flex:1}
-.wechsel{display:flex;gap:0}
-.wechsel button{font-size:14px;color:var(--ink2);padding:4px 8px;border-radius:var(--r);
-  transition:background 20ms ease-in}
-.wechsel button:hover{background:var(--raise)}
-.wechsel button[aria-current="true"]{background:var(--raise);color:var(--ink);font-weight:500}
-.kopf .akt{font-size:14px;color:var(--ink2);border-radius:var(--r);padding:4px 8px;
-  background:transparent;transition:background 20ms ease-in}
+.wechsel{display:flex;gap:2px;background:var(--raise);border-radius:10px;padding:3px}
+.wechsel button{font-size:12.5px;font-weight:700;color:var(--ink2);padding:6px 14px;
+  border-radius:8px}
+.wechsel button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
+  box-shadow:0 1px 2px rgba(15,43,29,.1)}
+.kopf .akt{font-size:12.5px;font-weight:600;color:var(--ink2);border:1px solid var(--rule2);
+  border-radius:9px;padding:5px 12px;background:var(--paper)}
 .kopf .akt:hover{background:var(--raise);color:var(--ink)}
-.kopf .stand{font-size:12px;color:var(--ink3)}
-.warn{flex-shrink:0;padding:9px 16px;background:var(--signal-s);color:var(--ink);
-  font-size:14px;line-height:1.5}
-.warn b{font-weight:600}
+.kopf .stand{font-family:var(--ff);font-size:11px;color:var(--ink3)}
+.warn{flex-shrink:0;padding:10px 24px;background:var(--signal-s);color:var(--signal);
+  font-size:12.5px;line-height:1.5;border-bottom:1px solid #f3d6cd}
+.warn b{font-weight:700}
 
 .rumpf{flex:1;min-height:0;overflow-y:auto;background:var(--paper)}
-.mitte{max-width:900px;margin:0 auto;padding:0 96px 90px;width:100%}
-@media(max-width:900px){.mitte{padding-left:24px;padding-right:24px}}
+.mitte{max-width:860px;margin:0 auto;padding:0 26px 80px;width:100%}
 .weit{max-width:1180px}
 
-/* ---------- Überschriften: Notion setzt eng und fett ---------- */
-.abs{display:flex;align-items:center;gap:10px;padding:32px 0 6px}
-.abs h2{font-size:16px;font-weight:600;letter-spacing:-.01em;color:var(--ink);
-  text-transform:none;font-family:var(--ff)}
-.abs h2.eilig{color:var(--signal-tx)}
-.abs h2.jetzt{color:var(--ink)}
-.abs .r{display:none}
-.abs .n{font-size:12px;color:var(--ink3);margin-left:auto}
-.abs button.n{border-radius:var(--r);padding:2px 6px}
-.abs button.n:hover{background:var(--raise);color:var(--ink2)}
-.hinweis{font-size:14px;color:var(--ink3);line-height:1.5;padding:2px 0 8px}
-/* Gerüstband — Notion setzt Hinweise als getönten Block ohne Rahmenfarbe. */
-.geruest{display:flex;gap:10px;align-items:baseline;margin:0 0 16px;padding:12px 14px;
-  border-radius:var(--r);background:var(--raise)}
-.geruest b{font-size:12px;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--ink2);flex-shrink:0}
-.geruest span{font-size:14px;color:var(--ink2);line-height:1.5}
+/* ---------- Abschnitte und Zeilen ---------- */
+.abs{display:flex;align-items:center;gap:13px;padding:30px 0 11px}
+.abs h2{font-family:var(--ff);font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;
+  font-weight:800;color:var(--ink)}
+.abs h2.eilig{color:var(--signal)}
+.abs h2.jetzt{color:var(--tinte)}
+.abs .r{flex:1;height:1px;background:var(--rule)}
+.abs .n{font-family:var(--ff);font-size:12px;font-weight:600;color:var(--ink3)}
+.abs button.n:hover{color:var(--ink)}
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px}
+/* Ein Gerüst sieht fertig aus — Liste, Knöpfe, Demodaten. Dieses Band
+   sagt, was daran noch nicht trägt. Graustufen, keine eigene Farbe:
+   „unfertig“ ist keine Dringlichkeit. */
+.geruest{display:flex;gap:9px;align-items:baseline;margin:0 0 14px;padding:9px 11px;
+  border:1px dashed var(--rule2);border-radius:10px;background:var(--raise)}
+.geruest b{font-family:var(--ff);font-size:10.5px;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:800;color:var(--ink2);flex-shrink:0}
+.geruest span{font-size:12.5px;color:var(--ink2);line-height:1.5}
 
-/* ---------- Zeilen: Notion-Blöcke mit weichem Hover ---------- */
-.z{display:flex;align-items:flex-start;gap:8px;padding:5px 8px 5px 6px;
-  border-radius:var(--r);margin:1px -8px;transition:background 20ms ease-in}
+.z{display:flex;align-items:flex-start;gap:12px;padding:10px 10px 10px 2px;border-radius:9px;
+  border-left:2px solid transparent}
 .z:hover{background:var(--raise)}
-.z + .z{box-shadow:none}
-.z.eilig{box-shadow:inset 2px 0 0 var(--signal)}
-.z.jetzt{box-shadow:inset 2px 0 0 var(--tinte)}
-.kast{width:16px;height:16px;border-radius:var(--r);border:1.3px solid rgba(55,53,47,.35);
-  flex-shrink:0;display:grid;place-items:center;background:transparent;margin-top:3px;
-  transition:background 20ms ease-in,border-color 20ms ease-in}
-.kast:hover{border-color:var(--ink2)}
-.kast svg{width:9px;height:9px;stroke:#fff;stroke-width:3;fill:none;
+.z + .z{box-shadow:inset 0 1px 0 var(--rule)}
+.z:hover + .z{box-shadow:none}
+.z.eilig{border-left-color:var(--signal)}
+.z.jetzt{border-left-color:var(--tinte)}
+.kast{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--rule2);flex-shrink:0;
+  display:grid;place-items:center;background:var(--sheet);margin-top:2px}
+.kast:hover{border-color:var(--ink)}
+.kast svg{width:10px;height:10px;stroke:var(--tinte);stroke-width:2.8;fill:none;
   stroke-linecap:round;stroke-linejoin:round;opacity:0}
-.z.fertig .kast{background:var(--tinte);border-color:var(--tinte)}
+.z.fertig .kast{background:var(--tinte-s);border-color:var(--tinte)}
 .z.fertig .kast svg{opacity:1}
 .zb{flex:1;min-width:0}
-.zt{display:block;font-size:14px;line-height:1.5;color:var(--ink);overflow-wrap:anywhere}
+.zt{display:block;font-size:14.5px;line-height:1.4;letter-spacing:-.006em;overflow-wrap:anywhere}
 .z.fertig .zt{color:var(--ink3);text-decoration:line-through}
-.zm{display:block;font-size:12px;color:var(--ink3);margin-top:1px;line-height:1.4}
-.zr{font-size:12px;color:var(--ink3);flex-shrink:0;padding-top:3px;
-  font-variant-numeric:tabular-nums}
-.zr.eilig{color:var(--signal-tx);font-weight:500}
-.zr.jetzt{color:var(--tinte-tx);font-weight:500}
-.sig{width:22px;height:22px;border-radius:50%;background:var(--raise-fest);color:var(--ink2);
-  display:grid;place-items:center;font-size:11px;font-weight:600;flex-shrink:0;margin-top:1px}
-.sig.fav{background:var(--tinte-s);color:var(--tinte-tx)}
-.leer{padding:8px 0;font-size:14px;color:var(--ink3);line-height:1.5}
+.zm{display:block;font-size:12px;color:var(--ink3);margin-top:3px;line-height:1.45}
+.zr{font-family:var(--ff);font-size:12px;font-weight:600;color:var(--ink3);flex-shrink:0;
+  padding-top:3px;font-variant-numeric:tabular-nums}
+.zr.eilig{color:var(--signal);font-weight:700}
+.zr.jetzt{color:var(--tinte);font-weight:700}
+.sig{width:29px;height:29px;border-radius:50%;background:var(--raise);color:var(--ink2);
+  display:grid;place-items:center;font-family:var(--ff);font-size:10.5px;font-weight:800;
+  flex-shrink:0;letter-spacing:.02em}
+.sig.fav{background:var(--tinte-s);color:var(--tinte)}
+.leer{padding:18px 2px;font-size:13px;color:var(--ink3);line-height:1.6}
 
 /* ---------- Kontaktkacheln ----------
-   Dieselbe Struktur wie in dashboard.html, nur Notions Maße:
-   kleine Rundung, dünne Linien, kein Schlagschatten im Ruhezustand. */
-.kkarten{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:6px}
-.kk{position:relative;display:flex;flex-direction:column;gap:9px;padding:11px 12px;
-  border:1px solid var(--rule);border-radius:var(--r-gross);background:var(--paper);
-  transition:background .1s}
-.kk:hover{background:var(--sheet)}
+   auto-fill statt fester Spaltenzahl: Passt eine Kachel nicht mehr in
+   die Reihe, rutscht sie in die nächste. Ein waagerechter Balken kann
+   dadurch gar nicht erst entstehen. */
+.kkarten{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:10px}
+.kk{position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 15px;
+  border:1px solid var(--rule);border-radius:12px;background:var(--sheet);
+  transition:border-color .12s,box-shadow .12s}
+.kk:hover{border-color:var(--rule2);box-shadow:0 2px 10px rgba(15,43,29,.06)}
 .kk.ist-fav{border-left:2px solid var(--tinte)}
-.kk-o{display:flex;align-items:flex-start;gap:10px}
+.kk-o{display:flex;align-items:flex-start;gap:11px}
 .kk-b{flex:1;min-width:0}
-.kk-n{display:block;font-size:14px;font-weight:600;line-height:1.35;overflow-wrap:anywhere}
-.kk-f{display:block;font-size:12px;color:var(--ink3);margin-top:2px;line-height:1.4;
+.kk-n{display:block;font-size:14.5px;font-weight:700;letter-spacing:-.005em;line-height:1.3;
   overflow-wrap:anywhere}
-.kk-u{display:flex;align-items:center;gap:5px;padding-top:1px}
-.kk-flaeche{position:absolute;inset:0;border-radius:var(--r-gross);z-index:1}
+.kk-f{display:block;font-size:12px;color:var(--ink3);margin-top:3px;line-height:1.4;
+  overflow-wrap:anywhere}
+.kk-u{display:flex;align-items:center;gap:6px;padding-top:2px}
+/* Der Klickbereich zum Öffnen deckt die ganze Kachel ab und liegt unter
+   den kleineren Zielen. Ohne das läge er über ihnen und schluckte sie. */
+.kk-flaeche{position:absolute;inset:0;border-radius:12px;z-index:1}
 .kk-u,.kk-stern{position:relative;z-index:2}
-.kk-stern{display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r);
-  color:var(--ink3);flex-shrink:0;margin:-1px -2px 0 0}
+.kk-stern{display:grid;place-items:center;width:27px;height:27px;border-radius:8px;
+  color:var(--ink3);flex-shrink:0;margin:-2px -3px 0 0}
 .kk-stern:hover{background:var(--raise);color:var(--ink2)}
-.kk-stern.an,.kk-stern.an:hover{color:var(--tinte-tx)}
-.iknopf{position:relative;display:grid;place-items:center;width:32px;height:29px;
-  border:1px solid var(--weg-r);border-radius:var(--r);background:var(--weg-s);
-  color:var(--weg-i);transition:background .1s,border-color .1s,color .1s}
-.iknopf:hover{background:#d9eaf3;border-color:var(--weg-i)}
-.iknopf.leer{background:transparent;border-color:var(--rule);color:var(--ink3);opacity:.45;
+.kk-stern.an,.kk-stern.an:hover{color:var(--gut)}
+.iknopf{position:relative;display:grid;place-items:center;width:34px;height:31px;
+  border:1px solid var(--weg-r);border-radius:9px;background:var(--weg-s);color:var(--weg-i);
+  transition:background .12s,border-color .12s,color .12s}
+.iknopf:hover{background:#d7ecdf;border-color:var(--weg-i)}
+.iknopf.leer{background:var(--paper);border-color:var(--rule);color:var(--ink3);opacity:.45;
   cursor:default}
-.iknopf.leer:hover{background:transparent;border-color:var(--rule);color:var(--ink3)}
-.iknopf .blase{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
-  background:var(--ink);color:#fff;font-size:12px;line-height:1.35;white-space:nowrap;
-  padding:5px 9px;border-radius:var(--r);opacity:0;pointer-events:none;transition:opacity .1s;
-  z-index:40;font-family:var(--mono)}
-.iknopf .blase b{display:block;font-family:var(--ff);font-weight:600;margin-bottom:1px}
+.iknopf.leer:hover{background:var(--paper);border-color:var(--rule);color:var(--ink3)}
+/* Sagt vor dem Klick, was passiert und mit welchem Ziel. */
+.iknopf .blase{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--sheet);font-size:11.5px;line-height:1.35;white-space:nowrap;
+  padding:6px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .13s;
+  z-index:40;font-family:var(--ff);letter-spacing:0}
+.iknopf .blase b{display:block;font-weight:700;letter-spacing:0;margin-bottom:1px}
 .iknopf:hover .blase{opacity:1}
 
 /* ---------- Suche innerhalb eines Moduls ---------- */
-.msuche{position:relative;margin-top:2px}
-.msuche input{width:100%;border:1px solid var(--rule2);border-radius:var(--r);
-  padding:7px 38px 7px 34px;background:var(--paper);font-size:14px;color:var(--ink)}
-.msuche input:focus{outline:0;border-color:var(--tinte);
-  box-shadow:0 0 0 2px rgba(35,131,226,.24)}
-.msuche .lupe{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+.msuche{position:relative;margin-top:4px}
+.msuche input{width:100%;border:1px solid var(--rule2);border-radius:10px;
+  padding:11px 40px 11px 38px;background:var(--sheet);font-size:14.5px;color:var(--ink)}
+.msuche input:focus{outline:0;border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.msuche .lupe{position:absolute;left:12px;top:50%;transform:translateY(-50%);
   color:var(--ink3);pointer-events:none;display:grid}
-.msuche .weg{position:absolute;right:6px;top:50%;transform:translateY(-50%);
-  color:var(--ink3);padding:4px 7px;border-radius:var(--r);font-size:12px}
+.msuche .weg{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  color:var(--ink3);padding:5px 8px;border-radius:6px;font-size:12px}
 .msuche .weg:hover{background:var(--raise);color:var(--ink)}
 
 /* ---------- Dialog ----------
-   Notion legt Dialoge auf Weiß mit weichem Schatten und fast ohne
-   Rahmen. Auf und Zu laufen über .schleier und .schleier.auf,
-   niemals über eine ID-Regel — Fehlerbuch Punkt 6. */
-.schleier{position:fixed;inset:0;background:rgba(15,15,15,.6);display:none;
+   Auf und Zu laufen über .schleier und .schleier.auf, niemals über
+   eine ID-Regel. Genau daran ist das Umschalten schon einmal
+   gebrochen — Fehlerbuch Punkt 6. */
+.schleier{position:fixed;inset:0;background:rgba(15,43,29,.34);display:none;
   place-items:center;padding:18px;z-index:500}
 .schleier.auf{display:grid}
-.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--paper);
-  border-radius:var(--r-gross);box-shadow:0 14px 44px rgba(15,15,15,.16),
-  0 2px 6px rgba(15,15,15,.1);display:flex;flex-direction:column;overflow:hidden}
-.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:11px;padding:14px 18px 11px;
-  border-bottom:1px solid var(--rule)}
-.dlg-k .art{font-family:var(--mono);font-size:11px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--ink3);font-weight:600;white-space:nowrap}
-.dlg-t{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--sheet);
+  border:1px solid var(--rule2);border-radius:16px;box-shadow:0 24px 70px rgba(15,43,29,.22);
+  display:flex;flex-direction:column;overflow:hidden}
+.dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:12px;padding:18px 24px 14px;
+  border-bottom:1px solid var(--rule);background:var(--raise)}
+.dlg-k .art{font-family:var(--ff);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink3);font-weight:800;white-space:nowrap}
+.dlg-t{font-size:18px;font-weight:800;font-family:var(--serif);letter-spacing:0;
+  overflow-wrap:anywhere}
 .dlg-k .sp{flex:1}
-.dlg-zu{font-size:18px;color:var(--ink3);line-height:1;padding:2px 7px;border-radius:var(--r)}
-.dlg-zu:hover{background:var(--raise);color:var(--ink)}
-.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:14px 18px 18px}
-.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:8px;padding:11px 18px;
-  border-top:1px solid var(--rule);background:var(--sheet)}
+.dlg-zu{font-size:19px;color:var(--ink3);line-height:1;padding:2px 8px;border-radius:7px}
+.dlg-zu:hover{background:var(--sheet);color:var(--ink)}
+.dlg-b{flex:1;min-height:0;overflow-y:auto;padding:18px 24px 20px}
+.dlg-f{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:14px 24px;
+  border-top:1px solid var(--rule);background:var(--paper)}
 .dlg-f .sp{flex:1}
-.draster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:11px 12px}
-.dfeld{display:flex;flex-direction:column;gap:4px}
+.draster{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 16px}
+.dfeld{display:flex;flex-direction:column;gap:6px}
 .dfeld.breit{grid-column:1/-1}
-.dfeld label{font-size:12px;color:var(--ink3);font-weight:500}
-.dfeld input,.dfeld textarea{border:1px solid var(--rule2);border-radius:var(--r);
-  padding:6px 9px;background:var(--paper);font-size:14px;color:var(--ink);width:100%}
-.dfeld input:focus,.dfeld textarea:focus{outline:0;border-color:var(--tinte);
-  box-shadow:0 0 0 2px rgba(35,131,226,.24)}
-.dfeld textarea{min-height:72px;resize:vertical;line-height:1.5}
-.dfeld select{border:1px solid var(--rule2);border-radius:var(--r);padding:6px 9px;
-  background:var(--paper);font-size:14px;color:var(--ink);width:100%}
-.dfeld select:focus{outline:0;border-color:var(--tinte);
-  box-shadow:0 0 0 2px rgba(35,131,226,.24)}
+.dfeld label{font-size:12.5px;color:var(--ink3);font-weight:800}
+.dfeld input,.dfeld textarea,.dfeld select{border:1px solid var(--rule2);border-radius:9px;
+  padding:9px 12px;background:var(--paper);font-size:14px;color:var(--ink);width:100%}
+.dfeld input:focus,.dfeld textarea:focus,.dfeld select:focus{outline:0;border-color:var(--tinte);
+  box-shadow:0 0 0 3px var(--tinte-s);background:var(--sheet)}
+.dfeld textarea{min-height:74px;resize:vertical;line-height:1.5}
+/* Die Prüfung zeigt auf das schuldige Feld, statt es nur zu melden. */
 .dfeld.schief input,.dfeld.schief textarea,.dfeld.schief select{border-color:var(--signal);
   background:var(--signal-s)}
 
-.dfeld.schalter{flex-direction:row;align-items:center;gap:8px;grid-column:1/-1;
-  padding:8px 9px;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
-.dfeld.schalter input{width:16px;height:16px;padding:0;accent-color:var(--tinte);flex-shrink:0}
-.dfeld.schalter label{font-size:14px;color:var(--ink)}
-.dfeld .sub{font-size:13px;color:var(--ink3);line-height:1.45;margin-top:-1px}
+.dfeld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
+  padding:10px 13px;border:1px solid var(--rule);border-radius:10px;background:var(--paper)}
+.dfeld.schalter input{width:18px;height:18px;padding:0;accent-color:var(--tinte);flex-shrink:0}
+.dfeld.schalter label{font-size:14px;color:var(--ink);font-weight:600}
+.dfeld .sub{font-size:12px;color:var(--ink3);line-height:1.45;margin-top:-1px}
 /* Einheit im Feld statt in der Beschriftung */
 .einheitfeld{position:relative;display:flex;align-items:center}
-.einheitfeld .einheit{position:absolute;right:12px;font-size:13px;color:var(--ink3);
+.einheitfeld .einheit{position:absolute;right:11px;font-size:12.5px;color:var(--ink3);
   pointer-events:none}
-.einheitfeld input{padding-right:74px}
+.einheitfeld input{padding-right:70px}
 /* WebKit gibt Datums- und Zeitfeldern eine eigene Mindestbreite und zentriert
-   ihren Wert. Beides schlägt width:100%, das Feld läuft aus seiner Spalte. */
+   ihren Wert. Beides schlägt width:100%, das Feld läuft aus seiner Spalte —
+   auf dem iPad um gut dreißig Pixel. In Chromium fällt es nicht auf. */
 .dfeld input[type=date],.dfeld input[type=time]{min-width:0;
   -webkit-appearance:none;appearance:none}
 .dfeld input::-webkit-date-and-time-value{text-align:left;margin:0}
@@ -258,259 +229,259 @@ input,textarea{font:inherit}
 
 /* ---------- Formatierungsleiste über mehrzeiligen Feldern ---------- */
 .mdfeld{display:flex;flex-direction:column}
-.mdleiste{display:flex;align-items:center;gap:1px;padding:3px 4px;flex-wrap:wrap;
-  border:1px solid var(--rule2);border-bottom:0;border-radius:var(--r) var(--r) 0 0;
-  background:var(--sheet)}
-.mdfeld textarea{border-radius:0 0 var(--r) var(--r);min-height:100px}
-.mdknopf{display:grid;place-items:center;width:26px;height:24px;border-radius:var(--r);
+.mdleiste{display:flex;align-items:center;gap:2px;padding:4px 5px;flex-wrap:wrap;
+  border:1px solid var(--rule2);border-bottom:0;border-radius:9px 9px 0 0;
+  background:var(--raise)}
+.mdfeld textarea{border-radius:0 0 9px 9px;min-height:104px}
+.mdknopf{display:grid;place-items:center;width:28px;height:26px;border-radius:7px;
   color:var(--ink2);flex-shrink:0}
-.mdknopf:hover{background:var(--raise);color:var(--ink)}
+.mdknopf:hover{background:var(--sheet);color:var(--ink)}
 .mdknopf svg{width:15px;height:15px}
-.mdstrich{width:1px;height:16px;background:var(--rule);margin:0 3px;flex-shrink:0}
+.mdstrich{width:1px;height:17px;background:var(--rule2);margin:0 3px;flex-shrink:0}
 .mdleiste .sp{flex:1}
-.mdschau{font-size:12px;color:var(--ink3);padding:3px 8px;border-radius:var(--r)}
-.mdschau:hover{background:var(--raise);color:var(--ink)}
-.mdschau[aria-pressed="true"]{background:var(--tinte-s);color:var(--tinte-tx)}
-.mdvor{border:1px solid var(--rule2);border-radius:0 0 var(--r) var(--r);
-  background:var(--paper);padding:10px 11px;font-size:14px;line-height:1.6;min-height:100px;
-  overflow-wrap:anywhere}
+.mdschau{font-size:11.5px;font-weight:700;color:var(--ink3);padding:4px 9px;border-radius:7px}
+.mdschau:hover{background:var(--sheet);color:var(--ink)}
+.mdschau[aria-pressed="true"]{background:var(--tinte-s);color:var(--tinte)}
+/* Vorschau: dieselbe Fläche wie das Feld, damit nichts springt. */
+.mdvor{border:1px solid var(--rule2);border-radius:0 0 9px 9px;background:var(--sheet);
+  padding:11px 12px;font-size:14px;line-height:1.6;min-height:104px;overflow-wrap:anywhere}
 .mdvor > :first-child{margin-top:0}
-.mdvor h3{font-size:15px;font-weight:600;margin:12px 0 4px}
-.mdvor p{margin:0 0 7px}
-.mdvor ul{margin:0 0 7px 19px}
+.mdvor h3{font-size:15.5px;font-weight:800;letter-spacing:0;margin:13px 0 5px}
+.mdvor p{margin:0 0 8px}
+.mdvor ul{margin:0 0 8px 19px}
 .mdvor li{margin-top:2px}
-.mdvor hr{border:0;border-top:1px solid var(--rule);margin:11px 0}
+.mdvor hr{border:0;border-top:1px solid var(--rule);margin:12px 0}
 .mdvor .leerhin{color:var(--ink3);font-style:italic}
-.merk{font-size:14px;color:var(--ink2);background:var(--sheet);border-radius:var(--r);
-  padding:9px 11px;margin-top:12px;line-height:1.5}
-.merk.warn{color:var(--signal-tx);background:var(--signal-s)}
-.merk b{font-weight:600}
-.merk ul{margin:5px 0 0 17px}
-.merk li{margin-top:2px}
-.tat.weg{color:var(--signal-tx);border-color:transparent;background:transparent}
+.merk{font-size:12.5px;color:var(--ink2);background:var(--raise);border-radius:10px;
+  padding:11px 13px;margin-top:14px;line-height:1.55}
+.merk.warn{color:var(--signal);background:var(--signal-s)}
+.merk b{font-weight:800}
+.merk ul{margin:6px 0 0 17px}
+.merk li{margin-top:3px}
+.tat.weg{color:var(--signal);border-color:transparent;background:transparent;font-weight:600}
 .tat.weg:hover{background:var(--signal-s)}
-.tat.weg.ernst{border-color:rgba(224,62,62,.4);background:var(--signal-s);font-weight:600}
-kbd{font-family:var(--mono);font-size:12px;background:var(--raise-fest);border:0;
-  border-radius:var(--r);padding:1px 5px;color:var(--signal-tx)}
-
-/* ---------- Knöpfe im Notion-Stil ---------- */
-.tat{font-size:14px;font-weight:500;background:var(--tinte);color:#fff;border:0;
-  padding:4px 10px;border-radius:var(--r);flex-shrink:0;transition:background 20ms ease-in}
-.tat:hover{background:#0b7ad1}
-.tat.still{background:transparent;color:var(--ink2);
-  box-shadow:inset 0 0 0 1px var(--rule2)}
+.tat.weg.ernst{border-color:var(--signal);background:var(--signal-s);font-weight:700}
+kbd{font-family:var(--ff);font-size:11.5px;font-weight:700;background:var(--raise);
+  border:1px solid var(--rule);border-radius:5px;padding:2px 6px;color:var(--ink2)}
+.tat{font-size:13px;font-weight:800;background:var(--tinte);color:#fff;
+  border:1px solid var(--tinte);padding:8px 16px;border-radius:10px;flex-shrink:0}
+.tat:hover{background:#166249}
+.tat.still{background:var(--paper);color:var(--ink2);border-color:var(--rule2);font-weight:700}
 .tat.still:hover{background:var(--raise);color:var(--ink)}
 
-/* ---------- Eingabefeld: Notions Suchfeld ---------- */
-.feld{display:flex;align-items:center;gap:10px;background:var(--sheet);
-  border-radius:var(--r-gross);padding:10px 14px;
-  box-shadow:inset 0 0 0 1px var(--rule2);transition:box-shadow 20ms ease-in}
-.feld:focus-within{box-shadow:inset 0 0 0 1px var(--tinte),0 0 0 2px rgba(35,131,226,.2)}
-.feld .c{font-size:16px;color:var(--ink3);line-height:1}
-.feld:focus-within .c{color:var(--tinte-tx)}   /* --tinte trägt nur als Fläche */
-.feld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:16px;
-  font-weight:400;color:var(--ink);letter-spacing:normal}
+/* ---------- Leiste ---------- */
+.schwelle{padding:11vh 0 0}
+@media(max-height:820px){.schwelle{padding-top:6vh}}
+.feld{display:flex;align-items:center;gap:15px;border-bottom:2px solid var(--rule2);
+  padding-bottom:13px;transition:border-color .16s}
+.feld:focus-within{border-color:var(--tinte)}
+.feld .c{font-size:24px;color:var(--rule2);line-height:1}
+.feld:focus-within .c{color:var(--tinte)}
+.feld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:27px;
+  font-weight:500;letter-spacing:-.018em;color:var(--ink)}
 .feld input::placeholder{color:var(--ink3)}
-.feld .k{font-size:12px;color:var(--ink3);flex-shrink:0;background:var(--raise-fest);
-  border-radius:var(--r);padding:2px 6px}
-.schwelle{padding:64px 0 0}
-@media(max-height:820px){.schwelle{padding-top:36px}}
+.feld .k{font-family:var(--ff);font-size:11px;font-weight:700;color:var(--ink3);flex-shrink:0;
+  border:1px solid var(--rule);border-radius:6px;padding:3px 7px;background:var(--sheet)}
 
-/* ---------- Trefferzeilen ---------- */
-.tr{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:var(--r);
-  margin:1px -8px;width:calc(100% + 16px);transition:background 20ms ease-in}
-.tr:hover,.tr.wahl{background:var(--raise)}
-.tr-a{font-size:12px;color:var(--ink3);flex-shrink:0;min-width:80px;font-weight:400}
-.tr.wahl .tr-a{color:var(--tinte-tx)}
+.tr{display:flex;align-items:center;gap:13px;padding:10px 12px;border-radius:10px;
+  border-left:2px solid transparent;width:100%}
+.tr:hover,.tr.wahl{background:var(--raise);border-left-color:var(--tinte)}
+.tr-a{font-family:var(--ff);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink3);flex-shrink:0;min-width:82px;font-weight:800}
+.tr.wahl .tr-a{color:var(--tinte)}
 .tr-b{flex:1;min-width:0}
-.tr-t{display:block;font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;
+.tr-t{display:block;font-size:15px;letter-spacing:-.006em;white-space:nowrap;overflow:hidden;
   text-overflow:ellipsis}
-.tr-m{display:block;font-size:12px;color:var(--ink3);margin-top:1px;white-space:nowrap;
+.tr-m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
-.tr-k{font-size:12px;color:var(--ink3);flex-shrink:0;opacity:0}
+.tr-k{font-family:var(--ff);font-size:11px;font-weight:600;color:var(--ink3);flex-shrink:0;opacity:0}
 .tr:hover .tr-k,.tr.wahl .tr-k{opacity:1}
-.rechner{padding:14px 16px;border-radius:var(--r);background:var(--tinte-s);margin:10px 0 4px}
-.rechner .frage{font-size:12px;color:var(--tinte-tx)}
-.rechner .zahl{font-size:28px;color:var(--ink);margin-top:3px;font-weight:600;
-  font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.rechner{padding:16px 14px;border-radius:11px;background:var(--tinte-s);margin:8px 0 4px}
+.rechner .frage{font-size:13px;font-weight:700;color:var(--tinte)}
+.rechner .zahl{font-family:var(--serif);font-size:32px;color:var(--ink);margin-top:5px;
+  font-variant-numeric:tabular-nums}
 
-/* ---------- Der große Satz: Notions H1 ---------- */
-.naechst-t{font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.2;
-  color:var(--ink);font-family:var(--ff)}
-.naechst-m{font-size:14px;color:var(--ink2);margin-top:6px;line-height:1.5}
-
-/* ---------- Raster ---------- */
-.marken{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:0}
-.mk{display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:var(--r);
-  transition:background 20ms ease-in}
-.mk:hover{background:var(--raise)}
-.mk b{font-size:12px;color:var(--ink3);font-weight:400;min-width:22px}
-.mk:hover b{color:var(--ink2)}
-.mk span{font-size:14px;color:var(--ink);white-space:nowrap;overflow:hidden;
-  text-overflow:ellipsis;border-bottom:.05em solid rgba(55,53,47,.25)}
-.modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(224px,1fr));gap:0}
-.ml{display:flex;align-items:baseline;gap:8px;padding:5px 8px;border-radius:var(--r);
-  transition:background 20ms ease-in}
+.naechst-t{font-family:var(--serif);font-size:clamp(23px,3vw,31px);line-height:1.15;
+  letter-spacing:0;font-weight:700}
+.naechst-m{font-size:13.5px;color:var(--ink2);margin-top:9px}
+.marken{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
+.mk{display:flex;align-items:baseline;gap:10px;padding:8px 10px;border-radius:9px;
+  border-left:2px solid transparent}
+.mk:hover{background:var(--raise);border-left-color:var(--tinte)}
+.mk b{font-family:var(--ff);font-size:10.5px;color:var(--ink3);font-weight:800;min-width:20px}
+.mk:hover b{color:var(--tinte)}
+.mk span{font-size:13.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk:hover span{color:var(--ink)}
+.modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
+.ml{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:8px}
 .ml:hover{background:var(--raise)}
-.ml b{font-size:12px;color:var(--ink3);min-width:20px}
-.ml span{font-size:14px;color:var(--ink)}
-.ml em{font-style:normal;font-size:12px;color:var(--ink3);margin-left:auto}
-.ml em.gz{margin-left:8px;border-radius:3px;padding:1px 6px;font-size:11px;
-  background:var(--raise);color:var(--ink2);text-transform:none}
+.ml b{font-family:var(--ff);font-size:10px;font-weight:700;color:var(--ink3);min-width:18px}
+.ml span{font-size:13.5px;color:var(--ink2)}
+.ml:hover span{color:var(--ink)}
+.ml em{font-style:normal;font-family:var(--ff);font-size:11px;font-weight:700;color:var(--ink3);
+  margin-left:auto}
+.ml em.gz{margin-left:8px;border:1px solid var(--rule2);border-radius:8px;
+  padding:1px 6px;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  background:var(--raise)}
 
 /* ---------- Planner ---------- */
 .planer{flex:1;min-height:0;display:flex;overflow:hidden;background:var(--paper)}
 .spalte{flex:1;min-width:225px;display:flex;flex-direction:column;overflow:hidden;
   border-right:1px solid var(--rule);background:var(--paper)}
 .spalte:last-child{border-right:0}
-.spalte.vorrat{flex:0 0 260px;background:var(--sheet)}
-.spalte.heute{background:var(--paper)}
-.sp-k{flex-shrink:0;padding:12px 14px 8px;border-bottom:1px solid var(--rule)}
-.sp-d{font-size:12px;color:var(--ink3);font-weight:400}
-.spalte.heute .sp-d{color:var(--tinte-tx);font-weight:500}
-.sp-n{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-top:2px;
-  display:flex;align-items:baseline;gap:8px}
-.sp-n em{font-style:normal;font-size:12px;color:var(--ink3);font-weight:400;margin-left:auto}
+.spalte.vorrat{flex:0 0 262px;background:var(--raise);border-right:1px solid var(--rule2)}
+.spalte.heute{background:var(--sheet)}
+.sp-k{flex-shrink:0;padding:12px 14px 9px;border-bottom:1px solid var(--rule)}
+.sp-d{font-family:var(--ff);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+.spalte.heute .sp-d{color:var(--tinte)}
+.sp-n{font-size:14.5px;font-weight:700;margin-top:5px;display:flex;align-items:baseline;gap:8px}
+.sp-n em{font-style:normal;font-family:var(--ff);font-size:11px;font-weight:700;color:var(--ink3);
+  margin-left:auto}
 .sp-b{flex:1;overflow-y:auto;padding:4px 8px 24px}
 .raster{position:relative}
 .stunde{display:flex;min-height:44px;border-top:1px solid var(--rule)}
 .stunde:first-child{border-top:0}
 .stunde.ziel{background:var(--tinte-s)}
-.st-t{width:42px;flex-shrink:0;font-size:12px;color:var(--ink3);padding-top:4px;
-  font-variant-numeric:tabular-nums}
-.st-l{flex:1;min-width:0;padding:3px 0 3px 6px;display:flex;flex-direction:column;gap:2px}
+.st-t{width:40px;flex-shrink:0;font-family:var(--ff);font-size:10.5px;font-weight:600;
+  color:var(--ink3);padding-top:5px;font-variant-numeric:tabular-nums}
+.st-l{flex:1;min-width:0;padding:3px 0 3px 6px;display:flex;flex-direction:column;gap:3px}
 /* Die freie Stunde ist anklickbar. Ohne Zeichen wäre das unsichtbar —
-   beim Zeigen färbt sie sich. */
+   beim Zeigen färbt sie sich. Auf dem iPad fällt das weg, dafür gibt
+   es die Knöpfe in den Kopfzeilen. */
 .st-l{cursor:copy}
-.stunde:hover .st-l:empty{background:var(--raise);border-radius:var(--r)}
-.blk{border-radius:var(--r);padding:5px 8px;background:var(--raise-fest);cursor:grab;
-  box-shadow:inset 3px 0 0 var(--ink3);transition:background 20ms ease-in}
-.blk:hover{background:rgba(55,53,47,.11)}
-.blk.zieht{opacity:.4}
-.blk.termin{background:var(--tinte-s);box-shadow:inset 3px 0 0 var(--tinte)}
-.blk.aufgabe{background:var(--gut-s);box-shadow:inset 3px 0 0 var(--gut)}
-.blk.spaet{background:var(--signal-s);box-shadow:inset 3px 0 0 var(--signal)}
-.blk{display:flex;align-items:flex-start;gap:7px;cursor:pointer}
+.stunde:hover .st-l:empty{background:var(--tinte-s);border-radius:7px}
+.blk{border-radius:9px;padding:7px 10px;border:1px solid var(--rule2);background:var(--sheet);
+  cursor:grab;border-left-width:3px}
+.blk:hover{border-color:var(--tinte)}
+.blk.zieht{opacity:.35}
+.blk.termin{border-left-color:var(--tinte)}
+.blk.aufgabe{border-left-color:var(--gut)}
+.blk.spaet{border-left-color:var(--signal)}
+.blk{display:flex;align-items:flex-start;gap:8px;cursor:pointer}
 .blk-b{flex:1;min-width:0}
-.blk .t{display:block;font-size:14px;font-weight:500;color:var(--ink)}
-.blk .m{display:block;font-size:12px;color:var(--ink2);margin-top:1px}
-.blk .kast{width:15px;height:15px;border-radius:3px;margin-top:2px}
+.blk .t{display:block;font-size:13px;font-weight:700;letter-spacing:-.005em}
+.blk .m{display:block;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.blk .kast{width:15px;height:15px;border-radius:4px;margin-top:1px}
 .blk .kast svg{width:9px;height:9px}
 .blk.fertig .t{text-decoration:line-through;color:var(--ink3)}
-/* Anlegeknopf in der Spaltenkopfzeile — rund, ohne Beschriftung */
-/* Notions Blau trägt als Fläche, aber nicht als Text — deshalb --tinte-tx
-   für das Zeichen: 4,65 : 1 auf dem hellblauen Grund. */
-.sp-neu{margin-left:8px;flex-shrink:0;width:26px;height:26px;border-radius:50%;
-  border:1px solid var(--tinte-tx);background:var(--tinte-s);color:var(--tinte-tx);
+/* Der Anlegeknopf: rund, ohne Beschriftung, in der Spaltenkopfzeile.
+   Am Fuß der Spalte läge er hinter zwölf Stunden Raster — man müsste
+   erst scrollen, um etwas anzulegen. Die Kopfzeile bleibt stehen. */
+/* Grün wie „Speichern“: Der Knopf ist die tragende Handlung dieser
+   Fläche, nicht eine Kategorie. Damit bleibt die Farbregel gewahrt —
+   Grün steht für „jetzt und aktiv“, nicht für „Termine sind grün“. */
+.sp-neu{margin-left:8px;flex-shrink:0;width:24px;height:24px;border-radius:50%;
+  border:1px solid var(--tinte);background:var(--tinte-s);color:var(--tinte);
   display:grid;place-items:center;align-self:center}
-.sp-neu svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;
+.sp-neu svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.7;fill:none;
   stroke-linecap:round}
-.sp-neu:hover{background:#cbe0ea}
+.sp-neu:hover{background:#d7ecdf}
 .vz{cursor:pointer}
-.jetztlinie{position:absolute;left:42px;right:0;height:2px;background:var(--signal);z-index:3}
+.jetztlinie{position:absolute;left:40px;right:0;height:2px;background:var(--signal);z-index:3}
 .jetztlinie::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;
   border-radius:50%;background:var(--signal)}
-.jetztlinie span{position:absolute;right:2px;top:-15px;font-size:11px;font-weight:600;
-  color:var(--signal-tx)}
-.vz{display:flex;align-items:flex-start;gap:8px;padding:6px 8px;border-radius:var(--r);
-  cursor:grab;transition:background 20ms ease-in}
-.vz:hover{background:var(--raise)}
-.vz.zieht{opacity:.4}
-.vz.spaet{box-shadow:inset 2px 0 0 var(--signal)}
-.wf{padding:6px 8px;border-radius:var(--r);background:var(--signal-s);margin-bottom:2px}
-.wf .t{font-size:14px;font-weight:500;color:var(--ink)}
-.wf .m{font-size:12px;color:var(--ink2);margin-top:1px}
+.jetztlinie span{position:absolute;right:2px;top:-15px;font-family:var(--ff);font-size:10px;
+  font-weight:800;color:var(--signal)}
+.vz{display:flex;align-items:flex-start;gap:9px;padding:9px 8px;border-radius:9px;cursor:grab;
+  border:1px solid transparent;border-left-width:3px}
+.vz:hover{background:var(--paper);border-color:var(--rule);border-left-color:var(--gut)}
+.vz.zieht{opacity:.35}
+.vz.spaet{border-left-color:var(--signal)}
+.wf{padding:9px 8px;border-radius:9px;border-left:3px solid var(--signal);
+  background:var(--signal-s);margin-bottom:3px}
+.wf .t{font-size:13px;font-weight:700}
+.wf .m{font-size:11.5px;color:var(--signal);margin-top:2px}
 
 /* ---------- Modulflächen ---------- */
-.zurueck{display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--ink3);
-  padding:4px 8px;margin:14px -8px 0;border-radius:var(--r);
-  transition:background 20ms ease-in}
-.zurueck:hover{background:var(--raise);color:var(--ink)}
-.karte{padding:12px 14px;border-radius:var(--r);background:var(--sheet);
-  box-shadow:inset 0 0 0 1px var(--rule);margin-bottom:4px}
+.zurueck{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
+  color:var(--ink3);padding:6px 0;margin-top:14px}
+.zurueck:hover{color:var(--ink)}
+.karte{padding:13px 15px;border-radius:11px;border:1px solid var(--rule);background:var(--sheet);
+  margin-bottom:4px}
 .baum{padding-left:0}
-.knoten{display:flex;align-items:baseline;gap:8px;padding:4px 8px;border-radius:var(--r);
-  transition:background 20ms ease-in}
+.knoten{display:flex;align-items:baseline;gap:9px;padding:6px 8px;border-radius:8px}
 .knoten:hover{background:var(--raise)}
-.knoten .pkt{width:5px;height:5px;border-radius:50%;background:var(--ink3);flex-shrink:0}
-.knoten .tx{font-size:14px;color:var(--ink)}
-textarea.code{width:100%;min-height:150px;border:0;border-radius:var(--r);
-  background:var(--sheet);box-shadow:inset 0 0 0 1px var(--rule);padding:12px;
-  font-family:var(--mono);font-size:13px;line-height:1.5;resize:vertical;color:var(--ink)}
-textarea.code:focus{outline:0;box-shadow:inset 0 0 0 1px var(--tinte)}
-
+.knoten .pkt{width:5px;height:5px;border-radius:50%;background:var(--rule2);flex-shrink:0}
+.knoten .tx{font-size:14px}
+textarea.code{width:100%;min-height:150px;border:1px solid var(--rule2);border-radius:10px;
+  background:var(--sheet);padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;
+  resize:vertical;color:var(--ink)}
+textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
 .zettel{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);
-  background:var(--ink);color:#fff;font-size:14px;padding:8px 14px;border-radius:var(--r);
-  opacity:0;pointer-events:none;z-index:9500;
-  box-shadow:0 6px 16px rgba(15,15,15,.16),0 3px 6px rgba(15,15,15,.1);
-  transition:transform .2s ease-out,opacity .2s ease-out}
+  background:var(--ink);color:#fff;border:1px solid var(--ink);font-size:13.5px;
+  padding:11px 20px;border-radius:11px;opacity:0;pointer-events:none;z-index:9500;
+  box-shadow:0 14px 40px rgba(15,43,29,.28);
+  transition:transform .24s cubic-bezier(.2,.8,.3,1),opacity .24s}
 .zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ---------- Kalender: zwei Werktage nebeneinander ---------- */
-.tage{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:10px}
-.tag{border:1px solid var(--rule);border-radius:var(--r-gross);background:var(--paper);
-  overflow:hidden}
-.tag-k{display:flex;align-items:baseline;gap:8px;padding:9px 12px;
-  border-bottom:1px solid var(--rule);background:var(--sheet)}
-.tag-k .d{font-size:14px;font-weight:600}
-.tag-k .h{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--tinte-tx);font-weight:600}
+.tage{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.tag{border:1px solid var(--rule);border-radius:12px;background:var(--sheet);overflow:hidden}
+.tag-k{display:flex;align-items:baseline;gap:9px;padding:11px 14px;
+  border-bottom:1px solid var(--rule);background:var(--raise)}
+.tag-k .d{font-size:14.5px;font-weight:800;letter-spacing:0}
+.tag-k .h{font-family:var(--ff);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--tinte);font-weight:800}
 .tag-k .sp{flex:1}
-.tag-k .n{font-family:var(--mono);font-size:12px;color:var(--ink3)}
-.tag-b{padding:4px 6px 8px}
-.tagfuss{padding:2px 6px 6px}
-.tm{display:flex;align-items:flex-start;gap:10px;padding:6px 7px;border-radius:var(--r);
-  width:100%;text-align:left}
-.tm:hover{background:var(--raise)}
-.tm .u{font-family:var(--mono);font-size:12px;color:var(--ink2);font-weight:600;flex-shrink:0;
+.tag-k .n{font-family:var(--ff);font-size:11px;font-weight:600;color:var(--ink3)}
+.tag-b{padding:6px 8px 10px}
+.tagfuss{padding:4px 8px 8px}
+.tm{display:flex;align-items:flex-start;gap:11px;padding:8px;border-radius:9px;width:100%;
+  text-align:left;border-left:2px solid transparent}
+.tm:hover{background:var(--raise);border-left-color:var(--tinte)}
+.tm .u{font-family:var(--ff);font-size:12px;color:var(--ink2);font-weight:700;flex-shrink:0;
   padding-top:1px;font-variant-numeric:tabular-nums}
 .tm .b{flex:1;min-width:0}
-.tm .t{display:block;font-size:14px;line-height:1.4;overflow-wrap:anywhere}
-.tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:1px;overflow-wrap:anywhere}
-.tm .w{font-size:12px;color:var(--ink3);flex-shrink:0;padding-top:2px}
+.tm .t{display:block;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
+.tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;overflow-wrap:anywhere}
+.tm .w{font-family:var(--ff);font-size:11px;font-weight:600;color:var(--ink3);flex-shrink:0;
+  padding-top:2px}
 
 /* ---------- Notizen ---------- */
-textarea.sz{min-height:118px;font-family:var(--mono);font-size:13px}
-.nz{position:relative;border:1px solid var(--rule);border-radius:var(--r-gross);
-  background:var(--paper);margin-bottom:6px;overflow:hidden}
-.nz:hover{background:var(--sheet)}
+textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
+.nz{position:relative;border:1px solid var(--rule);border-radius:12px;background:var(--sheet);
+  margin-bottom:8px;overflow:hidden}
+.nz:hover{border-color:var(--rule2)}
 .nz.tel{border-left:2px solid var(--tinte)}
-.nz-b{display:block;width:100%;padding:11px 13px}
-.nz-k{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px}
-.nz-t{font-size:14px;font-weight:600}
-.nz-a{font-family:var(--mono);font-size:11px;letter-spacing:.05em;text-transform:uppercase;
-  color:var(--ink3);font-weight:600}
-.nz-w{font-size:12px;color:var(--tinte-tx);background:var(--tinte-s);border-radius:var(--r);
-  padding:1px 6px}
+.nz-b{display:block;width:100%;padding:12px 14px}
+.nz-k{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+.nz-t{font-size:14.5px;font-weight:800;letter-spacing:0}
+.nz-a{font-family:var(--ff);font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink3);font-weight:800}
+.nz-w{font-size:12px;color:var(--tinte);background:var(--tinte-s);border-radius:6px;
+  padding:1px 7px}
 .nz-k .sp{flex:1}
-.nz-d{font-family:var(--mono);font-size:12px;color:var(--ink3);white-space:nowrap}
-.nz-v{display:block;font-size:14px;line-height:1.55;color:var(--ink2);overflow-wrap:anywhere}
+.nz-d{font-family:var(--ff);font-size:11px;font-weight:600;color:var(--ink3);white-space:nowrap}
+.nz-v{display:block;font-size:13.5px;line-height:1.6;color:var(--ink2);overflow-wrap:anywhere}
 .nz-v > :first-child{margin-top:0}
-.nz-v h3{font-size:14px;font-weight:600;color:var(--ink);margin:10px 0 3px}
-.nz-v p{margin:0 0 6px}
-.nz-v ul{margin:0 0 6px 19px}
+.nz-v h3{font-size:14.5px;font-weight:800;color:var(--ink);margin:11px 0 4px}
+.nz-v p{margin:0 0 7px}
+.nz-v ul{margin:0 0 7px 19px}
 .nz-v li{margin-top:2px}
 .nz-v hr{border:0;border-top:1px solid var(--rule);margin:10px 0}
 .nz-v .leerhin{color:var(--ink3);font-style:italic}
-.nz-aus{position:absolute;top:9px;right:11px;font-size:12px;color:var(--ink3);
-  padding:3px 8px;border-radius:var(--r);opacity:0}
+.nz-aus{position:absolute;top:10px;right:12px;font-size:11.5px;font-weight:600;color:var(--ink3);
+  padding:4px 9px;border-radius:7px;opacity:0}
 .nz:hover .nz-aus,.nz-aus:focus-visible{opacity:1}
 .nz-aus:hover{background:var(--raise);color:var(--ink)}
 
-/* ---------- Schmierzettel, kompakt in der Leiste ---------- */
-.szk{border:1px solid var(--rule2);border-radius:var(--r);background:var(--paper);
-  overflow:hidden}
+/* ---------- Schmierzettel, kompakt in der Leiste ----------
+   Bewusst ärmer als im Modul: keine Formatierungsleiste, keine
+   Vorschau, feste Zeilenschrift. Wer hier schreibt, will eine
+   Nummer festhalten, kein Dokument setzen. */
+.szk{border:1px solid var(--rule2);border-radius:11px;background:var(--sheet);overflow:hidden}
 .szk textarea{width:100%;border:0;outline:0;background:transparent;resize:vertical;
-  min-height:74px;padding:9px 11px;font-family:var(--mono);font-size:13px;
-  line-height:1.5;color:var(--ink)}
-.szk:focus-within{border-color:var(--tinte);box-shadow:0 0 0 2px rgba(35,131,226,.24)}
-.szk-f{display:flex;align-items:center;gap:8px;padding:5px 9px;
-  border-top:1px solid var(--rule);background:var(--sheet)}
-.szk-f .h{font-size:12px;color:var(--ink3)}
+  min-height:76px;padding:10px 12px;font-family:var(--mono);font-size:12.5px;
+  line-height:1.55;color:var(--ink)}
+.szk:focus-within{border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.szk-f{display:flex;align-items:center;gap:9px;padding:6px 10px;
+  border-top:1px solid var(--rule);background:var(--raise)}
+.szk-f .h{font-size:11.5px;color:var(--ink3)}
 .szk-f .sp{flex:1}
-.szk-f button{font-size:12px;color:var(--ink3);padding:2px 7px;border-radius:var(--r)}
-.szk-f button:hover{background:var(--raise);color:var(--ink)}
+.szk-f button{font-size:11.5px;font-weight:600;color:var(--ink3);padding:3px 8px;border-radius:7px}
+.szk-f button:hover{background:var(--sheet);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -524,6 +495,8 @@ textarea.sz{min-height:118px;font-family:var(--mono);font-size:13px}
     <button class="akt" id="sichern">Sichern</button>
     <button class="akt" id="ladenBtn">Laden</button>
     <button class="akt" id="export">Export</button>
+    <!-- Gesichert wird JSON. Der Filter stand auf .md und hätte die
+         Sicherungsdatei im Windows-Dialog ausgeblendet. -->
     <input type="file" id="laden" accept=".json,application/json" hidden>
     <input type="file" id="mdlesen" accept=".md,.markdown,.txt" hidden>
     <div class="wechsel" role="group" aria-label="Oberfläche">

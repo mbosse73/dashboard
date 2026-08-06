@@ -1,0 +1,136 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Linear-Fassung — Planner</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Derselbe Planner — Vorrat, zwei Werktage, Stundenraster,
+   runde Plus-Knöpfe — nur in Linears dunklem, violettem Kleid.
+   ============================================================ */
+.li{max-width:1420px;margin:16px auto 60px;border-radius:10px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.2);display:flex;height:820px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#e7e7ea;background:#19191c}
+
+.spalte{flex:1;min-width:0;display:flex;flex-direction:column;border-right:1px solid #2b2b30}
+.spalte:last-child{border-right:0}
+.spalte.vorrat{flex:0 0 240px;background:#1e1e21}
+.sp-k{flex-shrink:0;padding:11px 14px 9px;border-bottom:1px solid #2b2b30;display:flex;
+  align-items:baseline;gap:8px}
+.sp-d{font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:#6f6f78}
+.spalte.heute .sp-d{color:#5e6ad2}
+.sp-n{font-size:13.5px;font-weight:700;display:flex;align-items:baseline;gap:8px;width:100%}
+.sp-n em{font-style:normal;font-family:ui-monospace,monospace;font-size:11px;color:#6f6f78;
+  margin-left:auto}
+.sp-neu{width:20px;height:20px;border-radius:50%;border:1px solid #3a3a40;color:#8a8a94;
+  display:grid;place-items:center;margin-left:6px;flex-shrink:0}
+.sp-neu svg{width:11px;height:11px;stroke:currentColor;stroke-width:2.2;fill:none}
+
+.sp-b{flex:1;overflow-y:auto;padding:8px 8px}
+.vz{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border-radius:8px;
+  border:1px solid #2b2b30;margin-bottom:6px}
+.vz.spaet{border-color:#4a2a2c}
+.vz .status{width:13px;height:13px;border-radius:50%;border:1.6px solid #4d4d57;flex-shrink:0;
+  margin-top:1px}
+.vz.spaet .status{border-color:#eb5757}
+.vz .t{font-size:12.5px;font-weight:600;color:#e7e7ea}
+.vz .m{font-size:11px;color:#6f6f78;margin-top:2px}
+.vz.spaet .m{color:#eb5757}
+
+.raster{position:relative}
+.stunde{display:flex;min-height:44px;border-top:1px solid #232326}
+.stunde:first-child{border-top:0}
+.st-t{width:42px;flex-shrink:0;font-size:10px;color:#6f6f78;padding:4px 0 0 10px;
+  font-variant-numeric:tabular-nums}
+.st-l{flex:1;min-width:0;padding:3px 6px;display:flex;flex-direction:column;gap:3px}
+.blk{border-radius:8px;padding:6px 9px;font-size:12px;background:#242434;border-left:2px solid #5e6ad2}
+.blk .t{font-weight:700;color:#dcdcf4}
+.blk .m{color:#8a8a94;margin-top:1px;font-size:10.5px}
+.blk.aufgabe{background:#262218;border-left-color:#f2c94c}
+.jetzt{position:relative}
+.jetzt::before{content:"";position:absolute;left:42px;right:6px;top:14px;height:1.5px;
+  background:#eb5757}
+.jetzt::after{content:"";position:absolute;left:39px;top:10.5px;width:6px;height:6px;
+  border-radius:50%;background:#eb5757}
+.jetzt .st-t{color:#eb5757}
+</style>
+
+<div class="meta">
+  <b>Linear-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Leiste</a>
+    <a class="hier" href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+    <a href="home-hell.html">Hell: Leiste</a>
+    <a href="planner-hell.html">Planner</a>
+    <a href="kontakte-hell.html">Kontakte</a>
+    <a href="termin-hell.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Derselbe Planner wie in der
+Anwendung, Feld für Feld — Vorrat links, zwei Werktage mit Stundenraster, die runden
+Plus-Knöpfe in den Kopfzeilen. Nur die Farben und Formen sind Linear: fast schwarz, dünne
+Linien statt Rahmen, ein einziger violetter Akzent.</p>
+
+<div class="li">
+  <div class="spalte vorrat">
+    <div class="sp-k"><div class="sp-n">Nicht eingeplant<em>6</em><span class="sp-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg></span></div></div>
+    <div class="sp-b">
+      <div class="vz spaet"><span class="status"></span><div><div class="t">Rechnung 2026-114 freigeben</div><div class="m">Überfällig · Eva Bergmann</div></div></div>
+      <div class="vz"><span class="status"></span><div><div class="t">Backup-Skript testen</div><div class="m">Ohne Frist</div></div></div>
+      <div class="vz"><span class="status"></span><div><div class="t">KR 1.2 Review vorbereiten</div><div class="m">15. Aug</div></div></div>
+      <div class="vz"><span class="status"></span><div><div class="t">Angebot Meinhardt</div><div class="m">Nachverfolgen · Tobias Meinhardt</div></div></div>
+    </div>
+  </div>
+
+  <div class="spalte heute">
+    <div class="sp-k"><div class="sp-n"><span class="sp-d" style="margin-right:6px">Heute</span>Donnerstag, 6. Aug<em>4</em><span class="sp-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg></span></div></div>
+    <div class="sp-b"><div class="raster">
+      <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">08:00</span><div class="st-l">
+        <div class="blk"><div class="t">Standup</div><div class="m">08:00 · Team</div></div></div></div>
+      <div class="stunde"><span class="st-t">09:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">10:00</span><div class="st-l">
+        <div class="blk"><div class="t">Strategie-Call</div><div class="m">10:00 · Lisa Meier</div></div></div></div>
+      <div class="stunde jetzt"><span class="st-t">11:23</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">12:00</span><div class="st-l">
+        <div class="blk aufgabe"><div class="t">Feature-Matrix erstellen</div><div class="m">Aufgabe · 12:00</div></div></div></div>
+      <div class="stunde"><span class="st-t">13:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">14:00</span><div class="st-l">
+        <div class="blk"><div class="t">Abstimmung Layout</div><div class="m">14:00 · Jan Kowalski</div></div></div></div>
+      <div class="stunde"><span class="st-t">15:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">16:00</span><div class="st-l"></div></div>
+    </div></div>
+  </div>
+
+  <div class="spalte">
+    <div class="sp-k"><div class="sp-n"><span class="sp-d" style="margin-right:6px">Danach</span>Freitag, 7. Aug<em>3</em><span class="sp-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg></span></div></div>
+    <div class="sp-b"><div class="raster">
+      <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">08:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">09:00</span><div class="st-l">
+        <div class="blk"><div class="t">Sprint-Planung</div><div class="m">09:00 · Team</div></div></div></div>
+      <div class="stunde"><span class="st-t">10:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">11:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">15:00</span><div class="st-l">
+        <div class="blk"><div class="t">Vertragsgespräch</div><div class="m">15:30 · Eva Bergmann</div></div></div></div>
+      <div class="stunde"><span class="st-t">16:00</span><div class="st-l"></div></div>
+    </div></div>
+  </div>
+</div>

@@ -1,0 +1,151 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Things-3-Fassung — Leiste</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Dieselben Funktionen wie in der Anwendung — nur Things 3s
+   Optik: reinweißer Grund, farbige Quadrat-Icons je Bereich,
+   runde Kreis-Kästchen statt Kästchen, viel Weißraum.
+   ============================================================ */
+.th{max-width:1420px;margin:16px auto 60px;border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.1);display:flex;height:870px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#1c1c1e;background:#ffffff}
+
+.t-side{width:230px;flex-shrink:0;background:#f7f7f8;border-right:1px solid #e5e5ea;
+  padding:16px 10px;display:flex;flex-direction:column;gap:2px}
+.t-row{display:flex;align-items:center;gap:10px;padding:6px 9px;border-radius:7px;font-size:13.5px;
+  font-weight:600;color:#3a3a3c}
+.t-row:hover{background:#ececee}
+.t-row.aktiv{background:#0b84ff;color:#fff}
+.t-row.aktiv .ic{background:rgba(255,255,255,.25)!important}
+.t-row .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;flex-shrink:0}
+.t-row .ic svg{width:13px;height:13px;stroke:#fff;stroke-width:2.2;fill:none}
+.t-row .zahl{margin-left:auto;font-size:12px;color:#8e8e93;font-weight:600}
+.t-row.aktiv .zahl{color:rgba(255,255,255,.85)}
+.t-trenn{height:1px;background:#e5e5ea;margin:10px 4px}
+.t-sek{padding:8px 9px 4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:#8e8e93}
+.t-ger{font-size:9px;font-weight:700;color:#8e8e93;background:#e5e5ea;padding:1px 6px;
+  border-radius:8px;margin-left:auto}
+
+.t-main{flex:1;min-width:0;display:flex;flex-direction:column;position:relative}
+.t-kopf{padding:26px 40px 14px}
+.t-kopf h1{font-size:26px;font-weight:800}
+.t-kopf .datum{font-size:13.5px;color:#8e8e93;margin-top:2px}
+.t-scroll{flex:1;overflow-y:auto;padding:6px 40px 30px}
+.t-gsek{display:flex;align-items:baseline;gap:8px;font-size:12px;font-weight:700;
+  letter-spacing:.03em;text-transform:uppercase;color:#8e8e93;margin:20px 0 6px}
+.t-gsek.rot{color:#ff3b30}
+.t-zeile{display:flex;align-items:flex-start;gap:11px;padding:7px 2px;border-bottom:1px solid #f0f0f2}
+.t-kreis{width:17px;height:17px;border-radius:50%;border:1.7px solid #c7c7cc;flex-shrink:0;margin-top:1px}
+.t-zeile.spaet .t-kreis{border-color:#ff3b30}
+.t-zeile.fertig .t-kreis{background:#0b84ff;border-color:#0b84ff;position:relative}
+.t-inhalt{flex:1;min-width:0}
+.t-titel{font-size:14.5px;color:#1c1c1e}
+.t-zeile.spaet .t-titel{color:#1c1c1e}
+.t-notiz{font-size:12px;color:#8e8e93;margin-top:1px}
+.t-notiz.rot{color:#ff3b30}
+.t-tag{font-size:11px;color:#8e8e93;background:#f0f0f2;padding:1px 8px;border-radius:6px;
+  margin-left:8px}
+.t-av{width:18px;height:18px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
+  color:#fff;font-size:7.5px;font-weight:700;margin-left:auto;align-self:center}
+
+.t-favzeile{display:flex;align-items:center;gap:11px;padding:8px 2px;border-bottom:1px solid #f0f0f2}
+.t-favzeile .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:10px;font-weight:700;flex-shrink:0}
+.t-favzeile .mm{font-size:12px;color:#8e8e93;margin-left:8px}
+
+.t-plus{position:absolute;right:34px;bottom:26px;width:46px;height:46px;border-radius:50%;
+  background:#0b84ff;color:#fff;display:grid;place-items:center;font-size:24px;font-weight:400;
+  box-shadow:0 6px 16px rgba(11,132,255,.4)}
+</style>
+
+<div class="meta">
+  <b>Things-3-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a class="hier" href="home.html">Leiste</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselben Funktionen wie in der
+Anwendung — Überfällig, der Tagesplan, die Module, Favoriten — in Things 3s Optik: reinweißer
+Grund, farbige Quadrat-Icons, runde Kreis-Kästchen statt Kästchen mit Häkchen, der blaue
+Magic-Plus-Knopf unten rechts. Nicht Things eigenes Bereichsmodell, nur sein Erscheinungsbild.</p>
+
+<div class="th">
+  <aside class="t-side">
+    <div class="t-row aktiv"><span class="ic" style="background:#0b84ff"><svg viewBox="0 0 20 20"><path d="M3 9.5 10 4l7 5.5"/><path d="M5 9v7h10V9"/></svg></span>Leiste<span class="zahl">4</span></div>
+    <div class="t-row"><span class="ic" style="background:#ff9500"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 3v4"/></svg></span>Planner<span class="zahl">7</span></div>
+    <div class="t-trenn"></div>
+    <div class="t-sek">Module</div>
+    <div class="t-row"><span class="ic" style="background:#ff3b30"><svg viewBox="0 0 20 20"><path d="M4 15V5a2 2 0 0 1 2-2h4l2 2h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/></svg></span>Kontakte<span class="zahl">6</span></div>
+    <div class="t-row"><span class="ic" style="background:#34c759"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="m6 10 3 3 6-6"/></svg></span>Aufgaben<span class="zahl">8</span></div>
+    <div class="t-row"><span class="ic" style="background:#5e5ce6"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M6 8h8M6 11h5"/></svg></span>Notizen<span class="zahl">5</span></div>
+    <div class="t-row"><span class="ic" style="background:#c7c7cc"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v4M13 3v4M3 9h14"/></svg></span>Textbausteine<span class="t-ger">Gerüst</span></div>
+    <div class="t-row"><span class="ic" style="background:#c7c7cc"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1"/></svg></span>Bookmarks<span class="t-ger">Gerüst</span></div>
+    <div class="t-row"><span class="ic" style="background:#c7c7cc"><svg viewBox="0 0 20 20"><path d="M4 10a6 6 0 0 1 10-4.5M16 10a6 6 0 0 1-10 4.5"/><path d="m14 4 .5 2-2-.3M6 16l-.5-2 2 .3"/></svg></span>Workflows<span class="t-ger">Gerüst</span></div>
+  </aside>
+
+  <div class="t-main">
+    <div class="t-kopf"><h1>Leiste</h1><div class="datum">Donnerstag, 6. August</div></div>
+    <div class="t-scroll">
+      <div class="t-gsek rot">Überfällig</div>
+      <div class="t-zeile spaet">
+        <span class="t-kreis"></span>
+        <div class="t-inhalt"><div class="t-titel">Rechnung 2026-114 freigeben</div>
+          <div class="t-notiz rot">Heute fällig</div></div>
+        <span class="t-av" style="background:#ff3b30">EB</span>
+      </div>
+      <div class="t-zeile spaet">
+        <span class="t-kreis"></span>
+        <div class="t-inhalt"><div class="t-titel">Vertrag Meinhardt IT<span class="t-tag">Workflow · 4/8</span></div>
+          <div class="t-notiz rot">Überfällig</div></div>
+      </div>
+
+      <div class="t-gsek">Heute</div>
+      <div class="t-zeile">
+        <span class="t-kreis"></span>
+        <div class="t-inhalt"><div class="t-titel">Standup</div><div class="t-notiz">08:00 · Team</div></div>
+      </div>
+      <div class="t-zeile">
+        <span class="t-kreis"></span>
+        <div class="t-inhalt"><div class="t-titel">Strategie-Call</div><div class="t-notiz">10:00 · Video</div></div>
+        <span class="t-av" style="background:#ffcc00">LM</span>
+      </div>
+
+      <div class="t-gsek">Favoriten</div>
+      <div class="t-favzeile">
+        <span class="av" style="background:#ff3b30">EB</span>
+        <span class="t-titel">Eva Bergmann</span><span class="mm">Kanzlei Bergmann</span>
+      </div>
+      <div class="t-favzeile">
+        <span class="av" style="background:#0b84ff">JK</span>
+        <span class="t-titel">Jan Kowalski</span><span class="mm">Nordstern GmbH</span>
+      </div>
+      <div class="t-favzeile">
+        <span class="av" style="background:#ffcc00">LM</span>
+        <span class="t-titel">Lisa Meier</span><span class="mm">Nordstern GmbH</span>
+      </div>
+    </div>
+    <div class="t-plus">+</div>
+  </div>
+</div>

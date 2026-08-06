@@ -356,6 +356,39 @@ Die Ordnung: **Was → Wann → Wer → Dazu**, in allen vier gleich.
 
 ---
 
+## Anlegen im Planner
+
+Vorschlag und Mockup unter `mockups/planner-anlegen.html`.
+
+- [ ] Der Planner hat **drei runde Plus-Knöpfe**, je einen in der Kopfzeile
+      von Vorrat, „Heute“ und „Danach“. Ohne Beschriftung, kreisrund
+      **[vorgeprüft]**
+- [ ] Zeigen auf einen Knopf nennt seinen Zweck (Titel-Kurzhinweis)
+      **[nur du]**
+- [ ] **„+“ im Vorrat** legt eine Aufgabe an, ohne Datum, Kategorie To-do.
+      Sie erscheint sofort im Vorrat **[vorgeprüft]**
+- [ ] **„+“ in „Heute“** legt einen Termin an: Tag vorbelegt, Uhrzeit auf
+      der nächsten vollen Stunde **[vorgeprüft]**
+- [ ] **„+“ in „Danach“** belegt 09:00 vor — dort gibt es kein „jetzt“
+      **[vorgeprüft]**
+- [ ] **Klick in eine freie Stunde** legt dort einen Termin an, Tag und
+      Uhrzeit aus der angeklickten Stelle **[vorgeprüft]**
+- [ ] Beim Zeigen auf eine freie Stunde färbt sie sich ein — sonst wäre
+      nicht zu sehen, dass dort etwas geht **[nur du]**
+- [ ] **Klick auf einen vorhandenen Block** öffnet ihn und legt *nichts*
+      Neues an. Auch nicht, wenn man knapp daneben trifft **[vorgeprüft]**
+- [ ] **Auf dem iPad:** Die drei Knöpfe funktionieren. Der Klick in eine
+      leere Stunde ebenfalls — nur die Einfärbung beim Zeigen fällt weg,
+      weil es dort keinen Zeiger gibt **[nur du]**
+
+### Nicht umgesetzt, bewusst
+
+Das **Ziehen funktioniert auf dem iPad nicht** — iOS Safari feuert die
+HTML5-Drag-Ereignisse nicht. Einplanen geht dort über den Dialog: Block
+antippen, Tag und Uhrzeit setzen. So entschieden.
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.

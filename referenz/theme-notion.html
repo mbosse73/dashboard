@@ -393,6 +393,15 @@ kbd{font-family:var(--mono);font-size:12px;background:var(--raise-fest);border:0
 .blk .kast{width:15px;height:15px;border-radius:3px;margin-top:2px}
 .blk .kast svg{width:9px;height:9px}
 .blk.fertig .t{text-decoration:line-through;color:var(--ink3)}
+/* Anlegeknopf in der Spaltenkopfzeile — rund, ohne Beschriftung */
+.sp-neu{margin-left:8px;flex-shrink:0;width:26px;height:26px;border-radius:50%;
+  border:0;background:transparent;color:var(--ink3);
+  display:grid;place-items:center;align-self:center}
+.sp-neu svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.7;fill:none;
+  stroke-linecap:round}
+.sp-neu:hover{background:var(--raise);color:var(--ink)}
+.st-l{cursor:copy}
+.stunde:hover .st-l:empty{background:var(--raise);border-radius:var(--r)}
 .vz{cursor:pointer}
 .jetztlinie{position:absolute;left:42px;right:0;height:2px;background:var(--signal);z-index:3}
 .jetztlinie::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;
@@ -1805,10 +1814,13 @@ function tFelder(){
 }
 const TLEER={id:null,d:null,zeit:"09:00",dauer:30,titel:"",anm:"",kontakt:null};
 
-function terminDialog(t, tagVor){
+function terminDialog(t, tagVor, zeitVor){
   const neu=!t;
   const start=Object.assign({}, TLEER, t||{});
-  if(neu) start.d=tagVor||iso(planTage()[0]);
+  if(neu){
+    start.d=tagVor||iso(planTage()[0]);
+    if(zeitVor) start.zeit=zeitVor;
+  }
   dialog({
     art: neu?"Neuer Termin":"Termin bearbeiten",
     titel: w=>w.titel,
@@ -2460,6 +2472,19 @@ function ruhezustand(box){
    7 — DER PLANNER
    ============================================================ */
 let zieht=null;
+
+/* Rund und ohne Beschriftung — deshalb trägt er seinen Namen in
+   aria-label und title. Das Plus ist Inline-SVG mit stroke, kein
+   Schriftzeichen: Ein gesetztes „+“ sitzt je nach Schrift anders in der
+   Zeile und zentriert sich in einem Kreis nie sauber. */
+function plusKnopf(name, tun){
+  const n=el("button","sp-neu",
+    '<svg viewBox="0 0 14 14" aria-hidden="true"><path d="M7 2.6v8.8M2.6 7h8.8"/></svg>');
+  n.setAttribute("aria-label",name); n.title=name;
+  n.onclick=e=>{ e.stopPropagation(); tun(); };
+  return n;
+}
+
 function plannerMalen(rumpf){
   rumpf.classList.add("keinScroll");
   const box=el("div","planer");
@@ -2467,8 +2492,10 @@ function plannerMalen(rumpf){
 
   const v=el("div","spalte vorrat");
   const offen=DATEN.aufgaben.filter(a=>!a.fertig && (!a.d || (a.d!==iso(d1)&&a.d!==iso(d2))));
-  v.appendChild(el("div","sp-k",'<div class="sp-d">Nicht eingeplant</div>'
-    +'<div class="sp-n">Aufgaben <em>'+offen.length+'</em></div>'));
+  const vk=el("div","sp-k",'<div class="sp-d">Nicht eingeplant</div>');
+  const vn=el("div","sp-n","Aufgaben <em>"+offen.length+"</em>");
+  vn.appendChild(plusKnopf("Neue Aufgabe anlegen", ()=>aufgabeDialog(null,"todo")));
+  vk.appendChild(vn); v.appendChild(vk);
   const vb=el("div","sp-b");
   if(!offen.length) vb.appendChild(el("div","leer","Alles eingeplant."));
   offen.forEach(a=>vb.appendChild(vorratZeile(a)));
@@ -2496,10 +2523,20 @@ function plannerMalen(rumpf){
     const s=el("div","spalte"+(heute?" heute":""));
     const termine=DATEN.termine.filter(t=>t.d===key);
     const aufg=DATEN.aufgaben.filter(a=>a.d===key);
-    s.appendChild(el("div","sp-k",
-      '<div class="sp-d">'+(heute?"Heute":(i===0?"Nächster Werktag":"Danach"))+'</div>'
-      +'<div class="sp-n">'+TAGL[d.getDay()]+", "+d.getDate()+". "+MONK[d.getMonth()]
-      +'<em>'+(termine.length+aufg.length)+'</em></div>'));
+    const sk=el("div","sp-k",
+      '<div class="sp-d">'+(heute?"Heute":(i===0?"Nächster Werktag":"Danach"))+'</div>');
+    const sn=el("div","sp-n",TAGL[d.getDay()]+", "+d.getDate()+". "+MONK[d.getMonth()]
+      +'<em>'+(termine.length+aufg.length)+'</em>');
+    /* Vorbelegt wird die nächste volle Stunde — aber nur heute. An einem
+       künftigen Tag gibt es kein „jetzt“, dort ist 09:00 der Anfang. */
+    const start=()=>{
+      if(!heute) return "09:00";
+      const h=Math.ceil((nowMin()+1)/60);
+      return p2(Math.min(Math.max(h,7),18))+":00";
+    };
+    sn.appendChild(plusKnopf("Neuen Termin an diesem Tag anlegen",
+      ()=>terminDialog(null,key,start())));
+    sk.appendChild(sn); s.appendChild(sk);
     const b=el("div","sp-b");
     const ohne=aufg.filter(a=>!a.zeit);
     if(ohne.length){
@@ -2517,6 +2554,12 @@ function plannerMalen(rumpf){
           +(t.kontakt?" · "+kname(t.kontakt):""))));
       aufg.filter(a=>a.zeit&&toMin(a.zeit)>=h*60&&toMin(a.zeit)<(h+1)*60).forEach(a=>
         lane.appendChild(block(a,"aufgabe","Aufgabe · "+a.zeit)));
+      /* Klick in eine freie Stunde legt dort einen Termin an, Tag und
+         Uhrzeit aus der angeklickten Stelle. Nur wenn der Klick die
+         Fläche selbst trifft: Ein Block darin hat seinen eigenen Klick,
+         der sonst zusätzlich einen neuen Termin anlegte. */
+      lane.onclick=e=>{ if(e.target===lane) terminDialog(null,key,p2(h)+":00"); };
+      lane.title="Klicken: neuer Termin um "+p2(h)+":00";
       st.appendChild(lane);
       st.addEventListener("dragover",e=>{ if(!zieht) return; e.preventDefault();
         st.classList.add("ziel"); });

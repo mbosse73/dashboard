@@ -1,0 +1,375 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Anordnung der Dialogfelder — vorher und nachher</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a4282a; --signal-s:#f7e6e4;
+  --gut:#2f6b4f;
+}
+body{font-family:var(--ff);background:var(--paper);color:var(--ink);
+  line-height:1.55;padding:26px 20px 70px}
+.bahn{max-width:1180px;margin:0 auto}
+h1{font-size:23px;letter-spacing:-.02em;margin-bottom:6px}
+.unter{font-size:14px;color:var(--ink2);max-width:70ch;margin-bottom:26px}
+
+h2{font-size:11px;font-family:var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);margin:34px 0 4px;display:flex;align-items:baseline;gap:11px}
+h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+.warum{font-size:13.5px;color:var(--ink2);max-width:78ch;margin-bottom:14px}
+.warum b{color:var(--ink)}
+.warum .q{font-size:12.5px;color:var(--ink3);display:block;margin-top:5px}
+
+/* ---------- Gegenüberstellung ---------- */
+.paar{display:grid;grid-template-columns:repeat(auto-fit,minmax(390px,1fr));gap:16px;
+  align-items:start;background:var(--paper)}
+.karte{background:var(--sheet);border:1px solid var(--rule2);border-radius:12px;
+  overflow:hidden}
+.karte.alt{opacity:.92}
+.kk{display:flex;align-items:baseline;gap:9px;padding:9px 14px;
+  border-bottom:1px solid var(--rule);background:var(--raise)}
+.kk b{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.karte.alt .kk b{color:var(--ink3)}
+.karte.neu .kk b{color:var(--gut)}
+.kk span{font-size:12px;color:var(--ink3)}
+.kb{padding:15px 16px 17px;background:var(--sheet);max-width:576px}
+
+/* ---------- Felder, wie im Dashboard ---------- */
+/* Fest zwei Spalten — genau wie im echten Dialog bei 620 px Breite.
+   Mit auto-fit bräche das Mockup auf drei um und zeigte eine Anordnung,
+   die es in der Anwendung gar nicht gibt. */
+.draster{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
+.dfeld{display:flex;flex-direction:column;gap:5px;min-width:0}
+.dfeld.breit{grid-column:1/-1}
+.dfeld label{font-size:12px;color:var(--ink3);font-weight:500}
+.dfeld .ein{border:1px solid var(--rule2);border-radius:8px;padding:8px 11px;
+  background:var(--paper);font-size:14px;color:var(--ink);min-height:37px;
+  display:flex;align-items:center;gap:7px}
+.dfeld .ein.leer{color:var(--ink3)}
+.dfeld .ein.hoch{min-height:70px;align-items:flex-start}
+.dfeld .ein .pf{margin-left:auto;color:var(--ink3);font-size:11px;flex-shrink:0}
+.dfeld .sub{font-size:12px;color:var(--ink3);line-height:1.45;margin-top:-1px}
+.dfeld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
+  padding:9px 11px;border:1px solid var(--rule);border-radius:9px;background:var(--paper)}
+.dfeld.schalter .kast{width:16px;height:16px;border:1px solid var(--rule2);border-radius:4px;
+  background:var(--sheet);flex-shrink:0}
+.dfeld.schalter label{font-size:14px;color:var(--ink)}
+
+/* Ein Loch in der Zeile — das, was der Vorschlag beseitigt */
+.loch{border:1px dashed var(--rule2);border-radius:8px;background:transparent;
+  display:flex;align-items:center;justify-content:center;min-height:37px;margin-top:22px;
+  font-size:11px;font-family:var(--mono);color:var(--ink3);letter-spacing:.06em}
+
+/* Markierung dessen, was sich bewegt hat */
+.zeig{position:relative}
+.zeig::before{content:"";position:absolute;inset:-5px -7px;border-radius:9px;
+  border:1.5px solid var(--tinte);pointer-events:none}
+.karte.alt .zeig::before{border-color:var(--signal);border-style:dashed}
+
+.merk{margin-top:14px;padding:11px 13px;border-radius:9px;background:var(--raise);
+  font-size:12.5px;color:var(--ink2);line-height:1.5}
+.merk b{color:var(--ink)}
+
+/* ---------- Regeln und Entscheidungen ---------- */
+.regeln{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:13px;
+  margin-top:14px}
+.regel{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:13px 15px}
+.regel b{display:block;font-size:13.5px;margin-bottom:4px}
+.regel span{font-size:12.5px;color:var(--ink2)}
+.regel em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3);margin-top:6px}
+
+.frage{background:var(--sheet);border:1px solid var(--rule2);border-radius:11px;
+  padding:14px 16px;margin-top:13px}
+.frage b{font-size:14px}
+.frage p{font-size:13px;color:var(--ink2);margin-top:5px}
+.frage ul{margin:9px 0 0 17px;font-size:13px;color:var(--ink2)}
+.frage li{margin-bottom:5px}
+.frage li b{font-size:13px}
+table{border-collapse:collapse;width:100%;margin-top:12px;font-size:13px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:11px;font-family:var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+td.p{color:var(--ink2)}
+code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  padding:1px 4px;border-radius:4px}
+</style>
+
+<div class="bahn">
+
+<h1>Anordnung der Dialogfelder</h1>
+<p class="unter">Links, wie es jetzt ist. Rechts der Vorschlag. Rot gestrichelt
+markiert, was stört; blau, wohin es wandert. Alle vier Dialoge nebeneinander,
+damit sichtbar wird, dass sie derselben Ordnung folgen sollen.</p>
+
+<!-- ============================================================ -->
+<h2>Die Ordnung, der alle vier folgen</h2>
+<p class="warum">Vier Fragen, immer in derselben Reihenfolge — so bauen Google
+Kalender, Outlook, Todoist, Things und Apple Kalender ihre Masken.
+<b>Was → Wann → Wer → Dazu.</b> Wer einen Dialog kennt, kennt alle.</p>
+
+<div class="regeln">
+  <div class="regel"><b>1 · Was</b><span>Der Titel steht oben und über die volle
+    Breite. Er benennt den Eintrag, alles Weitere beschreibt ihn.</span>
+    <em>So schon heute in allen vier Dialogen.</em></div>
+  <div class="regel"><b>2 · Wann</b><span>Datum und Uhrzeit stehen
+    <b>nebeneinander in einer Zeile</b>. Sie sind eine Angabe, nicht zwei.</span>
+    <em>Google Kalender, Outlook, Fantastical, Todoist — ausnahmslos alle.</em></div>
+  <div class="regel"><b>3 · Wer</b><span>Der Personenbezug folgt auf die
+    Zeit.</span>
+    <em>Bei Aufgaben gehört er neben die Kategorie: „nachverfolgen“ und „bei wem“
+    beantworten zusammen eine Frage.</em></div>
+  <div class="regel"><b>4 · Dazu</b><span>Das mehrzeilige Feld steht immer
+    zuletzt und über die volle Breite, Schalter darunter.</span>
+    <em>So schon heute.</em></div>
+  <div class="regel"><b>Keine Löcher</b><span>Bleibt ein Feld allein in einer
+    Zeile, wird es breit. Eine halbe leere Zeile liest sich als Fehler.</span>
+    <em>Betrifft heute Kontakt und Notiz.</em></div>
+  <div class="regel"><b>Nur zeigen, was gilt</b><span>Felder, die in der
+    gewählten Betriebsart bedeutungslos sind, werden nicht angezeigt.</span>
+    <em>Betrifft die Notiz: Ein Anrufer bei einer allgemeinen Notiz.</em></div>
+</div>
+
+<!-- ============================================================ -->
+<h2>1 · Termin</h2>
+<p class="warum"><b>Die Dauer gehört zur Uhrzeit, nicht zum Kontakt.</b>
+„Uhrzeit“ und „Dauer in Minuten“ sind zusammen die Zeitspanne — jeder Kalender
+zeigt sie in einer Zeile (Google und Outlook als Von–Bis, Fantastical als
+Start + Dauer). Heute steht die Dauer eine Zeile tiefer, neben dem Kontakt, mit
+dem sie nichts zu tun hat.
+<span class="q">Der Tag rückt nach oben und wird breit: Er ist die Angabe, die
+den Termin überhaupt verortet, und sein Hinweis braucht Platz.</span></p>
+
+<div class="paar">
+  <div class="karte alt">
+    <div class="kk"><b>heute</b><span>Dauer neben Kontakt</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Standup</div></div>
+      <div class="dfeld"><label>Tag</label><div class="ein">Donnerstag, 6. Aug<span class="pf">▾</span></div>
+        <div class="sub">Nur diese beiden Werktage.</div></div>
+      <div class="dfeld"><label>Uhrzeit</label><div class="ein">08:00</div></div>
+      <div class="dfeld zeig"><label>Dauer in Minuten</label><div class="ein">30</div></div>
+      <div class="dfeld"><label>Kontakt</label><div class="ein leer">— keiner —<span class="pf">▾</span></div></div>
+      <div class="dfeld breit"><label>Anmerkung</label><div class="ein hoch">Team</div></div>
+    </div></div>
+  </div>
+
+  <div class="karte neu">
+    <div class="kk"><b>Vorschlag</b><span>Zeitspanne in einer Zeile</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Standup</div></div>
+      <div class="dfeld breit"><label>Tag</label><div class="ein">Donnerstag, 6. Aug<span class="pf">▾</span></div>
+        <div class="sub">Nur diese beiden Werktage.</div></div>
+      <div class="dfeld"><label>Uhrzeit</label><div class="ein">08:00</div></div>
+      <div class="dfeld zeig"><label>Dauer</label><div class="ein">30 Minuten</div></div>
+      <div class="dfeld breit"><label>Kontakt</label><div class="ein leer">— keiner —<span class="pf">▾</span></div></div>
+      <div class="dfeld breit"><label>Anmerkung</label><div class="ein hoch">Team</div></div>
+    </div></div>
+  </div>
+</div>
+<div class="merk"><b>Nebenbei:</b> „Dauer in Minuten“ wird zu „Dauer“, die
+Einheit steht im Feld. Ein Label soll benennen, nicht erklären.</div>
+
+<!-- ============================================================ -->
+<h2>2 · Aufgabe</h2>
+<p class="warum"><b>Datum und Uhrzeit stehen heute in verschiedenen Zeilen.</b>
+Genau der Fall, den du genannt hast: „Fällig am“ endet die zweite Zeile,
+„Uhrzeit“ beginnt die dritte. Sie gehören zusammen.
+<span class="q">Dafür rücken Kategorie und Kontakt zusammen — und das ist kein
+Notbehelf, sondern die bessere Paarung: „Nachverfolgen — liegt bei anderen“ und
+„bei wem“ sind eine einzige Aussage. Todoist und Things stellen Fälligkeit
+zuoberst und die Einordnung darunter.</span></p>
+
+<div class="paar">
+  <div class="karte alt">
+    <div class="kk"><b>heute</b><span>Datum und Uhrzeit getrennt</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Rechnung 2026-114 freigeben</div></div>
+      <div class="dfeld"><label>Kategorie</label><div class="ein">To-do<span class="pf">▾</span></div></div>
+      <div class="dfeld zeig"><label>Fällig am</label><div class="ein">04.08.2026</div>
+        <div class="sub">Jedes Datum erlaubt, auch keines.</div></div>
+      <div class="dfeld zeig"><label>Uhrzeit</label><div class="ein leer">--:--</div>
+        <div class="sub">Optional. Setzt auch der Planner beim Ziehen.</div></div>
+      <div class="dfeld"><label>Kontakt</label><div class="ein">Eva Bergmann<span class="pf">▾</span></div></div>
+      <div class="dfeld breit"><label>Notizen</label><div class="ein hoch">Skonto läuft</div></div>
+    </div></div>
+  </div>
+
+  <div class="karte neu">
+    <div class="kk"><b>Vorschlag</b><span>Wann · dann Wer</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Rechnung 2026-114 freigeben</div></div>
+      <div class="dfeld zeig"><label>Fällig am</label><div class="ein">04.08.2026</div>
+        <div class="sub">Jedes Datum erlaubt, auch keines.</div></div>
+      <div class="dfeld zeig"><label>Uhrzeit</label><div class="ein leer">--:--</div>
+        <div class="sub">Optional. Setzt auch der Planner.</div></div>
+      <div class="dfeld"><label>Kategorie</label><div class="ein">To-do<span class="pf">▾</span></div></div>
+      <div class="dfeld"><label>Kontakt</label><div class="ein">Eva Bergmann<span class="pf">▾</span></div></div>
+      <div class="dfeld breit"><label>Notizen</label><div class="ein hoch">Skonto läuft</div></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>3 · Notiz</h2>
+<p class="warum"><b>Drei Dinge stimmen hier nicht.</b> Datum und Uhrzeit sind
+getrennt. Die beiden Anruferfelder — „aus der Liste“ und „frei eintragen“ — sind
+eine einzige Frage, stehen aber in zwei Zeilen mit einem Loch daneben. Und bei
+einer <em>allgemeinen</em> Notiz wird trotzdem nach einem Anrufer gefragt.
+<span class="q">Die Art ist ein Umschalter, kein Merkmal: Sie entscheidet, wie
+der Rest der Maske aussieht. Deshalb steht sie oben und über die volle Breite —
+so wie Outlook und Apple Notizen den Typ vor den Inhalt stellen.</span></p>
+
+<div class="paar">
+  <div class="karte alt">
+    <div class="kk"><b>heute</b><span>Anrufer in zwei Zeilen, Loch daneben</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Preismodell Staffeln</div></div>
+      <div class="dfeld"><label>Art</label><div class="ein">Telefonnotiz<span class="pf">▾</span></div>
+        <div class="sub">Neue Notizen sind Telefonnotizen.</div></div>
+      <div class="dfeld zeig"><label>Datum</label><div class="ein">06.08.2026</div></div>
+      <div class="dfeld zeig"><label>Uhrzeit</label><div class="ein">09:42</div></div>
+      <div class="dfeld zeig"><label>Kontakt aus der Liste</label><div class="ein">Lisa Meier<span class="pf">▾</span></div></div>
+      <div class="dfeld zeig"><label>…oder frei eintragen</label><div class="ein leer"></div>
+        <div class="sub">Für Anrufer, die nicht in der Kontaktliste stehen.</div></div>
+      <div class="loch">leer</div>
+      <div class="dfeld breit"><label>Text</label><div class="ein hoch">**Donnerstag, 6. Aug, 09:42**</div></div>
+    </div></div>
+  </div>
+
+  <div class="karte neu">
+    <div class="kk"><b>Vorschlag</b><span>Art schaltet · Anrufer in einer Zeile</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Preismodell Staffeln</div></div>
+      <div class="dfeld breit zeig"><label>Art</label><div class="ein">Telefonnotiz<span class="pf">▾</span></div></div>
+      <div class="dfeld zeig"><label>Datum</label><div class="ein">06.08.2026</div></div>
+      <div class="dfeld zeig"><label>Uhrzeit</label><div class="ein">09:42</div></div>
+      <div class="dfeld zeig"><label>Anrufer</label><div class="ein">Lisa Meier<span class="pf">▾</span></div></div>
+      <div class="dfeld zeig"><label>…oder frei eintragen</label><div class="ein leer"></div></div>
+      <div class="dfeld breit"><label>Text</label><div class="ein hoch">**Donnerstag, 6. Aug, 09:42**</div></div>
+    </div></div>
+  </div>
+</div>
+
+<div class="merk"><b>Und bei „Allgemeine Notiz“</b> fallen Uhrzeit und die
+beiden Anruferfelder weg — übrig bleiben Titel, Art, Datum, Text. Vier Felder
+statt sieben. Das ist die eigentliche Verbesserung: Die Maske fragt nicht mehr
+nach Dingen, die es in diesem Fall gar nicht gibt.</div>
+
+<div class="paar" style="margin-top:14px">
+  <div class="karte alt">
+    <div class="kk"><b>heute · allgemeine Notiz</b><span>fragt nach dem Anrufer</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Architekturskizze</div></div>
+      <div class="dfeld"><label>Art</label><div class="ein">Allgemeine Notiz<span class="pf">▾</span></div></div>
+      <div class="dfeld"><label>Datum</label><div class="ein">02.08.2026</div></div>
+      <div class="dfeld zeig"><label>Uhrzeit</label><div class="ein leer">--:--</div></div>
+      <div class="dfeld zeig"><label>Kontakt aus der Liste</label><div class="ein leer">— keiner —<span class="pf">▾</span></div></div>
+      <div class="dfeld zeig"><label>…oder frei eintragen</label><div class="ein leer"></div>
+        <div class="sub">Für Anrufer, die nicht in der Kontaktliste stehen.</div></div>
+      <div class="loch">leer</div>
+      <div class="dfeld breit"><label>Text</label><div class="ein hoch">Einzeldatei bleibt. Module als Ansichten.</div></div>
+    </div></div>
+  </div>
+
+  <div class="karte neu">
+    <div class="kk"><b>Vorschlag · allgemeine Notiz</b><span>vier Felder</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld breit"><label>Titel</label><div class="ein">Architekturskizze</div></div>
+      <div class="dfeld breit"><label>Art</label><div class="ein">Allgemeine Notiz<span class="pf">▾</span></div></div>
+      <div class="dfeld breit"><label>Datum</label><div class="ein">02.08.2026</div></div>
+      <div class="dfeld breit"><label>Text</label><div class="ein hoch">Einzeldatei bleibt. Module als Ansichten.</div></div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>4 · Kontakt</h2>
+<p class="warum"><b>Zwei Blöcke statt einer Reihe.</b> Vorname und Nachname sind
+die Person, Telefon und E-Mail sind die Wege zu ihr. Heute liegt die Firma
+zwischen Name und Telefon, und die E-Mail steht allein in einer Zeile mit einem
+Loch daneben.
+<span class="q">Outlook, Apple Kontakte und Google Kontakte setzen alle zuerst
+Vorname, dann Nachname — und fassen die Erreichbarkeiten zu einem Block
+zusammen.</span></p>
+
+<div class="paar">
+  <div class="karte alt">
+    <div class="kk"><b>heute</b><span>E-Mail allein, Loch daneben</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld zeig"><label>Nachname</label><div class="ein">Bergmann</div></div>
+      <div class="dfeld zeig"><label>Vorname</label><div class="ein">Eva</div></div>
+      <div class="dfeld zeig"><label>Firma</label><div class="ein">Kanzlei Bergmann</div></div>
+      <div class="dfeld"><label>Telefon</label><div class="ein">+49 40 1234-56</div></div>
+      <div class="dfeld zeig"><label>E-Mail</label><div class="ein">e.bergmann@example.com</div></div>
+      <div class="loch">leer</div>
+      <div class="dfeld breit"><label>Notizen</label><div class="ein hoch">Kanzlei, Vertragsfragen</div></div>
+      <div class="dfeld schalter"><span class="kast"></span><label>Als Favorit markieren</label></div>
+    </div></div>
+  </div>
+
+  <div class="karte neu">
+    <div class="kk"><b>Vorschlag</b><span>Person · Erreichbarkeit</span></div>
+    <div class="kb"><div class="draster">
+      <div class="dfeld zeig"><label>Vorname</label><div class="ein">Eva</div></div>
+      <div class="dfeld zeig"><label>Nachname</label><div class="ein">Bergmann</div></div>
+      <div class="dfeld breit zeig"><label>Firma</label><div class="ein">Kanzlei Bergmann</div></div>
+      <div class="dfeld"><label>Telefon</label><div class="ein">+49 40 1234-56</div></div>
+      <div class="dfeld zeig"><label>E-Mail</label><div class="ein">e.bergmann@example.com</div></div>
+      <div class="dfeld breit"><label>Notizen</label><div class="ein hoch">Kanzlei, Vertragsfragen</div></div>
+      <div class="dfeld schalter"><span class="kast"></span><label>Als Favorit markieren</label></div>
+    </div></div>
+  </div>
+</div>
+
+<div class="merk"><b>Ein Einwand dagegen:</b> Pflicht ist nur der Nachname, und
+der Dialog setzt den Schreibzeiger ins erste Feld. Nach dem Vorschlag landet er
+im Vornamen, also im optionalen Feld. Sortiert wird ebenfalls nach Nachname.
+Wenn dir das wichtiger ist als die gewohnte Reihenfolge, bleibt es bei
+Nachname zuerst — es ist eine Zeile Unterschied.</div>
+
+<!-- ============================================================ -->
+<h2>Was das im Code heißt</h2>
+<p class="warum">Drei der vier Dialoge sind reine Umsortierung — die Feldliste
+wird umgestellt, sonst nichts. Nur zwei Dinge sind wirklich neu.</p>
+
+<table>
+  <tr><th>Änderung</th><th>Umfang</th></tr>
+  <tr><td><b>Reihenfolge in <code>AFELDER</code>, <code>KFELDER</code>,
+    <code>tFelder()</code>, <code>nFelder()</code></b></td>
+    <td class="p">Zeilen tauschen. Kein neuer Code, keine neue Feldart.</td></tr>
+  <tr><td><b><code>breit:true</code> für Tag, Firma, Kontakt, Art</b></td>
+    <td class="p">Gibt es schon. Beseitigt alle Löcher.</td></tr>
+  <tr><td><b>Neu: Felder je nach Wert ein- und ausblenden</b></td>
+    <td class="p">Ein Feld bekommt <code>nurWenn:(w)=>w.art==="telefon"</code>.
+      <code>felderMalen</code> zeichnet die Gruppe neu, wenn ein Wert sich
+      ändert, auf den jemand hört. Betrifft heute nur die Notiz —
+      <b>der Workflow-Dialog aus Schritt 6 wird es ebenfalls brauchen</b>,
+      weil Eigenschaften je Teilschritt verschieden sind.</td></tr>
+  <tr><td><b>Neu: Einheit im Feld statt im Label</b></td>
+    <td class="p">Ein <code>suffix:"Minuten"</code> an der Feldart
+      <code>zahl</code>. Betrifft nur die Dauer.</td></tr>
+</table>
+
+<div class="frage">
+  <b>Drei Entscheidungen, bevor ich baue</b>
+  <ul>
+    <li><b>Kontakt:</b> Vorname zuerst wie überall sonst — oder Nachname
+      zuerst, weil er das Pflichtfeld ist und danach sortiert wird?</li>
+    <li><b>Notiz:</b> Felder je nach Art ausblenden — oder lieber alle
+      stehen lassen und nur besser anordnen? Ausblenden ist die größere
+      Änderung, aber die spürbarere.</li>
+    <li><b>Termin:</b> Tag über die volle Breite und darunter Uhrzeit + Dauer —
+      oder alle drei nebeneinander in einer Dreierzeile, wie Google Kalender
+      es macht? Die Dreierzeile spart eine Zeile, braucht aber eine neue
+      Rasterform.</li>
+  </ul>
+</div>
+
+</div>

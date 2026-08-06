@@ -1,0 +1,293 @@
+/* Erzeugt mockups/schritt-jahreskalender.html — 12 Monate × 31 Tage
+   lassen sich nicht von Hand schreiben und schon gar nicht prüfen. */
+import { writeFileSync } from "node:fs";
+
+const JAHR = 2026;
+const HEUTE = "2026-08-06";
+const MONL = ["Januar","Februar","März","April","Mai","Juni",
+              "Juli","August","September","Oktober","November","Dezember"];
+const MONK = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const TAGK = ["So","Mo","Di","Mi","Do","Fr","Sa"];
+
+/* Demodaten. Kategorie: "urlaub" oder "sonst". */
+const TERMINE = [
+  {von:"2026-02-16", bis:"2026-02-20", titel:"Skiurlaub Tirol",        kat:"urlaub"},
+  {von:"2026-03-12", bis:"2026-03-14", titel:"Messe Hannover",          kat:"sonst"},
+  {von:"2026-05-05", bis:"2026-05-05", titel:"Zahnarzt",                kat:"sonst"},
+  {von:"2026-06-18", bis:"2026-06-19", titel:"Konferenz Berlin",        kat:"sonst"},
+  {von:"2026-08-03", bis:"2026-08-17", titel:"Sommerurlaub Dänemark",   kat:"urlaub"},
+  /* Bewusst mitten im Urlaub: zeigt, was passiert, wenn beide
+     Kategorien auf denselben Tag fallen. */
+  {von:"2026-08-10", bis:"2026-08-10", titel:"Termin Steuerberater",    kat:"sonst"},
+  {von:"2026-09-30", bis:"2026-09-30", titel:"Jahresabschluss besprechen", kat:"sonst"},
+  {von:"2026-11-11", bis:"2026-11-13", titel:"Fortbildung Buchhaltung", kat:"sonst"},
+  {von:"2026-12-22", bis:"2026-12-31", titel:"Weihnachtsurlaub",        kat:"urlaub"}
+];
+
+const p2 = n => String(n).padStart(2, "0");
+const iso = (j,m,t) => j + "-" + p2(m+1) + "-" + p2(t);
+const esc = s => String(s).replace(/[&<>"]/g,
+  c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* Lesbare Spanne: „3.–17. August“, bei Monatswechsel „22. Dez – 3. Jan“ */
+function spanne(t){
+  const [jv,mv,tv] = t.von.split("-").map(Number);
+  const [jb,mb,tb] = t.bis.split("-").map(Number);
+  if (t.von === t.bis) return tv + ". " + MONL[mv-1];
+  if (mv === mb && jv === jb) return tv + ".–" + tb + ". " + MONL[mv-1];
+  return tv + ". " + MONK[mv-1] + " – " + tb + ". " + MONK[mb-1];
+}
+
+/* Alle Termine, die diesen Tag berühren */
+const amTag = key => TERMINE.filter(t => key >= t.von && key <= t.bis);
+
+function raster(variante){
+  let h = '<div class="jahr">';
+  for (let m = 0; m < 12; m++){
+    const laenge = new Date(JAHR, m+1, 0).getDate();
+    h += '<div class="jz"><span class="jm">' + MONK[m] + '</span>';
+    for (let t = 1; t <= 31; t++){
+      if (t > laenge){ h += '<span class="jt keiner"></span>'; continue; }
+      const key = iso(JAHR, m, t);
+      const d   = new Date(JAHR, m, t);
+      const we  = d.getDay() === 0 || d.getDay() === 6;
+      const l   = amTag(key);
+      const urlaub = l.some(x => x.kat === "urlaub");
+      const sonst  = l.some(x => x.kat === "sonst");
+
+      const k = ["jt"];
+      if (we) k.push("we");
+      if (key === HEUTE) k.push("heute");
+      if (urlaub) k.push("urlaub");
+      if (sonst)  k.push("sonst");
+      /* Ränder der Urlaubsspanne runden — sonst sieht ein Block aus
+         wie zwei, sobald zwei Urlaube aneinanderstoßen. */
+      if (urlaub){
+        const vorher  = amTag(iso(JAHR, m, t-1)).some(x => x.kat === "urlaub") && t > 1;
+        const nachher = amTag(iso(JAHR, m, t+1)).some(x => x.kat === "urlaub") && t < laenge;
+        if (!vorher)  k.push("anfang");
+        if (!nachher) k.push("ende");
+      }
+
+      h += '<span class="' + k.join(" ") + '">';
+      h += '<span class="n">' + t + '</span>';
+      if (sonst && variante === "form") h += '<span class="pkt"></span>';
+      if (sonst && variante === "farbe") h += '<span class="pkt"></span>';
+      if (l.length){
+        h += '<span class="blase">';
+        h += '<b>' + TAGK[d.getDay()] + ", " + t + ". " + MONL[m] + '</b>';
+        l.forEach(x => {
+          h += '<span class="e"><span class="w ' + x.kat + '"></span>'
+             + esc(x.titel) + ' <em>' + esc(spanne(x)) + '</em></span>';
+        });
+        h += '</span>';
+      }
+      h += '</span>';
+    }
+    h += '</div>';
+  }
+  h += '</div>';
+  return h;
+}
+
+/* Jede Probe zeigt eine echte Tageszahl. Eine Probe, die etwas anderes
+   zeigt als ihre Beschriftung behauptet, ist schlimmer als keine. */
+const legendeForm = `
+<div class="legende">
+  <span class="lp"><span class="pr urlaub anfang ende"><span class="z">14</span></span>Urlaub — der Tag ist flächig hinterlegt</span>
+  <span class="lp"><span class="pr"><span class="z">14</span><span class="pkt"></span></span>Sonstiger Termin — Punkt unter der Zahl</span>
+  <span class="lp"><span class="pr heute"><span class="z t">14</span></span>Heute</span>
+  <span class="lp"><span class="pr"><span class="z blass">14</span></span>Wochenende — blassere Zahl, keine Fläche</span>
+</div>`;
+
+const legendeFarbe = `
+<div class="legende">
+  <span class="lp"><span class="pr urlaub anfang ende"><span class="z">14</span></span>Urlaub</span>
+  <span class="lp"><span class="pr sonst"><span class="z">14</span></span>Sonstiger Termin</span>
+  <span class="lp"><span class="pr heute"><span class="z t">14</span></span>Heute</span>
+  <span class="lp"><span class="pr"><span class="z blass">14</span></span>Wochenende</span>
+</div>`;
+
+const html = `<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Entwurf — Jahreskalender</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --gut:#2b6b46;   --gut-s:#e3f0e8;
+}
+body{font-family:var(--ff);background:var(--paper);color:var(--ink);
+  -webkit-font-smoothing:antialiased}
+
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.rahmenhinweis{max-width:1180px;margin:16px auto 0;padding:0 26px;font-size:13px;
+  color:var(--ink2);line-height:1.6}
+.rahmenhinweis b{color:var(--ink)}
+.rahmenhinweis + .rahmenhinweis{margin-top:9px}
+
+.mitte{max-width:1180px;margin:0 auto;padding:0 26px 70px}
+
+/* ---------- Abschnitt, wie in der Anwendung ---------- */
+.abs{display:flex;align-items:center;gap:13px;padding:34px 0 11px}
+.abs h2{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--ink)}
+.abs .r{flex:1;height:1px;background:var(--rule)}
+.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 14px}
+
+/* ---------- Kopfzeile mit Jahreswechsel ---------- */
+.jkopf{display:flex;align-items:center;gap:10px;padding:0 0 14px}
+.jkopf .jahrzahl{font-family:var(--serif);font-size:26px;letter-spacing:-.01em}
+.jpfeil{width:28px;height:28px;border-radius:8px;border:1px solid var(--rule2);
+  background:var(--sheet);color:var(--ink2);display:grid;place-items:center;flex-shrink:0}
+.jpfeil svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.9;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.jkopf .sp{flex:1}
+.jkopf .zaehler{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+
+/* ---------- Das Raster: 12 Zeilen, 31 Spalten ---------- */
+.jahr{border:1px solid var(--rule);border-radius:11px;background:var(--sheet);
+  padding:7px 9px;overflow-x:auto}
+.jz{display:grid;grid-template-columns:34px repeat(31,1fr);align-items:center;
+  min-width:940px}
+.jm{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+.jt{position:relative;height:27px;display:grid;place-items:center;
+  font-size:11.5px;color:var(--ink2);font-variant-numeric:tabular-nums;cursor:pointer}
+.jt.keiner{cursor:default}
+.jt.we .n{color:#a6a29a}
+.jt .n{position:relative;z-index:2;line-height:1}
+.jt:hover .n{color:var(--ink);font-weight:700}
+
+/* Heute — der einzige Farbakzent, Tinte wie überall in der Anwendung */
+.jt.heute .n{color:var(--tinte);font-weight:700}
+.jt.heute::after{content:"";position:absolute;inset:2px 1px;border:1.5px solid var(--tinte);
+  border-radius:6px;z-index:1}
+
+/* ---------- VARIANTE A: Form statt Farbe ---------- */
+.a .jt.urlaub::before{content:"";position:absolute;inset:3px -1px;background:#ddd7c7;z-index:0}
+.a .jt.urlaub.anfang::before{left:2px;border-radius:6px 0 0 6px}
+.a .jt.urlaub.ende::before{right:2px;border-radius:0 6px 6px 0}
+.a .jt.urlaub.anfang.ende::before{border-radius:6px}
+.a .jt .pkt{position:absolute;bottom:3px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--ink2);z-index:2}
+.a .jt.urlaub .pkt{background:var(--ink)}
+
+/* ---------- VARIANTE B: zwei Flächenfarben ---------- */
+.b .jt.urlaub::before{content:"";position:absolute;inset:3px -1px;background:#cfe4d6;z-index:0}
+.b .jt.urlaub.anfang::before{left:2px;border-radius:6px 0 0 6px}
+.b .jt.urlaub.ende::before{right:2px;border-radius:0 6px 6px 0}
+.b .jt.urlaub.anfang.ende::before{border-radius:6px}
+.b .jt.sonst::before{content:"";position:absolute;inset:3px 2px;background:#d8def0;
+  border-radius:6px;z-index:0}
+.b .jt .pkt{display:none}
+
+/* ---------- Die Blase beim Zeigen ---------- */
+.jt .blase{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--sheet);font-size:11.5px;line-height:1.45;
+  padding:8px 11px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .13s;
+  z-index:40;min-width:190px;text-align:left;display:flex;flex-direction:column;gap:4px}
+.jt:hover .blase{opacity:1}
+.jt .blase b{font-size:11px;color:#b9b6ad;font-weight:600}
+.jt .blase .e{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.jt .blase em{font-style:normal;color:#b9b6ad;font-size:10.5px}
+.jt .blase .w{width:7px;height:7px;border-radius:2px;flex-shrink:0;background:#8d8a83}
+.a .jt .blase .w.urlaub{border-radius:2px}
+.a .jt .blase .w.sonst{border-radius:50%}
+.b .jt .blase .w.urlaub{background:#7fae94}
+.b .jt .blase .w.sonst{background:#8a94c4}
+/* Die ersten drei Spalten kippen sonst über den linken Rand hinaus */
+.jz .jt:nth-child(-n+5) .blase{left:0;transform:none}
+.jz .jt:nth-last-child(-n+4) .blase{left:auto;right:0;transform:none}
+
+/* ---------- Legende ---------- */
+.legende{display:flex;flex-wrap:wrap;gap:9px 22px;padding:14px 2px 0;font-size:12.5px;
+  color:var(--ink2)}
+.lp{display:flex;align-items:center;gap:8px}
+.pr{position:relative;width:28px;height:24px;border-radius:6px;background:var(--sheet);
+  border:1px solid var(--rule);flex-shrink:0;display:grid;place-items:center}
+.pr .z{font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1}
+.pr .z.blass{color:#a6a29a}
+.pr .z.t{color:var(--tinte);font-weight:700}
+.a .pr.urlaub{background:#ddd7c7;border-color:#d0c9b6}
+.b .pr.urlaub{background:#cfe4d6;border-color:#b9d5c3}
+.b .pr.sonst{background:#d8def0;border-color:#c3cbe4}
+.pr.heute{border:1.5px solid var(--tinte)}
+.a .pr .pkt{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--ink2)}
+</style>
+
+<div class="meta">
+  <b>Entwurf — Jahreskalender</b>
+  <span>Statischer Look-&amp;-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+</div>
+
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Alle 365 Tage in zwölf Zeilen,
+eine je Monat. Ein Klick auf einen Tag legt einen Termin an, ein Klick auf einen belegten
+Tag öffnet den vorhandenen. Der Mauszeiger auf einem Tag zeigt die Termindetails.</p>
+
+<p class="rahmenhinweis"><b>Zwei Fassungen zur Wahl.</b> Die Kategorien Urlaub und
+sonstiger Termin müssen unterscheidbar sein. <b>A</b> tut das über die Form und hält damit
+die Regel aus <code>CLAUDE.md</code> ein — Farbe codiert Dringlichkeit, nicht Kategorie.
+<b>B</b> nimmt zwei Flächenfarben; das liest sich schneller, bricht die Regel aber und
+müsste dort als Ausnahme vermerkt werden. Fahre mit der Maus über einen belegten Tag,
+etwa den 3. bis 17. August.</p>
+
+<p class="rahmenhinweis"><b>Sieh dir den 10. August an.</b> Dort liegt ein Termin beim
+Steuerberater mitten im Urlaub. In <b>A</b> sind beide zugleich zu sehen — Fläche und
+Punkt stören einander nicht. In <b>B</b> kann der Tag nur eine der beiden Farben tragen,
+der Urlaub reißt an dieser Stelle auf. Das ist kein Darstellungsfehler, sondern die
+Grenze des Verfahrens: Zwei Flächenfarben schließen sich gegenseitig aus, Form und
+Fläche nicht.</p>
+
+<div class="mitte">
+
+  <div class="a">
+    <div class="abs"><h2>Variante A — Form statt Farbe</h2><span class="r"></span>
+      <span class="n">regelkonform</span></div>
+    <p class="hinweis">Urlaub ist eine durchgehende Fläche, ein sonstiger Termin ein Punkt
+    unter der Zahl. Wochenenden tragen nur eine blassere Zahl und keine Fläche — sonst
+    wären sie von einem Urlaub nicht zu unterscheiden. Tinte trägt allein „heute“.</p>
+    <div class="jkopf">
+      <span class="jpfeil"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6"/></svg></span>
+      <span class="jahrzahl">${JAHR}</span>
+      <span class="jpfeil"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6"/></svg></span>
+      <span class="sp"></span>
+      <span class="zaehler">${TERMINE.length} Einträge · ${TERMINE.filter(t=>t.kat==="urlaub").length} Urlaube</span>
+    </div>
+    ${raster("form")}
+    ${legendeForm}
+  </div>
+
+  <div class="b">
+    <div class="abs"><h2>Variante B — zwei Flächenfarben</h2><span class="r"></span>
+      <span class="n">bräuchte eine Ausnahme in CLAUDE.md</span></div>
+    <p class="hinweis">Dieselben Daten, dieselbe Anordnung. Nur tragen die beiden
+    Kategorien hier je eine eigene Farbfläche statt Form und Punkt.</p>
+    <div class="jkopf">
+      <span class="jpfeil"><svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6"/></svg></span>
+      <span class="jahrzahl">${JAHR}</span>
+      <span class="jpfeil"><svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6"/></svg></span>
+      <span class="sp"></span>
+      <span class="zaehler">${TERMINE.length} Einträge · ${TERMINE.filter(t=>t.kat==="urlaub").length} Urlaube</span>
+    </div>
+    ${raster("farbe")}
+    ${legendeFarbe}
+  </div>
+
+</div>
+`;
+
+writeFileSync("mockups/schritt-jahreskalender.html", html);
+console.log("geschrieben:", html.split("\n").length, "Zeilen");

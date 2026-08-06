@@ -25,6 +25,10 @@
   --weg-s:#eef0f8; --weg-i:#4a55a0; --weg-r:#d3d8ec;
   --signal:#a8321f;--signal-s:#fbe9e5;
   --gut:#2b6b46;   --gut-s:#e3f0e8;
+  /* Die einzige Stelle, an der Farbe eine Kategorie codiert statt
+     Dringlichkeit — die Ausnahme steht in CLAUDE.md und gilt nur
+     fuer den Jahreskalender. */
+  --k-urlaub:#cfe4d6; --k-sonst:#d3daf0;
   /* Fürs Basecamp-Thema unten: Etikettenschrift, RGB-Trio fürs Schatten,
      zwei Hover-Aufheller, ein Warnrahmen — alles, was sonst hart im Code
      stünde, damit ein Thema es ersetzen kann. */
@@ -225,6 +229,12 @@ body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-colo
 .dlg-zu{font-size:19px;color:var(--ink3);line-height:1;padding:2px 8px;border-radius:6px}
 .dlg-zu:hover{background:var(--raise);color:var(--ink)}
 .dlg-b{flex:1;min-height:0;overflow-y:auto;padding:16px 22px 20px}
+/* Die breite Fassung traegt den Jahreskalender. Sie scrollt nicht in
+   sich — ein overflow schnitte die Blasen ueber den Tagen ab. Gescrollt
+   wird stattdessen der Schleier, der dafuer oben ausrichtet. */
+.schleier.weit{align-items:start;overflow-y:auto}
+.dlg.weit{width:min(1080px,100%);max-height:none;overflow:visible}
+.dlg.weit .dlg-b{overflow:visible}
 .dlg-f{flex-shrink:0;display:flex;align-items:center;gap:9px;padding:12px 22px;
   border-top:1px solid var(--rule);background:var(--paper)}
 .dlg-f .sp{flex:1}
@@ -470,6 +480,106 @@ textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
 .tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;overflow-wrap:anywhere}
 .tm .w{font-family:var(--etikett);font-size:11px;color:var(--ink3);flex-shrink:0;padding-top:2px}
 
+/* ---------- Jahreskalender ----------
+   Ein breites, schwebendes Fenster statt einer Modulfläche. Es hängt
+   in dlgOffen wie ein Dialog, damit Escape und der Klick daneben ohne
+   zweite Mechanik greifen — geöffnet wird es aber nicht über dialog(),
+   denn das ruft dialogZu() und schlösse sich selbst, sobald man einen
+   Tag anklickt. Der Termin klappt deshalb im Fenster auf. */
+.jk-k{display:flex;align-items:center;gap:10px;padding-bottom:13px}
+.jk-k .jahrzahl{font-family:var(--serif);font-size:22px;letter-spacing:-.01em}
+.jk-k .sp{flex:1}
+.jk-k .zahl{font-family:var(--etikett);font-size:11px;color:var(--ink3)}
+.jpfeil{width:26px;height:26px;border-radius:7px;border:1px solid var(--rule2);
+  background:var(--paper);color:var(--ink2);display:grid;place-items:center;flex-shrink:0}
+.jpfeil:hover{background:var(--raise);color:var(--ink)}
+.jpfeil svg{width:12px;height:12px;stroke:currentColor;stroke-width:1.9;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.jahr{border:1px solid var(--rule);border-radius:10px;background:var(--paper);padding:7px 9px}
+.jz{display:grid;grid-template-columns:32px repeat(31,1fr);align-items:center}
+.jm{font-family:var(--etikett);font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+
+/* Alle Regeln zu .jt stehen bewusst dicht beieinander: pruefen.mjs
+   schlägt an, wenn derselbe Klassenname über mehr als 25 Zeilen
+   verteilt gestaltet wird. */
+.jt{position:relative;height:27px;display:grid;place-items:center;font-size:11px;
+  color:var(--ink2);font-variant-numeric:tabular-nums;cursor:pointer;width:100%}
+.jt.keiner{cursor:default}
+.jt.urlaub::before{content:"";position:absolute;inset:2px -1px;background:var(--k-urlaub);z-index:0}
+.jt.u-anfang::before{left:2px;border-radius:6px 0 0 6px}
+.jt.u-ende::before{right:2px;border-radius:0 6px 6px 0}
+.jt.sonst::after{content:"";position:absolute;inset:6px -1px;background:var(--k-sonst);z-index:1}
+.jt.s-anfang::after{left:3px;border-radius:5px 0 0 5px}
+.jt.s-ende::after{right:3px;border-radius:0 5px 5px 0}
+.jt.heute::after{content:"";position:absolute;inset:2px 1px;border:1.5px solid var(--tinte);
+  border-radius:6px;z-index:2;background:none}
+.jt.heute.sonst::after{inset:6px -1px;border:0;background:var(--k-sonst);border-radius:0}
+.jt.heute.sonst.s-anfang::after{left:3px;border-radius:5px 0 0 5px}
+.jt.heute.sonst.s-ende::after{right:3px;border-radius:0 5px 5px 0}
+
+.jt .n{position:relative;z-index:3;line-height:1}
+.jt.we .n{color:#a6a29a}
+.jt:hover .n{color:var(--ink);font-weight:700}
+.jt.heute .n{color:var(--tinte);font-weight:700}
+/* Heute und der gewählte Tag hängen ihre Umrandung an die Zahl, nicht
+   an die Zelle: ::before trägt den Urlaub, ::after den sonstigen
+   Termin. Beide sind belegt, und eine dritte Regel darauf löschte am
+   gewählten Tag die Kategorie — der Urlaubsblock riss dort auf. */
+.jt.heute.sonst .n::before{content:"";position:absolute;inset:-8px -6px;
+  border:1.5px solid var(--tinte);border-radius:6px;z-index:2}
+.jt.wahl .n{color:var(--tinte);font-weight:700}
+.jt.wahl .n::after{content:"";position:absolute;inset:-8px -7px;
+  border:2px solid var(--tinte);border-radius:7px;z-index:4}
+
+.blase{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--sheet);font-size:11.5px;line-height:1.45;padding:8px 11px;
+  border-radius:8px;opacity:0;pointer-events:none;transition:opacity .13s;z-index:40;
+  min-width:200px;text-align:left;display:flex;flex-direction:column;gap:4px}
+.jz.nachunten .blase{bottom:auto;top:calc(100% + 6px)}
+.jt:hover .blase{opacity:1}
+.blase b{font-size:11px;color:#b9b6ad;font-weight:600}
+.blase .e{display:flex;align-items:baseline;gap:6px;white-space:nowrap}
+.blase em{font-style:normal;color:#b9b6ad;font-size:10.5px}
+.blase .w{width:8px;height:8px;border-radius:2px;flex-shrink:0}
+.blase .w.urlaub{background:var(--k-urlaub)}
+.blase .w.sonst{background:var(--k-sonst)}
+.jz .jt:nth-child(-n+5) .blase{left:0;transform:none}
+.jz .jt:nth-last-child(-n+4) .blase{left:auto;right:0;transform:none}
+
+.legende{display:flex;flex-wrap:wrap;gap:9px 20px;padding:13px 2px 0;font-size:12.5px;
+  color:var(--ink2)}
+.lp{display:flex;align-items:center;gap:8px}
+.pr{position:relative;width:29px;height:25px;border-radius:6px;background:var(--paper);
+  border:1px solid var(--rule);flex-shrink:0;display:grid;place-items:center}
+.pr.urlaub::before{content:"";position:absolute;inset:2px;background:var(--k-urlaub);
+  border-radius:5px;z-index:0}
+.pr.sonst::after{content:"";position:absolute;inset:6px 2px;background:var(--k-sonst);
+  border-radius:4px;z-index:1}
+.pr.heute{border:1.5px solid var(--tinte)}
+.pr .z{font-size:11px;color:var(--ink2);font-variant-numeric:tabular-nums;line-height:1;
+  position:relative;z-index:3}
+.pr .z.blass{color:#a6a29a}
+.pr .z.t{color:var(--tinte);font-weight:700}
+
+/* Der Termin klappt im Fenster auf, nicht darüber */
+.einbau{margin-top:16px;border-top:1px solid var(--rule);padding-top:16px}
+.einbau .k{display:flex;align-items:baseline;gap:11px;padding-bottom:12px}
+.einbau .k .art{font-family:var(--etikett);font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink3);font-weight:700}
+.einbau .k .tag{font-size:15px;font-weight:650;letter-spacing:-.01em}
+.einbau .f{display:flex;align-items:center;gap:9px;padding-top:16px}
+.einbau .f .sp{flex:1}
+.wahl{display:flex;gap:8px;flex-wrap:wrap}
+.wahl button{display:flex;align-items:center;gap:8px;border:1px solid var(--rule2);
+  border-radius:8px;padding:8px 13px;font-size:14px;background:var(--paper);color:var(--ink2)}
+.wahl button[aria-pressed="true"]{border-color:var(--tinte);background:var(--tinte-s);
+  color:var(--ink);font-weight:600}
+.wahl .pp{width:13px;height:13px;border-radius:4px;flex-shrink:0}
+.wahl .pp.urlaub{background:var(--k-urlaub)}
+.wahl .pp.sonst{background:var(--k-sonst)}
+
 /* ---------- Notizen ---------- */
 textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
 .nz{position:relative;border:1px solid var(--rule);border-radius:11px;background:var(--sheet);
@@ -570,6 +680,8 @@ const TAGL=["Sonntag","Montag","Dienstag","Mittwoch","Donnerstag","Freitag","Sam
 const MONL=["Januar","Februar","März","April","Mai","Juni","Juli","August",
             "September","Oktober","November","Dezember"];
 const MONK=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+/* Kurzform wie MONK, fuer die Blase ueber einem Tag im Jahresraster. */
+const TAGK=["So","Mo","Di","Mi","Do","Fr","Sa"];
 let melT;
 function melde(m){ const t=$("#zettel"); t.textContent=m; t.classList.add("an");
   clearTimeout(melT); melT=setTimeout(()=>t.classList.remove("an"),2200); }
@@ -591,6 +703,10 @@ function planTage(){ const h=new Date(); h.setHours(0,0,0,0);
 let HEUTE=iso(new Date());
 function tagPlus(n){ const d=new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()+n); return iso(d); }
 const K0=planTage().map(iso);
+/* Laufendes Jahr fuer die Demodaten des Jahreskalenders. Steht hier
+   und nicht in vorgabe(): pruefen.mjs erkennt den Datenbereich nur,
+   solange dort woertlich `function vorgabe(){ return {` steht. */
+const JJ=HEUTE.slice(0,4);
 
 function frist(x){
   if(!x.d) return "ohne Frist";
@@ -1211,6 +1327,18 @@ function vorgabe(){ return {
   {id:"t3",d:K0[0],zeit:"14:00",dauer:30,titel:"Abstimmung Layout",anm:"Büro 2.14",kontakt:"k2"},
   {id:"t4",d:K0[1],zeit:"09:00",dauer:60,titel:"Sprint-Planung",anm:"Team",kontakt:null},
   {id:"t5",d:K0[1],zeit:"15:30",dauer:45,titel:"Vertragsgespräch",anm:"Kanzlei",kontakt:"k4"}
+ ],
+ /* Eigener Bestand, vom Kalender getrennt: ganze Tage statt Uhrzeiten,
+    eine Spanne statt eines Zeitpunkts, kein Kontakt. Was hier steht,
+    erscheint nicht im Kalender und nicht im Planner — und umgekehrt. */
+ jahrestermine:[
+  {id:"j1",von:JJ+"-02-16",bis:JJ+"-02-20",titel:"Skiurlaub Tirol",kat:"urlaub"},
+  {id:"j2",von:JJ+"-03-12",bis:JJ+"-03-14",titel:"Messe Hannover",kat:"sonst"},
+  {id:"j3",von:JJ+"-05-05",bis:JJ+"-05-05",titel:"Zahnarzt",kat:"sonst"},
+  {id:"j4",von:JJ+"-08-03",bis:JJ+"-08-17",titel:"Sommerurlaub",kat:"urlaub"},
+  {id:"j5",von:JJ+"-08-10",bis:JJ+"-08-10",titel:"Termin Steuerberater",kat:"sonst"},
+  {id:"j6",von:JJ+"-11-11",bis:JJ+"-11-13",titel:"Fortbildung Buchhaltung",kat:"sonst"},
+  {id:"j7",von:JJ+"-12-22",bis:JJ+"-12-31",titel:"Weihnachtsurlaub",kat:"urlaub"}
  ],
  aufgaben:[
   {id:"a1",kat:"todo",titel:"Rechnung 2026-114 freigeben",d:tagPlus(-1),zeit:null,notiz:"Skonto läuft",kontakt:"k4",fertig:false},
@@ -1864,6 +1992,289 @@ function terminDialog(t, tagVor, zeitVor){
     }
   });
 }
+
+/* ---------- 14 Jahreskalender ---------- */
+/* Ganz eigener Bestand: DATEN.jahrestermine. Der Kalender (Modul 06)
+   kennt ihn nicht, der Planner auch nicht — und dieses Modul zeigt
+   umgekehrt keine Termine von dort. Das ist ausdruecklich so gewollt. */
+const JK_LEER={id:null,von:null,bis:null,titel:"",kat:"urlaub"};
+const JK_KAT={urlaub:"Urlaub", sonst:"Sonstiger Termin"};
+
+let jkJahr=null, jkWahl=null, jkEntwurf=null, jkRumpf=null;
+
+const jkTage=(j,m)=>new Date(j,m+1,0).getDate();
+/* Beruehrt der Eintrag diesen Tag? Vergleich als Zeichenkette, weil
+   ISO-Daten in dieser Form lexikographisch richtig sortieren. */
+const jkAmTag=k=>DATEN.jahrestermine.filter(t=>k>=t.von && k<=t.bis);
+const jkHat=(k,kat)=>jkAmTag(k).some(t=>t.kat===kat);
+
+/* „3.–17. August“, ueber Monatsgrenzen „22. Dez – 3. Jan“ */
+function jkSpanne(t){
+  const [jv,mv,tv]=t.von.split("-").map(Number);
+  const [jb,mb,tb]=t.bis.split("-").map(Number);
+  if(t.von===t.bis) return tv+". "+MONL[mv-1];
+  if(jv===jb && mv===mb) return tv+".–"+tb+". "+MONL[mv-1];
+  return tv+". "+MONK[mv-1]+" – "+tb+". "+MONK[mb-1];
+}
+
+function jkOeffnen(tagVor){
+  /* Was offen ist, macht Platz. Danach traegt sich das Fenster selbst
+     in dlgOffen ein — so greifen Escape und der Klick daneben, ohne
+     dass es eine zweite Mechanik dafuer braeuchte. */
+  dialogZu();
+  jkJahr=Number(HEUTE.slice(0,4));
+  jkWahl=null; jkEntwurf=null;
+  const s=el("div","schleier weit auf");
+  const d=el("div","dlg weit");
+  const k=el("div","dlg-k",
+    '<span class="art">Jahreskalender</span><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×");
+  zu.setAttribute("aria-label","Schließen"); zu.onclick=dialogZu;
+  k.appendChild(zu);
+  jkRumpf=el("div","dlg-b");
+  d.append(k,jkRumpf);
+  s.appendChild(d);
+  s.onclick=ev=>{ if(ev.target===s) dialogZu(); };
+  document.body.appendChild(s);
+  dlgOffen=s;
+  jkMalen();
+  if(tagVor) jkWaehle(tagVor);
+}
+
+function jkMalen(){
+  if(!jkRumpf) return;
+  jkRumpf.innerHTML="";
+
+  const kopf=el("div","jk-k");
+  const zur=el("button","jpfeil",
+    '<svg viewBox="0 0 20 20"><path d="M12 4 6 10l6 6"/></svg>');
+  zur.setAttribute("aria-label","Ein Jahr zurück");
+  zur.onclick=()=>{ jkJahr--; jkWahl=null; jkEntwurf=null; jkMalen(); };
+  const vor=el("button","jpfeil",
+    '<svg viewBox="0 0 20 20"><path d="m8 4 6 6-6 6"/></svg>');
+  vor.setAttribute("aria-label","Ein Jahr vor");
+  vor.onclick=()=>{ jkJahr++; jkWahl=null; jkEntwurf=null; jkMalen(); };
+  kopf.append(zur, el("span","jahrzahl",String(jkJahr)), vor, el("span","sp"));
+  const imJahr=DATEN.jahrestermine.filter(t=>t.von.slice(0,4)===String(jkJahr)
+    || t.bis.slice(0,4)===String(jkJahr));
+  kopf.appendChild(el("span","zahl", imJahr.length+" im Jahr · "
+    +imJahr.filter(t=>t.kat==="urlaub").length+" Urlaube"));
+  jkRumpf.appendChild(kopf);
+
+  jkRumpf.appendChild(jkRaster());
+  jkRumpf.appendChild(jkLegende());
+  if(jkEntwurf) jkRumpf.appendChild(jkFelder());
+}
+
+function jkRaster(){
+  const g=el("div","jahr");
+  for(let m=0;m<12;m++){
+    /* Die obersten Zeilen lassen ihre Blase nach unten aufklappen —
+       nach oben liefe sie aus dem Fenster heraus. */
+    const z=el("div","jz"+(m<3?" nachunten":""));
+    z.appendChild(el("span","jm",MONK[m]));
+    const laenge=jkTage(jkJahr,m);
+    for(let t=1;t<=31;t++){
+      if(t>laenge){ z.appendChild(el("span","jt keiner")); continue; }
+      const key=jkJahr+"-"+p2(m+1)+"-"+p2(t);
+      const d=new Date(jkJahr,m,t);
+      const l=jkAmTag(key);
+      const kl=["jt"];
+      if(d.getDay()===0||d.getDay()===6) kl.push("we");
+      if(key===HEUTE) kl.push("heute");
+      if(key===jkWahl) kl.push("wahl");
+      /* Beide Kategorien laufen unabhaengig voneinander durch, jede mit
+         eigenen Rundungen. Sonst risse eine Spanne genau dort auf, wo
+         die andere beginnt. */
+      ["urlaub","sonst"].forEach(kat=>{
+        if(!jkHat(key,kat)) return;
+        kl.push(kat);
+        const v=t>1      && jkHat(jkJahr+"-"+p2(m+1)+"-"+p2(t-1),kat);
+        const n=t<laenge && jkHat(jkJahr+"-"+p2(m+1)+"-"+p2(t+1),kat);
+        if(!v) kl.push(kat==="urlaub"?"u-anfang":"s-anfang");
+        if(!n) kl.push(kat==="urlaub"?"u-ende":"s-ende");
+      });
+      const c=el("button",kl.join(" "),'<span class="n">'+t+'</span>');
+      c.setAttribute("aria-label",TAGL[d.getDay()]+", "+t+". "+MONL[m]+" "+jkJahr
+        +(l.length?" — "+l.map(x=>x.titel).join(", "):" — nichts eingetragen"));
+      if(l.length){
+        let h='<b>'+TAGK[d.getDay()]+", "+t+". "+MONL[m]+'</b>';
+        l.forEach(x=>{ h+='<span class="e"><span class="w '+x.kat+'"></span>'
+          +esc(x.titel)+' <em>'+esc(jkSpanne(x))+'</em></span>'; });
+        c.appendChild(el("span","blase",h));
+      }
+      c.onclick=()=>jkWaehle(key);
+      z.appendChild(c);
+    }
+    g.appendChild(z);
+  }
+  return g;
+}
+
+function jkLegende(){
+  const l=el("div","legende");
+  const probe=(kl,zkl,txt)=>{
+    const p=el("span","lp");
+    p.appendChild(el("span","pr"+(kl?" "+kl:""),
+      '<span class="z'+(zkl?" "+zkl:"")+'">14</span>'));
+    p.appendChild(document.createTextNode(txt));
+    return p;
+  };
+  l.append(
+    probe("urlaub u-anfang u-ende",null,"Urlaub"),
+    probe("sonst s-anfang s-ende",null,"Sonstiger Termin"),
+    probe("urlaub u-anfang u-ende sonst s-anfang s-ende",null,"Beides am selben Tag"),
+    probe("heute","t","Heute"),
+    probe(null,"blass","Wochenende"));
+  return l;
+}
+
+/* Ein Klick auf einen belegten Tag oeffnet den vorhandenen Eintrag,
+   auf einen leeren legt er an. Beides klappt im selben Fenster auf —
+   dialog() schloesse das Fenster, weil es mit dialogZu() beginnt. */
+function jkWaehle(key){
+  const l=jkAmTag(key);
+  jkWahl=key;
+  jkEntwurf = l.length ? Object.assign({},l[0])
+                       : Object.assign({},JK_LEER,{von:key,bis:key});
+  jkMalen();
+}
+const jkNeuAm=key=>Object.assign({},JK_LEER,{von:key,bis:key});
+
+function jkFelder(){
+  const neu=!jkEntwurf.id;
+  const kasten=el("div","einbau");
+  const [j,m,t]=jkWahl.split("-").map(Number);
+  const d=new Date(j,m-1,t);
+  kasten.appendChild(el("div","k",
+    '<span class="art">'+(neu?"Neuer Eintrag":"Eintrag bearbeiten")+'</span>'
+    +'<span class="tag">'+TAGL[d.getDay()]+", "+t+". "+MONL[m-1]+" "+j+'</span>'));
+
+  /* Liegen mehrere Eintraege auf dem Tag, muessen sie alle erreichbar
+     sein — sonst laesst sich der zweite weder bearbeiten noch loeschen,
+     und ein Loeschversuch traefe still den ersten. Derselbe Streifen
+     traegt auch den Weg zu einem weiteren Eintrag am selben Tag. */
+  const amTag=jkAmTag(jkWahl);
+  if(amTag.length){
+    const r=el("div","wahl");
+    r.style.marginBottom="12px";
+    amTag.forEach(t=>{
+      const b=el("button",null,'<span class="pp '+t.kat+'"></span>'+esc(t.titel));
+      b.setAttribute("aria-pressed",String(t.id===jkEntwurf.id));
+      b.onclick=()=>{ jkEntwurf=Object.assign({},t); jkMalen(); };
+      r.appendChild(b);
+    });
+    const nb=el("button",null,"+ Weiterer Eintrag");
+    nb.setAttribute("aria-pressed",String(!jkEntwurf.id));
+    nb.onclick=()=>{ jkEntwurf=jkNeuAm(jkWahl); jkMalen(); };
+    r.appendChild(nb);
+    kasten.appendChild(r);
+  }
+
+  const felder=[
+    {schl:"titel",nm:"Titel",art:"text",breit:true},
+    {schl:"von",  nm:"Von",  art:"datum"},
+    {schl:"bis",  nm:"Bis",  art:"datum", sub:"Ein einzelner Tag: dasselbe Datum."}
+  ];
+  const raster=felderMalen(felder, jkEntwurf, null);
+  kasten.appendChild(raster);
+
+  /* Zwei Kategorien als Knoepfe statt als Klappliste: bei genau zwei
+     Moeglichkeiten spart das den Zwischenschritt, und die Farbe steht
+     gleich daneben. */
+  const kf=el("div","dfeld breit",'<label>Kategorie</label>');
+  const w=el("div","wahl");
+  Object.keys(JK_KAT).forEach(k=>{
+    const b=el("button",null,'<span class="pp '+k+'"></span>'+JK_KAT[k]);
+    b.setAttribute("aria-pressed",String(jkEntwurf.kat===k));
+    b.onclick=()=>{ jkEntwurf.kat=k; jkMalen(); };
+    w.appendChild(b);
+  });
+  kf.appendChild(w);
+  raster.appendChild(kf);
+
+  const f=el("div","f");
+  if(!neu){
+    const lo=el("button","tat weg","Löschen");
+    lo.onclick=()=>{
+      const i=DATEN.jahrestermine.findIndex(x=>x.id===jkEntwurf.id);
+      if(i>=0) DATEN.jahrestermine.splice(i,1);
+      bewahre(); jkWahl=null; jkEntwurf=null; jkMalen(); male();
+      melde("Eintrag gelöscht");
+    };
+    f.appendChild(lo);
+  }
+  f.appendChild(el("span","sp"));
+  const ab=el("button","tat still","Abbrechen");
+  ab.onclick=()=>{ jkWahl=null; jkEntwurf=null; jkMalen(); };
+  const sp=el("button","tat","Speichern");
+  sp.onclick=jkSpeichern;
+  f.append(ab,sp);
+  kasten.appendChild(f);
+  return kasten;
+}
+
+function jkSpeichern(){
+  const w=jkEntwurf;
+  w.titel=String(w.titel||"").trim();
+  if(!w.titel){ melde("Ohne Titel geht es nicht."); return; }
+  if(!w.von){ melde("Ein Eintrag braucht ein Startdatum."); return; }
+  /* Ein leeres oder verdrehtes Ende faengt der Eintrag selbst ab —
+     sonst laege er in einer Spanne, die es nicht gibt, und waere im
+     Raster nirgends zu sehen. */
+  if(!w.bis || w.bis<w.von) w.bis=w.von;
+  const neu=!w.id;
+  if(neu){ w.id=neueId("j"); DATEN.jahrestermine.push(w); }
+  else{
+    const z=DATEN.jahrestermine.find(x=>x.id===w.id);
+    if(!z){ melde("Der Eintrag ist nicht mehr da."); jkWahl=null; jkEntwurf=null; jkMalen(); return; }
+    Object.keys(JK_LEER).forEach(k=>{ if(k!=="id") z[k]=w[k]; });
+  }
+  bewahre();
+  jkJahr=Number(w.von.slice(0,4));
+  jkWahl=null; jkEntwurf=null; jkMalen(); male();
+  melde(neu?"Eintrag angelegt":"Eintrag gespeichert");
+}
+
+/* ===== MODUL jahr ===== */
+registriere({
+  id:"jahr", nr:"14", nm:"Jahreskalender",
+  zahl:()=>DATEN.jahrestermine.length,
+  suche(q){
+    return DATEN.jahrestermine
+      .filter(t=>t.titel.toLowerCase().includes(q))
+      .map(t=>treff("Jahreskalender",t.titel,
+        JK_KAT[t.kat]+" · "+jkSpanne(t)+" "+t.von.slice(0,4),"↵",
+        ()=>jkOeffnen(t.von)));
+  },
+  flaeche(b){
+    b.appendChild(abschnitt("Jahreskalender","eigener Bestand"));
+    b.appendChild(el("div","hinweis",
+      "Ganze Tage statt Uhrzeiten: ein Eintrag hat ein Start- und ein Enddatum. "
+      +"Dieser Bestand steht für sich — er erscheint weder im Kalender noch im "
+      +"Planner, und von dort erscheint hier nichts."));
+    const auf=el("button","tat","Jahresraster öffnen");
+    auf.onclick=()=>jkOeffnen();
+    b.appendChild(auf);
+
+    /* Die Liste ist nicht bloss Beiwerk: Ist das Fenster zu, waeren die
+       Eintraege sonst nirgends zu sehen. Fehlerbuch Punkt 3. */
+    b.appendChild(abschnitt("Alle Einträge",DATEN.jahrestermine.length+" gesamt"));
+    const l=DATEN.jahrestermine.slice().sort((a,c)=>a.von<c.von?-1:1);
+    if(!l.length) b.appendChild(el("div","leer","Noch nichts eingetragen."));
+    l.forEach(t=>{
+      const z=el("button","z");
+      z.style.width="100%";
+      z.innerHTML='<span class="sig">'+(t.kat==="urlaub"?"UR":"TE")+'</span>'
+        +'<span class="zb"><span class="zt">'+esc(t.titel)+'</span>'
+        +'<span class="zm">'+esc(JK_KAT[t.kat])+' · '+esc(jkSpanne(t))+' '
+        +esc(t.von.slice(0,4))+'</span></span>';
+      z.onclick=()=>jkOeffnen(t.von);
+      b.appendChild(z);
+    });
+  }
+});
+/* ===== ENDE jahr ===== */
 
 /* ---------- 01 Notizen ---------- */
 /* ===== MODUL notizen ===== */
@@ -2730,7 +3141,7 @@ $("#laden").onchange=e=>{
     /* Bereichsweise ersetzen, damit die Verweise halten.
        Fehlende Bereiche bleiben, wie sie sind. */
     let zahl=0;
-    ["kontakte","termine","aufgaben","notizen","workflows",
+    ["kontakte","termine","jahrestermine","aufgaben","notizen","workflows",
      "bausteine","apps","marken","pins","baum"].forEach(k=>{
       if(Array.isArray(neu[k])){ ersetze(Z[k], neu[k]); zahl+=neu[k].length; }
     });

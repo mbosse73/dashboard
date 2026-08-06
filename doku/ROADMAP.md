@@ -196,6 +196,32 @@ wie gewohnt: `Tab` rückt ein, `Umschalt+Tab` aus.
 
 ---
 
+## Schritt 10 — Jahreskalender · **erledigt**
+
+Nachträglich in den Plan aufgenommen, nicht Teil der ursprünglichen
+Reihenfolge. Alle 365 Tage eines Jahres in einem schwebenden Fenster,
+mit eigenem Bestand `Z.jahrestermine`.
+
+**Umgesetzt**
+* 12 × 31 Raster, Jahr umschaltbar
+* Eintrag mit Start- und Enddatum, ohne Uhrzeit, ohne Kontakt
+* Zwei Kategorien: Urlaub und sonstiger Termin, mit Legende
+* Klick auf einen Tag legt an oder öffnet den vorhandenen Eintrag
+* Der Eintrag wird **im Fenster** bearbeitet, nicht in einem zweiten
+  Dialog — `dialog()` beginnt mit `dialogZu()` und schlösse das Fenster
+* Mauszeiger auf einem belegten Tag zeigt die Details
+
+**Zwei Entscheidungen, die festgehalten gehören**
+* Der Bestand ist vom Kalender (06) und vom Planner **getrennt**. Keine
+  wechselseitige Anzeige. So gewollt.
+* Farbe codiert hier ausnahmsweise die Kategorie. Die Ausnahme steht in
+  `CLAUDE.md` und gilt nur für dieses Modul.
+
+**Bewusst nicht dabei:** Wiederholungen, Verweis auf Kontakte, Anzeige in
+Leiste oder Planner, Ziehen im Raster zum Verschieben einer Spanne.
+
+---
+
 ## Später
 
 * Code-Beautifier um HTML und CSS erweitern

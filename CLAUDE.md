@@ -135,6 +135,19 @@ Ausführlich in `doku/ARCHITEKTUR.md`, Entwurf unter
 * **Farbe codiert Dringlichkeit, nicht Kategorie.** Tinte für „jetzt und
   aktiv", Signalrot ausschließlich für „überfällig". Sonst Graustufen.
   Keine Modulfarben im Inhaltsbereich.
+  * **Eine einzige Ausnahme: der Jahreskalender.** Dort tragen die beiden
+    Kategorien `urlaub` und `sonst` je eine eigene Flächenfarbe
+    (`--k-urlaub`, `--k-sonst`), erklärt durch eine Legende unter dem
+    Raster. Grund: Ein Jahresraster zeigt 365 Zellen von 27 Pixeln Höhe;
+    dort trägt nur die Fläche selbst, und Graustufen wären von den
+    Wochenenden nicht zu unterscheiden. Die Ausnahme gilt **nur** für
+    diese beiden Tokens und **nur** im Jahreskalender. Sie ist kein
+    Präzedenzfall: Kategorien anderswo — Aufgabenarten, Notizarten,
+    Workflow-Schritte — bleiben in Graustufen.
+  * Die zweite Farbe liegt **deckend** über der ersten, nie
+    halbtransparent. Die Mischfarbe läge zu beiden Ausgangsfarben bei
+    1,00 : 1, wäre also von keiner der beiden zu unterscheiden und käme
+    in der Legende nicht vor.
 * Kontrast prüfen: tragender Text mindestens 4,5 : 1, große Schrift
   mindestens 3 : 1.
 * **Dialogfelder folgen Was → Wann → Wer → Dazu.** Datum und Uhrzeit
@@ -143,12 +156,14 @@ Ausführlich in `doku/ARCHITEKTUR.md`, Entwurf unter
   Zeile stehen. Erklärungen stehen **unter** dem Feld, nie im Label.
 * **Ein zweites Thema, kein zweites File.** Basecamp ist ein Umschalter im
   Kopf (`Standard` / `Basecamp`, Knöpfe `#th-standard` / `#th-basecamp`),
-  der `data-theme="basecamp"` auf `.app` setzt. Alle Basecamp-Farbwerte
-  stehen in `.app[data-theme="basecamp"]{...}` gleich unter dem
+  der `data-theme="basecamp"` auf `body` setzt — nicht auf `.app`:
+  Dialoge und der Meldungszettel hängen als eigene Zweige direkt an
+  `body` und würden von einem Thema an `.app` nie erreicht. Alle
+  Basecamp-Farbwerte stehen in `body[data-theme="basecamp"]{...}` unter dem
   `:root`-Block — dieselben Tokens, andere Werte. Nur was sich nicht als
   Token ausdrücken lässt (Georgia im Dialogtitel, der gefüllte statt helle
   Knopf, der goldene statt tintenfarbene Stern), bekommt eine eigene,
-  mit `.app[data-theme="basecamp"]` vorangestellte Regel direkt daneben.
+  mit `body[data-theme="basecamp"]` vorangestellte Regel direkt daneben.
   Die Wahl selbst ist eine Anzeigeeinstellung, kein Anwendungsdatum — sie
   liegt für sich in `localStorage` unter `"thema"`, nicht im Objekt `Z`,
   und taucht deshalb auch nicht in Sicherung oder Export auf.

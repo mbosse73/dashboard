@@ -214,6 +214,37 @@ dasselbe Eigenschaftsformat.
 
 ---
 
+## 14 Jahreskalender — fertig
+
+Ein **eigener Bestand**, `Z.jahrestermine`, vom Kalender (06) und vom
+Planner vollständig getrennt. Was hier steht, erscheint dort nicht — und
+umgekehrt. Das ist ausdrücklich so gewollt und keine Lücke.
+
+Ein Eintrag: `{id, von, bis, titel, kat}`. Keine Uhrzeit, kein Kontakt.
+`kat` ist `urlaub` oder `sonst`, mehr gibt es nicht.
+
+**Die Fläche ist ein schwebendes Fenster**, kein Rumpfbereich: alle 365
+Tage als 12 × 31 Raster. Ein Klick auf einen leeren Tag legt an, auf
+einen belegten öffnet den vorhandenen Eintrag. Der Mauszeiger auf einem
+belegten Tag zeigt die Details.
+
+**Der Eintrag wird im Fenster bearbeitet, nicht in einem Dialog
+darüber.** `dialog()` beginnt mit `dialogZu()` und schlösse das Fenster,
+sobald man einen Tag anklickt — nach dem Speichern stünde man wieder vor
+der Leiste. Das Fenster trägt sich aber selbst in `dlgOffen` ein, damit
+Escape und der Klick daneben ohne zweite Mechanik greifen.
+
+**Farbe:** die einzige Stelle im Programm, an der Farbe eine Kategorie
+codiert statt Dringlichkeit. Die Ausnahme steht in `CLAUDE.md`. Die
+zweite Farbe liegt deckend über der ersten, damit beide Kategorien
+denselben Tag tragen können, ohne dass eine Spanne aufreißt.
+
+**Das Jahr ist umschaltbar.** Ohne das wäre ein Eintrag im Folgejahr
+nirgends zu sehen. Aus demselben Grund führt die Modulfläche zusätzlich
+eine Liste aller Einträge: Ist das Fenster zu, sind sie sonst weg.
+
+---
+
 ## 15 Outliner — Gerüst
 
 Gliederung mit Ebenen. Angelegt als Beleg, dass sich neue Module ohne

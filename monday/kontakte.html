@@ -1,0 +1,155 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Monday-Fassung — Kontakte (Board)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+.md{max-width:1420px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);display:flex;height:870px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#323338;background:#fff}
+
+.m-side{width:232px;flex-shrink:0;background:#292f4c;color:#c5c7d0;display:flex;
+  flex-direction:column;padding:14px 10px}
+.m-ws{display:flex;align-items:center;gap:8px;padding:6px 8px;font-weight:700;font-size:14px;color:#fff}
+.m-ws .ic{width:24px;height:24px;border-radius:6px;
+  background:conic-gradient(#ff3d57,#fdab3d,#00c875,#579bfc,#a25ddc,#ff3d57)}
+.m-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:7px;font-size:13.5px}
+.m-row svg{width:16px;height:16px;stroke:currentColor;stroke-width:1.9;fill:none;flex-shrink:0}
+.m-sek{padding:14px 9px 5px;font-size:11px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;color:#7c7fa0}
+.m-board{display:flex;align-items:center;gap:9px;padding:6px 9px;border-radius:7px;font-size:13.5px}
+.m-board.aktiv{background:#323860;color:#fff;font-weight:700}
+.m-board .dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.m-board .zahl{margin-left:auto;font-size:11.5px;color:#7c7fa0}
+
+.m-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.m-top{display:flex;align-items:center;gap:12px;padding:20px 32px 8px}
+.m-top .dot{width:13px;height:13px;border-radius:4px;background:#ff3d57}
+.m-top h1{font-size:24px;font-weight:800}
+.m-tabs{display:flex;gap:6px;padding:12px 32px 0;border-bottom:2px solid #e6e9ef}
+.m-tabs span{font-size:13.5px;font-weight:600;color:#676879;padding:9px 6px;border-bottom:2px solid transparent}
+.m-tabs span.aktiv{color:#323338;border-color:#0073ea;margin-bottom:-2px}
+.m-toolbar{display:flex;align-items:center;gap:16px;padding:10px 32px;font-size:12.5px;color:#676879}
+.m-neu{margin-left:auto;background:#0073ea;color:#fff;font-weight:700;padding:6px 14px;
+  border-radius:6px;font-size:12.5px}
+.m-scroll{flex:1;overflow-y:auto;padding:0 32px 30px}
+
+.m-gruppe{margin-bottom:18px;border-radius:8px;overflow:hidden;border:1px solid #e6e9ef}
+.m-g-kopf{display:flex;align-items:center;gap:8px;padding:9px 14px;font-weight:700;font-size:13.5px;
+  color:#fff}
+.m-g-kopf .zahl{margin-left:auto;font-weight:400;opacity:.85}
+.m-tabelle{width:100%;border-collapse:collapse}
+.m-tabelle th{text-align:left;font-size:11px;color:#9699a6;font-weight:700;padding:7px 14px;
+  border-bottom:1px solid #eef0f4;background:#fafbfc}
+.m-tabelle td{padding:9px 14px;border-bottom:1px solid #eef0f4;font-size:13.5px}
+.m-tabelle tr:last-child td{border-bottom:0}
+.m-pille{display:inline-block;padding:4px 12px;border-radius:5px;font-size:12px;font-weight:700;
+  color:#fff;min-width:80px;text-align:center}
+.m-av{width:24px;height:24px;border-radius:50%;display:inline-grid;place-items:center;color:#fff;
+  font-size:9.5px;font-weight:700}
+.m-wege{display:flex;gap:6px}
+.m-wege span{width:26px;height:26px;border-radius:6px;background:#f0f3ff;color:#0073ea;
+  display:grid;place-items:center}
+.m-wege svg{width:13px;height:13px;stroke:currentColor;stroke-width:2.1;fill:none}
+</style>
+
+<div class="meta">
+  <b>Monday-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Meine Arbeit</a>
+    <a href="planner.html">Planner</a>
+    <a class="hier" href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Kontakte als Monday-Board, gruppiert
+nach Firma, mit einer eigenen Statusspalte „Favorit“ als farbige Pille — Monday macht aus
+jeder Kategorie eine bunte, volltonige Fläche, auch wenn es eigentlich nur ein Ja/Nein ist.</p>
+
+<div class="md">
+  <aside class="m-side">
+    <div class="m-ws"><span class="ic"></span>Dashboard</div>
+    <div class="m-row"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="1.5"/><path d="M3 8h14"/></svg>Meine Arbeit</div>
+    <div class="m-sek">Boards</div>
+    <div class="m-board aktiv"><span class="dot" style="background:#fff"></span>Kontakte<span class="zahl">6</span></div>
+    <div class="m-board"><span class="dot" style="background:#00c875"></span>Aufgaben<span class="zahl">8</span></div>
+    <div class="m-board"><span class="dot" style="background:#579bfc"></span>Planner<span class="zahl">6</span></div>
+    <div class="m-board"><span class="dot" style="background:#fdab3d"></span>Notizen<span class="zahl">5</span></div>
+  </aside>
+
+  <div class="m-main">
+    <div class="m-top"><span class="dot"></span><h1>Kontakte</h1></div>
+    <div class="m-tabs"><span class="aktiv">Haupttabelle</span><span>Kanban</span><span>Kacheln</span></div>
+    <div class="m-toolbar">Gruppiert: Firma<span>Sortiert: Nachname</span><span class="m-neu">+ Neu</span></div>
+    <div class="m-scroll">
+      <div class="m-gruppe">
+        <div class="m-g-kopf" style="background:#e2445c">Kanzlei Bergmann<span class="zahl">1</span></div>
+        <table class="m-tabelle">
+          <tr><th>Name</th><th>Favorit</th><th>Telefon</th><th>E-Mail</th><th>Aktion</th></tr>
+          <tr><td><span class="m-av" style="background:#e2445c">EB</span> Eva Bergmann</td>
+            <td><span class="m-pille" style="background:#fdab3d">★ Favorit</span></td>
+            <td>0391 77820-0</td><td>kanzlei@bergmann.de</td>
+            <td><div class="m-wege">
+              <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+              <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span></div></td></tr>
+        </table>
+      </div>
+
+      <div class="m-gruppe">
+        <div class="m-g-kopf" style="background:#579bfc">Nordstern GmbH<span class="zahl">2</span></div>
+        <table class="m-tabelle">
+          <tr><th>Name</th><th>Favorit</th><th>Telefon</th><th>E-Mail</th><th>Aktion</th></tr>
+          <tr><td><span class="m-av" style="background:#579bfc">JK</span> Jan Kowalski</td>
+            <td><span class="m-pille" style="background:#fdab3d">★ Favorit</span></td>
+            <td>0391 55010-2</td><td>j.kowalski@nordstern.de</td>
+            <td><div class="m-wege">
+              <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+              <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span></div></td></tr>
+          <tr><td><span class="m-av" style="background:#fdab3d">LM</span> Lisa Meier</td>
+            <td><span class="m-pille" style="background:#fdab3d">★ Favorit</span></td>
+            <td>0391 55010-5</td><td>l.meier@nordstern.de</td>
+            <td><div class="m-wege">
+              <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+              <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span></div></td></tr>
+        </table>
+      </div>
+
+      <div class="m-gruppe">
+        <div class="m-g-kopf" style="background:#a25ddc">Sonstige<span class="zahl">3</span></div>
+        <table class="m-tabelle">
+          <tr><th>Name</th><th>Favorit</th><th>Telefon</th><th>E-Mail</th><th>Aktion</th></tr>
+          <tr><td><span class="m-av" style="background:#a25ddc">TM</span> Tobias Meinhardt</td>
+            <td><span class="m-pille" style="background:#c4c4c4">—</span></td>
+            <td>0391 88 210</td><td>t.meinhardt@meinhardt-it.de</td>
+            <td><div class="m-wege">
+              <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+              <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span></div></td></tr>
+          <tr><td><span class="m-av" style="background:#00c875">PH</span> Petra Hoffmann</td>
+            <td><span class="m-pille" style="background:#c4c4c4">—</span></td>
+            <td>0391 40 300</td><td>hoffmann@stadtwerke.de</td>
+            <td><div class="m-wege">
+              <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+              <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span></div></td></tr>
+          <tr><td><span class="m-av" style="background:#c4c4c4">?</span> Ohne Nummer</td>
+            <td><span class="m-pille" style="background:#c4c4c4">—</span></td>
+            <td>—</td><td>—</td><td></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

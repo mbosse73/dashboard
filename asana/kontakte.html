@@ -1,0 +1,144 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Asana-Fassung — Kontakte (Board)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Kontakte als Asana-Projekt in der Board-Ansicht, gruppiert
+   nach Firma — Asanas Boards gruppieren nach einem Auswahlfeld,
+   nicht zwingend nach Status.
+   ============================================================ */
+.as{max-width:1420px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#151515;background:#fff}
+.a-top{display:flex;align-items:center;gap:12px;padding:22px 34px 6px}
+.a-top .dot{width:11px;height:11px;border-radius:3px;background:#e8384f}
+.a-top h1{font-size:23px;font-weight:800}
+.a-tabs{display:flex;gap:20px;padding:14px 34px 0;border-bottom:1px solid #ececec;font-size:13.5px;
+  color:#8a8a8a}
+.a-tabs span{padding-bottom:10px;border-bottom:2px solid transparent}
+.a-tabs span.aktiv{color:#151515;font-weight:700;border-color:#151515}
+.a-toolbar{display:flex;align-items:center;gap:16px;padding:12px 34px;font-size:12.5px;color:#8a8a8a}
+.a-neu{margin-left:auto;background:#fc636b;color:#fff;font-weight:700;padding:6px 14px;
+  border-radius:7px;font-size:12.5px}
+
+.a-board{display:flex;gap:14px;padding:0 34px 30px;overflow-x:auto}
+.a-sp{flex:0 0 260px;background:#fafafa;border-radius:10px;padding:11px}
+.a-sp-k{display:flex;align-items:center;gap:8px;padding:2px 4px 11px;font-size:13px;font-weight:700}
+.a-sp-k .zahl{margin-left:auto;color:#a5a5a5;font-weight:600}
+.a-karte{background:#fff;border:1px solid #ececec;border-radius:8px;padding:11px 12px;
+  margin-bottom:8px}
+.a-karte .kopf{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.a-karte .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:10.5px;font-weight:700;flex-shrink:0}
+.a-karte .t{font-weight:700;font-size:13.5px}
+.a-karte .stern{margin-left:auto;color:#e0a72e}
+.a-karte .m{font-size:12px;color:#8a8a8a;margin-top:2px;padding-left:34px}
+.a-karte .wege{display:flex;gap:6px;margin-top:8px;padding-left:34px}
+.a-karte .wege span{width:24px;height:24px;border-radius:6px;background:#f5f5f5;color:#6b6b6b;
+  display:grid;place-items:center}
+.a-karte .wege svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.1;fill:none}
+.a-neuk{font-size:12.5px;color:#a5a5a5;padding:6px 4px}
+</style>
+
+<div class="meta">
+  <b>Asana-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Meine Aufgaben</a>
+    <a href="planner.html">Planner</a>
+    <a class="hier" href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Statt einer Galerie zeigt das
+Projekt „Kontakte“ hier die Board-Ansicht, gruppiert nach dem Feld „Firma“ — Asana gruppiert
+Boards nach jedem Auswahlfeld, nicht zwingend nach einem Status. Favoriten tragen einen
+Stern wie überall in Asana.</p>
+
+<div class="as">
+  <div class="a-top"><span class="dot"></span><h1>Kontakte</h1></div>
+  <div class="a-tabs"><span>Übersicht</span><span>Liste</span><span class="aktiv">Board</span><span>Kalender</span><span>Dashboard</span></div>
+  <div class="a-toolbar">Gruppiert nach: Firma<span>Sortiert: Nachname</span><span class="a-neu">+ Hinzufügen</span></div>
+  <div class="a-board">
+    <div class="a-sp">
+      <div class="a-sp-k">Kanzlei Bergmann<span class="zahl">1</span></div>
+      <div class="a-karte">
+        <div class="kopf"><span class="av" style="background:#e8384f">EB</span><span class="t">Eva Bergmann</span><span class="stern">★</span></div>
+        <div class="m">0391 77820-0 · kanzlei@bergmann.de</div>
+        <div class="wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+      <div class="a-neuk">+ Hinzufügen</div>
+    </div>
+    <div class="a-sp">
+      <div class="a-sp-k">Nordstern GmbH<span class="zahl">2</span></div>
+      <div class="a-karte">
+        <div class="kopf"><span class="av" style="background:#4573d2">JK</span><span class="t">Jan Kowalski</span><span class="stern">★</span></div>
+        <div class="m">0391 55010-2 · j.kowalski@nordstern.de</div>
+        <div class="wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+      <div class="a-karte">
+        <div class="kopf"><span class="av" style="background:#e0a72e">LM</span><span class="t">Lisa Meier</span><span class="stern">★</span></div>
+        <div class="m">0391 55010-5 · l.meier@nordstern.de</div>
+        <div class="wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+      <div class="a-neuk">+ Hinzufügen</div>
+    </div>
+    <div class="a-sp">
+      <div class="a-sp-k">Meinhardt IT<span class="zahl">1</span></div>
+      <div class="a-karte">
+        <div class="kopf"><span class="av" style="background:#8b5cf6">TM</span><span class="t">Tobias Meinhardt</span></div>
+        <div class="m">0391 88 210 · t.meinhardt@meinhardt-it.de</div>
+        <div class="wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+      <div class="a-neuk">+ Hinzufügen</div>
+    </div>
+    <div class="a-sp">
+      <div class="a-sp-k">Stadtwerke<span class="zahl">1</span></div>
+      <div class="a-karte">
+        <div class="kopf"><span class="av" style="background:#14a35e">PH</span><span class="t">Petra Hoffmann</span></div>
+        <div class="m">0391 40 300 · hoffmann@stadtwerke.de</div>
+        <div class="wege">
+          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+        </div>
+      </div>
+      <div class="a-neuk">+ Hinzufügen</div>
+    </div>
+    <div class="a-sp">
+      <div class="a-sp-k">Ohne Firma<span class="zahl">1</span></div>
+      <div class="a-karte">
+        <div class="kopf"><span class="av" style="background:#c4c4c4">?</span><span class="t">Ohne Nummer</span></div>
+        <div class="m">—</div>
+      </div>
+      <div class="a-neuk">+ Hinzufügen</div>
+    </div>
+  </div>
+</div>

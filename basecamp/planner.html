@@ -1,0 +1,98 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Basecamp-Fassung — Zeitplan</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1180px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Basecamps „Zeitplan“ ist bewusst schlicht: eine Liste nach
+   Tag, keine Stundenlinien, keine Kästchen — Text auf Creme.
+   ============================================================ */
+.bc{max-width:1180px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#0f2b1d;background:#fffcf5}
+.bc-top{display:flex;align-items:center;gap:14px;padding:16px 34px;border-bottom:1px solid #ece4cf;
+  background:#fff9ea}
+.bc-ic{width:34px;height:34px;border-radius:8px;background:#1d7a5f;display:grid;place-items:center;
+  color:#fff;font-weight:800}
+.bc-krume{font-size:12.5px;color:#8a8368}
+.bc-top h1{font-size:19px;font-weight:800}
+
+.bc-body{padding:26px 34px 40px;max-width:760px}
+.bc-lead{font-size:14px;color:#5f5847;margin-bottom:24px}
+.bc-lead b{color:#0f2b1d}
+
+.bc-tag{margin-bottom:26px}
+.bc-tag h2{font-size:16px;font-weight:800;border-bottom:2px solid #e9ddb8;padding-bottom:8px;
+  margin-bottom:10px}
+.bc-eintrag{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-bottom:1px solid #f3ecd9}
+.bc-eintrag:last-child{border-bottom:0}
+.bc-zeit{font-size:13px;font-weight:700;color:#1d7a5f;width:52px;flex-shrink:0}
+.bc-titel{font-size:14.5px;font-weight:600}
+.bc-m{font-size:12.5px;color:#8a8368;margin-left:8px}
+.bc-unpl{background:#fff9ea;border:1px dashed #e9ddb8;border-radius:10px;padding:14px 16px;
+  margin-bottom:26px}
+.bc-unpl h3{font-size:13px;font-weight:700;color:#8a8368;margin-bottom:8px}
+.bc-unpl .zeile{font-size:13.5px;padding:3px 0}
+.bc-unpl .zeile.spaet{color:#b8433a;font-weight:600}
+</style>
+
+<div class="meta">
+  <b>Basecamp-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Projekt „Dashboard“</a>
+    <a class="hier" href="planner.html">Zeitplan</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Der Planner wird zu Basecamps
+Werkzeug „Zeitplan“ — bewusst die einfachste Darstellung aller acht Fassungen. Kein Raster,
+keine Karten, kein Ziehen: nur eine Liste nach Tag, wie eine Tagesordnung auf Papier.</p>
+
+<div class="bc">
+  <div class="bc-top">
+    <span class="bc-ic">D</span>
+    <div><div class="bc-krume">Dashboard</div><h1>Zeitplan</h1></div>
+  </div>
+  <div class="bc-body">
+    <p class="bc-lead"><b>Zwei Werktage, mehr zeigt der Zeitplan nicht.</b> Was ohne Uhrzeit
+    fällig ist, steht als eigener Hinweis oben.</p>
+
+    <div class="bc-unpl">
+      <h3>Ohne Uhrzeit fällig</h3>
+      <div class="zeile spaet">Rechnung 2026-114 freigeben — überfällig, Eva Bergmann</div>
+      <div class="zeile">Backup-Skript testen — ohne Frist</div>
+      <div class="zeile">KR 1.2 Review vorbereiten — 15. Aug</div>
+    </div>
+
+    <div class="bc-tag">
+      <h2>Heute — Donnerstag, 6. August</h2>
+      <div class="bc-eintrag"><span class="bc-zeit">08:00</span><span class="bc-titel">Standup</span><span class="bc-m">Team</span></div>
+      <div class="bc-eintrag"><span class="bc-zeit">10:00</span><span class="bc-titel">Strategie-Call</span><span class="bc-m">Lisa Meier · Video</span></div>
+      <div class="bc-eintrag"><span class="bc-zeit">12:00</span><span class="bc-titel">Feature-Matrix erstellen</span><span class="bc-m">To-do</span></div>
+      <div class="bc-eintrag"><span class="bc-zeit">14:00</span><span class="bc-titel">Abstimmung Layout</span><span class="bc-m">Jan Kowalski · Büro 2.14</span></div>
+    </div>
+
+    <div class="bc-tag">
+      <h2>Danach — Freitag, 7. August</h2>
+      <div class="bc-eintrag"><span class="bc-zeit">09:00</span><span class="bc-titel">Sprint-Planung</span><span class="bc-m">Team</span></div>
+      <div class="bc-eintrag"><span class="bc-zeit">15:30</span><span class="bc-titel">Vertragsgespräch</span><span class="bc-m">Eva Bergmann · Kanzlei</span></div>
+    </div>
+  </div>
+</div>

@@ -167,6 +167,20 @@ VORLAGEN = [{
     {schl:"angebot", nm:"Angebot erstellt", eigenschaften:[
       {schl:"nummer", nm:"Angebotsnummer", art:"text"},
       {schl:"betrag", nm:"Betrag",         art:"zahl"}
+
+Ein Feld kennt außer `schl`, `nm`, `art` und `optionen` vier Zusätze:
+
+| Schlüssel | Wirkung |
+|---|---|
+| `breit` | Feld über beide Spalten. Darf eine Funktion `(werte)=>bool` sein — die Notiz braucht das, damit das Datum die frei werdende Hälfte einnimmt |
+| `sub` | Erklärung **unter** dem Feld. Nie im Label: dort schöbe sie das Feld nach unten und die Zeile säße schief (Fehlerbuch Punkt 14) |
+| `einheit` | steht im Feld, rechts. Ein Label benennt („Dauer“), es erklärt nicht („Dauer in Minuten“) |
+| `nurWenn` | `(werte)=>bool`. Ist es falsch, wird das Feld nicht gezeichnet **und beim Speichern geleert** — sonst bliebe ein Wert da, den niemand sieht. Das Feld, von dem es abhängt, trägt `schaltet:true` |
+
+Die Anordnung folgt in allen Dialogen **Was → Wann → Wer → Dazu**. Datum
+und Uhrzeit stehen nebeneinander, mehrzeilige Felder zuletzt und breit,
+Schalter darunter. Bleibt ein Feld allein in einer Zeile, bekommt es
+`breit` — eine halbe leere Zeile liest sich als Fehler.
     ]}
   ]
 }]

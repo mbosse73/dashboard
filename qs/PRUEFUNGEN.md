@@ -303,6 +303,59 @@ Fünf Befunde wurden behoben.
 
 ---
 
+## Dialoge: Ausrichtung und Abstände
+
+Gefunden auf dem iPad, nicht von einer Prüfung. Fehlerbuch Punkt 14.
+
+- [ ] **Termin bearbeiten** öffnen. „Tag“ und „Uhrzeit“ beginnen auf
+      derselben Höhe, „Dauer“ und „Kontakt“ ebenso. Der Hinweis
+      „Nur diese beiden Werktage.“ steht **unter** dem Auswahlfeld
+      **[vorgeprüft in Chromium]**
+- [ ] **Neue Notiz** öffnen — dieselbe Prüfung für „Art“/„Datum“ und
+      „Uhrzeit“/„Kontakt aus der Liste“ **[vorgeprüft in Chromium]**
+- [ ] Das **Datumsfeld** und das **Zeitfeld** enden bündig mit dem Feld
+      darüber und darunter, laufen also nicht aus ihrer Spalte.
+      **Das ist der Punkt, der auf dem iPad falsch war und den ich hier
+      nicht nachstellen kann — bitte dort ansehen** **[nur du]**
+- [ ] Ihr Wert steht **links**, nicht mittig **[nur du — auf dem iPad]**
+- [ ] In Edge auf Windows: Das Kalendersymbol im Datumsfeld und das
+      Uhrsymbol im Zeitfeld sind noch da und öffnen den Wähler.
+      `appearance:none` könnte sie theoretisch verschlucken; in Chromium
+      tut es das nicht **[nur du]**
+
+---
+
+## Anordnung der Dialogfelder
+
+Vorschlag und Mockup unter `mockups/dialog-anordnung.html`.
+Die Ordnung: **Was → Wann → Wer → Dazu**, in allen vier gleich.
+
+- [ ] **Termin:** Titel · Tag (breit) · Uhrzeit + Dauer nebeneinander ·
+      Kontakt (breit) · Anmerkung. Die Dauer trägt „Minuten“ **im** Feld
+      **[vorgeprüft]**
+- [ ] **Aufgabe:** Titel · Fällig am + Uhrzeit nebeneinander ·
+      Kategorie + Kontakt · Notizen **[vorgeprüft]**
+- [ ] **Kontakt:** Vorname · Nachname · Firma (breit) · Telefon + E-Mail ·
+      Notizen · Favorit. Kein Loch mehr neben der E-Mail **[vorgeprüft]**
+- [ ] **Notiz, Telefonnotiz:** Titel · Art (breit) · Datum + Uhrzeit ·
+      Anrufer + frei eintragen · Text **[vorgeprüft]**
+- [ ] **Notiz, Art auf „Allgemeine Notiz“ stellen** — Uhrzeit und die
+      beiden Anruferfelder verschwinden, das Datum nimmt die ganze Zeile,
+      der Merkkasten unten wechselt den Text mit **[vorgeprüft]**
+- [ ] Beim Umschalten bleibt der Schreibzeiger im Auswahlfeld „Art“
+      **[vorgeprüft]**
+- [ ] **Eine Telefonnotiz mit Anrufer und Uhrzeit auf „allgemein“
+      umstellen und speichern.** Danach sichern und die Datei ansehen:
+      `zeit`, `kontakt` und `wer` sind leer. Was die Maske nicht zeigt,
+      wird nicht gespeichert **[vorgeprüft]**
+- [ ] Zurück auf „Telefonnotiz“ — die Felder sind wieder da (leer)
+      **[vorgeprüft]**
+- [ ] **Dauer:** Das Zahlenfeld hat in Edge Pfeilchen zum Hoch- und
+      Runterzählen. Kollidieren die mit dem Wort „Minuten“? In Chromium
+      stehen sie davor und es passt **[nur du]**
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.

@@ -137,6 +137,10 @@ Ausführlich in `doku/ARCHITEKTUR.md`, Entwurf unter
   Keine Modulfarben im Inhaltsbereich.
 * Kontrast prüfen: tragender Text mindestens 4,5 : 1, große Schrift
   mindestens 3 : 1.
+* **Dialogfelder folgen Was → Wann → Wer → Dazu.** Datum und Uhrzeit
+  stehen nebeneinander, nie in verschiedenen Zeilen. Mehrzeiliges zuletzt
+  und breit, Schalter darunter. Kein Feld bleibt allein in einer halben
+  Zeile stehen. Erklärungen stehen **unter** dem Feld, nie im Label.
 * Eine Alternativfassung im Notion-Stil liegt unter
   `referenz/theme-notion.html`. Dort ist **nur** das Stylesheet getauscht,
   Struktur und Logik sind identisch. Wer eine davon ändert, ändert beide.

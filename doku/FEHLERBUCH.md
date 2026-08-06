@@ -255,6 +255,36 @@ Was sich nachzählen lässt, wird nachgezählt statt beschrieben.
 
 ---
 
+## 14 — Der Dialog sitzt schief
+
+**Erscheinung:** Auf dem iPad stehen die Eingabefelder eines Dialogs nicht
+auf einer Linie. Das Feld links beginnt tiefer als das rechts daneben, und
+Datums- und Zeitfelder ragen gut dreißig Pixel über ihre Spalte hinaus.
+Ihr Wert steht mittig, während jedes andere Feld links ausrichtet.
+
+**Zwei Ursachen, die nichts miteinander zu tun haben:**
+
+Erstens stand der erklärende Hinweis **im** Label, zwischen Beschriftung
+und Feld. Zwei Zeilen Label schieben die Eingabe nach unten — das Feld
+daneben, das keinen Hinweis hat, beginnt höher. Die Zeile sitzt schief.
+
+Zweitens gibt WebKit `input[type=date]` und `input[type=time]` eine
+eigene Mindestbreite und zentriert ihren Wert. Beides schlägt `width:100%`.
+In Chromium fällt das nicht auf, in Safari läuft das Feld aus der Spalte.
+
+**Lösung:** Der Hinweis steht jetzt unter dem Feld, wo er sich nur auf die
+Gesamthöhe auswirkt, und hängt über `aria-describedby` am Feld statt im
+Label. Dazu `min-width:0`, `appearance:none` und
+`::-webkit-date-and-time-value{text-align:left}`.
+
+**Regel daraus:** Was zwischen Beschriftung und Feld steht, verschiebt das
+Feld. Erklärungen gehören darunter. Und: Ein Formular sieht in jeder
+Maschine anders aus — Chromium allein beweist nichts über Safari.
+Der Befund kam nicht aus einer Prüfung, sondern aus einer Aufnahme vom
+iPad. Genau wie Punkt 11.
+
+---
+
 ## Prüfmuster, die sich bewährt haben
 
 * **Zustandslogik gegen die Uhr testen.** Funktionen wie `frist()` mit

@@ -243,7 +243,18 @@ input,textarea{font:inherit}
   padding:8px 9px;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
 .dfeld.schalter input{width:16px;height:16px;padding:0;accent-color:var(--tinte);flex-shrink:0}
 .dfeld.schalter label{font-size:14px;color:var(--ink)}
-.dfeld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:1px}
+.dfeld .sub{font-size:13px;color:var(--ink3);line-height:1.45;margin-top:-1px}
+/* Einheit im Feld statt in der Beschriftung */
+.einheitfeld{position:relative;display:flex;align-items:center}
+.einheitfeld .einheit{position:absolute;right:12px;font-size:13px;color:var(--ink3);
+  pointer-events:none}
+.einheitfeld input{padding-right:74px}
+/* WebKit gibt Datums- und Zeitfeldern eine eigene Mindestbreite und zentriert
+   ihren Wert. Beides schlägt width:100%, das Feld läuft aus seiner Spalte. */
+.dfeld input[type=date],.dfeld input[type=time]{min-width:0;
+  -webkit-appearance:none;appearance:none}
+.dfeld input::-webkit-date-and-time-value{text-align:left;margin:0}
+.dfeld input::-webkit-datetime-edit{padding:0}
 
 /* ---------- Formatierungsleiste über mehrzeiligen Feldern ---------- */
 .mdfeld{display:flex;flex-direction:column}
@@ -861,8 +872,12 @@ function mdMalen(text){
    Ebene 2  dialog — die Hülle darum: Kopf, Fuß, Escape, Klick
             daneben, Löschen mit Rückfrage, Prüfung.
    ============================================================ */
-function feldMalen(def, wert, setzen){
-  const breit = def.art==="mehrzeilig" || def.breit;
+function feldMalen(def, wert, setzen, werte){
+  /* `breit` darf eine Funktion sein. Die Notiz braucht das: Steht das
+     Datum neben der Uhrzeit, ist es halb so breit — fällt die Uhrzeit
+     bei einer allgemeinen Notiz weg, bliebe daneben ein Loch. */
+  const breit = def.art==="mehrzeilig"
+    || (typeof def.breit==="function" ? def.breit(werte||{}) : def.breit);
   const f=el("div","dfeld"+(breit?" breit":"")+(def.art==="schalter"?" schalter":""));
   let n, huelle=null;
   if(def.art==="mehrzeilig"){ n=el("textarea"); n.value=wert==null?"":wert; }
@@ -882,8 +897,18 @@ function feldMalen(def, wert, setzen){
     n.value = wert==null ? "" : wert;
   }
   n.id="fd-"+def.schl+"-"+(++idZaehler);
-  const lab=el("label",null,esc(def.nm)+(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
+  const lab=el("label",null,esc(def.nm));
   lab.setAttribute("for",n.id);
+  /* Der Hinweis steht unter dem Feld, nicht zwischen Beschriftung und Feld.
+     Im Label wachsen zwei Zeilen nach unten und schieben die Eingabe weg —
+     das Feld daneben, das keinen Hinweis hat, beginnt dann höher, und die
+     Zeile sitzt schief. Unten wirkt er sich nur auf die Gesamthöhe aus. */
+  let sub=null;
+  if(def.sub){
+    sub=el("div","sub",esc(def.sub));
+    sub.id=n.id+"-sub";
+    n.setAttribute("aria-describedby",sub.id);
+  }
 
   if(def.art==="mehrzeilig" && def.ohneLeiste!==true){
     huelle=el("div","mdfeld");
@@ -891,7 +916,15 @@ function feldMalen(def, wert, setzen){
     f.append(lab,huelle);
   }
   else if(def.art==="schalter") f.append(n,lab);
+  else if(def.einheit){
+    /* Die Einheit gehört ins Feld, nicht in die Beschriftung. Ein Label
+       soll benennen („Dauer“), nicht erklären („Dauer in Minuten“). */
+    const h=el("div","einheitfeld");
+    h.append(n, el("span","einheit",esc(def.einheit)));
+    f.append(lab,h);
+  }
   else f.append(lab,n);
+  if(sub) f.appendChild(sub);
 
   n.oninput=n.onchange=()=>setzen(
     def.art==="schalter" ? n.checked
@@ -940,16 +973,36 @@ function mdLeiste(ta){
   return l;
 }
 
+/* Ein Feld darf sagen, wann es überhaupt gilt: `nurWenn(werte)`. Eine
+   allgemeine Notiz hat keinen Anrufer und keine Uhrzeit — die Maske
+   fragt dann gar nicht erst danach. Neu gezeichnet wird nur, wenn ein
+   Feld mit `schaltet:true` sich ändert; bei jedem Tastendruck neu zu
+   zeichnen, risse den Schreibzeiger aus dem Feld. */
 function felderMalen(felder, werte, beiAenderung){
   const r=el("div","draster");
   r.felder=[];
-  felder.forEach(def=>{
-    const f=feldMalen(def, werte[def.schl], v=>{
-      werte[def.schl]=v; f.classList.remove("schief");
-      if(beiAenderung) beiAenderung(werte, def);
+  const gilt=def=>!def.nurWenn || def.nurWenn(werte);
+
+  function zeichne(){
+    r.innerHTML=""; r.felder.length=0;
+    felder.filter(gilt).forEach(def=>{
+      const f=feldMalen(def, werte[def.schl], v=>{
+        werte[def.schl]=v; f.classList.remove("schief");
+        if(beiAenderung) beiAenderung(werte, def);
+        if(def.schaltet) neu(def.schl);
+      }, werte);
+      r.felder.push(f); r.appendChild(f);
     });
-    r.felder.push(f); r.appendChild(f);
-  });
+  }
+  /* Nach dem Neuzeichnen zurück in das Feld, das die Änderung ausgelöst
+     hat — sonst steht der Schreibzeiger plötzlich woanders. */
+  function neu(schl){
+    zeichne();
+    const z=r.felder.find(f=>f.dazu.def.schl===schl);
+    if(z) z.dazu.knoten.focus();
+  }
+
+  zeichne();
   return r;
 }
 
@@ -975,11 +1028,17 @@ function dialog(o){
   d.appendChild(kopf);
 
   const rumpf=el("div","dlg-b");
+  /* Auch der Merkkasten darf vom Stand abhängen. Sonst spricht er bei
+     einer allgemeinen Notiz weiter vom Anrufer, den die Maske gerade
+     ausgeblendet hat. */
+  const merkText=()=> typeof o.merk==="function" ? o.merk(w) : o.merk;
+  const merk = o.merk ? el("div","merk",merkText()) : null;
   const raster=felderMalen(o.felder, w, ()=>{
     const t=d.querySelector(".dlg-t"); if(t) t.textContent=titel();
+    if(merk) merk.innerHTML=merkText();
   });
   rumpf.appendChild(raster);
-  if(o.merk) rumpf.appendChild(el("div","merk",o.merk));
+  if(merk) rumpf.appendChild(merk);
   d.appendChild(rumpf);
 
   const fuss=el("div","dlg-f");
@@ -1000,6 +1059,12 @@ function dialog(o){
       if(ziel){ ziel.classList.add("schief"); ziel.dazu.knoten.focus(); }
       return;
     }
+    /* Was die Maske nicht zeigt, wird auch nicht gespeichert. Sonst
+       bliebe an einer allgemeinen Notiz die Uhrzeit eines früheren
+       Anrufs hängen — vorhanden, aber nirgends zu sehen. */
+    o.felder.forEach(d=>{
+      if(d.nurWenn && !d.nurWenn(w)) w[d.schl] = d.art==="text" ? "" : null;
+    });
     o.speichern(w); dialogZu();
   };
   fuss.append(ab,sp);
@@ -1421,10 +1486,14 @@ function kSuchfeld(){
    gemeinsame Baustein — die Felder sind deshalb schon in seinem Format
    beschrieben: {schl, nm, art}. Dasselbe Format tragen die
    Eigenschaften der Workflow-Vorlagen. */
+/* Zwei Blöcke: wer die Person ist, dann wie man sie erreicht. Vorname
+   vor Nachname wie in Outlook, Apple Kontakte und Google Kontakte.
+   Die Firma steht breit dazwischen, sonst bliebe neben der E-Mail ein
+   Loch in der Zeile. */
 const KFELDER=[
-  {schl:"nach",  nm:"Nachname", art:"text"},
   {schl:"vor",   nm:"Vorname",  art:"text"},
-  {schl:"firma", nm:"Firma",    art:"text"},
+  {schl:"nach",  nm:"Nachname", art:"text"},
+  {schl:"firma", nm:"Firma",    art:"text", breit:true},
   {schl:"tel",   nm:"Telefon",  art:"text"},
   {schl:"mail",  nm:"E-Mail",   art:"text"},
   {schl:"notiz", nm:"Notizen",  art:"mehrzeilig"},
@@ -1569,14 +1638,17 @@ registriere({
 });
 /* ===== ENDE aufgaben ===== */
 
+/* Was → Wann → Wer → Dazu. Datum und Uhrzeit standen in verschiedenen
+   Zeilen, obwohl sie eine Angabe sind. Kategorie und Kontakt rücken
+   dafür zusammen — „nachverfolgen, liegt bei anderen“ und „bei wem“
+   beantworten dieselbe Frage. */
 const AFELDER=[
   {schl:"titel", nm:"Titel", art:"text", breit:true},
+  {schl:"d",     nm:"Fällig am", art:"datum", sub:"Jedes Datum erlaubt, auch keines."},
+  {schl:"zeit",  nm:"Uhrzeit",   art:"zeit", sub:"Optional. Setzt auch der Planner."},
   {schl:"kat",   nm:"Kategorie", art:"auswahl",
    optionen:[["todo","To-do — arbeite ich selbst ab"],
              ["nach","Nachverfolgen — liegt bei anderen"]]},
-  {schl:"d",     nm:"Fällig am", art:"datum", sub:"Jedes Datum erlaubt, auch keines."},
-  {schl:"zeit",  nm:"Uhrzeit",   art:"zeit",
-   sub:"Optional. Setzt auch der Planner beim Ziehen."},
   {schl:"kontakt",nm:"Kontakt",  art:"kontakt"},
   {schl:"notiz", nm:"Notizen",   art:"mehrzeilig"}
 ];
@@ -1719,11 +1791,15 @@ function tFelder(){
   const nm=d=>TAGL[d.getDay()]+", "+d.getDate()+". "+MONK[d.getMonth()];
   return [
     {schl:"titel", nm:"Titel", art:"text", breit:true},
-    {schl:"d",     nm:"Tag", art:"auswahl",
+    /* Der Tag verortet den Termin überhaupt und trägt einen Hinweis —
+       er steht breit. Uhrzeit und Dauer bilden darunter die Zeitspanne,
+       wie in jedem Kalender. Die Dauer stand vorher neben dem Kontakt,
+       mit dem sie nichts zu tun hat. */
+    {schl:"d",     nm:"Tag", art:"auswahl", breit:true,
      optionen:[[iso(d1),nm(d1)],[iso(d2),nm(d2)]], sub:"Nur diese beiden Werktage."},
     {schl:"zeit",  nm:"Uhrzeit", art:"zeit"},
-    {schl:"dauer", nm:"Dauer in Minuten", art:"zahl"},
-    {schl:"kontakt",nm:"Kontakt", art:"kontakt"},
+    {schl:"dauer", nm:"Dauer", art:"zahl", einheit:"Minuten"},
+    {schl:"kontakt",nm:"Kontakt", art:"kontakt", breit:true},
     {schl:"anm",   nm:"Anmerkung", art:"mehrzeilig"}
   ];
 }
@@ -1837,17 +1913,21 @@ function nSuchfeld(){
   return s;
 }
 
+/* Die Art ist ein Umschalter, kein Merkmal: Sie entscheidet, wie der
+   Rest der Maske aussieht. Deshalb steht sie oben und breit. Eine
+   allgemeine Notiz hat keinen Anrufer und keine Uhrzeit — dann bleiben
+   vier Felder statt sieben, und das Datum nimmt die frei gewordene
+   Hälfte der Zeile ein. */
+const nurAnruf = w => w.art==="telefon";
 function nFelder(){
   return [
     {schl:"titel", nm:"Titel", art:"text", breit:true},
-    {schl:"art",   nm:"Art", art:"auswahl",
-     optionen:[["telefon","Telefonnotiz"],["allgemein","Allgemeine Notiz"]],
-     sub:"Neue Notizen sind Telefonnotizen."},
-    {schl:"d",     nm:"Datum", art:"datum"},
-    {schl:"zeit",  nm:"Uhrzeit", art:"zeit"},
-    {schl:"kontakt",nm:"Kontakt aus der Liste", art:"kontakt"},
-    {schl:"wer",   nm:"…oder frei eintragen", art:"text",
-     sub:"Für Anrufer, die nicht in der Kontaktliste stehen."},
+    {schl:"art",   nm:"Art", art:"auswahl", breit:true, schaltet:true,
+     optionen:[["telefon","Telefonnotiz"],["allgemein","Allgemeine Notiz"]]},
+    {schl:"d",     nm:"Datum", art:"datum", breit:w=>!nurAnruf(w)},
+    {schl:"zeit",  nm:"Uhrzeit", art:"zeit", nurWenn:nurAnruf},
+    {schl:"kontakt",nm:"Anrufer", art:"kontakt", nurWenn:nurAnruf},
+    {schl:"wer",   nm:"…oder frei eintragen", art:"text", nurWenn:nurAnruf},
     {schl:"text",  nm:"Text", art:"mehrzeilig"}
   ];
 }
@@ -1873,10 +1953,13 @@ function notizDialog(n, vorbelegt, artVor){
     titel: w=>w.titel,
     felder: nFelder(),
     werte: start,
-    merk:"<b>Neue Notizen sind Telefonnotizen</b> — das ist der häufigere Fall. Datum und "
-      +"Uhrzeit stehen zusätzlich im Text, damit sie beim Ausleiten als <code>.md</code> "
-      +"erhalten bleiben. Ein Anrufer kann aus der Kontaktliste kommen oder frei "
-      +"eingetragen werden; wird beides gefüllt, gewinnt die Auswahl.",
+    merk: v => v.art==="allgemein"
+      ? "<b>Eine allgemeine Notiz hat keinen Anrufer und keine Uhrzeit.</b> Danach "
+        +"wird deshalb nicht gefragt. Zurück auf „Telefonnotiz“ bringt die Felder wieder."
+      : "<b>Neue Notizen sind Telefonnotizen</b> — das ist der häufigere Fall. Datum und "
+        +"Uhrzeit stehen zusätzlich im Text, damit sie beim Ausleiten als <code>.md</code> "
+        +"erhalten bleiben. Ein Anrufer kann aus der Kontaktliste kommen oder frei "
+        +"eingetragen werden; wird beides gefüllt, gewinnt die Auswahl.",
     pruefe: w=>String(w.titel||"").trim()?null:{schl:"titel",text:"Ohne Titel geht es nicht."},
     loeschen: neu?null:{
       frage: w=>"<b>„"+esc(w.titel)+"“ wirklich löschen?</b> Auf Notizen verweist nichts, "

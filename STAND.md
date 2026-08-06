@@ -7,7 +7,38 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: eine Zwischenprüfung des erreichten Stands.** Kein
+**Zuletzt: die Anordnung der Dialogfelder.** Alle vier folgen jetzt
+derselben Ordnung — **Was → Wann → Wer → Dazu**. Datum und Uhrzeit standen
+in Aufgabe und Notiz in verschiedenen Zeilen, obwohl sie eine Angabe sind;
+die Dauer eines Termins stand neben dem Kontakt statt neben der Uhrzeit;
+bei Kontakt und Notiz blieb je eine halbe Zeile leer.
+
+Drei Zusätze am Feldvertrag machen das möglich: `breit` darf eine Funktion
+sein, `einheit` setzt die Maßeinheit ins Feld statt in die Beschriftung,
+und **`nurWenn` blendet ein Feld aus, das in der gewählten Betriebsart
+nichts bedeutet** — eine allgemeine Notiz hat keinen Anrufer und keine
+Uhrzeit, also fragt die Maske nicht danach. Ausgeblendete Werte werden
+beim Speichern geleert; sonst bliebe an einer allgemeinen Notiz die
+Uhrzeit eines früheren Anrufs hängen, vorhanden, aber nirgends zu sehen.
+Auch der Merkkasten wechselt mit.
+
+`nurWenn` ist nicht nur für die Notiz gebaut: **Schritt 6 braucht es**,
+weil Workflow-Eigenschaften je Teilschritt verschieden sind.
+
+**Davor: die Dialoge sitzen wieder gerade.** Gefunden auf dem iPad, nicht
+von einer Prüfung. Zwei Ursachen ohne Zusammenhang: Der erklärende Hinweis
+stand **im** Label und schob das Feld nach unten, während das Feld daneben
+ohne Hinweis höher begann. Und WebKit gibt Datums- und Zeitfeldern eine
+eigene Mindestbreite und zentriert ihren Wert — beides schlägt `width:100%`,
+das Feld läuft aus seiner Spalte. Der Hinweis steht jetzt unter dem Feld und
+hängt über `aria-describedby` daran; die beiden Feldarten sind gebändigt.
+Fehlerbuch Punkt 14.
+
+Die Breiten kann ich hier nicht nachstellen — Chromium zeigt den Fehler
+nicht. Nachzusehen ist das auf dem iPad, und in Edge, ob Kalender- und
+Uhrsymbol noch da sind.
+
+**Davor: eine Zwischenprüfung des erreichten Stands.** Kein
 Roadmap-Schritt — ein Durchgang durch alle Flächen, die Datenwege und die
 Farben. Fünf Befunde:
 

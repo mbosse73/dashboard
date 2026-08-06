@@ -32,6 +32,12 @@ Anwendung, andere Optik, ohne zweite Datei.
 
 `dashboard.html` herunterladen und doppelklicken. Sonst nichts.
 
+Zum Hineinschauen ohne Herunterladen liegt der jeweils letzte Stand von
+`main` unter **<https://mbosse73.github.io/dashboard/dashboard.html>**.
+Das ist nur eine Vorschau: Die Anwendung ist für die lokal geöffnete
+Datei gebaut, und der Speicher hängt am Browser — was dort eingetragen
+wird, steht nicht in der eigenen Datei und umgekehrt.
+
 Ein paar Eingaben für die Leiste:
 
 | Eingabe | Wirkung |

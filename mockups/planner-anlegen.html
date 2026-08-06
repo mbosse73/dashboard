@@ -1,0 +1,318 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Anlegen im Planner — Vorschlag</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a4282a; --signal-s:#f7e6e4;
+  --gut:#2f6b4f;
+}
+body{font-family:var(--ff);background:var(--paper);color:var(--ink);
+  line-height:1.55;padding:26px 20px 70px}
+.bahn{max-width:1180px;margin:0 auto}
+h1{font-size:23px;letter-spacing:-.02em;margin-bottom:6px}
+.unter{font-size:14px;color:var(--ink2);max-width:72ch;margin-bottom:8px}
+h2{font-size:11px;font-family:var(--mono);letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);margin:34px 0 4px;display:flex;align-items:baseline;gap:11px}
+h2::after{content:"";flex:1;height:1px;background:var(--rule)}
+.warum{font-size:13.5px;color:var(--ink2);max-width:78ch;margin-bottom:14px}
+.warum b{color:var(--ink)}
+
+/* ---------- Planner, wie in der Anwendung ---------- */
+.rahmen{border:1px solid var(--rule2);border-radius:12px;overflow:hidden;background:var(--paper)}
+.planer{display:flex;background:var(--paper);height:520px}
+.spalte{flex:1;min-width:225px;display:flex;flex-direction:column;overflow:hidden;
+  border-right:1px solid var(--rule);background:var(--paper)}
+.spalte:last-child{border-right:0}
+.spalte.vorrat{flex:0 0 262px;background:var(--sheet);border-right:1px solid var(--rule2)}
+.spalte.heute{background:var(--sheet)}
+.sp-k{flex-shrink:0;padding:12px 14px 9px;border-bottom:1px solid var(--rule)}
+.sp-d{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);font-weight:600}
+.spalte.heute .sp-d{color:var(--tinte)}
+.sp-n{font-size:14.5px;font-weight:600;margin-top:5px;display:flex;align-items:baseline;gap:8px}
+.sp-n em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:auto}
+.sp-b{flex:1;overflow-y:auto;padding:4px 8px 24px}
+.raster{position:relative}
+.stunde{display:flex;min-height:44px;border-top:1px solid var(--rule)}
+.stunde:first-child{border-top:0}
+.st-t{width:40px;flex-shrink:0;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
+  padding-top:5px;font-variant-numeric:tabular-nums}
+.st-l{flex:1;min-width:0;padding:3px 0 3px 6px;display:flex;flex-direction:column;gap:3px}
+.blk{border-radius:7px;padding:7px 10px;border:1px solid var(--rule2);background:var(--sheet);
+  border-left-width:3px;display:flex;align-items:flex-start;gap:8px}
+.blk.termin{border-left-color:var(--tinte)}
+.blk.aufgabe{border-left-color:var(--gut)}
+.blk .t{display:block;font-size:13px;font-weight:600;letter-spacing:-.008em}
+.blk .m{display:block;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.blk .kast{width:15px;height:15px;border-radius:4px;margin-top:1px;
+  border:1px solid var(--rule2);background:var(--paper);flex-shrink:0}
+.vz{display:flex;align-items:flex-start;gap:9px;padding:9px 8px;border-radius:8px;
+  border:1px solid transparent;border-left-width:3px}
+.vz .t{font-size:13px;font-weight:600}
+.vz .m{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.vz.spaet{border-left-color:var(--signal)}
+.leer{font-size:12.5px;color:var(--ink3);padding:8px 8px}
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.5;padding:0 8px 8px}
+
+/* ---------- Das Neue ---------- */
+/* Der Anlegeknopf sitzt in der Spaltenkopfzeile, rechts neben der Zahl.
+   Er ist die Tastatur- und die iPad-taugliche Tür; das Klicken in eine
+   leere Stunde ist der Weg mit der Maus. */
+.sp-neu{margin-left:auto;font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;
+  color:var(--ink3);border:1px solid var(--rule2);border-radius:6px;padding:2px 7px;
+  background:var(--sheet);white-space:nowrap}
+.sp-n .sp-neu{align-self:center}
+.karte-neu .sp-neu{border-color:var(--tinte);color:var(--tinte);background:var(--tinte-s)}
+
+/* Leere Stunde: der Zeiger darüber zeigt ein blasses Plus */
+.st-l.zeigt{position:relative}
+.st-l.zeigt::after{content:"+ Termin";position:absolute;left:6px;top:5px;
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--tinte);
+  border:1px dashed var(--tinte);border-radius:6px;padding:2px 8px;background:var(--tinte-s)}
+.stunde.zeigt{background:var(--tinte-s)}
+
+.zeig{outline:1.5px solid var(--tinte);outline-offset:3px;border-radius:8px}
+
+/* ---------- Beiwerk ---------- */
+.paar{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:16px;
+  align-items:start}
+.kk{display:flex;align-items:baseline;gap:9px;padding:9px 14px;
+  border-bottom:1px solid var(--rule);background:var(--raise)}
+.kk b{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.karte-alt .kk b{color:var(--ink3)}
+.karte-neu .kk b{color:var(--gut)}
+.kk span{font-size:12px;color:var(--ink3)}
+.merk{margin-top:14px;padding:11px 13px;border-radius:9px;background:var(--raise);
+  font-size:12.5px;color:var(--ink2);line-height:1.5}
+.merk b{color:var(--ink)}
+.regeln{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:13px;
+  margin-top:14px}
+.regel{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:13px 15px}
+.regel b{display:block;font-size:13.5px;margin-bottom:4px}
+.regel span b{display:inline;font-size:inherit;margin:0}
+.regel span{font-size:12.5px;color:var(--ink2)}
+.regel em{display:block;font-style:normal;font-size:11.5px;color:var(--ink3);margin-top:6px}
+table{border-collapse:collapse;width:100%;margin-top:12px;font-size:13px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-size:11px;font-family:var(--mono);letter-spacing:.09em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+td.p{color:var(--ink2)}
+code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  padding:1px 4px;border-radius:4px}
+</style>
+
+<div class="bahn">
+
+<h1>Anlegen im Planner</h1>
+<p class="unter">Der Planner kann heute nur mit dem umgehen, was schon da ist.
+Anlegen geht ausschließlich über die Leiste oder über die Module Aufgaben und
+Kalender. Auf dem iPad fällt das doppelt auf, weil dort auch das Ziehen nicht
+funktioniert.</p>
+
+<!-- ============================================================ -->
+<h2>Zwei Türen, nicht eine</h2>
+<p class="warum">Ein Knopf in jeder Spaltenkopfzeile <b>und</b> ein Klick in
+eine leere Stunde. Das ist keine Doppelung — die beiden bedienen verschiedene
+Lagen: Der Knopf ist immer sichtbar, mit der Tastatur erreichbar und
+funktioniert auf dem iPad; der Klick ins Raster ist der schnelle Weg mit der
+Maus und nimmt Tag und Stunde gleich als Vorbelegung mit. Google Kalender und
+Outlook haben beides aus demselben Grund.</p>
+
+<div class="regeln">
+  <div class="regel"><b>Vorrat → Aufgabe</b><span>„Aufgabe +“ in der Kopfzeile
+    der linken Spalte. Legt eine Aufgabe ohne Datum an — sie landet genau
+    dort, wo der Knopf steht.</span>
+    <em>Kategorie <code>todo</code>, wie im Modul der erste Knopf.</em></div>
+  <div class="regel"><b>Tagesspalte → Termin</b><span>„Termin +“ in der
+    Kopfzeile jedes der beiden Tage. Der Tag ist vorbelegt, die Uhrzeit auf
+    der vollen nächsten Stunde.</span>
+    <em>Bei „Danach“ auf 09:00, weil es dort kein „jetzt“ gibt.</em></div>
+  <div class="regel"><b>Leere Stunde → Termin</b><span>Klick in eine freie
+    Stunde legt dort einen Termin an. Tag <em>und</em> Uhrzeit kommen aus der
+    angeklickten Stelle.</span>
+    <em>Beim Zeigen darauf erscheint ein blasses „+ Termin“, sonst wäre die
+    Fläche unsichtbar anklickbar.</em></div>
+  <div class="regel"><b>Was es nicht gibt</b><span>Klick in eine Stunde legt
+    <b>keine</b> Aufgabe an. Eine Aufgabe entsteht im Vorrat und bekommt ihre
+    Uhrzeit durch Ziehen oder im Dialog.</span>
+    <em>Zwei Dinge an derselben Stelle bräuchten eine Rückfrage — das ist ein
+    Klick zu viel.</em></div>
+</div>
+
+<!-- ============================================================ -->
+<h2>Heute</h2>
+<div class="rahmen karte-alt">
+  <div class="kk"><b>heute</b><span>keine Möglichkeit, etwas anzulegen</span></div>
+  <div class="planer">
+    <div class="spalte vorrat">
+      <div class="sp-k">
+        <div class="sp-d">Nicht eingeplant</div>
+        <div class="sp-n">Aufgaben <em>6</em></div>
+      </div>
+      <div class="sp-b">
+        <div class="vz spaet"><div><span class="t">Rechnung 2026-114 freigeben</span>
+          <span class="m">überfällig · Eva Bergmann</span></div></div>
+        <div class="vz"><div><span class="t">Backup-Konzept lesen</span>
+          <span class="m">ohne Frist</span></div></div>
+        <div class="vz"><div><span class="t">KR 1.2 Rückmeldung</span>
+          <span class="m">15. Aug</span></div></div>
+      </div>
+    </div>
+    <div class="spalte heute">
+      <div class="sp-k">
+        <div class="sp-d">Heute</div>
+        <div class="sp-n">Donnerstag, 6. Aug <em>4</em></div>
+      </div>
+      <div class="sp-b"><div class="raster">
+        <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">08:00</span><div class="st-l">
+          <div class="blk termin"><span><span class="t">Standup</span>
+            <span class="m">08:00 · Team</span></span></div></div></div>
+        <div class="stunde"><span class="st-t">09:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">10:00</span><div class="st-l">
+          <div class="blk termin"><span><span class="t">Strategie-Call</span>
+            <span class="m">10:00 · Video</span></span></div></div></div>
+        <div class="stunde"><span class="st-t">11:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">12:00</span><div class="st-l"></div></div>
+      </div></div>
+    </div>
+    <div class="spalte">
+      <div class="sp-k">
+        <div class="sp-d">Danach</div>
+        <div class="sp-n">Freitag, 7. Aug <em>3</em></div>
+      </div>
+      <div class="sp-b"><div class="raster">
+        <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">08:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">09:00</span><div class="st-l">
+          <div class="blk termin"><span><span class="t">Sprint-Planung</span>
+            <span class="m">09:00 · Team</span></span></div></div></div>
+        <div class="stunde"><span class="st-t">10:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">11:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">12:00</span><div class="st-l"></div></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<h2>Vorschlag</h2>
+<p class="warum">Drei Knöpfe in den Kopfzeilen, und die Stunde 11:00 unter dem
+Zeiger zeigt, was ein Klick ins Raster tut.</p>
+
+<div class="rahmen karte-neu">
+  <div class="kk"><b>Vorschlag</b><span>Knopf je Spalte · Klick in eine leere Stunde</span></div>
+  <div class="planer">
+    <div class="spalte vorrat">
+      <div class="sp-k">
+        <div class="sp-d">Nicht eingeplant</div>
+        <div class="sp-n">Aufgaben <em>6</em>
+          <span class="sp-neu zeig">Aufgabe +</span></div>
+      </div>
+      <div class="sp-b">
+        <div class="vz spaet"><div><span class="t">Rechnung 2026-114 freigeben</span>
+          <span class="m">überfällig · Eva Bergmann</span></div></div>
+        <div class="vz"><div><span class="t">Backup-Konzept lesen</span>
+          <span class="m">ohne Frist</span></div></div>
+        <div class="vz"><div><span class="t">KR 1.2 Rückmeldung</span>
+          <span class="m">15. Aug</span></div></div>
+      </div>
+    </div>
+    <div class="spalte heute">
+      <div class="sp-k">
+        <div class="sp-d">Heute</div>
+        <div class="sp-n">Donnerstag, 6. Aug <em>4</em>
+          <span class="sp-neu zeig">Termin +</span></div>
+      </div>
+      <div class="sp-b"><div class="raster">
+        <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">08:00</span><div class="st-l">
+          <div class="blk termin"><span><span class="t">Standup</span>
+            <span class="m">08:00 · Team</span></span></div></div></div>
+        <div class="stunde"><span class="st-t">09:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">10:00</span><div class="st-l">
+          <div class="blk termin"><span><span class="t">Strategie-Call</span>
+            <span class="m">10:00 · Video</span></span></div></div></div>
+        <div class="stunde zeigt"><span class="st-t">11:00</span>
+          <div class="st-l zeigt"></div></div>
+        <div class="stunde"><span class="st-t">12:00</span><div class="st-l"></div></div>
+      </div></div>
+    </div>
+    <div class="spalte">
+      <div class="sp-k">
+        <div class="sp-d">Danach</div>
+        <div class="sp-n">Freitag, 7. Aug <em>3</em>
+          <span class="sp-neu zeig">Termin +</span></div>
+      </div>
+      <div class="sp-b"><div class="raster">
+        <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">08:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">09:00</span><div class="st-l">
+          <div class="blk termin"><span><span class="t">Sprint-Planung</span>
+            <span class="m">09:00 · Team</span></span></div></div></div>
+        <div class="stunde"><span class="st-t">10:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">11:00</span><div class="st-l"></div></div>
+        <div class="stunde"><span class="st-t">12:00</span><div class="st-l"></div></div>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<div class="merk"><b>Der Knopf sitzt in der Kopfzeile, nicht am Fuß der
+Spalte.</b> Der Fuß liegt hinter zwölf Stunden Raster — man müsste erst
+scrollen, um etwas anzulegen. Die Kopfzeile bleibt stehen.</div>
+
+<!-- ============================================================ -->
+<h2>Was ein Klick genau bewirkt</h2>
+<table>
+  <tr><th>Ort</th><th>Was entsteht</th><th>Vorbelegt</th></tr>
+  <tr><td><b>„Aufgabe +“</b> im Vorrat</td><td class="p">Aufgabe, Kategorie To-do</td>
+    <td class="p">kein Datum — sie bleibt im Vorrat sichtbar</td></tr>
+  <tr><td><b>„Termin +“</b> in einer Tagesspalte</td><td class="p">Termin</td>
+    <td class="p">dieser Tag · nächste volle Stunde, sonst 09:00</td></tr>
+  <tr><td><b>Klick in eine leere Stunde</b></td><td class="p">Termin</td>
+    <td class="p">dieser Tag · diese Stunde</td></tr>
+  <tr><td><b>Klick auf einen Block</b></td><td class="p">nichts Neues — der
+    vorhandene Eintrag geht auf</td><td class="p">unverändert wie heute</td></tr>
+</table>
+
+<div class="merk"><b>Ein Fallstrick:</b> Die leere Stunde und der Block darin
+liegen übereinander. Ein Klick auf einen Block darf nicht zusätzlich einen
+neuen Termin anlegen. Die Stunde reagiert deshalb nur, wenn der Klick sie
+selbst trifft und nicht ein Kind darin — <code>e.target</code> muss die Lane
+sein.</div>
+
+<!-- ============================================================ -->
+<h2>Was das im Code heißt</h2>
+<table>
+  <tr><th>Änderung</th><th>Umfang</th></tr>
+  <tr><td><b><code>plannerMalen()</code></b></td>
+    <td class="p">Drei Knöpfe in die drei <code>.sp-k</code>, ein
+      <code>onclick</code> an jede <code>.st-l</code>. Die Dialoge
+      <code>aufgabeDialog(null, kat)</code> und
+      <code>terminDialog(null, tag)</code> gibt es schon —
+      <code>terminDialog</code> braucht nur zusätzlich eine Uhrzeit.</td></tr>
+  <tr><td><b><code>terminDialog(t, tagVor, zeitVor)</code></b></td>
+    <td class="p">Ein dritter Parameter. Fehlt er, bleibt es bei 09:00 wie
+      heute.</td></tr>
+  <tr><td><b>Stylesheet</b></td>
+    <td class="p"><code>.sp-neu</code> und die Zeigefläche der leeren Stunde.
+      Beides in beiden Fassungen.</td></tr>
+  <tr><td><b>Nicht nötig</b></td>
+    <td class="p">Kein neuer Datenbereich, keine neue Feldart, keine Änderung
+      am Dialogbaustein.</td></tr>
+</table>
+
+<div class="merk"><b>Nicht in diesem Schritt:</b> das Ziehen auf dem iPad.
+Dort bleibt es beim Weg über den Dialog — Block antippen, Tag und Uhrzeit
+setzen. Das funktioniert schon heute.</div>
+
+</div>

@@ -7,7 +7,23 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: die Anordnung der Dialogfelder.** Alle vier folgen jetzt
+**Zuletzt: im Planner lässt sich etwas anlegen.** Bis eben ging das
+überhaupt nicht — der Planner konnte nur mit dem umgehen, was schon da
+war. Jetzt trägt jede der drei Spalten in ihrer Kopfzeile einen runden
+Plus-Knopf, und ein Klick in eine freie Stunde legt dort einen Termin an,
+mit Tag und Uhrzeit von der angeklickten Stelle. Der Knopf sitzt im Kopf,
+nicht am Fuß: Der Fuß liegt hinter zwölf Stunden Raster.
+
+Zwei Türen mit Absicht — der Knopf ist immer sichtbar und funktioniert
+auf dem iPad, der Klick ins Raster ist der schnelle Weg mit der Maus.
+
+**Dabei aufgefallen und nicht behoben:** Das **Ziehen funktioniert auf
+dem iPad überhaupt nicht.** Der Planner benutzt HTML5-Drag-and-Drop, und
+iOS Safari feuert diese Ereignisse nicht. Einplanen geht dort über den
+Dialog — Block antippen, Tag und Uhrzeit setzen. So entschieden; ein
+Umbau auf Zeigerereignisse wäre ein eigener Schritt.
+
+**Davor: die Anordnung der Dialogfelder.** Alle vier folgen jetzt
 derselben Ordnung — **Was → Wann → Wer → Dazu**. Datum und Uhrzeit standen
 in Aufgabe und Notiz in verschiedenen Zeilen, obwohl sie eine Angabe sind;
 die Dauer eines Termins stand neben dem Kontakt statt neben der Uhrzeit;

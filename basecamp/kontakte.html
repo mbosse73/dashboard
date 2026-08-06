@@ -18,45 +18,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 .rahmenhinweis b{color:#1a1a18}
 
 /* ============================================================
-   Dieselbe Kachel-Galerie wie im echten Modul — Favoriten oben,
-   eigene Suche, Anrufen/Mailen als eigene Knöpfe — nur in
-   Basecamps Farben und Formen.
+   Basecamps eigene Optik: eine ruhige Liste auf Creme statt
+   Kacheln — genau wie Basecamps eigene Listen. Der Inhalt sind
+   aber echte Kontakte mit Anrufen/Schreiben, kein To-do-Ersatz.
    ============================================================ */
-.bc{max-width:1180px;margin:16px auto 60px;border-radius:14px;overflow:hidden;
+.bc{max-width:1180px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
   box-shadow:0 1px 3px rgba(15,15,15,.08);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:#0f2b1d;background:#fffcf5}
-.bc-top{display:flex;align-items:center;gap:14px;padding:14px 30px;border-bottom:1.5px solid #ece4cf;
+.bc-top{display:flex;align-items:center;gap:14px;padding:16px 34px;border-bottom:1px solid #ece4cf;
   background:#fff9ea}
-.bc-top .ic{width:30px;height:30px;border-radius:9px;background:#1d7a5f;display:grid;place-items:center;
-  color:#fff;font-weight:800;font-size:13px}
-.bc-top h1{font-size:19px;font-weight:800;font-family:Georgia,"Iowan Old Style",serif}
+.bc-ic{width:34px;height:34px;border-radius:8px;background:#1d7a5f;display:grid;place-items:center;
+  color:#fff;font-weight:800}
+.bc-krume{font-size:12.5px;color:#8a8368}
+.bc-top h1{font-size:19px;font-weight:800}
+.bc-top .such{margin-left:auto;font-size:12.5px;color:#8a8368;background:#fff;border:1px solid #ece4cf;
+  border-radius:8px;padding:6px 12px}
 
-.bc-body{padding:24px 30px 40px}
-.bc-such{display:flex;align-items:center;gap:10px;border:1.5px solid #ece4cf;border-radius:12px;
-  padding:11px 15px;font-size:14px;color:#8a8368;margin-bottom:20px;background:#fff}
-.bc-such svg{width:16px;height:16px;stroke:#8a8368;stroke-width:2;fill:none}
+.bc-body{padding:22px 34px 40px;max-width:820px}
+.bc-lead{font-size:14px;color:#5f5847;margin-bottom:20px}
+.bc-lead b{color:#0f2b1d}
+.bc-sek{font-size:12px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+  color:#8a8368;margin:18px 0 4px}
 
-.bc-sek{display:flex;align-items:center;gap:10px;margin:6px 0 12px}
-.bc-sek b{font-size:14px;font-weight:800}
-.bc-sek .linie{flex:1;height:2px;background:#e9ddb8}
-.bc-sek .zahl{font-size:12.5px;color:#8a8368;font-weight:700}
-
-.bc-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;
-  margin-bottom:8px}
-.bc-kk{background:#fff;border:1.5px solid #ece4cf;border-radius:13px;padding:14px 15px}
-.bc-kk.fav{border-color:#cfe4da;background:#fbfff9}
-.bc-kk .kopf{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.bc-kk .av{width:34px;height:34px;border-radius:10px;color:#fff;font-weight:800;font-size:12.5px;
-  display:grid;place-items:center;flex-shrink:0}
-.bc-kk .tt{font-weight:800;font-size:15px}
-.bc-kk .stern{margin-left:auto;color:#c2a63b;font-size:14px}
-.bc-kk .mm{font-size:12.5px;color:#8a8368;margin-left:44px}
-.bc-kk .wege{display:flex;gap:8px;margin-top:11px}
-.bc-kk .wege span{width:30px;height:30px;border-radius:9px;background:#eef6f1;color:#1d7a5f;
-  display:grid;place-items:center}
-.bc-kk .wege span.blass{background:#f4f0e0;color:#c9c2a4}
-.bc-kk .wege svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.1;fill:none}
+.bc-eintrag{display:flex;align-items:center;gap:13px;border-bottom:1px solid #f0e8cf;padding:11px 4px}
+.bc-eintrag .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:11px;font-weight:800;flex-shrink:0}
+.bc-titel{font-size:14.5px;font-weight:700;display:flex;align-items:center;gap:7px}
+.bc-titel svg{width:13px;height:13px;stroke:#c2a63b;fill:#c2a63b}
+.bc-mm{font-size:12.5px;color:#8a8368}
+.bc-wege{display:flex;gap:14px;margin-left:auto;flex-shrink:0}
+.bc-wege a{font-size:12.5px;color:#1d7a5f;font-weight:700;text-decoration:none}
+.bc-wege a.blass{color:#c9c2a4}
 </style>
 
 <div class="meta">
@@ -69,69 +62,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     <a href="termin.html">Termin</a>
   </nav>
 </div>
-<p class="rahmenhinweis"><b>Überarbeitet:</b> Dieselbe Kachel-Galerie wie im echten Modul —
-Favoriten stehen oben, eine eigene Suche nur für Kontakte, Anrufen und Mailen als eigene
-Knöpfe. Nur eingekleidet in Basecamps warmes Creme und die dicken, runden Formen.</p>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselbe Kontaktliste wie im echten
+Modul, nur in Basecamps ruhiger Listenoptik statt Kacheln: eine Zeile je Person, Anrufen
+und Schreiben als eigene Verweise am rechten Rand.</p>
 
 <div class="bc">
-  <div class="bc-top"><span class="ic">D</span><h1>Kontakte</h1></div>
+  <div class="bc-top">
+    <span class="bc-ic">D</span>
+    <div><div class="bc-krume">Dashboard</div><h1>Kontakte</h1></div>
+    <span class="such">Suchen …</span>
+  </div>
   <div class="bc-body">
-    <div class="bc-such"><svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>Nur Kontakte durchsuchen …</div>
+    <p class="bc-lead"><b>6 Kontakte, 3 davon angeheftet.</b> Angeheftete Kontakte
+    erscheinen auch in der Leiste.</p>
 
-    <div class="bc-sek"><b>Favoriten</b><span class="linie"></span></div>
-    <div class="bc-kacheln">
-      <div class="bc-kk fav">
-        <div class="kopf"><span class="av" style="background:#1d7a5f">EB</span><span class="tt">Eva Bergmann</span><span class="stern">★</span></div>
-        <div class="mm">Kanzlei Bergmann</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
-      <div class="bc-kk fav">
-        <div class="kopf"><span class="av" style="background:#4573d2">JK</span><span class="tt">Jan Kowalski</span><span class="stern">★</span></div>
-        <div class="mm">Nordstern GmbH</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
-      <div class="bc-kk fav">
-        <div class="kopf"><span class="av" style="background:#c2a63b">LM</span><span class="tt">Lisa Meier</span><span class="stern">★</span></div>
-        <div class="mm">Nordstern GmbH</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
+    <div class="bc-sek">Favoriten</div>
+    <div class="bc-eintrag">
+      <span class="av" style="background:#e8384f">EB</span>
+      <div><div class="bc-titel">Eva Bergmann<svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg></div>
+        <div class="bc-mm">Kanzlei Bergmann</div></div>
+      <div class="bc-wege"><a href="#">anrufen</a><a href="#">schreiben</a></div>
+    </div>
+    <div class="bc-eintrag">
+      <span class="av" style="background:#4573d2">JK</span>
+      <div><div class="bc-titel">Jan Kowalski<svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg></div>
+        <div class="bc-mm">Nordstern GmbH</div></div>
+      <div class="bc-wege"><a href="#">anrufen</a><a href="#">schreiben</a></div>
+    </div>
+    <div class="bc-eintrag">
+      <span class="av" style="background:#e0a72e">LM</span>
+      <div><div class="bc-titel">Lisa Meier<svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg></div>
+        <div class="bc-mm">Nordstern GmbH</div></div>
+      <div class="bc-wege"><a href="#">anrufen</a><a href="#">schreiben</a></div>
     </div>
 
-    <div class="bc-sek"><b>Alle Kontakte</b><span class="linie"></span><span class="zahl">6</span></div>
-    <div class="bc-kacheln">
-      <div class="bc-kk">
-        <div class="kopf"><span class="av" style="background:#8b5cf6">TM</span><span class="tt">Tobias Meinhardt</span></div>
-        <div class="mm">Meinhardt IT</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
-      <div class="bc-kk">
-        <div class="kopf"><span class="av" style="background:#00c875">PH</span><span class="tt">Petra Hoffmann</span></div>
-        <div class="mm">Stadtwerke</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
-      <div class="bc-kk">
-        <div class="kopf"><span class="av" style="background:#c9c2a4">?</span><span class="tt">Ohne Nummer</span></div>
-        <div class="mm">—</div>
-        <div class="wege">
-          <span class="blass"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span class="blass"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
+    <div class="bc-sek">Alle Kontakte · 6</div>
+    <div class="bc-eintrag">
+      <span class="av" style="background:#1d7a5f">TM</span>
+      <div><div class="bc-titel">Tobias Meinhardt</div><div class="bc-mm">Meinhardt IT</div></div>
+      <div class="bc-wege"><a href="#">anrufen</a><a href="#">schreiben</a></div>
+    </div>
+    <div class="bc-eintrag">
+      <span class="av" style="background:#4a9d6e">PH</span>
+      <div><div class="bc-titel">Petra Hoffmann</div><div class="bc-mm">Stadtwerke</div></div>
+      <div class="bc-wege"><a href="#">anrufen</a><a href="#">schreiben</a></div>
+    </div>
+    <div class="bc-eintrag">
+      <span class="av" style="background:#a8a087">?</span>
+      <div><div class="bc-titel">Ohne Nummer</div><div class="bc-mm">—</div></div>
+      <div class="bc-wege"><a class="blass" href="#">anrufen</a><a class="blass" href="#">schreiben</a></div>
     </div>
   </div>
 </div>

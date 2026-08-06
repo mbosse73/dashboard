@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Basecamp-Fassung — Termin (Dialog)</title>
+<title>Basecamp-Fassung — Termin</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{color-scheme:light}
@@ -18,43 +18,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 .rahmenhinweis b{color:#1a1a18}
 
 /* ============================================================
-   Derselbe Dialog wie in der Anwendung — Titel, Tag + Uhrzeit,
-   Dauer + Kontakt, Anmerkung, Fuß mit Löschen/Speichern — nur
-   in Basecamps Optik. Was → Wann → Wer → Dazu bleibt unverändert.
+   Basecamp öffnet nichts als Dialog — jede Sache ist ihre eigene
+   volle Seite. Derselbe Termin, dieselben Felder in Was → Wann →
+   Wer → Dazu, nur als Seite statt schwebendem Panel.
    ============================================================ */
-.buehne{background:#f2f1ee;min-height:640px;display:flex;align-items:center;justify-content:center;
-  padding:20px}
-.dlg{width:620px;background:#fffcf5;border-radius:18px;box-shadow:0 24px 70px rgba(15,43,29,.16);
-  overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#0f2b1d}
-.dlg-k{display:flex;align-items:baseline;gap:12px;padding:18px 24px 14px;
-  border-bottom:1.5px solid #ece4cf;background:#fff9ea}
-.dlg-k .art{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#8a8368}
-.dlg-t{font-size:18px;font-weight:800;font-family:Georgia,"Iowan Old Style",serif}
-.dlg-zu{margin-left:auto;font-size:20px;color:#8a8368}
-.dlg-b{padding:20px 24px}
-.draster{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px}
-.dfeld{display:flex;flex-direction:column;gap:6px}
-.dfeld.breit{grid-column:1/-1}
-.dfeld label{font-size:12.5px;color:#8a8368;font-weight:800}
-.dfeld .ein{border:1.5px solid #ece4cf;border-radius:11px;padding:9px 13px;background:#fff;
-  font-size:14.5px;color:#0f2b1d;min-height:41px;display:flex;align-items:center;gap:7px}
-.dfeld .ein.leer{color:#a8a087}
-.dfeld .ein.hoch{min-height:76px;align-items:flex-start}
-.dfeld .ein:focus-within{border-color:#1d7a5f;box-shadow:0 0 0 3px #eaf5ee}
-.dfeld .sub{font-size:11.5px;color:#8a8368;line-height:1.4}
-.dfeld.schalter{flex-direction:row;align-items:center;gap:9px;grid-column:1/-1;
-  padding:10px 13px;border:1.5px solid #ece4cf;border-radius:11px}
-.dfeld.schalter .kast{width:18px;height:18px;border:2px solid #cbbf95;border-radius:6px}
-.merk{margin-top:14px;padding:12px 14px;border-radius:11px;background:#fff9ea;
-  border:1.5px dashed #e9ddb8;font-size:12.5px;color:#5f5847;line-height:1.5}
-.merk b{color:#0f2b1d}
-.dlg-f{display:flex;align-items:center;gap:10px;padding:14px 24px;border-top:1.5px solid #ece4cf}
-.tat-weg{color:#b8433a;font-weight:800;font-size:13.5px}
-.sp{flex:1}
-.tat-still{font-size:13.5px;font-weight:700;color:#5f5847;border:1.5px solid #ece4cf;
+.bc{max-width:900px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.08);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#0f2b1d;background:#fffcf5}
+.bc-top{display:flex;align-items:center;gap:14px;padding:16px 34px;border-bottom:1px solid #ece4cf;
+  background:#fff9ea}
+.bc-ic{width:34px;height:34px;border-radius:8px;background:#1d7a5f;display:grid;place-items:center;
+  color:#fff;font-weight:800}
+.bc-krume{font-size:12.5px;color:#8a8368}
+.bc-top h1{font-size:19px;font-weight:800}
+
+.bc-body{padding:28px 40px 40px}
+.bc-titel{font-size:24px;font-weight:800;margin-bottom:16px;font-family:Georgia,"Iowan Old Style",serif}
+.bc-zeilen{border-top:1px solid #ece4cf;border-bottom:1px solid #ece4cf;padding:14px 0;margin-bottom:20px}
+.bc-z{display:flex;gap:14px;padding:6px 0;font-size:14px}
+.bc-z .lab{width:110px;flex-shrink:0;color:#8a8368;font-weight:600}
+.bc-z .val{font-weight:600}
+.bc-z .sub{color:#8a8368;font-weight:400;margin-left:8px}
+.bc-z .av{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;
+  background:#e0a72e;color:#fff;font-size:9px;font-weight:700;margin-right:6px;vertical-align:middle}
+.bc-notiz{font-size:14.5px;line-height:1.7;color:#3d3826;margin-bottom:26px}
+.bc-notiz b{color:#0f2b1d}
+.bc-fuss{display:flex;align-items:center;gap:12px;border-top:2px solid #e9ddb8;padding-top:18px}
+.bc-weg{color:#b8433a;font-weight:800;font-size:13.5px}
+.bc-sp{flex:1}
+.bc-still{font-size:13.5px;font-weight:700;color:#5f5847;border:1.5px solid #ece4cf;
   border-radius:10px;padding:9px 16px;background:#fff}
-.tat{font-size:13.5px;font-weight:800;color:#fff;background:#1d7a5f;border-radius:10px;
+.bc-tat{font-size:13.5px;font-weight:800;color:#fff;background:#1d7a5f;border-radius:10px;
   padding:9px 18px}
 </style>
 
@@ -68,36 +63,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     <a class="hier" href="termin.html">Termin</a>
   </nav>
 </div>
-<p class="rahmenhinweis"><b>Überarbeitet:</b> Derselbe Dialog wie in der Anwendung, Feld für
-Feld — Titel, Tag und Uhrzeit nebeneinander, Dauer und Kontakt darunter, die Anmerkung
-zuletzt und breit. Was → Wann → Wer → Dazu bleibt unangetastet, nur eingekleidet in
-Basecamps warme Formen und die dicke Schrift für den Titel.</p>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Basecamp öffnet nichts als Dialog
+oder Seitenpanel — jede Sache ist ihre eigene, vollständige Seite. Dieselben Felder wie im
+echten Dialog, Was → Wann → Wer → Dazu, nur als Seite mit dickem Titel statt schwebendem
+Panel.</p>
 
-<div class="buehne">
-  <div class="dlg">
-    <div class="dlg-k">
-      <span class="art">Termin bearbeiten</span>
-      <span class="dlg-t">Strategie-Call</span>
-      <span class="dlg-zu">×</span>
+<div class="bc">
+  <div class="bc-top">
+    <span class="bc-ic">D</span>
+    <div><div class="bc-krume">Dashboard · Planner</div><h1>Termin bearbeiten</h1></div>
+  </div>
+  <div class="bc-body">
+    <div class="bc-titel">Strategie-Call</div>
+    <div class="bc-zeilen">
+      <div class="bc-z"><span class="lab">Tag</span><span class="val">Donnerstag, 6. Aug<span class="sub">Nur diese beiden Werktage.</span></span></div>
+      <div class="bc-z"><span class="lab">Uhrzeit</span><span class="val">10:00<span class="sub">60 Minuten</span></span></div>
+      <div class="bc-z"><span class="lab">Kontakt</span><span class="val"><span class="av">LM</span>Lisa Meier</span></div>
     </div>
-    <div class="dlg-b">
-      <div class="draster">
-        <div class="dfeld breit"><label>Titel</label><div class="ein">Strategie-Call</div></div>
-        <div class="dfeld breit"><label>Tag</label><div class="ein">Donnerstag, 6. Aug<span style="margin-left:auto;color:#8a8368">▾</span></div>
-          <div class="sub">Nur diese beiden Werktage.</div></div>
-        <div class="dfeld"><label>Uhrzeit</label><div class="ein">10:00</div></div>
-        <div class="dfeld"><label>Dauer</label><div class="ein">60<span style="margin-left:auto;color:#8a8368">Minuten</span></div></div>
-        <div class="dfeld breit"><label>Kontakt</label><div class="ein">Lisa Meier<span style="margin-left:auto;color:#8a8368">▾</span></div></div>
-        <div class="dfeld breit"><label>Anmerkung</label><div class="ein hoch">Video · Agenda: Positionierung Q4, Preisstaffeln, Wettbewerbsvergleich.</div></div>
-      </div>
-      <div class="merk"><b>Termine gibt es nur für den aktuellen und den nächsten Werktag.</b>
-        Im Planner lassen sie sich zwischen beiden Tagen hin und her ziehen.</div>
+    <div class="bc-notiz">
+      Video · Agenda:
+      <br>— Positionierung Q4
+      <br>— Preisstaffeln
+      <br>— Wettbewerbsvergleich
     </div>
-    <div class="dlg-f">
-      <span class="tat-weg">Löschen</span>
-      <span class="sp"></span>
-      <span class="tat-still">Abbrechen</span>
-      <span class="tat">Speichern</span>
+    <div class="bc-fuss">
+      <span class="bc-weg">Löschen</span>
+      <span class="bc-sp"></span>
+      <span class="bc-still">Abbrechen</span>
+      <span class="bc-tat">Speichern</span>
     </div>
   </div>
 </div>

@@ -18,74 +18,44 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 .rahmenhinweis b{color:#1a1a18}
 
 /* ============================================================
-   Nicht Basecamps Funktionen — Basecamps Optik. Dieselben vier
-   Flächen wie in der Anwendung, nur in Basecamps Farben,
-   Formen und Typografie eingekleidet: warmes Creme, kräftiges
-   Dunkelgrün, große runde Ecken, freundliche dicke Schrift.
+   Basecamps eigene Optik: eine Projektseite mit Karten-Raster,
+   sehr ruhig, sehr wenig Farbe. Die Karten zeigen aber unsere
+   eigenen Funktionen — Überfällig, Heute, Module, Favoriten —
+   nicht Basecamps sechs feste Werkzeuge.
    ============================================================ */
-.bc{max-width:1180px;margin:16px auto 60px;border-radius:14px;overflow:hidden;
+.bc{max-width:1180px;margin:16px auto 60px;border-radius:11px;overflow:hidden;
   box-shadow:0 1px 3px rgba(15,15,15,.08);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   color:#0f2b1d;background:#fffcf5}
 
-.bc-top{display:flex;align-items:center;gap:14px;padding:14px 30px;border-bottom:1px solid #ece4cf;
+.bc-top{display:flex;align-items:center;gap:14px;padding:16px 34px;border-bottom:1px solid #ece4cf;
   background:#fff9ea}
-.bc-top .ic{width:30px;height:30px;border-radius:9px;background:#1d7a5f;display:grid;place-items:center;
-  color:#fff;font-weight:800;font-size:13px}
-.bc-top .datum{font-size:13px;color:#8a8368;font-weight:700}
-.bc-top .re{margin-left:auto;display:flex;gap:10px}
-.bc-btn{font-size:12.5px;font-weight:700;color:#1d7a5f;border:1.5px solid #cfe4da;border-radius:9px;
-  padding:6px 13px;background:#fff}
+.bc-ic{width:34px;height:34px;border-radius:8px;background:#1d7a5f;display:grid;place-items:center;
+  color:#fff;font-weight:800}
+.bc-top h1{font-size:19px;font-weight:800}
+.bc-top .re{margin-left:auto;font-size:12.5px;color:#8a8368}
 
 .bc-body{padding:26px 34px 40px}
-.bc-eingabe{display:flex;align-items:center;gap:10px;border:2px solid #1d7a5f;border-radius:14px;
-  padding:14px 18px;font-size:16px;color:#8a8368;margin-bottom:26px;background:#fff}
-.bc-eingabe svg{width:18px;height:18px;stroke:#1d7a5f;stroke-width:2.2;fill:none}
+.bc-lead{font-size:14px;color:#5f5847;margin-bottom:22px;max-width:70ch}
+.bc-lead b{color:#0f2b1d}
 
-.bc-sek{display:flex;align-items:center;gap:10px;margin:22px 0 10px}
-.bc-sek b{font-size:14px;font-weight:800;letter-spacing:.01em}
-.bc-sek.rot b{color:#b8433a}
-.bc-sek .linie{flex:1;height:2px;background:#e9ddb8}
-.bc-sek .zahl{font-size:12.5px;color:#8a8368;font-weight:700}
+.bc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.bc-karte{border:1px solid #ece4cf;border-radius:12px;padding:16px 17px;background:#fff}
+.bc-karte .kopf{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.bc-karte .kopf svg{width:19px;height:19px;stroke:#1d7a5f;stroke-width:1.8;fill:none}
+.bc-karte .kopf b{font-size:14.5px}
+.bc-karte .kopf .zahl{margin-left:auto;font-size:12px;color:#8a8368;font-weight:700}
+.bc-zeile{display:flex;align-items:baseline;gap:8px;font-size:12.5px;color:#5f5847;padding:3px 0}
+.bc-zeile .p{color:#c2a63b;font-weight:700}
+.bc-zeile.spaet{color:#b8433a;font-weight:600}
+.bc-mehr{font-size:12px;color:#1d7a5f;font-weight:700;margin-top:8px}
+.bc-ger{font-size:10px;font-weight:700;color:#8a8368;background:#fff9ea;border:1px solid #ece4cf;
+  padding:1px 7px;border-radius:8px;margin-left:auto}
 
-.bc-karte{background:#fff;border:1.5px solid #ece4cf;border-radius:12px;padding:13px 16px;
-  margin-bottom:8px;display:flex;align-items:center;gap:12px}
-.bc-karte.spaet{border-color:#f3c9c2;background:#fef6f3}
-.bc-kast{width:20px;height:20px;border:2px solid #cbbf95;border-radius:6px;flex-shrink:0}
-.bc-karte.spaet .bc-kast{border-color:#b8433a}
-.bc-t{font-size:14.5px;font-weight:700}
-.bc-m{font-size:12.5px;color:#8a8368;margin-top:2px}
-.bc-zeit{font-size:13px;font-weight:800;color:#1d7a5f;width:44px;flex-shrink:0}
-.bc-tag-spaet{margin-left:auto;font-size:11px;font-weight:800;color:#b8433a;background:#fbe2dc;
-  padding:3px 10px;border-radius:20px}
-
-.bc-gross{font-size:26px;font-weight:800;font-family:Georgia,"Iowan Old Style",serif}
-.bc-gross-m{font-size:14px;color:#8a8368;margin-top:6px}
-
-.bc-schmier{border:1.5px dashed #cbbf95;border-radius:12px;padding:13px 16px;margin-top:8px;
-  font-family:ui-monospace,"SF Mono",Consolas,monospace;font-size:13px;color:#3d3826;background:#fff}
-
-.bc-favz{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.bc-fav{background:#fff;border:1.5px solid #ece4cf;border-radius:12px;padding:13px 14px}
-.bc-fav .kopf{display:flex;align-items:center;gap:9px;margin-bottom:8px}
-.bc-fav .av{width:32px;height:32px;border-radius:9px;color:#fff;font-weight:800;font-size:12px;
-  display:grid;place-items:center;flex-shrink:0}
-.bc-fav .tt{font-weight:800;font-size:14px}
-.bc-fav .mm{font-size:12px;color:#8a8368;margin-left:41px}
-.bc-fav .wege{display:flex;gap:7px;margin-top:9px}
-.bc-fav .wege span{width:28px;height:28px;border-radius:8px;background:#eef6f1;color:#1d7a5f;
-  display:grid;place-items:center}
-.bc-fav .wege svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.1;fill:none}
-
-.bc-modliste{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
-.bc-mod{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:14px;
-  font-weight:700}
-.bc-mod .ic{width:22px;height:22px;border-radius:6px;background:#eef6f1;color:#1d7a5f;
-  display:grid;place-items:center;flex-shrink:0}
-.bc-mod .ic svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.2;fill:none}
-.bc-mod .zahl{margin-left:auto;font-size:12.5px;color:#8a8368;font-weight:600}
-.bc-mod .ger{font-size:9.5px;font-weight:800;color:#8a8368;background:#f0e9d3;padding:2px 7px;
-  border-radius:10px;margin-left:6px}
+.bc-leute{display:flex;align-items:center;gap:9px;padding:6px 0;flex-wrap:wrap}
+.bc-leute .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:10px;font-weight:700;flex-shrink:0}
+.bc-leute .name{font-size:12.5px;color:#5f5847}
 </style>
 
 <div class="meta">
@@ -98,85 +68,81 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     <a href="termin.html">Termin</a>
   </nav>
 </div>
-<p class="rahmenhinweis"><b>Überarbeitet:</b> Nicht Basecamps eigene Werkzeuge — die
-Funktionen bleiben genau die, die für die Anwendung schon feststehen. Nur Farben, Formen
-und Typografie sind Basecamps: warmes Creme statt Weiß, ein kräftiges Dunkelgrün statt
-Blau oder Violett, große runde Ecken, eine freundliche, dicke Schrift für Überschriften.</p>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselben Funktionen wie in der
+Anwendung — Überfällig, der Tagesplan, die Module, Favoriten — in Basecamps eigenem
+Karten-Raster: eine Projektseite mit ruhigen weißen Karten auf Creme, jede mit einer
+Vorschau des Neuesten. Nicht Basecamps sechs feste Werkzeuge, nur sein Erscheinungsbild.</p>
 
 <div class="bc">
   <div class="bc-top">
-    <span class="ic">D</span>
-    <span class="datum">Donnerstag, 6. August</span>
-    <span class="re">
-      <span class="bc-btn">Sichern</span>
-      <span class="bc-btn">Laden</span>
-    </span>
+    <span class="bc-ic">D</span>
+    <h1>Dashboard</h1>
+    <span class="re">Donnerstag, 6. August</span>
   </div>
   <div class="bc-body">
-    <div class="bc-eingabe">
-      <svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg>
-      Suchen, rechnen, erfassen …
-    </div>
+    <p class="bc-lead"><b>Ohne Eingabe zeigt die Leiste Überfälliges, den Tagesplan und
+    die Module.</b> Eine Suche oder Eingabe würde diese Ansicht ersetzen.</p>
 
-    <div class="bc-sek rot"><b>Überfällig</b><span class="linie"></span><span class="zahl">2</span></div>
-    <div class="bc-karte spaet">
-      <span class="bc-kast"></span>
-      <div><div class="bc-t">Rechnung 2026-114 freigeben</div>
-        <div class="bc-m">Aufgabe · Eva Bergmann</div></div>
-      <span class="bc-tag-spaet">Überfällig</span>
-    </div>
-    <div class="bc-karte spaet">
-      <span class="bc-kast" style="border-radius:50%"></span>
-      <div><div class="bc-t">Vertrag Meinhardt IT</div>
-        <div class="bc-m">Workflow · Schritt 4 von 8 · Rückfragen geklärt</div></div>
-      <span class="bc-tag-spaet">Überfällig</span>
-    </div>
+    <div class="bc-grid">
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg><b>Überfällig</b><span class="zahl">2</span></div>
+        <div class="bc-zeile spaet"><span class="p">●</span>Rechnung 2026-114 freigeben</div>
+        <div class="bc-zeile spaet"><span class="p">●</span>Vertrag Meinhardt IT · Workflow 4/8</div>
+      </div>
 
-    <div class="bc-sek"><b>Heute</b><span class="linie"></span></div>
-    <div class="bc-gross">Kein Termin mehr.</div>
-    <div class="bc-gross-m">Der Rest des Tages gehört dir.</div>
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 3v4"/></svg><b>Heute</b><span class="zahl">2</span></div>
+        <div class="bc-zeile">08:00 · Standup</div>
+        <div class="bc-zeile">10:00 · Strategie-Call, Lisa Meier</div>
+        <div class="bc-mehr">Planner öffnen →</div>
+      </div>
 
-    <div class="bc-sek"><b>Schmierzettel</b><span class="linie"></span></div>
-    <div class="bc-schmier">Sitzungsraum 2.14 ab 14 Uhr<br>Code Drucker: 4417</div>
-
-    <div class="bc-sek"><b>Favoriten</b><span class="linie"></span><span class="zahl">alle 6</span></div>
-    <div class="bc-favz">
-      <div class="bc-fav">
-        <div class="kopf"><span class="av" style="background:#1d7a5f">EB</span><span class="tt">Eva Bergmann</span></div>
-        <div class="mm">Kanzlei Bergmann</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg><b>Favoriten</b></div>
+        <div class="bc-leute">
+          <span class="av" style="background:#e8384f">EB</span><span class="name">Eva Bergmann</span>
+        </div>
+        <div class="bc-leute">
+          <span class="av" style="background:#4573d2">JK</span><span class="name">Jan Kowalski</span>
+        </div>
+        <div class="bc-leute">
+          <span class="av" style="background:#e0a72e">LM</span><span class="name">Lisa Meier</span>
         </div>
       </div>
-      <div class="bc-fav">
-        <div class="kopf"><span class="av" style="background:#4573d2">JK</span><span class="tt">Jan Kowalski</span></div>
-        <div class="mm">Nordstern GmbH</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
-      <div class="bc-fav">
-        <div class="kopf"><span class="av" style="background:#c2a63b">LM</span><span class="tt">Lisa Meier</span></div>
-        <div class="mm">Nordstern GmbH</div>
-        <div class="wege">
-          <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
-          <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
-        </div>
-      </div>
-    </div>
 
-    <div class="bc-sek"><b>Module</b><span class="linie"></span><span class="zahl">11 angemeldet</span></div>
-    <div class="bc-modliste">
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><circle cx="7" cy="7" r="3"/><path d="M2 17c0-3.5 2.5-6 5-6s5 2.5 5 6"/></svg></span>Kontakte<span class="zahl">6</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="m6 10 3 3 6-6"/></svg></span>Aufgaben<span class="zahl">8</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 3v4"/></svg></span>Kalender<span class="zahl">5</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><path d="M4 4h9l3 3v9H4z"/><path d="M7 9h6M7 12h6"/></svg></span>Notizen<span class="zahl">5</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><path d="M4 6h12M4 10h8M4 14h10"/></svg></span>Textbausteine<span class="ger">Gerüst</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><path d="M6 3h8v14l-4-3-4 3Z"/></svg></span>Bookmarks<span class="ger">Gerüst</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg></span>Workflows<span class="ger">Gerüst</span></div>
-      <div class="bc-mod"><span class="ic"><svg viewBox="0 0 20 20"><path d="M4 6h5M4 10h5M4 14h5M11 6l1.5 1.5L15 5"/></svg></span>Outliner<span class="ger">Gerüst</span></div>
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M4 15V5a2 2 0 0 1 2-2h4l2 2h4a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/></svg><b>Kontakte</b><span class="zahl">6</span></div>
+        <div class="bc-zeile">Eva Bergmann, Jan Kowalski, Lisa Meier …</div>
+        <div class="bc-mehr">Alle Kontakte →</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="m6 10 3 3 6-6"/></svg><b>Aufgaben</b><span class="zahl">8</span></div>
+        <div class="bc-zeile">Backup-Skript testen</div>
+        <div class="bc-zeile">KR 1.2 Review vorbereiten</div>
+        <div class="bc-mehr">Alle 8 ansehen →</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M6 8h8M6 11h5"/></svg><b>Notizen</b><span class="zahl">5</span></div>
+        <div class="bc-zeile">Architekturskizze</div>
+        <div class="bc-zeile">4 weitere Notizen</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 3v4M13 3v4M3 9h14"/></svg><b>Textbausteine</b><span class="bc-ger">Gerüst</span></div>
+        <div class="bc-zeile">Noch ohne Inhalt</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1"/></svg><b>Bookmarks</b><span class="bc-ger">Gerüst</span></div>
+        <div class="bc-zeile">Noch ohne Inhalt</div>
+      </div>
+
+      <div class="bc-karte">
+        <div class="kopf"><svg viewBox="0 0 20 20"><path d="M4 10a6 6 0 0 1 10-4.5M16 10a6 6 0 0 1-10 4.5"/><path d="m14 4 .5 2-2-.3M6 16l-.5-2 2 .3"/></svg><b>Workflows</b><span class="bc-ger">Gerüst</span></div>
+        <div class="bc-zeile">Noch ohne Inhalt</div>
+      </div>
     </div>
   </div>
 </div>

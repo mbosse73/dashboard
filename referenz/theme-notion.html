@@ -379,6 +379,10 @@ kbd{font-family:var(--mono);font-size:12px;background:var(--raise-fest);border:0
 .st-t{width:42px;flex-shrink:0;font-size:12px;color:var(--ink3);padding-top:4px;
   font-variant-numeric:tabular-nums}
 .st-l{flex:1;min-width:0;padding:3px 0 3px 6px;display:flex;flex-direction:column;gap:2px}
+/* Die freie Stunde ist anklickbar. Ohne Zeichen wäre das unsichtbar —
+   beim Zeigen färbt sie sich. */
+.st-l{cursor:copy}
+.stunde:hover .st-l:empty{background:var(--raise);border-radius:var(--r)}
 .blk{border-radius:var(--r);padding:5px 8px;background:var(--raise-fest);cursor:grab;
   box-shadow:inset 3px 0 0 var(--ink3);transition:background 20ms ease-in}
 .blk:hover{background:rgba(55,53,47,.11)}
@@ -394,14 +398,14 @@ kbd{font-family:var(--mono);font-size:12px;background:var(--raise-fest);border:0
 .blk .kast svg{width:9px;height:9px}
 .blk.fertig .t{text-decoration:line-through;color:var(--ink3)}
 /* Anlegeknopf in der Spaltenkopfzeile — rund, ohne Beschriftung */
+/* Notions Blau trägt als Fläche, aber nicht als Text — deshalb --tinte-tx
+   für das Zeichen: 4,65 : 1 auf dem hellblauen Grund. */
 .sp-neu{margin-left:8px;flex-shrink:0;width:26px;height:26px;border-radius:50%;
-  border:0;background:transparent;color:var(--ink3);
+  border:1px solid var(--tinte-tx);background:var(--tinte-s);color:var(--tinte-tx);
   display:grid;place-items:center;align-self:center}
-.sp-neu svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.7;fill:none;
+.sp-neu svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;
   stroke-linecap:round}
-.sp-neu:hover{background:var(--raise);color:var(--ink)}
-.st-l{cursor:copy}
-.stunde:hover .st-l:empty{background:var(--raise);border-radius:var(--r)}
+.sp-neu:hover{background:#cbe0ea}
 .vz{cursor:pointer}
 .jetztlinie{position:absolute;left:42px;right:0;height:2px;background:var(--signal);z-index:3}
 .jetztlinie::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;

@@ -334,6 +334,11 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .st-t{width:40px;flex-shrink:0;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
   padding-top:5px;font-variant-numeric:tabular-nums}
 .st-l{flex:1;min-width:0;padding:3px 0 3px 6px;display:flex;flex-direction:column;gap:3px}
+/* Die freie Stunde ist anklickbar. Ohne Zeichen wäre das unsichtbar —
+   beim Zeigen färbt sie sich. Auf dem iPad fällt das weg, dafür gibt
+   es die Knöpfe in den Kopfzeilen. */
+.st-l{cursor:copy}
+.stunde:hover .st-l:empty{background:var(--tinte-s);border-radius:6px}
 .blk{border-radius:7px;padding:7px 10px;border:1px solid var(--rule2);background:var(--sheet);
   cursor:grab;border-left-width:3px}
 .blk:hover{border-color:var(--tinte)}
@@ -351,15 +356,16 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 /* Der Anlegeknopf: rund, ohne Beschriftung, in der Spaltenkopfzeile.
    Am Fuß der Spalte läge er hinter zwölf Stunden Raster — man müsste
    erst scrollen, um etwas anzulegen. Die Kopfzeile bleibt stehen. */
+/* Tinte wie bei „Speichern“: Der Knopf ist die tragende Handlung dieser
+   Fläche, nicht eine Kategorie. Damit bleibt die Farbregel gewahrt —
+   Tinte steht für „jetzt und aktiv“, nicht für „Termine sind blau“.
+   Das Blau des Zeichens liegt bei 8,3 : 1 auf der Kreisfläche. */
 .sp-neu{margin-left:8px;flex-shrink:0;width:24px;height:24px;border-radius:50%;
-  border:1px solid var(--rule2);background:var(--sheet);color:var(--ink3);
+  border:1px solid var(--tinte);background:var(--tinte-s);color:var(--tinte);
   display:grid;place-items:center;align-self:center}
-.sp-neu svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.6;fill:none;
+.sp-neu svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.7;fill:none;
   stroke-linecap:round}
-.sp-neu:hover{border-color:var(--tinte);color:var(--tinte);background:var(--tinte-s)}
-/* Die freie Stunde ist anklickbar — ohne Zeichen wäre das unsichtbar. */
-.st-l{cursor:copy}
-.stunde:hover .st-l:empty{background:var(--tinte-s);border-radius:6px}
+.sp-neu:hover{background:#d9dff1}
 .vz{cursor:pointer}
 .jetztlinie{position:absolute;left:40px;right:0;height:2px;background:var(--signal);z-index:3}
 .jetztlinie::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;

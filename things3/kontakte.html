@@ -1,0 +1,124 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Things-3-Fassung — Kontakte</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Dieselbe Kontaktliste — Favoriten oben, Anrufen/Schreiben als
+   eigene Knöpfe — in Things 3s reinweißer Listenoptik: schmale
+   Zeilen, feine Trennlinien, blaue Aktionsfarbe.
+   ============================================================ */
+.th{max-width:900px;margin:16px auto 60px;border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.1);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#1c1c1e;background:#ffffff}
+.t-kopf{padding:26px 34px 10px}
+.t-kopf h1{font-size:26px;font-weight:800}
+.t-kopf .such{margin-top:12px;display:flex;align-items:center;gap:8px;padding:8px 13px;
+  border-radius:9px;background:#f2f2f4;color:#8e8e93;font-size:13px}
+.t-kopf .such svg{width:14px;height:14px;stroke:#8e8e93;stroke-width:1.9;fill:none}
+
+.t-body{padding:6px 34px 34px}
+.t-sek{font-size:12px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:#8e8e93;
+  margin:20px 0 4px}
+.t-zeile{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px solid #f0f0f2}
+.t-zeile .av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#fff;
+  font-size:12px;font-weight:700;flex-shrink:0}
+.t-zeile .info{flex:1;min-width:0}
+.t-zeile .name{font-size:14.5px;font-weight:600;display:flex;align-items:center;gap:6px}
+.t-zeile .stern{color:#ff9500;font-size:12px}
+.t-zeile .mm{font-size:12.5px;color:#8e8e93;margin-top:1px}
+.t-wege{display:flex;gap:8px;flex-shrink:0}
+.t-wege span{width:30px;height:30px;border-radius:50%;background:#eaf4ff;color:#0b84ff;
+  display:grid;place-items:center}
+.t-wege span.blass{background:#f2f2f4;color:#c7c7cc}
+.t-wege svg{width:14px;height:14px;stroke:currentColor;stroke-width:2;fill:none}
+</style>
+
+<div class="meta">
+  <b>Things-3-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Leiste</a>
+    <a href="planner.html">Planner</a>
+    <a class="hier" href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselbe Kontaktliste wie im echten
+Modul, nur in Things 3s reinweißer Listenoptik: schmale Zeilen, feine Trennlinien, runde
+blaue Knöpfe für Anrufen und Schreiben statt Kacheln.</p>
+
+<div class="th">
+  <div class="t-kopf">
+    <h1>Kontakte</h1>
+    <div class="such"><svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>Nur Kontakte durchsuchen …</div>
+  </div>
+  <div class="t-body">
+    <div class="t-sek">Favoriten</div>
+    <div class="t-zeile">
+      <span class="av" style="background:#ff3b30">EB</span>
+      <div class="info"><div class="name">Eva Bergmann<span class="stern">★</span></div><div class="mm">Kanzlei Bergmann</div></div>
+      <div class="t-wege">
+        <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      </div>
+    </div>
+    <div class="t-zeile">
+      <span class="av" style="background:#0b84ff">JK</span>
+      <div class="info"><div class="name">Jan Kowalski<span class="stern">★</span></div><div class="mm">Nordstern GmbH</div></div>
+      <div class="t-wege">
+        <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      </div>
+    </div>
+    <div class="t-zeile">
+      <span class="av" style="background:#ffcc00">LM</span>
+      <div class="info"><div class="name">Lisa Meier<span class="stern">★</span></div><div class="mm">Nordstern GmbH</div></div>
+      <div class="t-wege">
+        <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      </div>
+    </div>
+
+    <div class="t-sek">Alle Kontakte · 6</div>
+    <div class="t-zeile">
+      <span class="av" style="background:#5e5ce6">TM</span>
+      <div class="info"><div class="name">Tobias Meinhardt</div><div class="mm">Meinhardt IT</div></div>
+      <div class="t-wege">
+        <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      </div>
+    </div>
+    <div class="t-zeile">
+      <span class="av" style="background:#34c759">PH</span>
+      <div class="info"><div class="name">Petra Hoffmann</div><div class="mm">Stadtwerke</div></div>
+      <div class="t-wege">
+        <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+        <span><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      </div>
+    </div>
+    <div class="t-zeile">
+      <span class="av" style="background:#c7c7cc">?</span>
+      <div class="info"><div class="name">Ohne Nummer</div><div class="mm">—</div></div>
+      <div class="t-wege">
+        <span class="blass"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
+        <span class="blass"><svg viewBox="0 0 20 20"><rect x="3" y="5" width="14" height="10" rx="2"/><path d="m4 6 6 5 6-5"/></svg></span>
+      </div>
+    </div>
+  </div>
+</div>

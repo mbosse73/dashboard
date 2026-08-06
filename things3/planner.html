@@ -1,0 +1,130 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Things-3-Fassung — Planner</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1420px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Derselbe Planner — Vorrat, zwei Werktage, Stundenraster, runde
+   Plus-Knöpfe — in Things 3s reinweißer, luftiger Optik mit
+   Kreis-Kästchen statt Kästchen und dem blauen Akzent.
+   ============================================================ */
+.th{max-width:1420px;margin:16px auto 60px;border-radius:12px;overflow:hidden;
+  box-shadow:0 1px 3px rgba(15,15,15,.1);display:flex;height:820px;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#1c1c1e;background:#ffffff}
+
+.spalte{flex:1;min-width:0;display:flex;flex-direction:column;border-right:1px solid #e5e5ea}
+.spalte:last-child{border-right:0}
+.spalte.vorrat{flex:0 0 250px;background:#f7f7f8}
+.sp-k{flex-shrink:0;padding:16px 16px 10px;display:flex;align-items:baseline;gap:8px}
+.sp-d{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8e8e93}
+.spalte.heute .sp-d{color:#0b84ff}
+.sp-n{font-size:15px;font-weight:800;display:flex;align-items:baseline;gap:8px;width:100%}
+.sp-n em{font-style:normal;font-size:12px;color:#8e8e93;margin-left:auto;font-weight:600}
+.sp-neu{width:22px;height:22px;border-radius:50%;background:#0b84ff;color:#fff;
+  display:grid;place-items:center;margin-left:6px;flex-shrink:0}
+.sp-neu svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.4;fill:none}
+
+.sp-b{flex:1;overflow-y:auto;padding:2px 14px}
+.vz{display:flex;align-items:flex-start;gap:10px;padding:9px 4px;border-bottom:1px solid #ececee}
+.vz .kreis{width:16px;height:16px;border-radius:50%;border:1.7px solid #c7c7cc;flex-shrink:0;margin-top:1px}
+.vz.spaet .kreis{border-color:#ff3b30}
+.vz .t{font-size:13px;color:#1c1c1e}
+.vz .m{font-size:11.5px;color:#8e8e93;margin-top:1px}
+.vz.spaet .m{color:#ff3b30}
+
+.raster{position:relative}
+.stunde{display:flex;min-height:46px;border-top:1px solid #f0f0f2}
+.stunde:first-child{border-top:0}
+.st-t{width:44px;flex-shrink:0;font-size:10.5px;color:#8e8e93;padding:4px 0 0 12px;
+  font-variant-numeric:tabular-nums}
+.st-l{flex:1;min-width:0;padding:3px 8px;display:flex;flex-direction:column;gap:3px}
+.blk{border-radius:9px;padding:6px 10px;font-size:12.5px;background:#eaf4ff;border-left:3px solid #0b84ff}
+.blk .t{font-weight:700;color:#0b3f7a}
+.blk .m{color:#5a7fa6;margin-top:1px;font-size:11px}
+.blk.aufgabe{background:#fff6e0;border-left-color:#ff9500}
+.blk.aufgabe .t{color:#8a5a00}
+.blk.aufgabe .m{color:#a67b28}
+.jetzt{position:relative}
+.jetzt::before{content:"";position:absolute;left:44px;right:8px;top:15px;height:1.5px;
+  background:#ff3b30}
+.jetzt::after{content:"";position:absolute;left:41px;top:11.5px;width:6px;height:6px;
+  border-radius:50%;background:#ff3b30}
+.jetzt .st-t{color:#ff3b30;font-weight:700}
+</style>
+
+<div class="meta">
+  <b>Things-3-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Leiste</a>
+    <a class="hier" href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Derselbe Planner wie in der
+Anwendung, Feld für Feld — Vorrat links, zwei Werktage mit Stundenraster, die runden
+Plus-Knöpfe in den Kopfzeilen. Nur in Things 3s reinweißer, luftiger Optik mit Kreis-Kästchen
+und dünnen Linien.</p>
+
+<div class="th">
+  <div class="spalte vorrat">
+    <div class="sp-k"><div class="sp-n">Nicht eingeplant<em>6</em><span class="sp-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg></span></div></div>
+    <div class="sp-b">
+      <div class="vz spaet"><span class="kreis"></span><div><div class="t">Rechnung 2026-114 freigeben</div><div class="m">Überfällig · Eva Bergmann</div></div></div>
+      <div class="vz"><span class="kreis"></span><div><div class="t">Backup-Skript testen</div><div class="m">Ohne Frist</div></div></div>
+      <div class="vz"><span class="kreis"></span><div><div class="t">KR 1.2 Review vorbereiten</div><div class="m">15. Aug</div></div></div>
+      <div class="vz"><span class="kreis"></span><div><div class="t">Angebot Meinhardt</div><div class="m">Nachverfolgen · Tobias Meinhardt</div></div></div>
+    </div>
+  </div>
+
+  <div class="spalte heute">
+    <div class="sp-k"><div class="sp-n"><span class="sp-d" style="margin-right:6px">Heute</span>Donnerstag, 6. Aug<em>4</em><span class="sp-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg></span></div></div>
+    <div class="sp-b"><div class="raster">
+      <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">08:00</span><div class="st-l">
+        <div class="blk"><div class="t">Standup</div><div class="m">08:00 · Team</div></div></div></div>
+      <div class="stunde"><span class="st-t">09:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">10:00</span><div class="st-l">
+        <div class="blk"><div class="t">Strategie-Call</div><div class="m">10:00 · Lisa Meier</div></div></div></div>
+      <div class="stunde jetzt"><span class="st-t">11:23</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">12:00</span><div class="st-l">
+        <div class="blk aufgabe"><div class="t">Feature-Matrix erstellen</div><div class="m">Aufgabe · 12:00</div></div></div></div>
+      <div class="stunde"><span class="st-t">13:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">14:00</span><div class="st-l">
+        <div class="blk"><div class="t">Abstimmung Layout</div><div class="m">14:00 · Jan Kowalski</div></div></div></div>
+      <div class="stunde"><span class="st-t">15:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">16:00</span><div class="st-l"></div></div>
+    </div></div>
+  </div>
+
+  <div class="spalte">
+    <div class="sp-k"><div class="sp-n"><span class="sp-d" style="margin-right:6px">Danach</span>Freitag, 7. Aug<em>3</em><span class="sp-neu"><svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12"/></svg></span></div></div>
+    <div class="sp-b"><div class="raster">
+      <div class="stunde"><span class="st-t">07:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">08:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">09:00</span><div class="st-l">
+        <div class="blk"><div class="t">Sprint-Planung</div><div class="m">09:00 · Team</div></div></div></div>
+      <div class="stunde"><span class="st-t">10:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">11:00</span><div class="st-l"></div></div>
+      <div class="stunde"><span class="st-t">15:00</span><div class="st-l">
+        <div class="blk"><div class="t">Vertragsgespräch</div><div class="m">15:30 · Eva Bergmann</div></div></div></div>
+      <div class="stunde"><span class="st-t">16:00</span><div class="st-l"></div></div>
+    </div></div>
+  </div>
+</div>

@@ -25,6 +25,11 @@
   --weg-s:#eef0f8; --weg-i:#4a55a0; --weg-r:#d3d8ec;
   --signal:#a8321f;--signal-s:#fbe9e5;
   --gut:#2b6b46;   --gut-s:#e3f0e8;
+  /* Fürs Basecamp-Thema unten: Etikettenschrift, RGB-Trio fürs Schatten,
+     zwei Hover-Aufheller, ein Warnrahmen — alles, was sonst hart im Code
+     stünde, damit ein Thema es ersetzen kann. */
+  --etikett:var(--mono); --ink-rgb:26,26,24;
+  --tinte-hauch:#d9dff1; --weg-hauch:#e0e5f5; --warn-rand:#f0cfc7;
 }
 html,body{background:var(--paper)!important;color:var(--ink)!important;height:100%}
 body{font-family:var(--ff);-webkit-font-smoothing:antialiased;overflow:hidden}
@@ -39,25 +44,63 @@ input,textarea{font:inherit}
   border:3px solid var(--paper);background-clip:padding-box}
 
 .app{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--paper)}
+/* ============================================================
+   THEMA BASECAMP
+   Ein Klick auf den Knopf im Kopf setzt data-theme="basecamp" auf
+   body, nicht auf .app — Dialoge und der Meldungszettel hängen als
+   eigene Zweige direkt an body. Von body aus erben alle Kindelemente
+   diese Werte über die normale CSS-Vererbung der Custom Properties —
+   kein JavaScript muss wissen, welche Fläche welche Farbe trägt.
+   ============================================================ */
+body[data-theme="basecamp"]{
+  --paper:#ffffff; --sheet:#ffffff; --raise:#f2f0ea;
+  --rule:#ece7d8;  --rule2:#ddd5bd;
+  --ink:#0f2b1d;   --ink2:#3d3826;  --ink3:#5f5847;
+  --tinte:#1d7a5f; --tinte-s:#eaf5ee;
+  --weg-s:#eaf5ee; --weg-i:#1d7a5f; --weg-r:#cfe8db;
+  --signal:#b8433a;--signal-s:#fceeea;
+  --gut:#c2a63b;   --gut-s:#faf3df;
+  --etikett:var(--ff); --ink-rgb:15,43,29;
+  --tinte-hauch:#d7ecdf; --weg-hauch:#d7ecdf; --warn-rand:#f3d6cd;
+}
+/* Was über Tokens hinausgeht: Basecamp trägt einen gefüllten statt
+   einem hellen Knopf, Georgia im Dialogtitel und der nächsten
+   Verabredung, einen goldenen statt tintenfarbenen Stern, einen
+   dunklen statt hellen Meldungszettel. Vier Stellen, kein Token
+   könnte das allein abbilden. */
+/* :not(.weg):not(.still) — sonst schlägt die Spezifität dieser Regel
+   die von .tat.weg und .tat.still, und Löschen/Abbrechen färben sich
+   grün mit. */
+body[data-theme="basecamp"] .tat:not(.weg):not(.still){background:var(--tinte);color:#fff;
+  border-color:var(--tinte);font-weight:800}
+body[data-theme="basecamp"] .tat:not(.weg):not(.still):hover{background:#166249}
+body[data-theme="basecamp"] .tat.still{background:var(--paper);color:var(--ink2)}
+body[data-theme="basecamp"] .tat.still:hover{background:var(--raise);color:var(--ink)}
+body[data-theme="basecamp"] .dlg-k{background:var(--raise)}
+body[data-theme="basecamp"] .dlg-t{font-family:var(--serif);font-weight:800;letter-spacing:0}
+body[data-theme="basecamp"] .naechst-t{font-family:var(--serif);font-weight:700;letter-spacing:0}
+body[data-theme="basecamp"] .kk-stern.an,
+body[data-theme="basecamp"] .kk-stern.an:hover{color:var(--gut)}
+body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-color:var(--ink)}
 
 /* ---------- Kopf ---------- */
 .kopf{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:11px 22px;
   background:var(--sheet);border-bottom:1px solid var(--rule)}
-.kopf .zeit{font-family:var(--mono);font-size:12px;letter-spacing:.07em;color:var(--ink2);
+.kopf .zeit{font-family:var(--etikett);font-size:12px;letter-spacing:.07em;color:var(--ink2);
   font-weight:600;font-variant-numeric:tabular-nums}
-.kopf .dat{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;color:var(--ink3)}
+.kopf .dat{font-family:var(--etikett);font-size:11.5px;letter-spacing:.07em;color:var(--ink3)}
 .kopf .sp{flex:1}
 .wechsel{display:flex;gap:2px;background:var(--raise);border-radius:9px;padding:3px}
 .wechsel button{font-size:12.5px;font-weight:550;color:var(--ink2);padding:6px 14px;
   border-radius:7px}
 .wechsel button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
-  box-shadow:0 1px 2px rgba(26,26,24,.06)}
+  box-shadow:0 1px 2px rgba(var(--ink-rgb),.06)}
 .kopf .akt{font-size:12.5px;color:var(--ink2);border:1px solid var(--rule2);border-radius:8px;
   padding:5px 12px;background:var(--paper)}
 .kopf .akt:hover{background:var(--raise);color:var(--ink)}
-.kopf .stand{font-family:var(--mono);font-size:10.5px;color:var(--ink3);letter-spacing:.06em}
+.kopf .stand{font-family:var(--etikett);font-size:10.5px;color:var(--ink3);letter-spacing:.06em}
 .warn{flex-shrink:0;padding:10px 22px;background:var(--signal-s);color:var(--signal);
-  font-size:12.5px;line-height:1.5;border-bottom:1px solid #f0cfc7}
+  font-size:12.5px;line-height:1.5;border-bottom:1px solid var(--warn-rand)}
 .warn b{font-weight:700}
 
 .rumpf{flex:1;min-height:0;overflow-y:auto;background:var(--paper)}
@@ -66,12 +109,12 @@ input,textarea{font:inherit}
 
 /* ---------- Abschnitte und Zeilen ---------- */
 .abs{display:flex;align-items:center;gap:13px;padding:30px 0 11px}
-.abs h2{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+.abs h2{font-family:var(--etikett);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   font-weight:700;color:var(--ink)}
 .abs h2.eilig{color:var(--signal)}
 .abs h2.jetzt{color:var(--tinte)}
 .abs .r{flex:1;height:1px;background:var(--rule)}
-.abs .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.abs .n{font-family:var(--etikett);font-size:11px;color:var(--ink3)}
 .abs button.n:hover{color:var(--ink)}
 .hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px}
 /* Ein Gerüst sieht fertig aus — Liste, Knöpfe, Demodaten. Dieses Band
@@ -79,7 +122,7 @@ input,textarea{font:inherit}
    „unfertig“ ist keine Dringlichkeit. */
 .geruest{display:flex;gap:9px;align-items:baseline;margin:0 0 14px;padding:9px 11px;
   border:1px dashed var(--rule2);border-radius:8px;background:var(--raise)}
-.geruest b{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+.geruest b{font-family:var(--etikett);font-size:10px;letter-spacing:.09em;
   text-transform:uppercase;color:var(--ink2);flex-shrink:0}
 .geruest span{font-size:12.5px;color:var(--ink2);line-height:1.5}
 
@@ -101,12 +144,12 @@ input,textarea{font:inherit}
 .zt{display:block;font-size:14.5px;line-height:1.4;letter-spacing:-.006em;overflow-wrap:anywhere}
 .z.fertig .zt{color:var(--ink3);text-decoration:line-through}
 .zm{display:block;font-size:12px;color:var(--ink3);margin-top:3px;line-height:1.45}
-.zr{font-family:var(--mono);font-size:12px;color:var(--ink3);flex-shrink:0;padding-top:3px;
+.zr{font-family:var(--etikett);font-size:12px;color:var(--ink3);flex-shrink:0;padding-top:3px;
   font-variant-numeric:tabular-nums}
 .zr.eilig{color:var(--signal);font-weight:700}
 .zr.jetzt{color:var(--tinte);font-weight:700}
 .sig{width:29px;height:29px;border-radius:50%;background:var(--raise);color:var(--ink2);
-  display:grid;place-items:center;font-family:var(--mono);font-size:10.5px;font-weight:700;
+  display:grid;place-items:center;font-family:var(--etikett);font-size:10.5px;font-weight:700;
   flex-shrink:0;letter-spacing:.04em}
 .sig.fav{background:var(--tinte-s);color:var(--tinte)}
 .leer{padding:18px 2px;font-size:13px;color:var(--ink3);line-height:1.6}
@@ -119,7 +162,7 @@ input,textarea{font:inherit}
 .kk{position:relative;display:flex;flex-direction:column;gap:10px;padding:13px 14px;
   border:1px solid var(--rule);border-radius:11px;background:var(--sheet);
   transition:border-color .12s,box-shadow .12s}
-.kk:hover{border-color:var(--rule2);box-shadow:0 2px 10px rgba(26,26,24,.05)}
+.kk:hover{border-color:var(--rule2);box-shadow:0 2px 10px rgba(var(--ink-rgb),.05)}
 .kk.ist-fav{border-left:2px solid var(--tinte)}
 .kk-o{display:flex;align-items:flex-start;gap:11px}
 .kk-b{flex:1;min-width:0}
@@ -139,7 +182,7 @@ input,textarea{font:inherit}
 .iknopf{position:relative;display:grid;place-items:center;width:34px;height:31px;
   border:1px solid var(--weg-r);border-radius:8px;background:var(--weg-s);color:var(--weg-i);
   transition:background .12s,border-color .12s,color .12s}
-.iknopf:hover{background:#e0e5f5;border-color:var(--weg-i)}
+.iknopf:hover{background:var(--weg-hauch);border-color:var(--weg-i)}
 .iknopf.leer{background:var(--paper);border-color:var(--rule);color:var(--ink3);opacity:.45;
   cursor:default}
 .iknopf.leer:hover{background:var(--paper);border-color:var(--rule);color:var(--ink3)}
@@ -147,7 +190,7 @@ input,textarea{font:inherit}
 .iknopf .blase{position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);
   background:var(--ink);color:var(--sheet);font-size:11.5px;line-height:1.35;white-space:nowrap;
   padding:6px 10px;border-radius:7px;opacity:0;pointer-events:none;transition:opacity .13s;
-  z-index:40;font-family:var(--mono);letter-spacing:.01em}
+  z-index:40;font-family:var(--etikett);letter-spacing:.01em}
 .iknopf .blase b{display:block;font-family:var(--ff);font-weight:600;letter-spacing:0;
   margin-bottom:1px}
 .iknopf:hover .blase{opacity:1}
@@ -167,15 +210,15 @@ input,textarea{font:inherit}
    Auf und Zu laufen über .schleier und .schleier.auf, niemals über
    eine ID-Regel. Genau daran ist das Umschalten schon einmal
    gebrochen — Fehlerbuch Punkt 6. */
-.schleier{position:fixed;inset:0;background:rgba(26,26,24,.34);display:none;
+.schleier{position:fixed;inset:0;background:rgba(var(--ink-rgb),.34);display:none;
   place-items:center;padding:18px;z-index:500}
 .schleier.auf{display:grid}
 .dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--sheet);
-  border:1px solid var(--rule2);border-radius:14px;box-shadow:0 24px 70px rgba(26,26,24,.22);
+  border:1px solid var(--rule2);border-radius:14px;box-shadow:0 24px 70px rgba(var(--ink-rgb),.22);
   display:flex;flex-direction:column;overflow:hidden}
 .dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:12px;padding:16px 22px 13px;
   border-bottom:1px solid var(--rule)}
-.dlg-k .art{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;
+.dlg-k .art{font-family:var(--etikett);font-size:10.5px;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink3);font-weight:700;white-space:nowrap}
 .dlg-t{font-size:17px;font-weight:650;letter-spacing:-.02em;overflow-wrap:anywhere}
 .dlg-k .sp{flex:1}
@@ -229,7 +272,7 @@ input,textarea{font:inherit}
 .mdstrich{width:1px;height:17px;background:var(--rule2);margin:0 3px;flex-shrink:0}
 .mdleiste .sp{flex:1}
 .mdschau{font-size:11.5px;color:var(--ink3);padding:4px 9px;border-radius:6px;
-  font-family:var(--mono);letter-spacing:.04em}
+  font-family:var(--etikett);letter-spacing:.04em}
 .mdschau:hover{background:var(--sheet);color:var(--ink)}
 .mdschau[aria-pressed="true"]{background:var(--tinte-s);color:var(--tinte)}
 /* Vorschau: dieselbe Fläche wie das Feld, damit nichts springt. */
@@ -251,11 +294,11 @@ input,textarea{font:inherit}
 .tat.weg{color:var(--signal);border-color:transparent;background:transparent;font-weight:500}
 .tat.weg:hover{background:var(--signal-s)}
 .tat.weg.ernst{border-color:var(--signal);background:var(--signal-s);font-weight:600}
-kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px solid var(--rule);
+kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1px solid var(--rule);
   border-radius:4px;padding:2px 6px;color:var(--ink2)}
 .tat{font-size:12.5px;font-weight:600;background:var(--tinte-s);color:var(--tinte);
   border:1px solid var(--tinte);padding:6px 13px;border-radius:8px;flex-shrink:0}
-.tat:hover{background:#d9dff1}
+.tat:hover{background:var(--tinte-hauch)}
 .tat.still{background:transparent;color:var(--ink2);border-color:var(--rule2)}
 .tat.still:hover{background:var(--sheet);color:var(--ink)}
 
@@ -270,13 +313,13 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .feld input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:27px;
   font-weight:450;letter-spacing:-.024em;color:var(--ink)}
 .feld input::placeholder{color:var(--ink3)}
-.feld .k{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;
+.feld .k{font-family:var(--etikett);font-size:11px;color:var(--ink3);flex-shrink:0;
   border:1px solid var(--rule);border-radius:5px;padding:3px 7px;background:var(--sheet)}
 
 .tr{display:flex;align-items:center;gap:13px;padding:10px 12px;border-radius:9px;
   border-left:2px solid transparent;width:100%}
 .tr:hover,.tr.wahl{background:var(--sheet);border-left-color:var(--tinte)}
-.tr-a{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+.tr-a{font-family:var(--etikett);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
   color:var(--ink3);flex-shrink:0;min-width:82px;font-weight:700}
 .tr.wahl .tr-a{color:var(--tinte)}
 .tr-b{flex:1;min-width:0}
@@ -284,10 +327,10 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
   text-overflow:ellipsis}
 .tr-m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;white-space:nowrap;
   overflow:hidden;text-overflow:ellipsis}
-.tr-k{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;opacity:0}
+.tr-k{font-family:var(--etikett);font-size:11px;color:var(--ink3);flex-shrink:0;opacity:0}
 .tr:hover .tr-k,.tr.wahl .tr-k{opacity:1}
 .rechner{padding:16px 14px;border-radius:10px;background:var(--tinte-s);margin:8px 0 4px}
-.rechner .frage{font-family:var(--mono);font-size:13px;color:var(--tinte)}
+.rechner .frage{font-family:var(--etikett);font-size:13px;color:var(--tinte)}
 .rechner .zahl{font-family:var(--serif);font-size:32px;color:var(--ink);margin-top:5px;
   font-variant-numeric:tabular-nums}
 
@@ -298,17 +341,17 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .mk{display:flex;align-items:baseline;gap:10px;padding:8px 10px;border-radius:8px;
   border-left:2px solid transparent}
 .mk:hover{background:var(--sheet);border-left-color:var(--tinte)}
-.mk b{font-family:var(--mono);font-size:10.5px;color:var(--ink3);font-weight:700;min-width:20px}
+.mk b{font-family:var(--etikett);font-size:10.5px;color:var(--ink3);font-weight:700;min-width:20px}
 .mk:hover b{color:var(--tinte)}
 .mk span{font-size:13.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mk:hover span{color:var(--ink)}
 .modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
 .ml{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:7px}
 .ml:hover{background:var(--sheet)}
-.ml b{font-family:var(--mono);font-size:10px;color:var(--ink3);min-width:18px}
+.ml b{font-family:var(--etikett);font-size:10px;color:var(--ink3);min-width:18px}
 .ml span{font-size:13.5px;color:var(--ink2)}
 .ml:hover span{color:var(--ink)}
-.ml em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
+.ml em{font-style:normal;font-family:var(--etikett);font-size:10.5px;color:var(--ink3);
   margin-left:auto}
 .ml em.gz{margin-left:8px;border:1px dashed var(--rule2);border-radius:5px;
   padding:1px 5px;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase}
@@ -321,17 +364,17 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
 .spalte.vorrat{flex:0 0 262px;background:var(--sheet);border-right:1px solid var(--rule2)}
 .spalte.heute{background:var(--sheet)}
 .sp-k{flex-shrink:0;padding:12px 14px 9px;border-bottom:1px solid var(--rule)}
-.sp-d{font-family:var(--mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+.sp-d{font-family:var(--etikett);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--ink3);font-weight:600}
 .spalte.heute .sp-d{color:var(--tinte)}
 .sp-n{font-size:14.5px;font-weight:600;margin-top:5px;display:flex;align-items:baseline;gap:8px}
-.sp-n em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-left:auto}
+.sp-n em{font-style:normal;font-family:var(--etikett);font-size:11px;color:var(--ink3);margin-left:auto}
 .sp-b{flex:1;overflow-y:auto;padding:4px 8px 24px}
 .raster{position:relative}
 .stunde{display:flex;min-height:44px;border-top:1px solid var(--rule)}
 .stunde:first-child{border-top:0}
 .stunde.ziel{background:var(--tinte-s)}
-.st-t{width:40px;flex-shrink:0;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
+.st-t{width:40px;flex-shrink:0;font-family:var(--etikett);font-size:10.5px;color:var(--ink3);
   padding-top:5px;font-variant-numeric:tabular-nums}
 .st-l{flex:1;min-width:0;padding:3px 0 3px 6px;display:flex;flex-direction:column;gap:3px}
 /* Die freie Stunde ist anklickbar. Ohne Zeichen wäre das unsichtbar —
@@ -365,12 +408,12 @@ kbd{font-family:var(--mono);font-size:11.5px;background:var(--raise);border:1px 
   display:grid;place-items:center;align-self:center}
 .sp-neu svg{width:13px;height:13px;stroke:currentColor;stroke-width:1.7;fill:none;
   stroke-linecap:round}
-.sp-neu:hover{background:#d9dff1}
+.sp-neu:hover{background:var(--tinte-hauch)}
 .vz{cursor:pointer}
 .jetztlinie{position:absolute;left:40px;right:0;height:2px;background:var(--signal);z-index:3}
 .jetztlinie::before{content:"";position:absolute;left:-4px;top:-3px;width:8px;height:8px;
   border-radius:50%;background:var(--signal)}
-.jetztlinie span{position:absolute;right:2px;top:-15px;font-family:var(--mono);font-size:10px;
+.jetztlinie span{position:absolute;right:2px;top:-15px;font-family:var(--etikett);font-size:10px;
   font-weight:700;color:var(--signal)}
 .vz{display:flex;align-items:flex-start;gap:9px;padding:9px 8px;border-radius:8px;cursor:grab;
   border:1px solid transparent;border-left-width:3px}
@@ -400,7 +443,7 @@ textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
 .zettel{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(70px);
   background:var(--sheet);color:var(--ink);border:1px solid var(--rule2);font-size:13.5px;
   padding:11px 20px;border-radius:10px;opacity:0;pointer-events:none;z-index:9500;
-  box-shadow:0 14px 40px rgba(26,26,24,.16);
+  box-shadow:0 14px 40px rgba(var(--ink-rgb),.16);
   transition:transform .24s cubic-bezier(.2,.8,.3,1),opacity .24s}
 .zettel.an{transform:translateX(-50%) translateY(0);opacity:1}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -411,21 +454,21 @@ textarea.code:focus{outline:2px solid var(--tinte);outline-offset:1px}
 .tag-k{display:flex;align-items:baseline;gap:9px;padding:11px 14px;
   border-bottom:1px solid var(--rule);background:var(--paper)}
 .tag-k .d{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
-.tag-k .h{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+.tag-k .h{font-family:var(--etikett);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--tinte);font-weight:700}
 .tag-k .sp{flex:1}
-.tag-k .n{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.tag-k .n{font-family:var(--etikett);font-size:11px;color:var(--ink3)}
 .tag-b{padding:6px 8px 10px}
 .tagfuss{padding:4px 8px 8px}
 .tm{display:flex;align-items:flex-start;gap:11px;padding:8px;border-radius:8px;width:100%;
   text-align:left;border-left:2px solid transparent}
 .tm:hover{background:var(--paper);border-left-color:var(--tinte)}
-.tm .u{font-family:var(--mono);font-size:12px;color:var(--ink2);font-weight:600;flex-shrink:0;
+.tm .u{font-family:var(--etikett);font-size:12px;color:var(--ink2);font-weight:600;flex-shrink:0;
   padding-top:1px;font-variant-numeric:tabular-nums}
 .tm .b{flex:1;min-width:0}
 .tm .t{display:block;font-size:14px;line-height:1.35;overflow-wrap:anywhere}
 .tm .m{display:block;font-size:12px;color:var(--ink3);margin-top:2px;overflow-wrap:anywhere}
-.tm .w{font-family:var(--mono);font-size:11px;color:var(--ink3);flex-shrink:0;padding-top:2px}
+.tm .w{font-family:var(--etikett);font-size:11px;color:var(--ink3);flex-shrink:0;padding-top:2px}
 
 /* ---------- Notizen ---------- */
 textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
@@ -436,12 +479,12 @@ textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
 .nz-b{display:block;width:100%;padding:12px 14px}
 .nz-k{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:7px}
 .nz-t{font-size:14.5px;font-weight:650;letter-spacing:-.01em}
-.nz-a{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+.nz-a{font-family:var(--etikett);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink3);font-weight:700}
 .nz-w{font-size:12px;color:var(--tinte);background:var(--tinte-s);border-radius:5px;
   padding:1px 7px}
 .nz-k .sp{flex:1}
-.nz-d{font-family:var(--mono);font-size:11px;color:var(--ink3);white-space:nowrap}
+.nz-d{font-family:var(--etikett);font-size:11px;color:var(--ink3);white-space:nowrap}
 .nz-v{display:block;font-size:13.5px;line-height:1.6;color:var(--ink2);overflow-wrap:anywhere}
 .nz-v > :first-child{margin-top:0}
 .nz-v h3{font-size:14.5px;font-weight:650;color:var(--ink);margin:11px 0 4px}
@@ -490,6 +533,10 @@ textarea.sz{min-height:120px;font-family:var(--mono);font-size:13px}
     <div class="wechsel" role="group" aria-label="Oberfläche">
       <button id="w-leiste"  aria-current="true">Leiste</button>
       <button id="w-planner" aria-current="false">Planner</button>
+    </div>
+    <div class="wechsel" role="group" aria-label="Thema">
+      <button id="th-standard" aria-current="true">Standard</button>
+      <button id="th-basecamp" aria-current="false">Basecamp</button>
     </div>
   </div>
   <div class="warn" id="warn" hidden></div>
@@ -2104,7 +2151,7 @@ function wfKarte(w){
   const k=el("div","karte");
   k.innerHTML='<div style="display:flex;align-items:baseline;gap:10px">'
     +'<span style="font-size:14.5px;font-weight:650">'+esc(w.titel)+'</span>'
-    +'<span style="margin-left:auto;font-family:var(--mono);font-size:11.5px;color:'
+    +'<span style="margin-left:auto;font-family:var(--etikett);font-size:11.5px;color:'
     +(spaet?"var(--signal)":"var(--ink3)")+'">'
     +(wfFertig(w) ? "abgeschlossen" : (f ? (spaet?"überfällig":frist({d:f})) : "ohne Frist"))
     +'</span></div>'
@@ -2621,6 +2668,21 @@ function male(){
 }
 $("#w-leiste").onclick=()=>zeigeFlaeche("leiste");
 $("#w-planner").onclick=()=>zeigeFlaeche("planner");
+
+/* Thema ist eine Anzeigeeinstellung, kein Anwendungsdatum — es lebt
+   deshalb für sich in localStorage und nicht im Objekt Z, landet also
+   auch nicht in Sicherung oder Export. */
+function themaSetzen(t){
+  /* An body, nicht an .app — Dialoge und der Meldungszettel hängen als
+     eigene Zweige direkt an body, ein Thema an .app erreichte sie nie. */
+  document.body.dataset.theme = t==="basecamp" ? "basecamp" : "";
+  $("#th-standard").setAttribute("aria-current",String(t!=="basecamp"));
+  $("#th-basecamp").setAttribute("aria-current",String(t==="basecamp"));
+  store.set("thema",t);
+}
+$("#th-standard").onclick=()=>themaSetzen("standard");
+$("#th-basecamp").onclick=()=>themaSetzen("basecamp");
+themaSetzen(store.get("thema","standard"));
 
 /* ============================================================
    9 — SICHERN, LADEN, EXPORTIEREN

@@ -10,7 +10,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
 
-const DATEIEN = ["dashboard.html", "referenz/theme-basecamp.html",
+const DATEIEN = ["dashboard.html",
                  "referenz/workflow-dialog.html", "browsertest.html"];
 
 /* Fehlt eine Datei aus dieser Liste, ist das ein Fehler und kein Hinweis.
@@ -176,20 +176,7 @@ function pruefeNamen(name, css) {
   else ok(name + ": jeder Klassenname gehört einem Bereich");
 }
 
-/* ---------- 10 Basecamp-Fassung deckungsgleich ---------- */
-function pruefeFassungen() {
-  if (!existsSync("dashboard.html") || !existsSync("referenz/theme-basecamp.html")) return;
-  const a = teile(readFileSync("dashboard.html", "utf8"));
-  const b = teile(readFileSync("referenz/theme-basecamp.html", "utf8"));
-  if (a.js !== b.js)
-    bad("Basecamp-Fassung: Logik weicht ab \u2014 Stylesheet neu übertragen");
-  else ok("Basecamp-Fassung: Logik deckungsgleich");
-  const klassen = (css) => new Set([...css.matchAll(/\.([a-zA-Z][\w-]*)/g)].map(m => m[1]));
-  const fehlt = [...klassen(a.css)].filter(k => !klassen(b.css).has(k));
-  if (fehlt.length) warn("Basecamp-Fassung: Regeln fehlen \u2014 " + fehlt.join(", "));
-}
-
-/* ---------- 11 README gegen die Anwendung ----------
+/* ---------- 10 README gegen die Anwendung ----------
    Eine Zahl im README veraltet lautlos. Schlimmer: Eine Ersetzung, die
    den Text nicht trifft, tut nichts und meldet nichts — genau so stand
    dort nach Schritt 2 weiter „zehn Fehler" und „neun Module als Gerüst",
@@ -247,7 +234,6 @@ for (const f of DATEIEN) {
   if (f === "dashboard.html") pruefeSicherung(f, js);
 }
 console.log("\nÜbergreifend");
-pruefeFassungen();
 pruefeReadme();
 
 console.log("\n" + "\u2500".repeat(52));

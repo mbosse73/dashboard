@@ -23,6 +23,9 @@ Alles Übrige sind Module, die sich über ein Register anmelden: Kontakte,
 Aufgaben, Kalender, Notizen, Textbausteine, Appstarter, Bookmarks,
 Workflows, Outliner, Code-Beautifier.
 
+Dazu ein Themen-Umschalter im Kopf, `Standard` / `Basecamp` — dieselbe
+Anwendung, andere Optik, ohne zweite Datei.
+
 ---
 
 ## Ausprobieren
@@ -60,7 +63,6 @@ doku/ROADMAP.md           Reihenfolge der Arbeit
 doku/ARBEITSWEISE.md      wie Claude Code einen Schritt abarbeitet
 doku/FEHLERBUCH.md        14 Fehler, die schon passiert sind
 
-referenz/theme-basecamp.html    dieselbe Anwendung im Basecamp-Stil
 referenz/workflow-dialog.html   Entwurf des Workflow-Dialogs
 
 werkzeug/pruefen.mjs      Regelprüfung, ohne Abhängigkeiten

@@ -141,9 +141,17 @@ Ausführlich in `doku/ARCHITEKTUR.md`, Entwurf unter
   stehen nebeneinander, nie in verschiedenen Zeilen. Mehrzeiliges zuletzt
   und breit, Schalter darunter. Kein Feld bleibt allein in einer halben
   Zeile stehen. Erklärungen stehen **unter** dem Feld, nie im Label.
-* Eine Alternativfassung im Basecamp-Stil liegt unter
-  `referenz/theme-basecamp.html`. Dort ist **nur** das Stylesheet getauscht,
-  Struktur und Logik sind identisch. Wer eine davon ändert, ändert beide.
+* **Ein zweites Thema, kein zweites File.** Basecamp ist ein Umschalter im
+  Kopf (`Standard` / `Basecamp`, Knöpfe `#th-standard` / `#th-basecamp`),
+  der `data-theme="basecamp"` auf `.app` setzt. Alle Basecamp-Farbwerte
+  stehen in `.app[data-theme="basecamp"]{...}` gleich unter dem
+  `:root`-Block — dieselben Tokens, andere Werte. Nur was sich nicht als
+  Token ausdrücken lässt (Georgia im Dialogtitel, der gefüllte statt helle
+  Knopf, der goldene statt tintenfarbene Stern), bekommt eine eigene,
+  mit `.app[data-theme="basecamp"]` vorangestellte Regel direkt daneben.
+  Die Wahl selbst ist eine Anzeigeeinstellung, kein Anwendungsdatum — sie
+  liegt für sich in `localStorage` unter `"thema"`, nicht im Objekt `Z`,
+  und taucht deshalb auch nicht in Sicherung oder Export auf.
 
 ---
 
@@ -158,8 +166,7 @@ Abhängigkeiten. Rückgabewert 1, wenn etwas nicht stimmt.
 
 Geprüft werden: Syntax, externe Abhängigkeiten, gefüllte Zeichen als
 Symbole, `color-scheme`, `display` in ID-Regeln, bemalte Flächen,
-paarige Modulmarker, ob jeder Datenbereich beim Laden ersetzt wird, und
-ob die Basecamp-Fassung logisch deckungsgleich ist.
+paarige Modulmarker und ob jeder Datenbereich beim Laden ersetzt wird.
 
 **Danach die Datei im Browser öffnen und die geänderte Fläche ansehen.**
 Sämtliche schwarzen Flächen aus dem Fehlerbuch haben diese Prüfung

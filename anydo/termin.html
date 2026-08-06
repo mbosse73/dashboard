@@ -1,0 +1,122 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Any.do-Fassung — Termin (Bearbeitungsblatt)</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:960px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Any.do öffnet einen Eintrag nie als eigene Seite — immer als
+   Blatt, das von unten über die Liste gleitet. Dahinter bleibt
+   sichtbar, was man gerade verlassen hat.
+   ============================================================ */
+.buehne{display:flex;justify-content:center;margin:26px auto 60px}
+.phone{width:390px;height:844px;background:#000;border-radius:46px;padding:12px;
+  box-shadow:0 20px 50px rgba(15,15,15,.18)}
+.screen{width:100%;height:100%;background:#f8f7fc;border-radius:36px;overflow:hidden;
+  position:relative;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  color:#1f1b2e}
+.status{display:flex;justify-content:space-between;padding:16px 26px 2px;font-size:13px;font-weight:600}
+.hinter{padding:14px 20px;opacity:.35;filter:blur(.3px)}
+.hinter .karte{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px;
+  display:flex;gap:11px}
+.hinter .zeit{font-size:12.5px;font-weight:700;color:#6C4CF1;width:40px}
+.hinter .t{font-size:14.5px;font-weight:600}
+
+.scrim{position:absolute;inset:0;background:rgba(20,15,40,.35)}
+.sheet{position:absolute;left:0;right:0;bottom:0;height:78%;background:#fff;
+  border-radius:26px 26px 0 0;box-shadow:0 -10px 40px rgba(20,15,40,.2);
+  display:flex;flex-direction:column;overflow:hidden}
+.griffz{display:flex;justify-content:center;padding:11px 0 4px}
+.griffz span{width:38px;height:5px;border-radius:3px;background:#e4e1ee}
+.sheet-top{display:flex;align-items:center;padding:6px 20px 12px;border-bottom:1px solid #f1eff8}
+.sheet-top .liste{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;
+  color:#3b82f6;background:#e8f0fe;padding:4px 11px;border-radius:20px}
+.sheet-top .liste .dot{width:8px;height:8px;border-radius:50%;background:#3b82f6}
+.sheet-top .re{margin-left:auto}
+.sheet-top svg{width:18px;height:18px;stroke:#a29cb5;stroke-width:2;fill:none}
+
+.sheet-body{flex:1;overflow-y:auto;padding:16px 22px 20px}
+.titel{font-size:21px;font-weight:800;letter-spacing:-.01em;margin-bottom:16px}
+.zrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #f4f2fa}
+.zrow svg{width:18px;height:18px;stroke:#6C4CF1;stroke-width:1.9;fill:none;flex-shrink:0}
+.zrow .lab{font-size:14px;color:#6b6580;width:100px;flex-shrink:0}
+.zrow .val{font-size:14px;font-weight:600}
+.zrow .val .av{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;
+  background:#f59e0b;color:#fff;font-size:9px;font-weight:700;margin-right:6px;vertical-align:middle}
+.notiz{margin-top:14px;font-size:13.5px;color:#6b6580;line-height:1.6;background:#f8f7fc;
+  border-radius:12px;padding:12px 14px}
+
+.sheet-fuss{display:flex;align-items:center;gap:12px;padding:14px 22px;border-top:1px solid #f1eff8}
+.loeschen{width:42px;height:42px;border-radius:50%;background:#fef2f2;display:grid;place-items:center}
+.loeschen svg{width:18px;height:18px;stroke:#ef4444;stroke-width:2;fill:none}
+.speichern{flex:1;background:linear-gradient(135deg,#8b5cf6,#6366f1);color:#fff;font-weight:700;
+  font-size:14.5px;padding:12px;border-radius:14px;text-align:center}
+</style>
+
+<div class="meta">
+  <b>Any.do-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Heute</a>
+    <a href="planner.html">Kalender</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a class="hier" href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Any.do öffnet nie eine eigene Seite —
+ein Eintrag wird zum Blatt, das von unten hereinfährt, während die Liste dahinter sichtbar
+bleibt. Die Liste selbst trägt den Farbpunkt, hier als Pille „Kalender“ oben im Blatt.</p>
+
+<div class="buehne"><div class="phone"><div class="screen">
+  <div class="status"><span>9:41</span><span>🔋 91%</span></div>
+  <div class="hinter">
+    <div class="karte"><span class="zeit">08:00</span><span class="t">Standup</span></div>
+    <div class="karte"><span class="zeit">10:00</span><span class="t">Strategie-Call</span></div>
+    <div class="karte"><span class="zeit">14:00</span><span class="t">Abstimmung Layout</span></div>
+  </div>
+  <div class="scrim"></div>
+  <div class="sheet">
+    <div class="griffz"><span></span></div>
+    <div class="sheet-top">
+      <span class="liste"><span class="dot"></span>Kalender</span>
+      <div class="re"><svg viewBox="0 0 20 20"><path d="m6 6 8 8M14 6l-8 8"/></svg></div>
+    </div>
+    <div class="sheet-body">
+      <div class="titel">Strategie-Call</div>
+      <div class="zrow">
+        <svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="13" rx="2"/><path d="M3 8h14"/></svg>
+        <span class="lab">Datum</span><span class="val">Do, 6. Aug · 10:00</span>
+      </div>
+      <div class="zrow">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/></svg>
+        <span class="lab">Dauer</span><span class="val">60 Minuten</span>
+      </div>
+      <div class="zrow">
+        <svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg>
+        <span class="lab">Priorität</span><span class="val">Keine</span>
+      </div>
+      <div class="zrow">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="7" r="3"/><path d="M4 17c0-3.5 3-6 6-6s6 2.5 6 6"/></svg>
+        <span class="lab">Geteilt mit</span><span class="val"><span class="av">LM</span>Lisa Meier</span>
+      </div>
+      <div class="notiz">Video · Agenda: Positionierung Q4, Preisstaffeln, Wettbewerbsvergleich.</div>
+    </div>
+    <div class="sheet-fuss">
+      <span class="loeschen"><svg viewBox="0 0 20 20"><path d="M4 6h12M8 6V4h4v2M6 6l1 10h6l1-10"/></svg></span>
+      <span class="speichern">Speichern</span>
+    </div>
+  </div>
+</div></div></div>

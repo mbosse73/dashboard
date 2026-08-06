@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Linear-Fassung — Kontakte</title>
+<title>Linear-Fassung (hell) — Kontakte</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{color-scheme:light}
@@ -19,54 +19,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 
 /* ============================================================
    Dieselbe Kachel-Galerie — Favoriten oben, eigene Suche,
-   Anrufen/Mailen als eigene Knöpfe — nur dicht und dunkel wie
+   Anrufen/Mailen als eigene Knöpfe — nur dicht und hell wie
    Linears Listenansichten.
    ============================================================ */
 .li{max-width:1420px;margin:16px auto 60px;border-radius:10px;overflow:hidden;
-  box-shadow:0 1px 3px rgba(15,15,15,.2);
+  box-shadow:0 1px 3px rgba(15,15,15,.12);
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#e7e7ea;background:#19191c}
-.l-top{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:1px solid #2b2b30}
+  color:#1c1c1f;background:#ffffff}
+.l-top{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:1px solid #e4e4e7}
 .l-top h1{font-size:14.5px;font-weight:700}
 .l-such{display:flex;align-items:center;gap:8px;padding:6px 11px;border-radius:7px;font-size:12.5px;
-  color:#6f6f78;background:#1e1e21;border:1px solid #2b2b30;margin-left:16px}
+  color:#6f6f78;background:#fafafa;border:1px solid #e4e4e7;margin-left:16px}
 .l-such svg{width:13px;height:13px;stroke:#6f6f78;stroke-width:1.9;fill:none}
 
 .l-body{padding:20px 28px 30px}
 .l-sek{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.04em;
   text-transform:uppercase;color:#6f6f78;margin:16px 0 8px}
 .l-galerie{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
-.l-kk{background:#1e1e21;border:1px solid #2b2b30;border-radius:9px;padding:12px 13px}
+.l-kk{background:#fafafa;border:1px solid #e4e4e7;border-radius:9px;padding:12px 13px}
 .l-kk .kopf{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .l-kk .av{width:26px;height:26px;border-radius:50%;color:#fff;font-weight:700;font-size:10px;
   display:grid;place-items:center;flex-shrink:0}
-.l-kk .tt{font-weight:600;font-size:13.5px;color:#fff}
-.l-kk .stern{margin-left:auto;color:#f2c94c;font-size:12px}
-.l-kk .mm{font-size:11.5px;color:#8a8a94;margin-left:35px}
+.l-kk .tt{font-weight:600;font-size:13.5px;color:#1c1c1f}
+.l-kk .stern{margin-left:auto;color:#c9971f;font-size:12px}
+.l-kk .mm{font-size:11.5px;color:#6f6f78;margin-left:35px}
 .l-kk .wege{display:flex;gap:6px;margin-top:10px}
-.l-kk .wege span{width:24px;height:24px;border-radius:6px;background:#26262a;color:#a3a3ff;
+.l-kk .wege span{width:24px;height:24px;border-radius:6px;background:#efeff2;color:#4a4ac9;
   display:grid;place-items:center}
-.l-kk .wege span.blass{color:#4d4d57}
+.l-kk .wege span.blass{color:#b4b4bc}
 .l-kk .wege svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.1;fill:none}
 </style>
 
 <div class="meta">
-  <b>Linear-Fassung — Vorschau</b>
+  <b>Linear-Fassung (hell) — Vorschau</b>
   <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
   <nav>
-    <a href="home.html">Leiste</a>
-    <a href="planner.html">Planner</a>
-    <a class="hier" href="kontakte.html">Kontakte</a>
-    <a href="termin.html">Termin</a>
-    <a href="home-hell.html">Hell: Leiste</a>
+    <a href="home-hell.html">Leiste</a>
     <a href="planner-hell.html">Planner</a>
-    <a href="kontakte-hell.html">Kontakte</a>
+    <a class="hier" href="kontakte-hell.html">Kontakte</a>
     <a href="termin-hell.html">Termin</a>
+    <a href="home.html">Dunkel: Leiste</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
   </nav>
 </div>
 <p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselbe Kachel-Galerie wie im
-echten Modul, nur dicht und dunkel: dünne Rahmen statt Schatten, ein violetter Ton für die
-Aktionsknöpfe, kein Weiß im Hintergrund.</p>
+echten Modul, nur dicht und hell: dünne Rahmen statt Schatten, ein violetter Ton für die
+Aktionsknöpfe, weißer Hintergrund statt Schwarz.</p>
 
 <div class="li">
   <div class="l-top"><h1>Kontakte</h1><div class="l-such"><svg viewBox="0 0 20 20"><circle cx="9" cy="9" r="6.2"/><path d="m17 17-4-4"/></svg>Nur Kontakte durchsuchen …</div></div>
@@ -74,7 +74,7 @@ Aktionsknöpfe, kein Weiß im Hintergrund.</p>
     <div class="l-sek">Favoriten</div>
     <div class="l-galerie">
       <div class="l-kk">
-        <div class="kopf"><span class="av" style="background:#eb5757">EB</span><span class="tt">Eva Bergmann</span><span class="stern">★</span></div>
+        <div class="kopf"><span class="av" style="background:#c92a2a">EB</span><span class="tt">Eva Bergmann</span><span class="stern">★</span></div>
         <div class="mm">Kanzlei Bergmann</div>
         <div class="wege">
           <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
@@ -82,7 +82,7 @@ Aktionsknöpfe, kein Weiß im Hintergrund.</p>
         </div>
       </div>
       <div class="l-kk">
-        <div class="kopf"><span class="av" style="background:#4ea7fc">JK</span><span class="tt">Jan Kowalski</span><span class="stern">★</span></div>
+        <div class="kopf"><span class="av" style="background:#2f7bd6">JK</span><span class="tt">Jan Kowalski</span><span class="stern">★</span></div>
         <div class="mm">Nordstern GmbH</div>
         <div class="wege">
           <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
@@ -90,7 +90,7 @@ Aktionsknöpfe, kein Weiß im Hintergrund.</p>
         </div>
       </div>
       <div class="l-kk">
-        <div class="kopf"><span class="av" style="background:#f2c94c">LM</span><span class="tt">Lisa Meier</span><span class="stern">★</span></div>
+        <div class="kopf"><span class="av" style="background:#c9971f">LM</span><span class="tt">Lisa Meier</span><span class="stern">★</span></div>
         <div class="mm">Nordstern GmbH</div>
         <div class="wege">
           <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
@@ -110,7 +110,7 @@ Aktionsknöpfe, kein Weiß im Hintergrund.</p>
         </div>
       </div>
       <div class="l-kk">
-        <div class="kopf"><span class="av" style="background:#5eb98b">PH</span><span class="tt">Petra Hoffmann</span></div>
+        <div class="kopf"><span class="av" style="background:#2f8f5f">PH</span><span class="tt">Petra Hoffmann</span></div>
         <div class="mm">Stadtwerke</div>
         <div class="wege">
           <span><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>
@@ -118,7 +118,7 @@ Aktionsknöpfe, kein Weiß im Hintergrund.</p>
         </div>
       </div>
       <div class="l-kk">
-        <div class="kopf"><span class="av" style="background:#4d4d57">?</span><span class="tt">Ohne Nummer</span></div>
+        <div class="kopf"><span class="av" style="background:#a0a0a8">?</span><span class="tt">Ohne Nummer</span></div>
         <div class="mm">—</div>
         <div class="wege">
           <span class="blass"><svg viewBox="0 0 20 20"><path d="M6 3c1 3 2 4 1 6-1 1 2 4 3 3 2-1 3 0 6 1 1 3-1 6-4 5-7-2-11-6-13-13-1-3 2-5 5-4"/></svg></span>

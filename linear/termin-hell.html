@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Linear-Fassung — Termin (Dialog)</title>
+<title>Linear-Fassung (hell) — Termin (Dialog)</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{color-scheme:light}
@@ -19,58 +19,58 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 
 /* ============================================================
    Derselbe Dialog — Titel, Tag + Uhrzeit, Dauer + Kontakt,
-   Anmerkung, Fuß mit Löschen/Speichern — als dunkles, schwebendes
-   Panel, wie Linears eigenes Erfassungsfenster.
+   Anmerkung, Fuß mit Löschen/Speichern — als helles, schwebendes
+   Panel, wie Linears eigenes Erfassungsfenster im hellen Thema.
    ============================================================ */
 .buehne{background:#f2f1ee;min-height:640px;display:flex;align-items:center;justify-content:center;
   padding:20px}
-.dlg{width:600px;background:#1e1e21;border:1px solid #2b2b30;border-radius:13px;
-  box-shadow:0 30px 80px rgba(0,0,0,.45);overflow:hidden;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#e7e7ea}
-.dlg-k{display:flex;align-items:baseline;gap:12px;padding:16px 22px 12px;border-bottom:1px solid #2b2b30}
+.dlg{width:600px;background:#ffffff;border:1px solid #e4e4e7;border-radius:13px;
+  box-shadow:0 30px 80px rgba(15,15,15,.16);overflow:hidden;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#1c1c1f}
+.dlg-k{display:flex;align-items:baseline;gap:12px;padding:16px 22px 12px;border-bottom:1px solid #e4e4e7}
 .dlg-k .art{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
   color:#6f6f78}
-.dlg-t{font-size:16px;font-weight:700;color:#fff}
+.dlg-t{font-size:16px;font-weight:700;color:#1c1c1f}
 .dlg-zu{margin-left:auto;font-size:18px;color:#6f6f78}
 .dlg-b{padding:18px 22px}
 .draster{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px}
 .dfeld{display:flex;flex-direction:column;gap:5px}
 .dfeld.breit{grid-column:1/-1}
-.dfeld label{font-size:11.5px;color:#8a8a94;font-weight:600}
-.dfeld .ein{border:1px solid #2b2b30;border-radius:8px;padding:8px 12px;background:#19191c;
-  font-size:13.5px;color:#e7e7ea;min-height:37px;display:flex;align-items:center;gap:7px}
+.dfeld label{font-size:11.5px;color:#6f6f78;font-weight:600}
+.dfeld .ein{border:1px solid #e4e4e7;border-radius:8px;padding:8px 12px;background:#fafafa;
+  font-size:13.5px;color:#1c1c1f;min-height:37px;display:flex;align-items:center;gap:7px}
 .dfeld .ein.leer{color:#6f6f78}
 .dfeld .ein.hoch{min-height:70px;align-items:flex-start}
-.dfeld .ein:focus-within{border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.25)}
+.dfeld .ein:focus-within{border-color:#5e6ad2;box-shadow:0 0 0 3px rgba(94,106,210,.15)}
 .dfeld .sub{font-size:11px;color:#6f6f78;line-height:1.4}
-.merk{margin-top:12px;padding:11px 13px;border-radius:9px;background:#26262a;font-size:12px;
-  color:#8a8a94;line-height:1.5}
-.merk b{color:#c6c6cc}
-.dlg-f{display:flex;align-items:center;gap:10px;padding:13px 22px;border-top:1px solid #2b2b30}
-.tat-weg{color:#eb5757;font-weight:600;font-size:13px}
+.merk{margin-top:12px;padding:11px 13px;border-radius:9px;background:#fafafa;font-size:12px;
+  color:#6f6f78;line-height:1.5;border:1px solid #e4e4e7}
+.merk b{color:#1c1c1f}
+.dlg-f{display:flex;align-items:center;gap:10px;padding:13px 22px;border-top:1px solid #e4e4e7}
+.tat-weg{color:#c92a2a;font-weight:600;font-size:13px}
 .sp{flex:1}
-.tat-still{font-size:13px;font-weight:600;color:#c6c6cc;border:1px solid #2b2b30;border-radius:8px;
+.tat-still{font-size:13px;font-weight:600;color:#3f3f45;border:1px solid #e4e4e7;border-radius:8px;
   padding:8px 15px}
 .tat{font-size:13px;font-weight:700;color:#fff;background:#5e6ad2;border-radius:8px;padding:8px 17px}
 </style>
 
 <div class="meta">
-  <b>Linear-Fassung — Vorschau</b>
+  <b>Linear-Fassung (hell) — Vorschau</b>
   <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
   <nav>
-    <a href="home.html">Leiste</a>
-    <a href="planner.html">Planner</a>
-    <a href="kontakte.html">Kontakte</a>
-    <a class="hier" href="termin.html">Termin</a>
-    <a href="home-hell.html">Hell: Leiste</a>
+    <a href="home-hell.html">Leiste</a>
     <a href="planner-hell.html">Planner</a>
     <a href="kontakte-hell.html">Kontakte</a>
-    <a href="termin-hell.html">Termin</a>
+    <a class="hier" href="termin-hell.html">Termin</a>
+    <a href="home.html">Dunkel: Leiste</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
   </nav>
 </div>
 <p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Derselbe Dialog, Feld für Feld —
 Titel, Tag und Uhrzeit nebeneinander, Dauer und Kontakt darunter, die Anmerkung zuletzt und
-breit. Nur in Linears dunklem, schwebendem Panel mit dem violetten Speichern-Knopf.</p>
+breit. Nur in Linears hellem, schwebendem Panel mit dem violetten Speichern-Knopf.</p>
 
 <div class="buehne">
   <div class="dlg">

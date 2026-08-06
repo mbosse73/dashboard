@@ -1,6 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Linear-Fassung — Leiste</title>
+<title>Linear-Fassung (hell) — Leiste</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{color-scheme:light}
@@ -18,84 +18,84 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
 .rahmenhinweis b{color:#1a1a18}
 
 /* ============================================================
-   Dieselben Funktionen wie in der Anwendung — nur Linears Optik:
-   dunkles Thema, extrem reduziert, violetter Akzent, dichte
+   Dieselben Funktionen wie in der Anwendung — Linears helles
+   Thema: weißer Grund, derselbe violette Akzent, dichte
    einzeilige Reihen statt Karten. Nicht Linears Funktionsmodell.
    ============================================================ */
 .li{max-width:1420px;margin:16px auto 60px;border-radius:10px;overflow:hidden;
-  box-shadow:0 1px 3px rgba(15,15,15,.2);display:flex;height:870px;
+  box-shadow:0 1px 3px rgba(15,15,15,.12);display:flex;height:870px;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-  color:#e7e7ea;background:#19191c}
+  color:#1c1c1f;background:#ffffff}
 
-.l-side{width:222px;flex-shrink:0;background:#1e1e21;border-right:1px solid #2b2b30;
+.l-side{width:222px;flex-shrink:0;background:#fafafa;border-right:1px solid #e4e4e7;
   display:flex;flex-direction:column;padding:12px 8px}
 .l-ws{display:flex;align-items:center;gap:8px;padding:6px 7px;font-weight:600;font-size:13.5px}
 .l-ws .ic{width:20px;height:20px;border-radius:5px;background:#5e6ad2}
 .l-such{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:12.5px;
   color:#6f6f78;margin:8px 0}
 .l-such svg{width:13px;height:13px;stroke:#6f6f78;stroke-width:1.9;fill:none}
-.l-such kbd{margin-left:auto;font-size:10px;background:#2b2b30;border-radius:4px;padding:1px 5px;
-  color:#8a8a94;font-family:inherit}
+.l-such kbd{margin-left:auto;font-size:10px;background:#e4e4e7;border-radius:4px;padding:1px 5px;
+  color:#6f6f78;font-family:inherit}
 .l-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:13px;
-  color:#c6c6cc}
-.l-row:hover{background:#26262a}
-.l-row.aktiv{background:#26262a;color:#fff}
+  color:#3f3f45}
+.l-row:hover{background:#efeff2}
+.l-row.aktiv{background:#efeff2;color:#1c1c1f}
 .l-row svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none;flex-shrink:0}
 .l-row .zahl{margin-left:auto;font-size:11px;color:#6f6f78}
 .l-sek{padding:13px 8px 4px;font-size:10.5px;font-weight:700;letter-spacing:.05em;
   text-transform:uppercase;color:#6f6f78}
 .l-team{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;font-size:13px;
-  color:#c6c6cc}
-.l-team:hover{background:#26262a}
+  color:#3f3f45}
+.l-team:hover{background:#efeff2}
 .l-team .dot{width:7px;height:7px;border-radius:2px;flex-shrink:0}
 .l-team .zahl{margin-left:auto;font-size:11px;color:#6f6f78}
-.l-team .ger{font-size:8.5px;font-weight:700;color:#6f6f78;background:#26262a;padding:1px 5px;
+.l-team .ger{font-size:8.5px;font-weight:700;color:#6f6f78;background:#e4e4e7;padding:1px 5px;
   border-radius:8px;margin-left:5px}
 
 .l-main{flex:1;min-width:0;display:flex;flex-direction:column}
-.l-top{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:1px solid #2b2b30}
+.l-top{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:1px solid #e4e4e7}
 .l-top h1{font-size:14.5px;font-weight:700}
 .l-tabs{display:flex;gap:16px;margin-left:20px;font-size:12.5px;color:#6f6f78}
-.l-tabs span.aktiv{color:#fff}
+.l-tabs span.aktiv{color:#1c1c1f}
 .l-scroll{flex:1;overflow-y:auto}
 .l-gsek{display:flex;align-items:center;gap:8px;padding:9px 28px;font-size:12px;font-weight:600;
-  color:#8a8a94;background:#1e1e21;border-bottom:1px solid #2b2b30;border-top:1px solid #2b2b30}
-.l-gsek.rot{color:#eb5757}
+  color:#6f6f78;background:#fafafa;border-bottom:1px solid #e4e4e7;border-top:1px solid #e4e4e7}
+.l-gsek.rot{color:#c92a2a}
 .l-gsek .zahl{margin-left:8px;color:#6f6f78;font-weight:400}
-.l-zeile{display:flex;align-items:center;gap:11px;padding:9px 28px;border-bottom:1px solid #232326;
+.l-zeile{display:flex;align-items:center;gap:11px;padding:9px 28px;border-bottom:1px solid #ececef;
   font-size:13px}
-.l-zeile:hover{background:#1e1e21}
+.l-zeile:hover{background:#fafafa}
 .l-status{width:15px;height:15px;border-radius:50%;border:1.6px solid #4d4d57;flex-shrink:0}
 .l-status.progress{border-color:#5e6ad2;background:conic-gradient(#5e6ad2 0 40%,transparent 40% 100%)}
-.l-status.spaet{border-color:#eb5757}
+.l-status.spaet{border-color:#c92a2a}
 .l-prio{width:3px;height:14px;border-radius:2px;flex-shrink:0}
-.l-t{flex:1;min-width:0;color:#e7e7ea}
-.l-tag{font-size:11px;color:#8a8a94;background:#26262a;padding:2px 8px;border-radius:5px;
+.l-t{flex:1;min-width:0;color:#1c1c1f}
+.l-tag{font-size:11px;color:#6f6f78;background:#efeff2;padding:2px 8px;border-radius:5px;
   flex-shrink:0}
 .l-av{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;
   color:#fff;font-size:8.5px;font-weight:700}
 .l-datum{font-size:12px;color:#6f6f78;width:64px;text-align:right;flex-shrink:0}
-.l-datum.spaet{color:#eb5757;font-weight:600}
+.l-datum.spaet{color:#c92a2a;font-weight:600}
 </style>
 
 <div class="meta">
-  <b>Linear-Fassung — Vorschau</b>
+  <b>Linear-Fassung (hell) — Vorschau</b>
   <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
   <nav>
-    <a class="hier" href="home.html">Leiste</a>
-    <a href="planner.html">Planner</a>
-    <a href="kontakte.html">Kontakte</a>
-    <a href="termin.html">Termin</a>
-    <a href="home-hell.html">Hell: Leiste</a>
+    <a class="hier" href="home-hell.html">Leiste</a>
     <a href="planner-hell.html">Planner</a>
     <a href="kontakte-hell.html">Kontakte</a>
     <a href="termin-hell.html">Termin</a>
+    <a href="home.html">Dunkel: Leiste</a>
+    <a href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
   </nav>
 </div>
 <p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Dieselben Funktionen wie in der
-Anwendung — Überfällig, der Tagesplan, die Module — nur in Linears Optik: dunkles Thema,
-violetter Akzent, dichte einzeilige Reihen mit Status-Ring statt Karten mit Rahmen. Nicht
-Linears eigenes Ticketmodell, nur sein Erscheinungsbild.</p>
+Anwendung — Überfällig, der Tagesplan, die Module — nur in Linears hellem Thema: weißer
+Grund, derselbe violette Akzent, dichte einzeilige Reihen mit Status-Ring statt Karten mit
+Rahmen. Nicht Linears eigenes Ticketmodell, nur sein Erscheinungsbild.</p>
 
 <div class="li">
   <aside class="l-side">
@@ -104,13 +104,13 @@ Linears eigenes Ticketmodell, nur sein Erscheinungsbild.</p>
     <div class="l-row aktiv"><svg viewBox="0 0 20 20"><path d="M3 9.5 10 4l7 5.5"/><path d="M5 9v7h10V9"/></svg>Leiste</div>
     <div class="l-row"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M3 8h14M8 3v4"/></svg>Planner</div>
     <div class="l-sek">Module</div>
-    <div class="l-team"><span class="dot" style="background:#eb5757"></span>Kontakte<span class="zahl">6</span></div>
+    <div class="l-team"><span class="dot" style="background:#c92a2a"></span>Kontakte<span class="zahl">6</span></div>
     <div class="l-team"><span class="dot" style="background:#5e6ad2"></span>Aufgaben<span class="zahl">8</span></div>
     <div class="l-team"><span class="dot" style="background:#4ea7fc"></span>Kalender<span class="zahl">5</span></div>
     <div class="l-team"><span class="dot" style="background:#f2c94c"></span>Notizen<span class="zahl">5</span></div>
-    <div class="l-team"><span class="dot" style="background:#4d4d57"></span>Textbausteine<span class="ger">Gerüst</span></div>
-    <div class="l-team"><span class="dot" style="background:#4d4d57"></span>Bookmarks<span class="ger">Gerüst</span></div>
-    <div class="l-team"><span class="dot" style="background:#4d4d57"></span>Workflows<span class="ger">Gerüst</span></div>
+    <div class="l-team"><span class="dot" style="background:#a0a0a8"></span>Textbausteine<span class="ger">Gerüst</span></div>
+    <div class="l-team"><span class="dot" style="background:#a0a0a8"></span>Bookmarks<span class="ger">Gerüst</span></div>
+    <div class="l-team"><span class="dot" style="background:#a0a0a8"></span>Workflows<span class="ger">Gerüst</span></div>
   </aside>
 
   <div class="l-main">
@@ -121,14 +121,14 @@ Linears eigenes Ticketmodell, nur sein Erscheinungsbild.</p>
     <div class="l-scroll">
       <div class="l-gsek rot">Überfällig<span class="zahl">2</span></div>
       <div class="l-zeile">
-        <span class="l-status spaet"></span><span class="l-prio" style="background:#eb5757"></span>
+        <span class="l-status spaet"></span><span class="l-prio" style="background:#c92a2a"></span>
         <span class="l-t">Rechnung 2026-114 freigeben</span>
         <span class="l-tag">Aufgabe</span>
-        <span class="l-av" style="background:#eb5757">EB</span>
+        <span class="l-av" style="background:#c92a2a">EB</span>
         <span class="l-datum spaet">Heute</span>
       </div>
       <div class="l-zeile">
-        <span class="l-status progress"></span><span class="l-prio" style="background:#eb5757"></span>
+        <span class="l-status progress"></span><span class="l-prio" style="background:#c92a2a"></span>
         <span class="l-t">Vertrag Meinhardt IT</span>
         <span class="l-tag">Workflow · 4/8</span>
         <span></span>
@@ -137,19 +137,19 @@ Linears eigenes Ticketmodell, nur sein Erscheinungsbild.</p>
 
       <div class="l-gsek">Heute<span class="zahl">2</span></div>
       <div class="l-zeile">
-        <span class="l-status" style="border-color:#5e6ad2"></span><span class="l-prio" style="background:#4d4d57"></span>
+        <span class="l-status" style="border-color:#5e6ad2"></span><span class="l-prio" style="background:#d4d4d9"></span>
         <span class="l-t">Standup</span><span class="l-tag">08:00 · Team</span>
         <span></span><span class="l-datum">08:00</span>
       </div>
       <div class="l-zeile">
-        <span class="l-status" style="border-color:#5e6ad2"></span><span class="l-prio" style="background:#4d4d57"></span>
+        <span class="l-status" style="border-color:#5e6ad2"></span><span class="l-prio" style="background:#d4d4d9"></span>
         <span class="l-t">Strategie-Call</span><span class="l-tag">Video</span>
         <span class="l-av" style="background:#f2c94c">LM</span><span class="l-datum">10:00</span>
       </div>
 
       <div class="l-gsek">Favoriten<span class="zahl">3</span></div>
       <div class="l-zeile">
-        <span class="l-av" style="background:#eb5757;width:15px;height:15px;font-size:7px">EB</span>
+        <span class="l-av" style="background:#c92a2a;width:15px;height:15px;font-size:7px">EB</span>
         <span class="l-t">Eva Bergmann</span><span class="l-tag">Kanzlei Bergmann</span>
       </div>
       <div class="l-zeile">

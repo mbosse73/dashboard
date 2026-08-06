@@ -7,7 +7,20 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: eine Zwischenprüfung des erreichten Stands.** Kein
+**Zuletzt: die Dialoge sitzen wieder gerade.** Gefunden auf dem iPad, nicht
+von einer Prüfung. Zwei Ursachen ohne Zusammenhang: Der erklärende Hinweis
+stand **im** Label und schob das Feld nach unten, während das Feld daneben
+ohne Hinweis höher begann. Und WebKit gibt Datums- und Zeitfeldern eine
+eigene Mindestbreite und zentriert ihren Wert — beides schlägt `width:100%`,
+das Feld läuft aus seiner Spalte. Der Hinweis steht jetzt unter dem Feld und
+hängt über `aria-describedby` daran; die beiden Feldarten sind gebändigt.
+Fehlerbuch Punkt 14.
+
+Die Breiten kann ich hier nicht nachstellen — Chromium zeigt den Fehler
+nicht. Nachzusehen ist das auf dem iPad, und in Edge, ob Kalender- und
+Uhrsymbol noch da sind.
+
+**Davor: eine Zwischenprüfung des erreichten Stands.** Kein
 Roadmap-Schritt — ein Durchgang durch alle Flächen, die Datenwege und die
 Farben. Fünf Befunde:
 

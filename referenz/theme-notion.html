@@ -243,7 +243,13 @@ input,textarea{font:inherit}
   padding:8px 9px;border:1px solid var(--rule);border-radius:var(--r);background:var(--sheet)}
 .dfeld.schalter input{width:16px;height:16px;padding:0;accent-color:var(--tinte);flex-shrink:0}
 .dfeld.schalter label{font-size:14px;color:var(--ink)}
-.dfeld .sub{display:block;font-size:12px;color:var(--ink3);margin-top:1px}
+.dfeld .sub{font-size:13px;color:var(--ink3);line-height:1.45;margin-top:-1px}
+/* WebKit gibt Datums- und Zeitfeldern eine eigene Mindestbreite und zentriert
+   ihren Wert. Beides schlägt width:100%, das Feld läuft aus seiner Spalte. */
+.dfeld input[type=date],.dfeld input[type=time]{min-width:0;
+  -webkit-appearance:none;appearance:none}
+.dfeld input::-webkit-date-and-time-value{text-align:left;margin:0}
+.dfeld input::-webkit-datetime-edit{padding:0}
 
 /* ---------- Formatierungsleiste über mehrzeiligen Feldern ---------- */
 .mdfeld{display:flex;flex-direction:column}
@@ -882,8 +888,18 @@ function feldMalen(def, wert, setzen){
     n.value = wert==null ? "" : wert;
   }
   n.id="fd-"+def.schl+"-"+(++idZaehler);
-  const lab=el("label",null,esc(def.nm)+(def.sub?'<span class="sub">'+esc(def.sub)+'</span>':""));
+  const lab=el("label",null,esc(def.nm));
   lab.setAttribute("for",n.id);
+  /* Der Hinweis steht unter dem Feld, nicht zwischen Beschriftung und Feld.
+     Im Label wachsen zwei Zeilen nach unten und schieben die Eingabe weg —
+     das Feld daneben, das keinen Hinweis hat, beginnt dann höher, und die
+     Zeile sitzt schief. Unten wirkt er sich nur auf die Gesamthöhe aus. */
+  let sub=null;
+  if(def.sub){
+    sub=el("div","sub",esc(def.sub));
+    sub.id=n.id+"-sub";
+    n.setAttribute("aria-describedby",sub.id);
+  }
 
   if(def.art==="mehrzeilig" && def.ohneLeiste!==true){
     huelle=el("div","mdfeld");
@@ -892,6 +908,7 @@ function feldMalen(def, wert, setzen){
   }
   else if(def.art==="schalter") f.append(n,lab);
   else f.append(lab,n);
+  if(sub) f.appendChild(sub);
 
   n.oninput=n.onchange=()=>setzen(
     def.art==="schalter" ? n.checked

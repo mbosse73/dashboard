@@ -303,6 +303,28 @@ Fünf Befunde wurden behoben.
 
 ---
 
+## Dialoge: Ausrichtung und Abstände
+
+Gefunden auf dem iPad, nicht von einer Prüfung. Fehlerbuch Punkt 14.
+
+- [ ] **Termin bearbeiten** öffnen. „Tag“ und „Uhrzeit“ beginnen auf
+      derselben Höhe, „Dauer“ und „Kontakt“ ebenso. Der Hinweis
+      „Nur diese beiden Werktage.“ steht **unter** dem Auswahlfeld
+      **[vorgeprüft in Chromium]**
+- [ ] **Neue Notiz** öffnen — dieselbe Prüfung für „Art“/„Datum“ und
+      „Uhrzeit“/„Kontakt aus der Liste“ **[vorgeprüft in Chromium]**
+- [ ] Das **Datumsfeld** und das **Zeitfeld** enden bündig mit dem Feld
+      darüber und darunter, laufen also nicht aus ihrer Spalte.
+      **Das ist der Punkt, der auf dem iPad falsch war und den ich hier
+      nicht nachstellen kann — bitte dort ansehen** **[nur du]**
+- [ ] Ihr Wert steht **links**, nicht mittig **[nur du — auf dem iPad]**
+- [ ] In Edge auf Windows: Das Kalendersymbol im Datumsfeld und das
+      Uhrsymbol im Zeitfeld sind noch da und öffnen den Wähler.
+      `appearance:none` könnte sie theoretisch verschlucken; in Chromium
+      tut es das nicht **[nur du]**
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.

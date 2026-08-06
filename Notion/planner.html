@@ -1,0 +1,172 @@
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Notion-Fassung — Planner</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:#f2f1ee;color:#111}
+.meta{background:#1a1a18;color:#e7e5e0;padding:10px 22px;font-size:13px;
+  display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.meta b{color:#fff}
+.meta nav{display:flex;gap:14px;margin-left:auto}
+.meta a{color:#b9b6ad;text-decoration:none;font-size:12.5px}
+.meta a.hier{color:#fff;font-weight:600}
+.meta a:hover{color:#fff}
+.rahmenhinweis{max-width:1400px;margin:14px auto 0;padding:0 22px;font-size:13px;
+  color:#57544c;line-height:1.5}
+.rahmenhinweis b{color:#1a1a18}
+
+/* ============================================================
+   Notion Calendar — Kalender als eigenständige Anwendung, deren
+   Optik Notion konsequent auf einen Tagesraster überträgt: helle
+   Karten, ein Bereich für ungeplante Aufgaben, dünne Stundenlinien.
+   ============================================================ */
+.notion{max-width:1400px;margin:16px auto 60px;background:#fff;border:1px solid #e7e6e3;
+  border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(15,15,15,.06);
+  display:flex;height:860px;
+  font-family:ui-sans-serif,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  color:rgb(55,53,47)}
+
+.n-side{width:246px;flex-shrink:0;background:#fbfbfa;border-right:1px solid rgba(55,53,47,.09);
+  display:flex;flex-direction:column;padding:14px 12px}
+.n-side h3{font-size:11.5px;font-weight:600;color:rgba(55,53,47,.45);margin-bottom:9px}
+.n-uz{display:flex;flex-direction:column;gap:4px}
+.n-uk{background:#fff;border:1px solid rgba(55,53,47,.1);border-radius:7px;padding:9px 10px;
+  cursor:grab}
+.n-uk .tt{font-size:13.5px;font-weight:500}
+.n-uk .mm{font-size:11.5px;color:rgba(55,53,47,.5);margin-top:2px}
+.n-uk.spaet{border-left:3px solid rgb(235,87,87)}
+.n-uk.spaet .mm{color:rgb(235,87,87)}
+.n-hinweis{font-size:12px;color:rgba(55,53,47,.45);line-height:1.5;margin:10px 0 18px}
+.n-mini{margin-top:auto;border-top:1px solid rgba(55,53,47,.09);padding-top:12px}
+.n-mini .zeile{display:flex;align-items:center;gap:8px;font-size:13px;color:rgba(55,53,47,.6);
+  padding:4px 0}
+.n-mini svg{width:14px;height:14px;stroke:rgba(55,53,47,.5);stroke-width:1.8;fill:none}
+
+.n-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.n-top{display:flex;align-items:center;gap:14px;padding:13px 22px;border-bottom:1px solid rgba(55,53,47,.09)}
+.n-top .tt{font-size:16px;font-weight:600}
+.n-nav{display:flex;gap:2px;margin-left:6px}
+.n-nav button{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;border:0;
+  background:transparent}
+.n-nav button:hover{background:rgba(55,53,47,.07)}
+.n-nav svg{width:14px;height:14px;stroke:rgba(55,53,47,.55);stroke-width:2;fill:none}
+.n-heute-btn{font-size:12.5px;font-weight:500;border:1px solid rgba(55,53,47,.14);border-radius:6px;
+  padding:4px 10px;color:rgba(55,53,47,.7)}
+.n-top .re{margin-left:auto;font-size:12.5px;color:rgba(55,53,47,.45)}
+
+.n-tage{flex:1;display:flex;overflow:hidden}
+.n-tag{flex:1;border-right:1px solid rgba(55,53,47,.08);display:flex;flex-direction:column;
+  min-width:0}
+.n-tag:last-child{border-right:0}
+.n-tag.heute{background:rgba(35,131,226,.025)}
+.n-tag-k{padding:10px 16px;border-bottom:1px solid rgba(55,53,47,.08);flex-shrink:0}
+.n-tag-k .d{font-size:12px;color:rgba(55,53,47,.5)}
+.n-tag-k .n{font-size:15px;font-weight:600;margin-top:2px}
+.n-tag.heute .n{color:rgb(35,131,226)}
+.n-raster{flex:1;overflow-y:auto;position:relative}
+.n-std{display:flex;min-height:52px;border-top:1px solid rgba(55,53,47,.06)}
+.n-std:first-child{border-top:0}
+.n-std-t{width:44px;flex-shrink:0;font-size:10.5px;color:rgba(55,53,47,.4);padding:4px 0 0 12px;
+  font-variant-numeric:tabular-nums}
+.n-lane{flex:1;min-width:0;padding:3px 8px;display:flex;flex-direction:column;gap:3px}
+.n-blk{border-radius:6px;padding:6px 9px;font-size:12.5px;background:rgba(35,131,226,.09)}
+.n-blk .t{font-weight:600;color:rgb(15,71,126)}
+.n-blk .m{color:rgba(15,71,126,.7);margin-top:1px;font-size:11.5px}
+.n-blk.aufgabe{background:rgba(15,168,105,.1)}
+.n-blk.aufgabe .t{color:rgb(11,110,73)}
+.n-blk.aufgabe .m{color:rgba(11,110,73,.75)}
+/* Die Jetzt-Linie gehört in ihre eigene, leere Stunde — nicht als
+   Overlay über den ganzen Raster gelegt. Blöcke sind unterschiedlich
+   hoch, ein fester Pixelwert träfe irgendwann den falschen Termin. */
+.n-std.jetzt{position:relative}
+.n-std.jetzt .n-std-t{color:rgb(235,87,87);font-weight:700}
+.n-std.jetzt::before{content:"";position:absolute;left:44px;right:10px;top:15px;height:1.5px;
+  background:rgb(235,87,87)}
+.n-std.jetzt::after{content:"";position:absolute;left:41px;top:11px;width:7px;height:7px;
+  border-radius:50%;background:rgb(235,87,87)}
+</style>
+
+<div class="meta">
+  <b>Notion-Fassung — Vorschau</b>
+  <span>Statischer Look-&-Feel-Entwurf, kein Anschluss an die Anwendung</span>
+  <nav>
+    <a href="home.html">Home</a>
+    <a class="hier" href="planner.html">Planner</a>
+    <a href="kontakte.html">Kontakte</a>
+    <a href="termin.html">Termin</a>
+  </nav>
+</div>
+<p class="rahmenhinweis"><b>Was hier gezeigt wird:</b> Notion selbst hat für genau diesen
+Zweck „Notion Calendar“ — helle Terminkarten in Pastellton statt Rahmenfarbe, ein
+Seitenbereich für ungeplante Aufgaben zum Hineinziehen, dünne Stundenlinien statt eines
+kräftigen Rasters.</p>
+
+<div class="notion">
+  <aside class="n-side">
+    <h3>Nicht eingeplant</h3>
+    <div class="n-uz">
+      <div class="n-uk spaet"><div class="tt">Rechnung 2026-114 freigeben</div>
+        <div class="mm">Überfällig · Eva Bergmann</div></div>
+      <div class="n-uk"><div class="tt">Backup-Skript testen</div><div class="mm">Ohne Frist</div></div>
+      <div class="n-uk"><div class="tt">KR 1.2 Review vorbereiten</div><div class="mm">15. Aug</div></div>
+      <div class="n-uk"><div class="tt">Angebot Meinhardt</div>
+        <div class="mm">Nachverfolgen · Tobias Meinhardt</div></div>
+    </div>
+    <p class="n-hinweis">Auf einen Tag ziehen, um eine Uhrzeit zu vergeben.</p>
+    <div class="n-mini">
+      <div class="zeile">
+        <svg viewBox="0 0 20 20"><path d="M10 3l1.7 3.9 4.3.4-3.3 2.9 1 4.2L10 12.3 6.3 14.4l1-4.2-3.3-2.9 4.3-.4z"/></svg>
+        Workflows überfällig · 1
+      </div>
+    </div>
+  </aside>
+
+  <main class="n-main">
+    <div class="n-top">
+      <span class="tt">Donnerstag, 6. August</span>
+      <div class="n-nav">
+        <button><svg viewBox="0 0 20 20"><path d="M12 5 7 10l5 5"/></svg></button>
+        <button><svg viewBox="0 0 20 20"><path d="M8 5l5 5-5 5"/></svg></button>
+      </div>
+      <span class="n-heute-btn">Heute</span>
+      <span class="re">Zwei Werktage · Montag bis Freitag</span>
+    </div>
+    <div class="n-tage">
+      <div class="n-tag heute">
+        <div class="n-tag-k"><div class="d">Heute</div><div class="n">Donnerstag, 6. Aug</div></div>
+        <div class="n-raster">
+          <div class="n-std"><span class="n-std-t">07:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">08:00</span><div class="n-lane">
+            <div class="n-blk"><div class="t">Standup</div><div class="m">08:00 · Team</div></div></div></div>
+          <div class="n-std"><span class="n-std-t">09:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">10:00</span><div class="n-lane">
+            <div class="n-blk"><div class="t">Strategie-Call</div><div class="m">10:00 · Lisa Meier</div></div></div></div>
+          <div class="n-std jetzt"><span class="n-std-t">11:23</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">12:00</span><div class="n-lane">
+            <div class="n-blk aufgabe"><div class="t">Feature-Matrix erstellen</div><div class="m">Aufgabe · 12:00</div></div></div></div>
+          <div class="n-std"><span class="n-std-t">13:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">14:00</span><div class="n-lane">
+            <div class="n-blk"><div class="t">Abstimmung Layout</div><div class="m">14:00 · Jan Kowalski</div></div></div></div>
+          <div class="n-std"><span class="n-std-t">15:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">16:00</span><div class="n-lane"></div></div>
+        </div>
+      </div>
+      <div class="n-tag">
+        <div class="n-tag-k"><div class="d">Danach</div><div class="n">Freitag, 7. Aug</div></div>
+        <div class="n-raster">
+          <div class="n-std"><span class="n-std-t">07:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">08:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">09:00</span><div class="n-lane">
+            <div class="n-blk"><div class="t">Sprint-Planung</div><div class="m">09:00 · Team</div></div></div></div>
+          <div class="n-std"><span class="n-std-t">10:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">11:00</span><div class="n-lane"></div></div>
+          <div class="n-std"><span class="n-std-t">15:00</span><div class="n-lane">
+            <div class="n-blk"><div class="t">Vertragsgespräch</div><div class="m">15:30 · Kanzlei Bergmann</div></div></div></div>
+          <div class="n-std"><span class="n-std-t">16:00</span><div class="n-lane"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

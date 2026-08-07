@@ -9,12 +9,11 @@ dieser Reihenfolge:
 
 0. **Schritt 0** ist erledigt — alle Prüfungen bestanden, nichts mehr
    blockiert
-1. **Schritt 9** — Outliner
-2. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —
+1. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —
    seit dem bestandenen Browsertest nicht mehr blockiert
-3. **Die Tastenprüfung** — welche Kombinationen Edge durchlässt. `F1`
-   und `⇧F1` der Hilfe sind noch nicht bestätigt
-4. **Schritt 6** — Workflows, zuletzt
+2. **Die Tastenprüfung** — welche Kombinationen Edge durchlässt. `F1`
+   und `⇧F1` der Hilfe sowie `Strg+Y` im Outliner sind nicht bestätigt
+3. **Schritt 6** — Workflows, zuletzt
 
 ---
 
@@ -275,10 +274,27 @@ schreibt „noch nicht bestätigt" dazu. Die Tastenprüfung in
 
 ---
 
-## Schritt 9 — Outliner
+## Schritt 9 — Outliner · **erledigt**
 
-Knoten anlegen, ein- und ausrücken, verschieben, klappen. Tastaturbedienung
-wie gewohnt: `Tab` rückt ein, `Umschalt+Tab` aus.
+Deutlich mehr geworden als geplant. Grundlage war eine mitgebrachte
+Outliner-App, deren Funktionsumfang Punkt für Punkt durchgegangen und
+entschieden wurde.
+
+**Umgesetzt in drei Stufen**
+
+* **9a** Datenmodell mit `id` und flacher Ebene, Migration, Anlegen,
+  Ein- und Ausrücken, Verschieben, Klappen, Notizzeile, Fokusmodus mit
+  Pfad, Rückgängig
+* **9b** eigene Fristen und Zeiträume, getippt, dazu der Gantt
+* **9c** Mindmap, PDF-Ausgabe für beide, Blattformat zur Wahl
+
+**Bewusst nicht dabei:** Befehlspalette und `Strg+F` (das ist die
+Leiste), Kalenderansicht, Etiketten mit `#`, Filtersuche, Aufgaben mit
+Kästchen und Priorität, Anheften auf die zwölf Plätze, Archiv,
+Markdown-Ein- und Ausgabe, Ziehen mit der Maus.
+
+**Getrennt geblieben:** Die Fristen des Outliners erscheinen nicht im
+Planner, nicht im Kalender (06) und nicht im Jahreskalender (14).
 
 ---
 

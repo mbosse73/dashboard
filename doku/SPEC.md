@@ -452,12 +452,91 @@ eine Liste aller Einträge: Ist das Fenster zu, sind sie sonst weg.
 
 ---
 
-## 15 Outliner — Gerüst
+## 15 Outliner — fertig
 
-Gliederung mit Ebenen. Angelegt als Beleg, dass sich neue Module ohne
+Gliederung mit Ebenen, dazu Gantt und Mindmap als zwei weitere Lesarten
+derselben Knoten. Angelegt als Beleg, dass sich neue Module ohne
 Änderung an Leiste und Planner anmelden lassen.
 
-**Fehlt noch:** Knoten anlegen, ein- und ausrücken, verschieben, klappen.
+**Das Datenmodell ist flach.** `e` ist die Ebene, ein Teilbaum ist ein
+zusammenhängender Abschnitt der Liste. Ein- und Ausrücken, Verschieben
+und Löschen sind damit ein `splice` und kein Umhängen. Ein Knoten:
+
+```
+{id, e, t, notiz, zu, frist, von, bis}
+```
+
+**Rückgängig** liegt als Abzug der ganzen Liste auf einem Stapel, nicht
+als Befehlsstapel je Knoten. Bei einigen Hundert Knoten kostet ein Abzug
+nichts, und er kann nicht danebenliegen. Getipptes wird zu einem Schritt
+gebündelt, der Stapel bei 60 Schritten gedeckelt. Es gibt Rückgängig
+**nur hier** — sonst nirgends im Dashboard.
+
+**Datumsangaben werden getippt, nicht ausgewählt:** `@20.8.`,
+`@2026-08-20`, `@heute`, `@morgen`, `@mo` bis `@so`, dazu
+`@20.8...31.8.` für einen Zeitraum. Beim Verlassen der Zeile wird
+Relatives ausgeschrieben — sonst liefen Text und gespeicherte Frist ab
+dem nächsten Tag auseinander.
+
+**Diese Fristen gehören dem Outliner allein.** Sie erscheinen nicht im
+Planner, nicht im Kalender (06) und nicht im Jahreskalender (14) und
+werden dort auch nicht gesucht. Umgekehrt erscheint kein Termin des
+Dashboards im Gantt. Dieselbe Entscheidung wie beim Jahreskalender:
+getrennte Bestände, keine wechselseitige Anzeige.
+
+**Fokus und Suche gelten in allen drei Ansichten, das Zuklappen nicht.**
+Zuklappen ist eine Lesehilfe der Gliederung und darf keine Fristen still
+verschwinden lassen.
+
+**Die Mindmap ist nicht radial.** Ein Fächer sieht bei drei Ästen gut aus
+und schiebt bei dreißig Punkten die Beschriftungen übereinander — dagegen
+hilft auch kein größeres Blatt, das vergrößert die Überlappung mit.
+Stattdessen: Wurzel in der Mitte, Äste nach beiden Seiten, jeder Punkt in
+seiner eigenen Zeile.
+
+**Bewusst nicht dabei:** Befehlspalette und `Strg+F` (das ist die
+Leiste), Kalenderansicht, Etiketten mit `#`, Filtersuche, Aufgaben mit
+Kästchen und Priorität, Anheften auf die zwölf Plätze, Archiv, Ziehen mit
+der Maus.
+
+---
+
+## PDF-Ausgabe — ohne Bibliothek und ohne Druckdialog
+
+Gantt und Mindmap gehen als PDF heraus. Die Datei wird byteweise selbst
+geschrieben; der Schreiber steht in Abschnitt 9b.
+
+**Warum nicht mit Bibliothek?** Eine wäre erlaubt gewesen. Gemessen:
+
+| | |
+|---|---|
+| `dashboard.html` vorher | 195 KB |
+| jsPDF, kleinste brauchbare Fassung | 420 KB (MIT, gewerblich nutzbar) |
+| Ladezeit ohne / mit | 13,8 ms / 46,1 ms — Median aus fünf Läufen |
+| eigener Schreiber | rund 200 Zeilen |
+
+Die Bibliothek bringt Bilder, Tabellen und eingebettete Schriften — davon
+braucht keine der beiden Ansichten etwas. Und die Zeichengrenze wäre
+dieselbe, solange keine Schrift eingebettet wird.
+
+**Die Grenze:** Pfeile und Häkchen werden im PDF zu `?`. Namen, Umlaute
+und das Eurozeichen nicht — auch polnische und französische.
+
+**Große Diagramme.** Das Blattformat wählt der Mensch, A4 bis A0 quer.
+Ein Gantt wächst in zwei Richtungen, und die brauchen verschiedene
+Antworten:
+
+* **nach unten** hilft ein Umbruch. Jedes Blatt wiederholt Kopf **und
+  Namensspalte** und trägt „Blatt 2 von 3".
+* **nach rechts** hilft kein Umbruch — ein Zeitstrahl, der mitten im
+  November aufhört, ist nicht mehr zu lesen. Die Achse rechnet sich
+  immer auf die Blattbreite; nur die Beschriftung wird gröber: Wochen,
+  Monate, Vierteljahre.
+
+Passt alles auf ein Blatt, werden die Zeilen gestreckt, und Schrift und
+Balken wachsen mit dem Format. Eine Mindmap wird **nie** umgebrochen; bei
+„von selbst wählen" bekommt sie das kleinste Blatt, auf dem ihre Schrift
+über sieben Punkt bleibt.
 
 ---
 

@@ -356,3 +356,74 @@ fällt es lange nicht auf.
 * **Nach einem Umbau die Klassenliste vergleichen.** Wird das Stylesheet
   getauscht, alle Klassennamen aus dem alten gegen das neue prüfen — sonst
   fehlt still eine Regel.
+
+---
+
+## 17 — Fokus und Höhe an einem Knoten, der noch nirgends hängt
+
+Ein Modul bekommt von `male()` einen **losgelösten** Knoten. Erst wenn
+`flaeche(b)` zurückkehrt, hängt er im Dokument. Wer darin `focus()` ruft
+oder `scrollHeight` liest, bekommt nichts: Der Fokus wandert nicht, die
+Höhe ist null.
+
+Im Outliner hieß das: Nach jedem Neuzeichnen verlor die Schreibmarke den
+Halt. `Tab`, `Alt+Pfeil` und `Strg+Z` taten daraufhin sichtbar nichts —
+die Taste ging an `body`. Der Prüflauf war grün, die Bedienung tot.
+
+**Regel:** Alles, was Fokus setzt oder Größen misst, gehört in einen
+`queueMicrotask` am Ende von `flaeche()`. Er läuft, sobald `male()`
+fertig ist, und prüft vorher `isConnected`.
+
+---
+
+## 18 — Zurücknehmen ging genau einmal
+
+Nach einem `Strg+Z` gab es den markierten Knoten nicht mehr. Die Marke
+wurde auf `null` gesetzt, damit kein Verweis ins Leere zeigt — richtig
+gedacht, aber damit verließ der Fokus die Fläche, und **jede weitere
+Taste ging ins Leere**. Zurücknehmen funktionierte, aber nur ein
+einziges Mal, und niemand konnte sagen, warum.
+
+**Regel:** Ein ungültig gewordener Verweis wird nicht gelöscht, sondern
+auf etwas Gültiges umgelenkt — hier auf den ersten sichtbaren Knoten.
+
+---
+
+## 19 — Zwei Einheiten in derselben Zeichnung
+
+Die Mindmap zeichnete ihre Verbindungen als SVG und ihre Beschriftungen
+als HTML darüber. Die Kästen standen in Prozent, die Zeichenfläche saß
+mit `inset` innerhalb der Polsterung. Prozentwerte eines Kindes rechnen
+gegen die **Polsterkante** des Elternteils, `inset` nicht — die Linien
+lagen um genau den Innenabstand versetzt neben den Kästen.
+
+**Regel:** Wenn zwei Darstellungsarten dieselbe Zeichnung ergeben,
+bekommen beide dieselbe Einheit. Hier: echte Pixel für Linien und
+Kästen, der Rahmen scrollt, wenn es zu breit wird.
+
+---
+
+## 20 — `split` an einer Trennung, die im Datum vorkommt
+
+`@20.8...31.8.` ist ein Zeitraum: `20.8.` bis `31.8.`, dazwischen `..`
+als Trenner. Drei Punkte stehen dort hintereinander. `split("..")`
+greift beim **ersten** Paar zu und liefert `20.8` und `.31.8.` — beides
+kein Datum mehr, der Zeitraum verschwand stillschweigend.
+
+**Regel:** Ein Trennzeichen, das auch im Wert vorkommen kann, wird nicht
+mit `split` gesucht, sondern mit einem **gierigen** Ausdruck:
+`/^(.+)\.\.(.+)$/` nimmt links so viel wie möglich und trifft damit
+den richtigen Trenner.
+
+---
+
+## 21 — Die gewünschte Größe entschied über den Umbruch
+
+Im PDF sollten Zeilen auf großen Bogen höher werden. Der Umbruch wurde
+danach berechnet — mit dem Ergebnis, dass ein A2-Bogen auf zwei Blätter
+rutschte, obwohl alle Zeilen darauf gepasst hätten. Die Vergrößerung
+stand sich selbst im Weg.
+
+**Regel:** Über den Umbruch entscheidet die **kleinste vertretbare**
+Größe. Erst danach wird das Blatt gefüllt.
+

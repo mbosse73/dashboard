@@ -610,6 +610,27 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
   border:0;background:none;font-family:var(--ff);cursor:pointer}
 .ol-schalter button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
   font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+/* Gantt auf der Fläche */
+.olg{margin:4px 0 14px;min-width:0}
+.olg-r{display:flex;align-items:center;height:30px;border-bottom:1px solid var(--rule)}
+.olg-r:last-child{border-bottom:0}
+.olg-kopf{height:24px;border-bottom:1px solid var(--rule2)}
+.olg-nm{width:210px;flex-shrink:0;font-size:12.5px;color:var(--ink2);padding-right:10px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.olg-feld{position:relative;flex:1;height:100%}
+.olg-w{position:absolute;top:4px;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
+  border-left:1px solid var(--rule);padding-left:5px;height:20px;white-space:nowrap}
+.olg-balken{position:absolute;top:50%;margin-top:-6px;height:13px;border-radius:4px;
+  background:var(--tinte);opacity:.85}
+.olg-balken.fasst{background:none;border:1.5px solid var(--rule2);opacity:1;
+  height:11px;margin-top:-5px}
+.olg-balken.spaet{background:var(--signal)}
+.olg-raute{position:absolute;top:50%;margin-top:-6px;margin-left:-6px;width:11px;height:11px;
+  background:var(--tinte);transform:rotate(45deg);border-radius:2px}
+.olg-raute.spaet{background:var(--signal)}
+.olg-bez{position:absolute;top:50%;margin-top:-7px;margin-left:9px;font-family:var(--mono);
+  font-size:10.5px;color:var(--ink3);white-space:nowrap}
+.olg-heute{position:absolute;top:0;bottom:0;width:1.5px;background:var(--signal);opacity:.4}
 textarea.code{width:100%;min-height:150px;border:1px solid var(--rule2);border-radius:9px;
   background:var(--sheet);padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;
   resize:vertical;color:var(--ink)}
@@ -3596,8 +3617,13 @@ function olMalen(b){
     const f=el("textarea","ol-tx");
     f.rows=1; f.value=k.t; f.spellcheck=false;
     f.setAttribute("aria-label","Knoten, Ebene "+(k.e+1));
-    f.oninput=()=>{ k.t=f.value; olHoehe(f); olFertig(true); };
+    /* Gedeutet wird bei jedem Zeichen, neu gezeichnet aber nicht: Ein
+       Neuaufbau bei jedem Buchstaben risse die Schreibmarke heraus. Die
+       Marke am Datum erscheint beim nächsten Zeichnen — spätestens mit
+       Enter, Tab oder dem Wechsel in den Gantt. */
+    f.oninput=()=>{ k.t=f.value; olDeuten(k); olHoehe(f); olFertig(true); };
     f.onfocus=()=>{ olMarke=k.id; olFeld="t"; };
+    f.onblur=()=>{ if(olAusschreiben(k)){ f.value=k.t; olDeuten(k); olFertig(); } };
     f.onkeydown=e=>olTaste(e,k,i,f,"t");
     z.appendChild(f);
 
@@ -3839,9 +3865,225 @@ function olSchieben(i, richtung){
   olFertig(); male();
 }
 
-/* Platzhalter — Gantt und Mindmap kommen in den nächsten Stufen. */
-function olAnsichtMalen(b){ b.appendChild(el("div","leer","Kommt gleich.")); }
-function olMarkeMalen(){}
+/* ---------- Datumsangaben ----------
+   Sie werden getippt, nicht ausgewählt: `@20.8.`, `@2026-08-20`,
+   `@heute`, `@morgen`, `@mo`, dazu `@20.8...31.8.` für einen Zeitraum.
+   Der Text bleibt damit die einzige Wahrheit — es gibt keinen zweiten
+   Ort, der abgeglichen werden müsste.
+
+   Diese Fristen gehören dem Outliner allein. Sie stehen nicht im
+   Planner, nicht im Kalender und nicht im Jahreskalender. Wer eine
+   Frist an beiden Orten braucht, trägt sie an beiden Orten ein. */
+const OL_TAGE={so:0,mo:1,di:2,mi:3,do:4,fr:5,sa:6};
+function olDatum(s){
+  s=String(s||"").trim().toLowerCase();
+  if(!s) return null;
+  if(s==="heute") return HEUTE;
+  if(s==="morgen") return tagPlus(1);
+  if(s==="übermorgen"||s==="uebermorgen") return tagPlus(2);
+  if(OL_TAGE[s]!==undefined){
+    const heute=new Date(HEUTE+"T00:00:00");
+    let d=(OL_TAGE[s]-heute.getDay()+7)%7; if(d===0) d=7;
+    return tagPlus(d);
+  }
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return s;
+  m=s.match(/^(\d{1,2})\.(\d{1,2})\.?(\d{4})?$/);
+  if(m){
+    /* Ohne Jahr das laufende — es sei denn, der Tag liegt dann schon
+       mehr als ein halbes Jahr zurück. Dann war das nächste gemeint. */
+    let j=m[3] ? Number(m[3]) : Number(HEUTE.slice(0,4));
+    let d=j+"-"+p2(Number(m[2]))+"-"+p2(Number(m[1]));
+    if(!m[3] && d < tagPlus(-183)) d=(j+1)+d.slice(4);
+    return d;
+  }
+  return null;
+}
+/* Liest die Angaben aus einer Zeile und schreibt sie in den Knoten.
+   Was nicht als Datum zu deuten ist, bleibt einfach Text. */
+function olDeuten(k){
+  const alt=(k.frist||"")+"|"+(k.von||"")+"|"+(k.bis||"");
+  let frist=null, von=null, bis=null;
+  const re=/@([^\s@]+)/g; let m;
+  while((m=re.exec(k.t))){
+    const roh=m[1];
+    /* Gierig teilen, nicht mit `split`. Bei `20.8...31.8.` sind drei
+       Punkte hintereinander: der hinter dem Tag und die beiden des
+       Trenners. `split("..")` greift beim ersten Paar zu und reißt den
+       Tagespunkt mit ab — herauskamen `20.8` und `.31.8.`, und beides
+       war kein Datum mehr. Ein gieriges `.+` nimmt den linken Teil so
+       lang wie möglich und trifft damit den richtigen Trenner. */
+    const zwei=roh.match(/^(.+)\.\.(.+)$/);
+    if(zwei){
+      const a=olDatum(zwei[1]), b=olDatum(zwei[2]);
+      if(a&&b){ von=a<b?a:b; bis=a<b?b:a; }
+    } else {
+      const d=olDatum(roh);
+      if(d) frist=d;
+    }
+  }
+  k.frist=frist; k.von=von; k.bis=bis;
+  return alt !== (frist||"")+"|"+(von||"")+"|"+(bis||"");
+}
+/* Relative Angaben ausschreiben, sobald die Zeile verlassen wird.
+   Sonst liefen Text und gespeicherte Frist ab morgen auseinander:
+   `@morgen` meint dann einen anderen Tag als den festgehaltenen. */
+function olAusschreiben(k){
+  const vorher=k.t;
+  k.t=k.t.replace(/@([^\s@]+)/g, (ganz, roh)=>{
+    const zwei=roh.match(/^(.+)\.\.(.+)$/);
+    const wandle = x => {
+      const d=olDatum(x);
+      if(!d || /^\d{4}-\d{2}-\d{2}$/.test(x) || /^\d{1,2}\.\d{1,2}\.\d{4}$/.test(x)) return x;
+      const t=new Date(d+"T00:00:00");
+      return t.getDate()+"."+(t.getMonth()+1)+"."+t.getFullYear();
+    };
+    return "@"+(zwei ? wandle(zwei[1])+".."+wandle(zwei[2]) : wandle(roh));
+  });
+  return k.t!==vorher;
+}
+const olSpaet = k => { const d=k.frist||k.bis; return !!d && d<HEUTE; };
+function olMarkeMalen(z,k){
+  const d = k.von ? (kurzTag(k.von)+" – "+kurzTag(k.bis)) : k.frist ? kurzTag(k.frist) : null;
+  if(!d) return;
+  z.appendChild(el("span","ol-d"+(olSpaet(k)?" spaet":""),
+    (olSpaet(k)?"überfällig · ":"")+d));
+}
+const kurzTag = s => { const d=new Date(s+"T00:00:00");
+  return d.getDate()+". "+MONK[d.getMonth()]; };
+
+/* ---------- Zeilen mit Datum, für Gantt ----------
+   Ein Elternpunkt ohne eigenes Datum fasst zusammen, was unter ihm
+   liegt. Wer nichts Datiertes unter sich hat, fällt weg. */
+function olReihen(){
+  const aus=[];
+  const liste=olSichtbarFuerAnsicht();
+  liste.forEach(({k,i,tiefe})=>{
+    let von=k.von||k.frist, bis=k.bis||k.frist, art=k.von?"balken":"raute";
+    if(!von){
+      const n=olTeil(i);
+      const ki=BAUM.slice(i+1,i+1+n).filter(x=>x.von||x.frist);
+      if(!ki.length) return;
+      von=ki.map(x=>x.von||x.frist).sort()[0];
+      bis=ki.map(x=>x.bis||x.frist).sort().pop();
+      art="fasst";
+    }
+    aus.push({k,von,bis,art,tiefe});
+  });
+  return aus;
+}
+/* Für Gantt und Mindmap zählt der Fokus, aber **nicht** das Zuklappen:
+   Zuklappen ist eine Lesehilfe der Gliederung und darf keine Fristen
+   still verschwinden lassen. */
+function olSichtbarFuerAnsicht(){
+  let von=0, bis=BAUM.length, rueck=0;
+  if(olFokus){
+    const i=olWo(olFokus);
+    if(i>=0){ von=i; bis=i+1+olTeil(i); rueck=BAUM[i].e; }
+  }
+  const aus=[];
+  for(let i=von;i<bis;i++) aus.push({k:BAUM[i], i, tiefe:BAUM[i].e-rueck});
+  return aus;
+}
+
+function olAnsichtMalen(b){
+  const reihen=olReihen();
+  if(!reihen.length){
+    b.appendChild(el("div","leer",
+      olAnsicht==="gantt"
+        ? "Noch keine Fristen. Schreiben Sie @20.8. oder @20.8...31.8. in eine Zeile."
+        : "Noch nichts zu zeigen."));
+    return;
+  }
+  if(olAnsicht==="gantt") olGanttMalen(b, reihen);
+  else olMindmapMalen(b);
+}
+
+/* ---------- Gantt auf der Fläche ----------
+   Dieselbe Rechnung wie im PDF, nur mit Kästen statt Zeichenbefehlen:
+   Zeitraum wird zum Balken, bloße Frist zur Raute, ein Elternpunkt
+   ohne eigenes Datum bekommt den offenen Rahmen. */
+function olGanttMalen(b, reihen){
+  let von=reihen.map(r=>r.von).sort()[0];
+  const bis=reihen.map(r=>r.bis).sort().pop();
+  if(HEUTE<von) von=HEUTE;
+  const tage=Math.max(1, Math.round((new Date(bis+"T00:00:00")-new Date(von+"T00:00:00"))/86400000)+1);
+  const anteil = d => Math.round((new Date(d+"T00:00:00")-new Date(von+"T00:00:00"))/86400000)/tage*100;
+
+  const g=el("div","olg");
+  const kopf=el("div","olg-r olg-kopf");
+  kopf.appendChild(el("div","olg-nm"));
+  const skala=el("div","olg-feld");
+  olAchse(von,bis,tage).forEach(([a,bez])=>{
+    const s=el("span","olg-w",esc(bez)); s.style.left=a+"%"; skala.appendChild(s);
+  });
+  kopf.appendChild(skala);
+  g.appendChild(kopf);
+
+  reihen.forEach(({k,von:v,bis:z,art,tiefe})=>{
+    const r=el("div","olg-r");
+    const nm=el("div","olg-nm",esc(k.t||"Ohne Text"));
+    nm.style.paddingLeft=(tiefe*11)+"px";
+    if(tiefe<=1) nm.style.fontWeight="600";
+    r.appendChild(nm);
+    const f=el("div","olg-feld");
+    const l=anteil(v), br=Math.max(anteil(z)-l+100/tage, 1.2);
+    const rot=olSpaet(k);
+    if(art==="raute"){
+      const d=el("span","olg-raute"+(rot?" spaet":"")); d.style.left=l+"%"; f.appendChild(d);
+    } else {
+      const s=el("span","olg-balken"+(art==="fasst"?" fasst":"")+(rot?" spaet":""));
+      s.style.left=l+"%"; s.style.width=br+"%"; f.appendChild(s);
+    }
+    if(art!=="fasst"){
+      const bez=el("span","olg-bez", k.von ? kurzTag(v)+" – "+kurzTag(z) : kurzTag(v));
+      bez.style.left=(l+br)+"%"; f.appendChild(bez);
+    }
+    r.appendChild(f); g.appendChild(r);
+  });
+
+  if(HEUTE>=von && HEUTE<=bis){
+    const h=el("span","olg-heute"); h.style.left=anteil(HEUTE)+"%";
+    g.querySelectorAll(".olg-r:not(.olg-kopf) .olg-feld").forEach(f=>{
+      const l=el("span","olg-heute"); l.style.left=anteil(HEUTE)+"%"; f.appendChild(l);
+    });
+  }
+
+  b.appendChild(g);
+  b.appendChild(el("div","hinweis",
+    "Balken: Zeitraum · Raute: einzelne Frist · offener Rahmen: fasst die "
+    +"Unterpunkte zusammen. Diese Fristen gehören dem Outliner — sie stehen "
+    +"nicht im Planner, nicht im Kalender und nicht im Jahreskalender."));
+  b.appendChild(olPdfKnopf());
+}
+
+/* Die Achse wird gröber, wenn der Zeitraum lang ist: Wochen, Monate,
+   Vierteljahre. Ein Zeitstrahl, dessen Beschriftungen sich überlappen,
+   ist keiner. */
+function olAchse(von,bis,tage){
+  const aus=[], a=new Date(von+"T00:00:00"), z=new Date(bis+"T00:00:00");
+  const anteil = d => (d-a)/86400000/tage*100;
+  if(tage<=70){
+    for(let i=0;i<tage;i+=7){
+      const d=new Date(a.getTime()+i*86400000);
+      aus.push([anteil(d), d.getDate()+". "+MONK[d.getMonth()]]);
+    }
+    return aus;
+  }
+  let j=new Date(a.getFullYear(), a.getMonth()+1, 1);
+  const jeder = tage>430 ? 3 : 1;
+  let n=0;
+  while(j<=z){
+    if(n%jeder===0) aus.push([anteil(j),
+      MONK[j.getMonth()]+(j.getMonth()===0?" "+j.getFullYear():"")]);
+    j=new Date(j.getFullYear(), j.getMonth()+1, 1); n++;
+  }
+  return aus;
+}
+
+/* Platzhalter — Mindmap und PDF kommen in Stufe 9c. */
+function olMindmapMalen(b){ b.appendChild(el("div","leer","Kommt gleich.")); }
+function olPdfKnopf(){ return el("span"); }
 
 /* ---------- Code-Beautifier ---------- */
 /* ===== MODUL beautifier ===== */

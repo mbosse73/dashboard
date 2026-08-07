@@ -67,7 +67,7 @@ doku/ARCHITEKTUR.md       Modulvertrag, Datenmodell, Formate
 doku/SPEC.md              alle Module und ihr Stand
 doku/ROADMAP.md           Reihenfolge der Arbeit
 doku/ARBEITSWEISE.md      wie Claude Code einen Schritt abarbeitet
-doku/FEHLERBUCH.md        14 Fehler, die schon passiert sind
+doku/FEHLERBUCH.md        15 Fehler, die schon passiert sind
 
 referenz/workflow-dialog.html   Entwurf des Workflow-Dialogs
 

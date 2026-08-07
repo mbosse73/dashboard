@@ -47,7 +47,13 @@ input,textarea{font:inherit}
 ::-webkit-scrollbar-thumb{background:var(--rule2);border-radius:7px;
   border:3px solid var(--paper);background-clip:padding-box}
 
-.app{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--paper)}
+/* Zwei Zeilen Hoehe mit Absicht: 100vh ist auf iOS die Hoehe *ohne*
+   Safari-Leisten. Im Querformat nehmen die so viel weg, dass der Kopf
+   oben aus dem Sichtbaren rutscht — und body{overflow:hidden} laesst
+   ihn nicht zurueckholen. 100dvh misst, was wirklich zu sehen ist.
+   Die erste Zeile bleibt als Rueckfall fuer aeltere Browser stehen. */
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;
+  overflow:hidden;background:var(--paper)}
 /* ============================================================
    THEMA BASECAMP
    Ein Klick auf den Knopf im Kopf setzt data-theme="basecamp" auf
@@ -217,7 +223,7 @@ body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-colo
 .schleier{position:fixed;inset:0;background:rgba(var(--ink-rgb),.34);display:none;
   place-items:center;padding:18px;z-index:500}
 .schleier.auf{display:grid}
-.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);background:var(--sheet);
+.dlg{width:min(620px,100%);max-height:calc(100vh - 36px);max-height:calc(100dvh - 36px);background:var(--sheet);
   border:1px solid var(--rule2);border-radius:14px;box-shadow:0 24px 70px rgba(var(--ink-rgb),.22);
   display:flex;flex-direction:column;overflow:hidden}
 .dlg-k{flex-shrink:0;display:flex;align-items:baseline;gap:12px;padding:16px 22px 13px;

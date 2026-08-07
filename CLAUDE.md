@@ -63,6 +63,19 @@ Kein Modul wird von der Leiste oder vom Planner namentlich gekannt. Jedes
 meldet sich über `registriere({...})` an. Der Vertrag steht in
 `doku/ARCHITEKTUR.md` — beim Anlegen eines neuen Moduls dort nachlesen.
 
+**Jedes Modul mit eigener Fläche braucht einen Hilfetext.** Er steht als
+`hilfe` im Modulblock, direkt neben dem Code, den er beschreibt. Die
+Hilfe baut sich daraus auf; ohne ihn erschiene ein neues Modul dort ohne
+Erklärung. `werkzeug/pruefen.mjs` verlangt ihn und prüft drei Dinge:
+
+* höchstens **20 Wörter** je Satz
+* höchstens **ein Komma** je Satz
+* mindestens **40 Zeichen** insgesamt
+
+Die Regeln prüfen die Form, nicht den Inhalt. Ein Satz mit
+dreiunddreißig Wörtern und vier Kommas ist aber sicher nicht
+verständlich. Kurze Sätze, keine Schachtelsätze.
+
 Jeder Modulblock ist von Markern eingefasst:
 
 ```

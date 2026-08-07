@@ -9,10 +9,11 @@ dieser Reihenfolge:
 
 0. **Schritt 0** ist erledigt — alle Prüfungen bestanden, nichts mehr
    blockiert
-1. **Schritt 8** — Hilfe, baut sich aus dem Register auf
-2. **Schritt 9** — Outliner
-3. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —
+1. **Schritt 9** — Outliner
+2. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —
    seit dem bestandenen Browsertest nicht mehr blockiert
+3. **Die Tastenprüfung** — welche Kombinationen Edge durchlässt. `F1`
+   und `⇧F1` der Hilfe sind noch nicht bestätigt
 4. **Schritt 6** — Workflows, zuletzt
 
 ---
@@ -255,10 +256,22 @@ Entwurf mit gemessenen Zahlen: `mockups/schritt-breite.html`.
 
 ---
 
-## Schritt 8 — Hilfe
+## Schritt 8 — Hilfe · **erledigt**
 
-Baut sich aus dem Register auf: alle angemeldeten Module, ihre
-Tastenkürzel, die Eingabemuster der Leiste. Nicht von Hand pflegen.
+Zwei Flächen: die Hilfe als Modul mit Index und eigener Suche, die
+Schnellhilfe als schwebendes Fenster mit allen Tastenkürzeln.
+
+**Umgesetzt**
+* Sechs Abschnitte, Index links, eigenes Suchfeld
+* Die Suche ist von der Leiste getrennt: Das Modul meldet kein `suche` an
+* `TASTEN` schaltet die Tasten **und** füllt die Schnellhilfe
+* `MUSTER` deutet die Eingaben **und** beschreibt sie
+* Jedes Modul beschreibt sich über `hilfe` im eigenen Block
+* `pruefen.mjs` verlangt den Text und prüft drei Stilregeln
+
+**Offen:** `F1` und `⇧F1` sind am Zielrechner nicht bestätigt. Die Liste
+schreibt „noch nicht bestätigt" dazu. Die Tastenprüfung in
+`browsertest.html` folgt als eigener Schritt.
 
 ---
 

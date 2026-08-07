@@ -330,10 +330,55 @@ Höhe. Links passt sie bis zum zwölften.
 
 ---
 
-## 10 Hilfe — offen
+## 10 Hilfe — fertig
 
-Übersicht der Tastenkürzel und der Eingabemuster für die Leiste.
-Sollte sich aus dem Register aufbauen, nicht von Hand gepflegt werden.
+Zwei Flächen: die **Hilfe** als Modulfläche und die **Schnellhilfe** als
+schwebendes Fenster. `F1` öffnet die Schnellhilfe, `⇧F1` die Hilfe. Beide
+Kürzel sind am Zielrechner noch nicht bestätigt; die Liste schreibt das
+dazu.
+
+**Die Suche der Hilfe ist von der Leiste getrennt — konstruktiv.** Das
+Modul meldet **kein `suche`** an und kann in der Leiste deshalb gar nicht
+auftauchen. Sein Feld hat einen eigenen Zustand `hiSuche`, außerhalb von
+`Z`. Wer Daten sucht, nimmt die Leiste; wer die Hilfe durchsucht, bleibt
+in der Hilfe.
+
+**Sechs Abschnitte, links ein Index.** Zwei Oberflächen, Eingabemuster,
+Tastenkürzel, Module, Sichern und Laden, Themen. Die Suche filtert die
+Abschnitte, der Index zeigt dann nur die passenden.
+
+### Woher der Inhalt kommt
+
+| Was | Herkunft | bei etwas Neuem |
+|---|---|---|
+| Module, Nummer, Anzahl, Gerüst-Marke, Beiträge | Register | erscheint von selbst |
+| Erklärtext je Modul | `hilfe` im Modulblock | vom Prüflauf erzwungen |
+| Tastenkürzel | `TASTEN` | erscheint von selbst |
+| Eingabemuster | `MUSTER` | erscheint von selbst |
+| Oberflächen, Sichern, Themen | von Hand | selten, siehe unten |
+
+**`TASTEN` schaltet und beschreibt.** Die Tastatur liest dieselbe Tabelle
+wie die Schnellhilfe. Ein Kürzel kann deshalb nicht in der Liste stehen,
+ohne zu wirken. Die ortsabhängigen Tasten — Escape, die Pfeile — tragen
+kein `tun` und bleiben Sonderfälle; sie stehen trotzdem in der Tabelle,
+weil die Hilfe sie nennen muss.
+
+**`MUSTER` deutet und beschreibt.** `deuten()` liest seine Regeln von dort.
+
+**Von Hand bleiben nur drei Dinge:** Leiste und Planner, Sichern und
+Laden, die Themen. Die beiden Oberflächen können nicht wachsen —
+`CLAUDE.md` lässt genau zwei zu.
+
+### Der Prüflauf verlangt Hilfetexte
+
+Jedes Modul mit `flaeche` braucht `hilfe`. Dazu drei Regeln an den Stil:
+höchstens 20 Wörter je Satz, höchstens ein Komma je Satz, mindestens 40
+Zeichen. Sie prüfen die Form, nicht den Inhalt — aber ein Satz mit
+dreiunddreißig Wörtern ist sicher nicht verständlich.
+
+**Bewusst nicht dabei:** keine Suche über Anwendungsdaten, keine Bilder,
+kein Hilfetext je Dialogfeld. Erklärungen zu Feldern stehen dort schon
+unter dem Feld.
 
 ---
 

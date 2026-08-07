@@ -20,8 +20,9 @@ Stundenraster, links die nicht eingeplanten Aufgaben. Ziehen weist einer
 Aufgabe eine Uhrzeit zu.
 
 Alles Übrige sind Module, die sich über ein Register anmelden: Kontakte,
-Aufgaben, Kalender, Notizen, Textbausteine, Appstarter, Bookmarks,
-Workflows, Outliner, Code-Beautifier.
+Aufgaben, Kalender, Jahreskalender, Notizen, Textbausteine, Appstarter,
+Bookmarks, Workflows, Outliner, Code-Beautifier — und eine Hilfe, die
+sich aus ebendiesem Register aufbaut.
 
 Dazu ein Themen-Umschalter im Kopf, `Standard` / `Basecamp` — dieselbe
 Anwendung, andere Optik, ohne zweite Datei.
@@ -109,11 +110,11 @@ sodass sich einzelne Teile ersetzen lassen, ohne die Datei anzufassen.
 
 ## Stand
 
-Beide Oberflächen stehen. 12 Module angemeldet,
-davon 8 fertig und 4 als Gerüst.
+Beide Oberflächen stehen. 13 Module angemeldet,
+davon 9 fertig und 4 als Gerüst.
 Fertig heißt: Anlegen, Bearbeiten und Löschen tragen — Kontakte,
 Aufgaben, Kalender, Jahreskalender, Notizen, Bookmarks, Rechner,
-Code-Beautifier. Die übrigen vier
+Code-Beautifier, Hilfe. Die übrigen vier
 sagen auf ihrer Fläche selbst, was ihnen noch fehlt. Die Reihenfolge
 steht in `doku/ROADMAP.md`.
 

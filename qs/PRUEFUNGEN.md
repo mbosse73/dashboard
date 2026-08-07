@@ -445,6 +445,65 @@ statt vorher rund 1800.
 
 ---
 
+## Schritt 8 — die Hilfe
+
+### Die Hilfe
+
+- [ ] Leiste · Modul **Hilfe** öffnen. Links steht ein Index mit sechs
+      Einträgen, rechts der Inhalt **[vorgeprüft]**
+- [ ] Alle elf Module stehen unter „Module", mit Nummer, Erklärung und
+      Gerüst-Marke **[vorgeprüft]**
+- [ ] Die Erklärungen sind **verständlich**. Kurze Sätze, keine
+      Verschachtelung **[nur du — das kann keine Prüfung sagen]**
+- [ ] Ein Klick im Index springt zum Abschnitt **[nur du]**
+
+### Die beiden Suchen bleiben getrennt
+
+- [ ] In der Hilfe `platz` tippen — zwei Abschnitte bleiben übrig, der
+      Index zeigt nur diese **[vorgeprüft]**
+- [ ] `zzz` tippen — der Leertext sagt, dass die Hilfe nur sich selbst
+      durchsucht **[vorgeprüft]**
+- [ ] In der **Leiste** `hilfe` tippen — es erscheint **kein**
+      Hilfe-Treffer. Das Modul meldet kein `suche` an **[vorgeprüft]**
+- [ ] Von der Hilfe zur Leiste wechseln und zurück — der Suchtext der
+      Hilfe ist weg, die Leiste unberührt **[nur du]**
+
+### Die Schnellhilfe
+
+- [ ] `F1` drücken — ein Fenster mit allen zehn Kürzeln geht auf
+      **[nur du — F1 könnte von Edge abgefangen werden]**
+- [ ] `Esc` schließt. `F1` schließt ebenfalls **[vorgeprüft]**
+- [ ] Klick neben das Fenster schließt **[vorgeprüft]**
+- [ ] „Zur ausführlichen Hilfe" wechselt zur Modulfläche **[nur du]**
+- [ ] `⇧F1` öffnet die Hilfe **[nur du]**
+
+### Die Kürzel stimmen mit der Wirklichkeit überein
+
+- [ ] Jedes Kürzel aus der Liste **einmal drücken**. Jedes tut, was
+      danebensteht **[nur du]**
+- [ ] `F1` und `⇧F1` tragen den Vermerk „noch nicht bestätigt". Sobald
+      die Tastenprüfung läuft, fällt er weg **[vorgeprüft]**
+- [ ] `⌘K` und `⌘P` laufen jetzt über die Tabelle statt über eine
+      `if`-Kette — sie wirken unverändert **[vorgeprüft]**
+
+### Die Eingabemuster deuten noch
+
+- [ ] `Rückruf Kanzlei ? mo 14:30 @meier` in der Leiste — Aufgabe,
+      Nachverfolgen, Montag, 14:30, Kontakt Meier **[vorgeprüft]**
+- [ ] Die sechs Muster in der Hilfe stimmen mit dem überein, was die
+      Leiste tut **[nur du]**
+
+### Der Prüflauf verlangt Hilfetexte
+
+- [ ] `node werkzeug/pruefen.mjs` meldet „alle Hilfetexte vorhanden und
+      kurz gebaut" **[vorgeprüft]**
+- [ ] Zum Ausprobieren ein `hilfe` entfernen — der Lauf schlägt an und
+      nennt das Modul **[vorgeprüft]**
+- [ ] Einen Schachtelsatz eintragen — der Lauf nennt Wortzahl und
+      Kommazahl **[vorgeprüft]**
+
+---
+
 ## Die Pinnwand · Vorgang 2
 
 Zwölf Plätze, „Häufig benutzt", links unter dem Schmierzettel. Auf ihnen

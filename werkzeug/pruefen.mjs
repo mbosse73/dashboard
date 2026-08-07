@@ -138,6 +138,47 @@ function pruefeSicherung(name, js) {
   else ok(name + ": alle " + bereiche.length + " Datenbereiche werden geladen");
 }
 
+/* ---------- Hilfetexte: vorhanden, und lesbar ----------
+   Ein Modul mit eigener Fläche muss sich selbst erklären. Ohne diese
+   Prüfung erschiene ein neues Modul in der Hilfe ohne Erklärung, und die
+   Hilfe verfiele still — Modul für Modul.
+
+   Dazu drei Regeln an den Stil. Sie prüfen die Form, nicht den Inhalt:
+   ob ein Satz verständlich ist, sieht nur ein Mensch. Aber ein Satz mit
+   dreiunddreißig Wörtern und vier Kommas ist es sicher nicht. */
+const HILF_WORT = 20;   /* Wörter je Satz */
+const HILF_KOMMA = 1;   /* Kommas je Satz */
+const HILF_KURZ = 40;   /* Zeichen insgesamt — gegen hilfe:"TODO" */
+
+function pruefeHilfe(name, txt){
+  /* Jeder registrierte Block mit `flaeche` braucht ein `hilfe`. */
+  const bloecke = [...txt.matchAll(/registriere\(\{([\s\S]*?)\n\}\);/g)]
+    .map(m => m[1]);
+  const fehlt = [], schlecht = [];
+  bloecke.forEach(b => {
+    const id = (b.match(/id:"([a-z]+)"/) || [])[1] || "?";
+    if(!/\n\s*flaeche\s*[({]/.test(b)) return;      /* ohne Fläche: frei */
+    const h = b.match(/hilfe:\s*((?:"(?:[^"\\]|\\.)*"\s*\+?\s*)+)/);
+    if(!h){ fehlt.push(id); return; }
+    /* Die Zeichenketten zusammensetzen, ohne sie auszuwerten. */
+    const t = [...h[1].matchAll(/"((?:[^"\\]|\\.)*)"/g)]
+      .map(x => x[1].replace(/\\"/g,'"')).join("");
+    if(t.trim().length < HILF_KURZ){ schlecht.push(id+": nur "+t.trim().length+" Zeichen"); return; }
+    t.split(/(?<=[.!?])\s+/).filter(x=>x.trim()).forEach(sz => {
+      const w = sz.trim().split(/\s+/).length;
+      const k = (sz.match(/,/g) || []).length;
+      if(w > HILF_WORT) schlecht.push(id+": "+w+" Wörter — «"+sz.trim().slice(0,40)+"…»");
+      if(k > HILF_KOMMA) schlecht.push(id+": "+k+" Kommas — «"+sz.trim().slice(0,40)+"…»");
+    });
+  });
+  if(fehlt.length)
+    bad(name + ": ohne Hilfetext — " + fehlt.join(", "));
+  else if(schlecht.length)
+    bad(name + ": Hilfetext zu verschachtelt — " + schlecht.join(" · "));
+  else
+    ok(name + ": alle Hilfetexte vorhanden und kurz gebaut");
+}
+
 /* ---------- 9 Ein Klassenname gehört einem Bereich ----------
    In einer einzigen Datei ohne Geltungsbereiche ist der Name die einzige
    Trennung. Wird dieselbe Klasse an zwei weit auseinanderliegenden Stellen
@@ -232,6 +273,7 @@ for (const f of DATEIEN) {
   pruefeNamen(f, css);
   pruefeMarker(f, js);
   if (f === "dashboard.html") pruefeSicherung(f, js);
+  if (f === "dashboard.html") pruefeHilfe(f, js);
 }
 console.log("\nÜbergreifend");
 pruefeReadme();

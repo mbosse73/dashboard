@@ -748,3 +748,82 @@ Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 - **Schritt 8 — Hilfe:** Baut sich aus dem Register auf, ein neues Modul erscheint
   dort von selbst
 - **Schritt 9 — Outliner:** `Tab` rückt ein, `Umschalt+Tab` aus
+
+---
+
+## Schritt 9 — der Outliner
+
+`dashboard.html` per **Doppelklick** in Edge, dann Leiste → Outliner.
+
+### Gliederung
+
+1. In eine Zeile tippen, `↵` drücken — teilt sie an der Schreibmarke?
+2. `Tab` im neuen Knoten — rückt er ein? `⇧Tab` — wieder heraus?
+3. Ein Knoten **mit** Unterknoten: `Tab` und `⇧Tab` — kommen die
+   Unterknoten mit?
+4. `Tab` beim **ersten** Knoten unter seinem Elternteil — sagt er
+   „Kein Knoten darüber auf gleicher Ebene"?
+5. `Alt+↑` und `Alt+↓` — verschiebt sich der Knoten samt allem darunter?
+6. `⌫` am Zeilenanfang — verbindet er mit der Zeile darüber? Bei einem
+   Knoten **mit** Unterknoten: lehnt er ab und sagt es?
+7. Klick aufs Dreieck — klappt zu, Zähler `+2` erscheint?
+8. `Strg+.` — dasselbe über die Tastatur?
+9. `⇧↵` — öffnet sich die Notizzeile? `↵` darin — zurück in den Knoten?
+   `⌫` in der leeren Notiz — verschwindet sie?
+10. Klick auf den Punkt eines Knotens mit Unterknoten — springt er
+    hinein? Steht der Pfad oben? Führt er zurück?
+
+### Rückgängig
+
+11. Mehrere Änderungen, dann `Strg+Z` **mehrfach** — geht jede zurück?
+12. `Strg+⇧+Z` und `Strg+Y` — stellen beide wieder her?
+    **`Strg+Y` ist am Zielrechner noch nicht bestätigt.**
+13. Einen ganzen Satz tippen, dann einmal `Strg+Z` — ist der ganze Satz
+    weg, nicht nur ein Buchstabe?
+
+### Fristen
+
+14. ` @20.8.` an eine Zeile hängen, dann `Tab` — erscheint die Marke?
+15. ` @morgen` tippen, Zeile verlassen — steht dort jetzt das
+    ausgeschriebene Datum?
+16. ` @20.8...31.8.` — wird ein Zeitraum daraus, keine Frist?
+17. Ein Datum in der **Vergangenheit** — ist die Marke rot?
+18. Eine Mailadresse in eine Zeile schreiben — bleibt sie unangetastet?
+
+### Gantt und Mindmap
+
+19. Auf **Gantt** schalten — Balken für Zeiträume, Rauten für Fristen,
+    offener Rahmen bei Elternpunkten ohne eigenes Datum?
+20. Steht die rote Heute-Linie an der richtigen Stelle?
+21. Einen Zweig **zuklappen**, dann in den Gantt — sind seine Fristen
+    weiterhin da? (Sie müssen es sein.)
+22. In einen Knoten **hineinspringen**, dann in den Gantt — zeigt er nur
+    noch diesen Zweig? (Das muss er.)
+23. Auf **Mindmap** schalten — überdeckt sich nichts? Liegen Linien und
+    Kästen aufeinander?
+
+### PDF
+
+24. „Als PDF ausgeben …" — geht der Dialog auf?
+25. Mit **A4** ausgeben — **lädt Edge die Datei überhaupt herunter?**
+    Das ist am Zielrechner noch nicht bestätigt.
+26. Die Datei öffnen: Umlaute richtig? „Rabattlogik prüfen", nicht
+    „Rabattlogik pr?fen"?
+27. Mit **A2** ausgeben — größere Schrift, ein Blatt?
+28. Eine Gliederung mit **vielen** Zeilen anlegen, dann A4 — bricht sie
+    um? Steht auf Blatt 2 die Namensspalte? Steht „Blatt 2 von 3"?
+29. Eine Frist ein Jahr in die Zukunft setzen — wird die Achse gröber
+    (Monate statt Wochen)?
+30. Mindmap als PDF mit „von selbst wählen" — nennt die Fußzeile das
+    gewählte Format?
+
+### Zusammenspiel
+
+31. Sichern, Seite neu laden, Laden — kommt die Gliederung samt Notizen,
+    Fristen und zugeklappten Zweigen zurück?
+32. In der **Leiste** einen Knotentext tippen — erscheint ein
+    Gliederungs-Treffer? Führt er in den Outliner?
+33. In der **Hilfe** nach „Outliner" suchen — stehen alle Tasten da?
+34. Planner, Kalender und Jahreskalender öffnen — taucht **keine**
+    Outliner-Frist dort auf?
+

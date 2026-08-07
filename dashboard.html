@@ -94,7 +94,12 @@ body[data-theme="basecamp"] .kk-stern.an:hover{color:var(--gut)}
 body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-color:var(--ink)}
 
 /* ---------- Kopf ---------- */
+/* Der Inhalt des Kopfs rueckt zum uebrigen Inhalt, die Leiste selbst
+   laeuft weiter ueber die volle Breite — sie ist der Rahmen der
+   Anwendung. Ohne das lag der Themen-Umschalter bei 1920 px 348 px vom
+   Inhalt entfernt, bei 3440 px waren es 1130. */
 .kopf{flex-shrink:0;display:flex;align-items:center;gap:12px;padding:11px 22px;
+  padding-inline:max(22px,calc((100% - 1480px) / 2));
   background:var(--sheet);border-bottom:1px solid var(--rule)}
 .kopf .zeit{font-family:var(--etikett);font-size:12px;letter-spacing:.07em;color:var(--ink2);
   font-weight:600;font-variant-numeric:tabular-nums}
@@ -114,8 +119,22 @@ body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-colo
 .warn b{font-weight:700}
 
 .rumpf{flex:1;min-height:0;overflow-y:auto;background:var(--paper)}
-.mitte{max-width:860px;margin:0 auto;padding:0 26px 80px;width:100%}
-.weit{max-width:1180px}
+/* 1180 statt 860. Fuer sich genommen bringt das wenig — die Flaechen
+   sind gestapelte Abschnitte, kein Raster, und ein Stapel wird nicht
+   kuerzer, wenn man ihn breiter macht. Es ist die Voraussetzung fuer
+   die zweispaltige Leiste, und die vorhandenen auto-fill-Raster nutzen
+   den Platz von selbst. */
+/* 48 statt 80 am Fuss: Der zweispaltige Ruhezustand endet bei 829 px,
+   sichtbar sind auf 24 Zoll 895 — mit 80 px Abstand sprang trotzdem ein
+   Rollbalken an, obwohl nichts abgeschnitten war. */
+.mitte{max-width:1180px;margin:0 auto;padding:0 26px 48px;width:100%}
+/* Zwei Stapel nebeneinander: links was auffordert, rechts wonach man
+   greift. Unter 1100 px wieder untereinander, links vor rechts. */
+.zweispalt{display:grid;gap:0 44px;align-items:start}
+@media(min-width:1100px){.zweispalt{grid-template-columns:1fr 1fr}}
+/* Treffer bleiben schmal: Sie sind nach Rang geordnet, und Enter nimmt
+   den obersten. Zweispaltig stuende der zweitbeste neben dem besten. */
+.eng{max-width:860px}
 
 /* ---------- Abschnitte und Zeilen ---------- */
 .abs{display:flex;align-items:center;gap:13px;padding:30px 0 11px}
@@ -126,7 +145,8 @@ body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-colo
 .abs .r{flex:1;height:1px;background:var(--rule)}
 .abs .n{font-family:var(--etikett);font-size:11px;color:var(--ink3)}
 .abs button.n:hover{color:var(--ink)}
-.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px}
+/* Erklaerender Text bleibt schmal — 1180 px Fliesstext liest niemand. */
+.hinweis{font-size:12.5px;color:var(--ink3);line-height:1.55;padding:0 0 10px;max-width:78ch}
 /* Ein Gerüst sieht fertig aus — Liste, Knöpfe, Demodaten. Dieses Band
    sagt, was daran noch nicht trägt. Graustufen, keine eigene Farbe:
    „unfertig“ ist keine Dringlichkeit. */
@@ -162,7 +182,7 @@ body[data-theme="basecamp"] .zettel{background:var(--ink);color:#fff;border-colo
   display:grid;place-items:center;font-family:var(--etikett);font-size:10.5px;font-weight:700;
   flex-shrink:0;letter-spacing:.04em}
 .sig.fav{background:var(--tinte-s);color:var(--tinte)}
-.leer{padding:18px 2px;font-size:13px;color:var(--ink3);line-height:1.6}
+.leer{padding:18px 2px;font-size:13px;color:var(--ink3);line-height:1.6;max-width:78ch}
 
 /* ---------- Kontaktkacheln ----------
    auto-fill statt fester Spaltenzahl: Passt eine Kachel nicht mehr in
@@ -416,11 +436,23 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
   padding:1px 5px;font-size:9.5px;letter-spacing:.07em;text-transform:uppercase}
 
 /* ---------- Planner ---------- */
-.planer{flex:1;min-height:0;display:flex;overflow:hidden;background:var(--paper)}
+/* min-height:100% statt flex:1 — .rumpf ist ein Block, kein
+   Flex-Behaelter, deshalb lief flex:1 ins Leere und die Hoehe kam aus
+   dem Inhalt: 786 px, gleich wie gross das Fenster war. Bei 1300 px
+   blieben 459 px leer und die Spaltenraender hoerten mittendrin auf.
+   Dazu ein Deckel: Ohne ihn bekam ein halbstuendiger Termin bei 1920 px
+   einen Block von 767 px Breite. */
+.planer{flex:1;min-height:100%;display:flex;overflow:hidden;background:var(--paper);
+  width:100%;max-width:1480px;margin:0 auto;
+  border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
 .spalte{flex:1;min-width:225px;display:flex;flex-direction:column;overflow:hidden;
   border-right:1px solid var(--rule);background:var(--paper)}
 .spalte:last-child{border-right:0}
-.spalte.vorrat{flex:0 0 262px;background:var(--sheet);border-right:1px solid var(--rule2)}
+/* Der Vorrat waechst nur mit dem Fenster, nie auf Kosten der Tage:
+   unter rund 1250 px bleibt er bei seinen 262. Liesse man ihn einfach
+   mitwachsen, naehme er den Tagesspalten bei 1280 px je 70 px weg. */
+.spalte.vorrat{flex:0 0 clamp(262px,21vw,400px);background:var(--sheet);
+  border-right:1px solid var(--rule2)}
 .spalte.heute{background:var(--sheet)}
 .sp-k{flex-shrink:0;padding:12px 14px 9px;border-bottom:1px solid var(--rule)}
 .sp-d{font-family:var(--etikett);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
@@ -3093,6 +3125,10 @@ function suchen(){
   const erg=$("#erg"); if(!erg) return;
   erg.innerHTML=""; treffer=[]; zeiger=-1;
   const roh=eingabe.trim(), q=roh.toLowerCase();
+  /* Nur der Ruhezustand wird zweispaltig. Ein Suchergebnis ist nach Rang
+     geordnet und bleibt schmal — sonst stuende der zweitbeste Treffer
+     neben dem besten statt darunter. */
+  erg.className = roh ? "eng" : "";
 
   if(!roh){ ruhezustand(erg); return; }
 
@@ -3128,7 +3164,18 @@ function markiere(){
   if(zeiger>=0&&treffer[zeiger]) treffer[zeiger].scrollIntoView({block:"nearest"});
 }
 
-function ruhezustand(box){
+function ruhezustand(raum){
+  /* Zwei Stapel statt einer Kette. Links steht, was zu einer Handlung
+     auffordert, rechts, wonach man greift. Der Inhalt war einspaltig
+     1181 px hoch und passte damit nicht auf einen 24-Zoll-Schirm, der
+     im Rumpf 895 px laesst; zweispaltig sind es 646.
+     Beide Stapel haengen in .zweispalt — unter 1100 px legt die
+     Medienabfrage sie wieder untereinander, links vor rechts. */
+  const zwei=el("div","zweispalt");
+  const box=el("div"), rechts=el("div");
+  zwei.append(box,rechts);
+  raum.appendChild(zwei);
+
   const sp=ueberfaellig();
   if(sp.length){
     box.appendChild(abschnitt("Überfällig",String(sp.length),"eilig"));
@@ -3179,16 +3226,16 @@ function ruhezustand(box){
   const fa=abschnitt("Favoriten",null);
   const alleK=el("button","n","alle "+KONTAKTE.length+" ›");
   alleK.onclick=()=>zeigeFlaeche("kontakte"); fa.appendChild(alleK);
-  box.appendChild(fa);
-  if(favK.length) box.appendChild(kachelraster(favK));
-  else box.appendChild(el("div","leer",
+  rechts.appendChild(fa);
+  if(favK.length) rechts.appendChild(kachelraster(favK));
+  else rechts.appendChild(el("div","leer",
     "Noch kein Favorit. Im Modul Kontakte den Stern auf einer Kachel setzen — "
     +"dann steht der Kontakt hier."));
 
   const a=abschnitt("Bookmarks",null);
   const alle=el("button","n","alle "+MARKEN.length+" ›");
   alle.onclick=()=>zeigeFlaeche("marken"); a.appendChild(alle);
-  box.appendChild(a);
+  rechts.appendChild(a);
   const g=el("div","marken");
   PINS.forEach((id,i)=>{
     const m=MARKEN.find(x=>x.id===id); if(!m) return;
@@ -3198,10 +3245,10 @@ function ruhezustand(box){
   });
   if(!PINS.length) g.appendChild(el("div","leer",
     "Nichts angeheftet. Im Modul Bookmarks „anheften“ legt einen Eintrag hierher."));
-  box.appendChild(g);
+  rechts.appendChild(g);
 
-  box.appendChild(abschnitt("Module",MODULE.filter(m=>!m.versteckt).length+" angemeldet"));
-  box.appendChild(el("div","hinweis",
+  rechts.appendChild(abschnitt("Module",MODULE.filter(m=>!m.versteckt).length+" angemeldet"));
+  rechts.appendChild(el("div","hinweis",
     "Diese Liste erzeugt sich aus dem Register. Ein neues Modul erscheint hier von selbst."));
   const ml=el("div","modliste");
   MODULE.filter(m=>!m.versteckt).sort((a,b)=>a.nr<b.nr?-1:1).forEach(m=>{
@@ -3212,7 +3259,7 @@ function ruhezustand(box){
     n.onclick=()=> m.flaeche ? zeigeFlaeche(m.id) : melde(m.nm+" — keine eigene Fläche");
     ml.appendChild(n);
   });
-  box.appendChild(ml);
+  rechts.appendChild(ml);
   const pl=el("button","ml",'<b>07</b><span>Planner öffnen</span><em>⌘P</em>');
   pl.onclick=()=>zeigeFlaeche("planner");
   ml.appendChild(pl);

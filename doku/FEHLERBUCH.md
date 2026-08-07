@@ -308,6 +308,35 @@ gleich. Wie Punkt 11 und 14 kam der Befund von einem echten Gerät.
 
 ---
 
+## 16 — `margin:0 auto` schrumpft ein Flex-Element
+
+Der Planner sollte auf 1480 px gedeckelt und zentriert werden:
+
+```css
+.planer{max-width:1480px;margin:0 auto}
+```
+
+Statt 400/540/540 kamen **400/151/151** heraus — die Tagesspalten fielen
+auf Inhaltsbreite zusammen.
+
+`.planer` ist ein Flex-Element in einer Spalte. Quer zur Hauptachse
+werden solche Elemente normalerweise gestreckt. **Ein `auto`-Rand quer
+zur Hauptachse schaltet das Strecken ab**, und dann gilt wieder
+Inhaltsbreite. `max-width` deckelt nur, es setzt keine Breite.
+
+**Lösung:** `width:100%` daneben.
+
+```css
+.planer{width:100%;max-width:1480px;margin:0 auto}
+```
+
+**Regel daraus:** Zentrieren mit `margin:0 auto` braucht innerhalb eines
+Flex-Behälters immer ein `width:100%`. Außerhalb — bei einem Block wie
+`.mitte` — nicht, weil ein Block ohnehin die volle Breite nimmt. Deshalb
+fällt es lange nicht auf.
+
+---
+
 ## Prüfmuster, die sich bewährt haben
 
 * **Zustandslogik gegen die Uhr testen.** Funktionen wie `frist()` mit
@@ -317,6 +346,13 @@ gleich. Wie Punkt 11 und 14 kam der Befund von einem echten Gerät.
   die Anzahl.
 * **Randfälle mit Sonderzeichen.** Titel mit Gedankenstrich, Klammern und
   Umlauten.
+* **Höhen bei der Breite messen, die sie später haben.** Beim Entwurf
+  der zweispaltigen Leiste standen im Plan 646 px, gemessen wurden 909.
+  Die Blockhöhen waren bei 860 px Breite genommen worden — dort passen
+  drei Kontaktkacheln nebeneinander und die Modulliste hat vier Spalten.
+  In einer 542 px breiten Spalte werden daraus je zwei, und beide Blöcke
+  wachsen um mehr als hundert Pixel. Wer eine Fläche schmaler macht,
+  misst nicht vorher an der breiten.
 * **Nach einem Umbau die Klassenliste vergleichen.** Wird das Stylesheet
   getauscht, alle Klassennamen aus dem alten gegen das neue prüfen — sonst
   fehlt still eine Regel.

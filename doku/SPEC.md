@@ -21,6 +21,43 @@ Oberflächen aufgegangen:
 
 ---
 
+## Breiten — eine Entscheidung, drei Zahlen
+
+Zielumgebung ist ein Bildschirm ab 24 Zoll. Die Anwendung deckelt
+trotzdem, weil Text über die volle Breite eines solchen Schirms schlechter
+zu lesen ist, nicht besser. Drei Maße, jedes begründet:
+
+| Wo | Breite | warum |
+|---|---|---|
+| Kopf und Planner | **1480 px** | drei Spalten nebeneinander, davon zwei Stundenraster |
+| Modulflächen, `.mitte` | **1180 px** | zwei Stapel nebeneinander, jeder breit genug für zwei Kontaktkacheln |
+| Suchergebnis, `.eng` | **860 px** | eine Rangliste, die untereinander gelesen wird |
+
+**Der Kopf** wird nicht über `max-width` gedeckelt, sondern über
+`padding-inline: max(22px, calc((100% - 1480px) / 2))`. Die Leiste selbst
+läuft weiter über die volle Breite — sie ist der Rahmen der Anwendung —,
+nur ihr Inhalt rückt zum übrigen Inhalt.
+
+**Die Leiste ist im Ruhezustand zweispaltig**, ab 1100 px. Links steht,
+was zu einer Handlung auffordert: Überfälliges, der nächste Termin, der
+Schmierzettel. Rechts, wonach man greift: Kontaktkacheln, Anheftungen,
+Modulliste. Einspaltig war der Inhalt 1181 px hoch und passte damit nicht
+auf einen 24-Zoll-Schirm, der im Rumpf 895 px lässt.
+
+**Das Suchergebnis bleibt einspaltig.** Treffer sind nach Rang geordnet,
+und `↵` nimmt den obersten; in zwei Spalten stünde der zweitbeste neben
+dem besten statt darunter. `suchen()` setzt dafür die Klasse `eng`.
+
+**Erklärender Text bleibt schmal** — `.hinweis` und `.leer` tragen
+`max-width:78ch`. 1180 px Fließtext liest niemand.
+
+Was das **nicht** löst: Auf Schirmen über 2560 px wächst der leere Rand
+weiter. Eine dritte Spalte wurde geprüft und verworfen — ab 2560 px passt
+der Inhalt schon in eine, weil größere Bildschirme auch höher sind. Der
+enge Fall ist 24 Zoll mit 1080 Zeilen.
+
+---
+
 ## 01 Notizen — fertig
 
 Zwei Arten:
@@ -139,6 +176,22 @@ zwischen den beiden Tagen und über die Stunden ziehen.
 
 Zwei Werktage im Stundenraster von 7 bis 18 Uhr. Links die nicht
 eingeplanten Aufgaben.
+
+**Auf 1480 px gedeckelt und zentriert.** Ohne Deckel nahm der Planner die
+volle Fensterbreite: Bei 1920 px waren die Tagesspalten 830 px breit und
+ein halbstündiger Termin bekam einen Block von 767 px. Jetzt sind es
+540 px je Tag und 477 px je Block.
+
+**Der Aufgabenvorrat wächst mit dem Fenster**, aber nie auf Kosten der
+Tage: `clamp(262px, 21vw, 400px)`. Unter rund 1250 px bleibt er bei
+seinen 262, und die Tagesspalten sind dort so breit wie zuvor. Ließe man
+ihn einfach mitwachsen, nähme er den Tagen bei 1280 px je 70 px weg.
+
+**`min-height:100%` statt `flex:1`.** `.rumpf` ist ein Block, kein
+Flex-Behälter — deshalb lief `flex:1` ins Leere und die Höhe kam aus dem
+Inhalt: 786 px, gleich wie groß das Fenster war. Bei 1300 px Fensterhöhe
+blieben 459 px leer und die Spaltenränder hörten mitten in der Fläche
+auf.
 
 * Ziehen aus der Liste auf eine Stunde gibt der Aufgabe eine Uhrzeit
 * Ziehen zurück nach links nimmt Tag und Uhrzeit wieder weg

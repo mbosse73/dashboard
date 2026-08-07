@@ -215,6 +215,29 @@ Verweis sein muss. Ohne diese Antwort wäre der Weg geraten.
 
 ---
 
+## Zwischenschritt — die Breite auf 24 Zoll · **erledigt**
+
+Kein Roadmap-Schritt. Alle zwölf Modulflächen benutzten 860 px und ließen
+auf einem 24-Zoll-Schirm 1060 px leer, während drei von ihnen scrollten;
+der Planner machte das Gegenteil und nahm alles.
+
+**Umgesetzt (Vorgang 1)**
+* `.mitte` von 860 auf 1180 px, Fließtext bleibt bei 78 Zeichen
+* Leiste im Ruhezustand zweispaltig ab 1100 px — 1181 auf 895 px
+* Suchergebnis bleibt einspaltig und bei 860 px
+* Planner auf 1480 px gedeckelt und zentriert, Vorrat über `clamp`
+* Planner füllt die Höhe (`min-height:100%`)
+* Kopf über `padding-inline` auf dieselben 1480 px eingerückt
+
+**Offen (Vorgang 2)**
+* Die Leiste als Pinnwand mit zwölf Plätzen, über das Register auch für
+  Apps. Braucht eine Änderung an den gespeicherten Daten und eine
+  Erweiterung des Modulvertrags.
+
+Entwurf mit gemessenen Zahlen: `mockups/schritt-breite.html`.
+
+---
+
 ## Schritt 8 — Hilfe
 
 Baut sich aus dem Register auf: alle angemeldeten Module, ihre

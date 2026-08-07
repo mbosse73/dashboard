@@ -7,7 +7,42 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: die Bookmark-Fläche ist dichter.** Aus rund 1800 Pixeln für
+**Zuletzt: die Breite auf 24 Zoll.** Alle zwölf Modulflächen benutzten
+860 px und ließen 1060 px leer, während drei von ihnen scrollten. Der
+Planner machte das Gegenteil und nahm alle 1920 px — ein halbstündiger
+Termin bekam einen Block von 767 px.
+
+**Die naheliegende Lösung war falsch und wurde gemessen verworfen.** Den
+Deckel von 860 auf 1180 zu setzen bringt allein: Leiste −66 px, Notizen
+−19, Aufgaben ±0. Diese Flächen sind gestapelte Abschnitte, keine
+Raster — ein Stapel wird nicht kürzer, wenn man ihn breiter macht. Was
+hilft, ist **Zweispaltigkeit**: 1181 auf 895 px, kein Rollbalken mehr.
+
+Die Leiste ist im Ruhezustand zweispaltig ab 1100 px — links was
+auffordert, rechts wonach man greift. **Das Suchergebnis bleibt
+einspaltig:** Treffer sind nach Rang geordnet, und `↵` nimmt den obersten.
+
+**Der Planner** ist auf 1480 px gedeckelt und zentriert, der Vorrat wächst
+über `clamp(262px,21vw,400px)` nur mit dem Fenster. Und er **füllt jetzt
+die Höhe** — er war 786 px hoch, gleich wie groß das Fenster war, weil
+`.rumpf` kein Flex-Behälter ist und `flex:1` deshalb ins Leere lief. Bei
+1300 px Fensterhöhe blieben 459 px leer.
+
+**Der Kopf** rückt über `padding-inline` auf dieselben 1480 px ein; vorher
+lagen bei 1920 px 348 px zwischen Umschalter und Inhalt.
+
+**Zwei eigene Fehler dabei**, beide im Fehlerbuch: `margin:0 auto` an
+einem Flex-Element schaltet das Strecken ab, die Tagesspalten kamen mit
+151 statt 540 px heraus (Punkt 16). Und ich hatte die Blockhöhen für den
+Entwurf bei 860 px gemessen statt bei der späteren Spaltenbreite von
+542 — im Plan standen 646 px, gemessen wurden 909.
+
+**Offen als Vorgang 2:** die Leiste als Pinnwand mit zwölf Plätzen, über
+das Register auch für Apps. Braucht eine Änderung an den gespeicherten
+Daten und eine Erweiterung des Modulvertrags. Entschieden ist es, gebaut
+nicht. Entwurf: `mockups/schritt-breite.html`.
+
+**Davor: die Bookmark-Fläche ist dichter.** Aus rund 1800 Pixeln für
 24 Bookmarks sind **315** geworden. Gruppenname links als
 Randbeschriftung, die Bookmarks daneben als Chips; darüber ein
 Schnellzugriff mit den acht Plätzen, freie gestrichelt gezeigt.
@@ -24,6 +59,11 @@ Nebenbei aufgefallen: `.weit{max-width:1180px}` in der Gestalt wird von
 **niemandem** benutzt — totes CSS. Damit ließe sich die Fläche
 verbreitern. Bewusst nicht angefasst: 860 px sind eine Lesebreite für die
 ganze Anwendung.
+
+> **Überholt:** Inzwischen angefasst. `.mitte` trägt die 1180 px selbst,
+> die tote Regel ist entfallen. Die Lesebreite ist damit nicht aufgegeben,
+> sondern an den Fließtext gewandert: `.hinweis` und `.leer` bleiben bei
+> 78 Zeichen.
 
 **Zwei Zustände statt eingeblendeter Knöpfe.** Im Ruhezustand öffnet ein
 Klick, mehr nicht; `ordnen ›` blendet Nadel, Stift, „umbenennen" und

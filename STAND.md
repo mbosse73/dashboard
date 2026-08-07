@@ -294,21 +294,25 @@ stehen. Betrifft alle Datumsfelder der Anwendung, nicht nur dieses Modul.
 
 ## Nächster Schritt
 
-Schritt 6 der Roadmap: **Workflows vollständig**. Der Entwurf liegt seit
-Phase 0 unter `referenz/workflow-dialog.html`, das Datenmodell ist
-umgestellt, und `felderMalen` wurde in Schritt 2 eigens so gebaut, dass
-der Workflow-Dialog es **dreimal** benutzen kann: für die
+Schritt 8 der Roadmap: **Hilfe**. Sie baut sich aus dem Modulregister auf
+— alle angemeldeten Module, ihre Tastenkürzel, die Eingabemuster der
+Leiste — und wird nicht von Hand gepflegt. Klein, in sich abgeschlossen,
+und sie prüft nebenbei, ob das Register alles hergibt, was es hergeben
+soll.
+
+Danach Schritt 9 (Outliner). Schritt 4 und 7 bleiben zurückgestellt, bis
+der Browsertest beantwortet ist.
+
+**Schritt 6 — Workflows kommt zuletzt.** So entschieden: Er ist der
+größte, der einzige mit eigenem Datenmodell aus Vorlage, Instanz und
+aktivem Teilschritt, und `ANLEITUNG.md` nennt ihn einen der drei, bei
+denen eine falsche Grundentscheidung teuer wird. Das Vorarbeiten ist
+getan und verfällt nicht: Der Entwurf liegt seit Phase 0 unter
+`referenz/workflow-dialog.html`, das Datenmodell ist umgestellt, und
+`felderMalen` wurde in Schritt 2 eigens so gebaut, dass der
+Workflow-Dialog es **dreimal** benutzen kann — für die
 Instanzeigenschaften, für die Teilschrittliste und für den gewählten
-Schritt.
-
-`ANLEITUNG.md` nennt Schritt 6 einen der drei, bei denen eine falsche
-Grundentscheidung teuer wird.
-
-Danach Schritt 8 (Hilfe, baut sich aus dem Register auf) und Schritt 9
-(Outliner).
-
-Schritt 4 und 7 bleiben zurückgestellt, bis der Browsertest beantwortet
-ist.
+Schritt. `nurWenn` aus dem Dialogschritt wartet ebenfalls darauf.
 
 ---
 

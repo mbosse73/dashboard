@@ -53,6 +53,18 @@ function vorrat(breit){
     ${zeile("Lizenzverlängerung","Nachverfolgen · 21. Aug")}</div>`;
 }
 
+/* ---------- Der Kopf ---------- */
+const kopf = ein => `<div class="s-app knapp"><div class="s-kopf voll${ein?" ein":""}">
+  <span class="k-uhr">08:07</span><span class="k-dat">Freitag, 7. August</span>
+  <span class="k-sp"></span>
+  <span class="k-st">noch nie gesichert</span>
+  ${["Sichern","Laden","Export"].map(x=>`<span class="k-kn">${x}</span>`).join("")}
+  <span class="k-gr">${["Leiste","Planner"].map(x=>`<span>${x}</span>`).join("")}</span>
+  <span class="k-gr">${["Standard","Basecamp"].map(x=>`<span>${x}</span>`).join("")}</span>
+  </div><div class="s-rumpf"><div class="s-mitte" style="max-width:1180px">
+  ${feld}<div class="s-zwei"><div>${ueberfaellig}</div><div>${bookmarks}</div></div>
+  </div></div></div>`;
+
 /* ---------- Bühnen ---------- */
 const buehne=(breit,inhalt,kl)=>`<div class="buehne"><div class="rahmen${kl?" "+kl:""}"
   style="width:${breit}px">${inhalt}</div></div>`;
@@ -85,7 +97,7 @@ const leisteSchmal = `<div class="s-app"><div class="s-kopf schmal"></div>
   </div></div></div>`;
 
 const plannerIst = `<div class="s-app"><div class="s-kopf"></div>
-  <div class="s-planer">${vorrat(262)}${tagspalte("Heute","Freitag, 7. Aug",9999,TAG1)}
+  <div class="s-planer kurz">${vorrat(262)}${tagspalte("Heute","Freitag, 7. Aug",9999,TAG1)}
   ${tagspalte("Danach","Montag, 10. Aug",9999,TAG2)}</div></div>`;
 const plannerNeu = `<div class="s-app"><div class="s-kopf"></div>
   <div class="s-planer gedeckelt">${vorrat(400)}${tagspalte("Heute","Freitag, 7. Aug",540,TAG1)}
@@ -127,18 +139,30 @@ h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6
 
 /* Die Bühne zeigt 1920 px in halber Größe. */
 .buehne{border:1px solid var(--rule2);border-radius:10px;background:var(--raise);
-  overflow:hidden;margin:0 0 6px}
+  overflow-x:auto;overflow-y:hidden;margin:0 0 6px}
 /* zoom statt transform:scale — der Rahmen bekommt dadurch seine
    natuerliche Hoehe, statt eine geraten zu bekommen. Edge kann das. */
 .rahmen{width:1920px;zoom:.5;pointer-events:none}
 /* Die Kante des Sichtbaren: 895 px im Rumpf, hier in halber Groesse. */
 .s-app{min-height:950px}
+.s-app.knapp{min-height:430px}
 .lupe{font-family:var(--etikett);font-size:10px;letter-spacing:.09em;color:var(--ink3);
   text-transform:uppercase;margin:0 0 22px}
 
 /* ---- Schaubild: die Anwendung ---- */
 .s-app{background:var(--paper);display:flex;flex-direction:column}
 .s-kopf{height:55px;background:var(--sheet);border-bottom:1px solid var(--rule);flex-shrink:0}
+.s-kopf.voll{display:flex;align-items:center;gap:12px;padding:0 22px;height:auto;min-height:55px}
+.s-kopf.voll.ein{padding-inline:max(22px,calc((100% - 1480px) / 2))}
+.k-uhr{font-family:var(--etikett);font-size:12px;letter-spacing:.07em;font-weight:700}
+.k-dat{font-family:var(--etikett);font-size:11.5px;color:var(--ink3)}
+.k-sp{flex:1}
+.k-st{font-family:var(--etikett);font-size:10.5px;color:var(--ink3)}
+.k-kn{font-size:12.5px;color:var(--ink2);border:1px solid var(--rule2);border-radius:8px;
+  padding:5px 11px}
+.k-gr{display:flex;gap:2px;background:var(--raise);border-radius:9px;padding:3px}
+.k-gr span{font-size:12.5px;padding:5px 13px;border-radius:7px;color:var(--ink2)}
+.k-gr span:first-child{background:var(--sheet);color:var(--tinte);font-weight:600}
 .s-rumpf{flex:1;min-height:0;padding-bottom:26px}
 .s-mitte{margin:0 auto;padding:0 26px;width:100%}
 .s-zwei{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;align-items:start}
@@ -179,6 +203,7 @@ h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6
 
 /* ---- Schaubild: der Planner ---- */
 .s-planer{flex:1;min-height:0;display:flex;overflow:hidden;align-items:stretch}
+.s-planer.kurz{flex:0 0 786px}
 .s-planer.gedeckelt{width:100%;max-width:1480px;margin:0 auto;
   border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
 .s-sp{display:flex;flex-direction:column;align-self:stretch;border-right:1px solid var(--rule);
@@ -289,7 +314,7 @@ kommt nichts weg, es ordnet sich nur anders.</div>
 <div class="stufe">
 <h2>Punkt 2 · Ist-Zustand</h2>
 <h3>Der Planner nimmt alles</h3>
-<div class="mass warn">Spalten <b>262 / 830 / 830</b> px · Terminblöcke <b>767 px</b> breit · 226 px tot unter 18:00</div>
+<div class="mass warn">Spalten <b>262 / 830 / 830</b> px · Blöcke <b>767 px</b> · und nur <b>786 px hoch</b>, gleich wie groß das Fenster ist</div>
 ${buehne(1920,plannerIst)}
 <p class="lupe">1920 px in halber Größe</p>
 <div class="merk warn">Ein halbstündiger Standup bekommt einen Block von
@@ -302,7 +327,7 @@ bräuchte.</b></div>
 <div class="stufe">
 <h2>Punkt 2 · Vorschlag</h2>
 <h3>Tagesspalten deckeln, den Überschuss dem Vorrat geben</h3>
-<div class="mass">Spalten <b>400 / 540 / 540</b> px · Blöcke <b>477 px</b> · Planner auf 1480 px zentriert</div>
+<div class="mass">Spalten <b>400 / 540 / 540</b> px · Blöcke <b>477 px</b> · zentriert auf 1480 px · füllt die Höhe</div>
 ${buehne(1920,plannerNeu)}
 <p class="lupe">1920 px in halber Größe</p>
 <table class="tab">
@@ -348,6 +373,81 @@ und die Notizvorschau.</div>
 </div>
 
 <div class="stufe">
+<h2>Punkt 2 · nachgetragen</h2>
+<h3>Der Planner ist 786 px hoch — immer</h3>
+<div class="mass warn">bei 950 px Fenster <b>109 px</b> leer · bei 1300 px <b>459 px</b></div>
+<div class="merk warn">Das hängt <b>nicht</b> am Vorschlag, es ist heute schon so.
+<code>.rumpf</code> ist kein Flex-Behälter, also läuft <code>.planer{flex:1}</code>
+ins Leere und die Höhe kommt aus dem Inhalt: zwölf Stunden Raster, 786 px.
+Im Ist-Schaubild darüber sieht man es — die Spaltenränder hören mitten in
+der Fläche auf.<br><br>
+<b>Behoben mit einer Zeile:</b> <code>.planer{min-height:100%}</code>.
+Danach bleiben bei 1920 × 950, 2560 × 1300 und 3440 × 1300 jeweils
+<b>0 px</b> ungenutzt. Das Stundenraster bleibt maßstabsgetreu — es wächst
+nicht mit, nur die Spalten reichen bis unten.</div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 4</h2>
+<h3>Der Kopf spannt über alles, der Inhalt steht in der Mitte</h3>
+<div class="mass warn">heute bei 1920 px: <b>348 px</b> zwischen Umschalter und Inhalt · bei 3440 px sind es <b>1130</b></div>
+${buehne(1920,kopf(false))}
+<p class="lupe">heute · 1920 px in halber Größe</p>
+<div class="mass">gedeckelt auf dieselben 1480 px wie der Planner</div>
+${buehne(1920,kopf(true))}
+<p class="lupe">Vorschlag · 1920 px in halber Größe</p>
+<div class="merk"><b>Ohne neues Element:</b>
+<code>padding-inline: max(22px, calc((100% - 1480px) / 2))</code>.
+Die Leiste selbst läuft weiter über die volle Breite — sie ist der Rahmen
+der Anwendung und soll das bleiben. Nur ihr Inhalt rückt zum übrigen
+Inhalt. Auf schmalen Schirmen greift die 22 px, dort ändert sich nichts.</div>
+</div>
+
+<div class="stufe">
+<h2>Größer als 24 Zoll</h2>
+<h3>Was mitwächst und was nicht</h3>
+<table class="tab">
+<tr><th>Bildschirm</th><th>Leiste genutzt</th><th>leer</th><th>Planner</th><th>scrollt</th></tr>
+<tr><td>24" · 1920 × 1080</td><td class="z">1180</td><td class="z">740</td><td class="z">1480</td><td>nein</td></tr>
+<tr><td>27" · 2560 × 1440</td><td class="z">1180</td><td class="z"><i>1380</i></td><td class="z">1480</td><td>nein</td></tr>
+<tr><td>34" breit · 3440 × 1440</td><td class="z">1180</td><td class="z"><i>2260</i></td><td class="z">1480</td><td>nein</td></tr>
+<tr><td>32" 4K · 3840 × 2160</td><td class="z">1180</td><td class="z"><i>2660</i></td><td class="z">1480</td><td>nein</td></tr>
+</table>
+<div class="merk"><b>Das Ziel hält auf jedem Schirm:</b> Nichts scrollt,
+nichts liegt unter der Kante. Der Vorschlag wird auf größeren Bildschirmen
+nicht schlechter — nur der leere Anteil wächst.<br><br>
+<b>Ist das ein Mangel?</b> Nur zum Teil. Text über 3440 px zu ziehen macht
+das Lesen schlechter, nicht besser; der Blick müsste wandern. Ein Deckel
+ist eine Entscheidung, kein Versäumnis. Die Zahl 1180 ist allerdings auf
+1920 zugeschnitten — insofern Zufall des heutigen Schirms.</div>
+</div>
+
+<div class="stufe">
+<h2>Geprüft und verworfen</h2>
+<h3>Eine dritte Spalte in der Leiste</h3>
+<table class="tab">
+<tr><th>Fenster</th><th>eine Spalte</th><th>zwei</th><th>drei</th><th>sichtbar</th></tr>
+<tr><td class="z">1440 × 900</td><td class="z"><i>1175</i></td><td class="z"><i>850</i></td><td class="z">845</td><td class="z">845</td></tr>
+<tr><td class="z">1920 × 950</td><td class="z"><i>1181</i></td><td class="z"><b>895</b></td><td class="z">895</td><td class="z">895</td></tr>
+<tr><td class="z">2560 × 1300</td><td class="z">1245</td><td class="z">1245</td><td class="z">1245</td><td class="z">1245</td></tr>
+<tr><td class="z">3440 × 1300</td><td class="z">1245</td><td class="z">1245</td><td class="z">1245</td><td class="z">1245</td></tr>
+</table>
+<div class="merk warn"><b>Die dritte Spalte bringt messbar nichts.</b> Ich
+hatte sie selbst vorgeschlagen, dann gemessen: Ab 2560 px passt der Inhalt
+schon in <b>eine</b> Spalte. Der Grund war mir vorher nicht klar und ist
+im Nachhinein offensichtlich — <b>größere Bildschirme sind auch höher.</b>
+Bei 2560 × 1440 stehen 1245 px zur Verfügung, der einspaltige Inhalt
+braucht 1181.<br><br>
+Der enge Fall ist <b>24 Zoll mit 1080 Zeilen</b>: Dort bleiben nur 895 px,
+und genau dort trägt die zweite Spalte. Gebraucht wird sie zwischen etwa
+1100 und 2500 px Breite.<br><br>
+Dazu kommt: Drei Spalten sähen schlechter aus. Die Abschnitte sind
+verschieden hoch, und in der Probe riss es Beschriftung und Inhalt
+auseinander — die Überschrift „Schmierzettel" stand in der einen Spalte,
+sein Feld in der nächsten.</div>
+</div>
+
+<div class="stufe">
 <h2>Zusammen</h2>
 <table class="tab">
 <tr><th>&nbsp;</th><th>heute</th><th>Vorschlag</th></tr>
@@ -356,6 +456,8 @@ und die Notizvorschau.</div>
 <tr><td>Notizen</td><td class="z"><i>1134 px</i> · scrollt</td><td class="z">1115 px · scrollt weiter</td></tr>
 <tr><td>Terminblock im Planner</td><td class="z"><i>767 px</i></td><td class="z"><b>477 px</b></td></tr>
 <tr><td>Aufgabenvorrat</td><td class="z">262 px starr</td><td class="z"><b>262–400 px</b></td></tr>
+<tr><td>Planner-Höhe bei 1300 px Fenster</td><td class="z"><i>786 px</i> · 459 leer</td><td class="z"><b>1245 px</b> · 0 leer</td></tr>
+<tr><td>Kopf</td><td class="z">volle Breite</td><td class="z">auf 1480 px eingerückt</td></tr>
 <tr><td>unter 1100 px</td><td class="z">—</td><td class="z">unverändert</td></tr>
 </table>
 <div class="merk"><b>Nicht dabei, mit Absicht:</b><br><br>
@@ -366,6 +468,9 @@ Suchergebnis.<br><br>
 <b>Die 226 px unter 18:00 im Planner</b> bleiben leer. Sie zu füllen
 hieße, das Stundenraster zu dehnen; dann wäre eine halbe Stunde je nach
 Fenstergröße verschieden hoch, und das Raster verlöre seinen Maßstab.<br><br>
+<b>Eine dritte Spalte in der Leiste</b> — gemessen, verworfen, siehe oben.<br><br>
+<b>Der Planner wächst nicht mit dem Schirm.</b> 540 px je Tag sind
+großzügig; 900 px je Tag wären wieder die 767-px-Blöcke von heute.<br><br>
 <b>Das Jahreskalender-Fenster</b> bleibt bei 1080 px. Es ist ein
 schwebendes Fenster, kein Rumpfbereich, und 12 × 31 Zellen sind dort
 lesbar. Ein dritter Wert neben 1180 und 1480, aber ein begründeter.</div>

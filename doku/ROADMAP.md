@@ -3,6 +3,17 @@
 Ein Schritt pro Sitzung. Jeder Schritt ist für sich lauffähig und wird
 einzeln übergeben — nicht mehrere gleichzeitig anfangen.
 
+**Die Nummern sind Kennungen, keine Reihenfolge.** Schritt 10 kam
+nachträglich dazu, Schritt 6 ist ans Ende gerückt. Offen ist heute, in
+dieser Reihenfolge:
+
+1. **Schritt 8** — Hilfe, baut sich aus dem Register auf
+2. **Schritt 9** — Outliner
+3. **Schritt 4** und der Apps-Teil von **Schritt 7** — warten auf den
+   Browsertest. Die Bookmarks aus Schritt 7 sind erledigt; sie hingen
+   nicht am Test.
+4. **Schritt 6** — Workflows, zuletzt
+
 ---
 
 ## Schritt 0 — Browsertest (vor allem anderen)
@@ -152,7 +163,14 @@ kompakt in der Leiste, beide auf dieselbe Stelle.
 
 ---
 
-## Schritt 6 — Workflows vollständig
+## Schritt 6 — Workflows vollständig · **zurückgestellt, kommt zuletzt**
+
+Bewusst ans Ende gerückt. Der Schritt ist der größte und der einzige mit
+einem eigenen Datenmodell aus Vorlage, Instanz und aktivem Teilschritt;
+`ANLEITUNG.md` nennt ihn einen der drei, bei denen eine falsche
+Grundentscheidung teuer wird. Er wird nach Schritt 8, 9, 4 und 7
+angegangen, nicht davor. Die Nummer bleibt, damit alle Verweise in den
+übrigen Dokumenten stimmen — sie ist eine Kennung, keine Reihenfolge.
 
 Setzt Schritt 2 voraus: Die Eigenschaften der Vorlage haben dasselbe
 Format wie die Felder des Dialog-Bausteins.
@@ -177,8 +195,17 @@ Format wie die Felder des Dialog-Bausteins.
 
 ## Schritt 7 — Bookmarks und Apps bearbeiten
 
-Anlegen, Bearbeiten, Löschen, Gruppen verwalten. Bei Apps den in Schritt 0
-ermittelten Weg verwenden.
+**Bookmarks: erledigt.** Anlegen, Bearbeiten, Löschen, Anheften und Lösen,
+Gruppen umbenennen und zusammenlegen. Öffnen in einem neuen Tab, aus dem
+Modul, aus der Suche, von den Kacheln der Leiste und über `⌘1` bis `⌘8`.
+
+Der Teil hing **nicht** am Browsertest: Der betrifft das Öffnen einer
+lokalen Datei, und Bookmarks zeigen auf `http(s)`. Deshalb vorgezogen.
+
+**Apps: offen, wartet weiter auf Schritt 0.** Ein Appstarter zeigt auf
+`file:///C:/…`. Ob Edge das aus einer lokal geöffneten Datei heraus
+zulässt, entscheidet, ob `window.open` genügt oder ob es ein anklickbarer
+Verweis sein muss. Ohne diese Antwort wäre der Weg geraten.
 
 ---
 

@@ -33,7 +33,7 @@ in `doku/FEHLERBUCH.md`.
 
 ---
 
-## Schritt 0 — Browsertest · **offen, blockiert Schritt 4 und 7**
+## Schritt 0 — Browsertest · **offen, blockiert Schritt 4 und den Apps-Teil von 7**
 
 `browsertest.html` per Doppelklick öffnen, alle Knöpfe der Reihe nach drücken.
 
@@ -271,21 +271,21 @@ Fünf Befunde wurden behoben.
 
 ### Gerüste sagen jetzt, was sie nicht können
 
-- [ ] Textbausteine, Appstarter, Bookmarks, Workflows, Outliner öffnen —
+- [ ] Textbausteine, Appstarter, Workflows, Outliner öffnen —
       über jeder Fläche steht ein gestricheltes Band **Gerüst** mit einem
       Satz dazu **[vorgeprüft]**
-- [ ] Auf der Leiste in der Modulliste: genau diese fünf tragen die Marke
-      **Gerüst**, die sechs fertigen nicht **[vorgeprüft]**
+      *(Bookmarks stand hier bis Schritt 7 mit dabei und ist jetzt fertig.)*
+- [ ] Auf der Leiste in der Modulliste: genau diese vier tragen die Marke
+      **Gerüst**, die acht fertigen nicht **[vorgeprüft]**
 - [ ] Die Modulliste bricht sauber um, die Marke ragt in keiner Breite über
       die Zeile hinaus **[vorgeprüft]**
 
 ### Keine Beschriftung ohne Tat (Fehlerbuch Punkt 9)
 
-- [ ] `⌘1` drücken. Erwartet: „Noch nicht eingebaut · developer.mozilla.org“.
-      Vorher stand dort „Öffne MDN Web Docs“, und es passierte nichts
-      **[nur du — ⌘ fängt der Browser ab, nicht im Test prüfbar]**
-- [ ] In Textbausteinen „Kopieren“, in Apps „Starten“, in Bookmarks eine
-      Zeile anklicken — überall dieselbe ehrliche Meldung **[vorgeprüft]**
+- [ ] In Textbausteinen „Kopieren“, in Apps „Starten“ — überall dieselbe
+      ehrliche Meldung **[vorgeprüft]**
+      *(`⌘1` und die Bookmark-Zeilen standen hier mit; seit Schritt 7
+      öffnen sie wirklich und werden dort geprüft.)*
 
 ### README stimmt wieder
 
@@ -389,6 +389,70 @@ antippen, Tag und Uhrzeit setzen. So entschieden.
 
 ---
 
+## Schritt 7 — Bookmarks
+
+Der Apps-Teil von Schritt 7 fehlt weiter und wartet auf Schritt 0.
+
+### Öffnen
+
+- [ ] Im Modul auf **MDN Web Docs** klicken — die Seite öffnet in einem
+      **neuen Tab**, das Dashboard bleibt stehen **[nur du]**
+- [ ] `⌘1` drücken — dasselbe. Vorher meldete es nur „Noch nicht
+      eingebaut“ **[nur du — ⌘ fängt der Browser ab, nicht im Test prüfbar]**
+- [ ] Auf der Leiste eine der Bookmark-Kacheln anklicken — öffnet ebenso
+      **[vorgeprüft]**
+- [ ] In der Leiste `github` tippen und den Treffer mit `↵` nehmen —
+      öffnet ebenso **[vorgeprüft]**
+- [ ] Ein Bookmark anlegen mit der Adresse `beispiel.de` — geöffnet wird
+      `https://beispiel.de`. Eines mit `mailto:x@y.de` — das bleibt
+      unverändert **[nur du]**
+
+### Anlegen, Bearbeiten, Löschen
+
+- [ ] „neues Bookmark +“ · Titel und Adresse leer lassen · Speichern —
+      die Meldung zeigt auf das Titelfeld, der Dialog bleibt offen
+      **[vorgeprüft]**
+- [ ] Anlegen mit gesetztem Schalter **Auf die Leiste heften** — der
+      Eintrag steht danach sofort auf der Leiste **[vorgeprüft]**
+- [ ] Ein Bookmark bearbeiten und seine **Adresse ändern** — die
+      Anheftung bleibt bestehen. (Genau das ging vor dem Umbau auf `id`
+      nicht.) **[vorgeprüft]**
+- [ ] Ein angeheftetes Bookmark löschen — die Rückfrage nennt den frei
+      werdenden Platz, danach rücken die dahinter auf **[vorgeprüft]**
+
+### Anheften
+
+- [ ] Acht Bookmarks anheften, ein neuntes versuchen — „Acht Plätze
+      belegt — erst einen lösen“, es passiert nichts weiter **[nur du]**
+- [ ] Ein angeheftetes trägt Tinte und zeigt `⌘n`, ein nicht angeheftetes
+      steht blass auf „anheften“ **[vorgeprüft]**
+
+### Gruppen
+
+- [ ] „umbenennen“ an einer Gruppe · neuen Namen eintragen — alle
+      Bookmarks der Gruppe ziehen mit **[vorgeprüft]**
+- [ ] Denselben Namen wie eine vorhandene Gruppe eintragen — beide werden
+      zu einer, die Meldung sagt „aufgegangen“ **[vorgeprüft]**
+- [ ] Das letzte Bookmark einer Gruppe in eine andere verschieben — die
+      leere Gruppe verschwindet von selbst **[vorgeprüft]**
+
+### Der Datenumbau
+
+- [ ] Eine **alte Sicherung** laden, in der die Bookmarks keine `id`
+      haben und `pins` Adressen enthält — die Anheftungen stehen danach
+      an derselben Stelle **[nur du]**
+- [ ] Sichern, alles leeren, wieder laden — 24 Bookmarks, 4 Anheftungen,
+      jede zeigt auf ein vorhandenes Bookmark **[vorgeprüft]**
+
+### Erfassen in der Leiste
+
+- [ ] `neuedomain.example/x` tippen — unter „Erfassen“ steht ein Angebot
+      **Bookmark** **[vorgeprüft]**
+- [ ] `Das ist ein Satz. Mit Punkt` tippen — **kein** Bookmark-Angebot
+      **[vorgeprüft]**
+
+---
+
 ## Nach jeder Sitzung
 
 Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bis §7.
@@ -412,7 +476,9 @@ Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 - **Schritt 6 — Workflows:** Neue Instanz hat sofort alle acht Teilschritte mit leeren
   Werten · Durchlauf bis zum Ende klickbar · überfälliger aktiver Schritt erscheint in
   Leiste und Planner · Klick auf Schritt 6 ändert den Stand **nicht**
-- **Schritt 7 — Bookmarks und Apps:** *Braucht Schritt 0*
+- **Schritt 7, Apps-Teil:** Eine App startet auf dem Zielrechner wirklich.
+  *Braucht Schritt 0* — die Bookmarks aus Schritt 7 sind erledigt und oben
+  abzuhaken.
 - **Schritt 8 — Hilfe:** Baut sich aus dem Register auf, ein neues Modul erscheint
   dort von selbst
 - **Schritt 9 — Outliner:** `Tab` rückt ein, `Umschalt+Tab` aus

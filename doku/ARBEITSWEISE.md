@@ -36,18 +36,45 @@ Dazu die Bausteine, die du brauchst — `feld`, `zeile`, `abschnitt`,
 Die Datei ist rund 1700 Zeilen. Sie vollständig zu lesen kostet Kontext,
 den du später beim Prüfen brauchst.
 
-### 3 — Planen und den Plan zeigen
+### 3 — Planen, Mockup bauen, beides zeigen — und warten
 
-Der Plan gehört vor die erste Änderung. Er sollte beantworten:
+Plan **und** Mockup gehören vor die erste Änderung an `dashboard.html`.
+Danach ist Schluss, bis der Mensch zustimmt. **Das ist ein Halt, keine
+Höflichkeitsformel.** Ohne ausdrückliches Ja wird nicht gebaut.
+
+**Der Plan** beantwortet:
 
 * Welche Blöcke werden angefasst? Namentlich.
 * Kommt ein neuer Datenbereich hinzu? Dann **zwei** Stellen: `vorgabe()`
   und die Liste im Ladevorgang.
 * Welche Bausteine werden wiederverwendet, welche neu gebaut?
+* **Welche Entscheidungen sind nicht umkehrbar?** Ein Umbau am
+  Datenmodell, eine Migration bestehender Sicherungen, ein weggelassener
+  Handgriff — solche Punkte gehören einzeln benannt und einzeln
+  entschieden, nicht nachträglich begründet.
 * Was wird bewusst **nicht** gemacht?
+
+**Der Mockup** kommt nach `mockups/`, heißt `schritt-<name>.html` und
+zeigt die neue Fläche in ihren echten Zuständen — leer, gefüllt, Dialog
+offen, Fehlerfall. Er ist statisch: kein Modulregister, keine Daten, kein
+`bewahre()`. Sein Zweck ist, die Gestalt zu entscheiden, solange das noch
+nichts kostet. Sind es viele gleichförmige Elemente, erzeugt ihn ein
+Skript unter `werkzeug/` — 372 Zellen von Hand sind weder zu schreiben
+noch zu prüfen.
 
 Bei den Schritten 2, 5 und 6 der Roadmap ist der Plan besonders wichtig —
 dort wird eine falsche Grundentscheidung teuer.
+
+**Ohne Mockup geht es nur hier:**
+
+| Fall | warum |
+|------|-------|
+| Reine Fehlerbehebung auf eine Meldung hin | Die Gestalt steht schon; sie soll sich gerade *nicht* ändern |
+| Änderung nur an Dokumenten | Es gibt keine Fläche zu zeigen |
+| Der Mensch verlangt ausdrücklich sofortige Umsetzung | Seine Entscheidung — dann sagen, was dadurch ungeprüft bleibt |
+
+Der Plan entfällt nie. Auch eine Fehlerbehebung nennt vorher Ursache und
+Eingriff.
 
 ### 4 — Ändern, aber nur innerhalb der Marker
 
@@ -120,9 +147,15 @@ unüberprüfbaren Änderungen.
   Browsertest-Ergebnisse)
 * Zwei Umsetzungen sind vertretbar und die Entscheidung ist nicht
   umkehrbar
+* Der Schritt fasst **bestehende Daten** an — ein neues Pflichtfeld, eine
+  geänderte Kennung, eine Migration in `heile()`. Das lässt sich nach dem
+  ersten Sichern nicht mehr folgenlos zurücknehmen
 
 Widerspricht ein Auftrag einer Regel: **sag es und nenne die Regel.**
 Nicht stillschweigend umsetzen, nicht stillschweigend verweigern.
+
+Ein knapper Auftrag ist **keine** Abkürzung durch Phase 3. „Mach jetzt
+X" heißt: plane X, entwirf X, zeige beides. Nicht: baue X.
 
 ---
 
@@ -169,8 +202,9 @@ So sieht ein guter Auftrag aus, den der Mensch dir gibt:
 ```
 Lies CLAUDE.md, doku/ARBEITSWEISE.md und doku/ARCHITEKTUR.md.
 Setze Schritt 1 aus doku/ROADMAP.md um.
-Zeige zuerst den Plan.
+Zeige zuerst Plan und Mockup und warte auf meine Zustimmung.
 Ändere nur den Modulblock zwischen den Markern.
 ```
 
 Kommt ein Auftrag ohne diese Angaben, arbeite trotzdem nach dieser Datei.
+Der Halt in Phase 3 gilt auch dann — gerade dann.

@@ -92,10 +92,15 @@ Eintippen oder einfügen:
 ```
 Lies CLAUDE.md, doku/ARBEITSWEISE.md und doku/ARCHITEKTUR.md.
 Setze Schritt 1 aus doku/ROADMAP.md um.
-Zeige zuerst den Plan.
+Zeige zuerst Plan und Mockup und warte auf meine Zustimmung.
 Ändere nur den Modulblock zwischen /* ===== MODUL kontakte ===== */
 und /* ===== ENDE kontakte ===== */.
 ```
+
+Der letzte Halbsatz ist der wichtigste. Claude Code soll nach Plan und
+Mockup **anhalten**, nicht durchlaufen. Der Mockup liegt danach unter
+`mockups/` und lässt sich per Doppelklick ansehen — dort entscheidest du
+über die Gestalt, solange das noch nichts gekostet hat.
 
 `doku/ARBEITSWEISE.md` ist die Anleitung für Claude Code — dasselbe für
 die andere Seite. Darin steht auch, was es dir nach jedem Schritt melden

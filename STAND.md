@@ -7,7 +7,32 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: der Jahreskalender.** Ein neues Modul 14 mit eigenem Bestand
+**Zuletzt: Bookmarks sind fertig.** Anlegen, Bearbeiten, Löschen,
+Anheften und Lösen, Gruppen umbenennen und zusammenlegen. Öffnen in einem
+neuen Tab — aus dem Modul, aus der Suche, von den Kacheln der Leiste und
+über ⌘1 bis ⌘8. Das Gerüstband ist weg, die Meldungen sagen die Wahrheit.
+
+**Das ging ohne den Browsertest.** Der betrifft das Öffnen einer *lokalen*
+Datei, und Bookmarks zeigen auf `http(s)`. Der Apps-Teil von Schritt 7
+wartet weiter — dort steht `file:///C:/…`, und ob Edge das aus einer lokal
+geöffneten Datei zulässt, ist die Frage, die der Test beantwortet.
+
+**Ein Datenumbau steckt darin:** Bookmarks hatten keine `id`, sie wurden
+über ihre Adresse erkannt, und `pins` merkte sich ebenfalls die Adresse.
+Sobald sich eine Adresse bearbeiten lässt, trägt das nicht mehr — die
+Anheftung risse ab, und zwei Marken mit derselben Adresse wären nicht zu
+unterscheiden. `heile()` zieht das jetzt nach: `id` vergeben, `pins` von
+Adresse auf `id` umstellen, ins Leere zeigende Plätze streichen. Die
+Vorgabe läuft absichtlich durch denselben Weg statt fertige `id` mitzu-
+bringen — so wird er bei jedem Start benutzt und kann nicht verrotten.
+
+**Eine Gruppe ist kein eigener Datensatz**, sondern das Feld `g`. Sie
+entsteht mit dem ersten Bookmark darin und geht mit dem letzten.
+Umbenennen ändert `g` an allen; trägt man den Namen einer vorhandenen
+Gruppe ein, werden beide zu einer. Ein Löschen der Gruppe gibt es nicht —
+es wäre ein Löschen ihrer Bookmarks unter falschem Namen.
+
+**Davor: der Jahreskalender.** Ein neues Modul 14 mit eigenem Bestand
 `Z.jahrestermine`, bewusst getrennt vom Kalender (06) und vom Planner —
 in beide Richtungen. Ein Eintrag hat Start- und Enddatum, keine Uhrzeit,
 keinen Kontakt, und eine von zwei Kategorien: Urlaub oder sonstiger
@@ -102,6 +127,8 @@ Farben. Fünf Befunde:
 * **⌘1 bis ⌘8** meldeten „Öffne …" und öffneten nichts. Jetzt „Noch
   nicht eingebaut". Das Öffnen selbst gehört zu Schritt 7 und hängt am
   Browsertest.
+  > **Überholt:** Sie öffnen inzwischen wirklich. Am Browsertest hing das
+  > nie — der betrifft lokale Dateien, Bookmarks zeigen auf `http(s)`.
 * **Das README war überholt** — „zehn Fehler", „neun Module als Gerüst".
   Ursache war eine Ersetzung ohne Prüfung, die nichts traf, nichts tat
   und trotzdem als erledigt abgehakt wurde. `pruefen.mjs` zählt die drei
@@ -220,7 +247,12 @@ nachgereicht worden, und Schritt 6 hatte damit seine Dialogvorlage.
 `dashboard.html` läuft. Zwei Oberflächen — Leiste als Einstieg, Planner
 als Arbeitsfläche. Elf Module sind angemeldet, davon sechs fertig
 (Kontakte, Aufgaben, Kalender, Notizen, Rechner, Code-Beautifier) und
-fünf als Gerüst — die sagen das auf ihrer Fläche jetzt selbst. Sichern und Laden über JSON,
+fünf als Gerüst — die sagen das auf ihrer Fläche jetzt selbst.
+> **Überholt:** Inzwischen sind es zwölf Module, acht davon fertig.
+> Die tagesaktuelle Zahl steht im README und wird von `pruefen.mjs`
+> gegen die Anwendung gezählt.
+
+Sichern und Laden über JSON,
 Markdown-Export einbahnig. Alle Modulblöcke tragen Marker.
 
 Ein Entwurf für den Workflow-Dialog liegt unter
@@ -294,21 +326,25 @@ stehen. Betrifft alle Datumsfelder der Anwendung, nicht nur dieses Modul.
 
 ## Nächster Schritt
 
-Schritt 6 der Roadmap: **Workflows vollständig**. Der Entwurf liegt seit
-Phase 0 unter `referenz/workflow-dialog.html`, das Datenmodell ist
-umgestellt, und `felderMalen` wurde in Schritt 2 eigens so gebaut, dass
-der Workflow-Dialog es **dreimal** benutzen kann: für die
+Schritt 8 der Roadmap: **Hilfe**. Sie baut sich aus dem Modulregister auf
+— alle angemeldeten Module, ihre Tastenkürzel, die Eingabemuster der
+Leiste — und wird nicht von Hand gepflegt. Klein, in sich abgeschlossen,
+und sie prüft nebenbei, ob das Register alles hergibt, was es hergeben
+soll.
+
+Danach Schritt 9 (Outliner). Schritt 4 und 7 bleiben zurückgestellt, bis
+der Browsertest beantwortet ist.
+
+**Schritt 6 — Workflows kommt zuletzt.** So entschieden: Er ist der
+größte, der einzige mit eigenem Datenmodell aus Vorlage, Instanz und
+aktivem Teilschritt, und `ANLEITUNG.md` nennt ihn einen der drei, bei
+denen eine falsche Grundentscheidung teuer wird. Das Vorarbeiten ist
+getan und verfällt nicht: Der Entwurf liegt seit Phase 0 unter
+`referenz/workflow-dialog.html`, das Datenmodell ist umgestellt, und
+`felderMalen` wurde in Schritt 2 eigens so gebaut, dass der
+Workflow-Dialog es **dreimal** benutzen kann — für die
 Instanzeigenschaften, für die Teilschrittliste und für den gewählten
-Schritt.
-
-`ANLEITUNG.md` nennt Schritt 6 einen der drei, bei denen eine falsche
-Grundentscheidung teuer wird.
-
-Danach Schritt 8 (Hilfe, baut sich aus dem Register auf) und Schritt 9
-(Outliner).
-
-Schritt 4 und 7 bleiben zurückgestellt, bis der Browsertest beantwortet
-ist.
+Schritt. `nurWenn` aus dem Dialogschritt wartet ebenfalls darauf.
 
 ---
 

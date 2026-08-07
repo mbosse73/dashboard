@@ -285,6 +285,29 @@ iPad. Genau wie Punkt 11.
 
 ---
 
+## 15 — `100vh` ist auf dem iPhone zu viel
+
+Im Querformat war auf dem iPhone die obere Leiste nicht zu sehen.
+
+`100vh` ist auf iOS nicht die sichtbare Höhe, sondern die Höhe, die das
+Fenster **ohne** die Safari-Leisten hätte. `.app` war damit höher als das,
+was tatsächlich zu sehen ist. Im Hochformat fällt das kaum auf, im
+Querformat nehmen die Leisten einen großen Teil der ohnehin geringen Höhe
+weg — der Kopf rutschte oben heraus.
+
+Verschärft durch `body{overflow:hidden}`: Ohne diese Zeile ließe sich der
+Kopf wenigstens zurückscrollen. So war er unerreichbar.
+
+**Lösung:** `height:100vh` bleibt als Rückfall stehen, darunter
+`height:100dvh` — die *dynamische* Sichthöhe, die die Leisten mitrechnet.
+Dieselbe Doppelzeile bei `.dlg`, dessen `max-height` am selben Maß hing.
+
+**Regel daraus:** Vollhöhe misst man mit `dvh`, nicht mit `vh`. Und:
+Chromium am Rechner zeigt den Unterschied nicht — dort sind beide Werte
+gleich. Wie Punkt 11 und 14 kam der Befund von einem echten Gerät.
+
+---
+
 ## Prüfmuster, die sich bewährt haben
 
 * **Zustandslogik gegen die Uhr testen.** Funktionen wie `frist()` mit

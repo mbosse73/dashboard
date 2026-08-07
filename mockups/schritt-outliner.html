@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Entwurf — Schritt 9, Outliner</title>
+<style>
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--ff);background:var(--paper);color:var(--ink);
+  font-size:14px;line-height:1.55;padding:34px 22px 70px}
+.blatt{max-width:1180px;margin:0 auto}
+h1{font-size:21px;letter-spacing:-.2px;margin-bottom:5px}
+.unter{color:var(--ink3);font-size:13px;margin-bottom:26px;max-width:78ch}
+.karte{background:var(--sheet);border:1px solid var(--rule);border-radius:12px;
+  padding:19px 21px 22px;margin-bottom:19px}
+.karte h2{font-size:14.5px;display:flex;align-items:center;gap:9px;margin-bottom:5px}
+.nr{display:inline-flex;align-items:center;justify-content:center;width:21px;height:21px;
+  border-radius:50%;background:var(--tinte-s);color:var(--tinte);font-size:11px;font-weight:650}
+.was{color:var(--ink3);font-size:12.5px;margin-bottom:14px;max-width:74ch}
+.buehne{background:var(--paper);border:1px solid var(--rule);border-radius:9px;padding:14px 12px}
+
+/* ---- der Baum selbst ---- */
+.ol-baum{padding:0}
+.ol-k{display:flex;align-items:center;gap:7px;padding:5px 8px;border-radius:7px;min-height:29px}
+.ol-k:hover{background:var(--sheet)}
+.ol-k.mark{background:var(--tinte-s)}
+.ol-drei{width:15px;height:15px;flex-shrink:0;border:0;background:none;padding:0;
+  color:var(--ink3);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ol-drei svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;transform:rotate(90deg)}
+.ol-drei.zu svg{transform:rotate(0deg)}
+.ol-drei.leer{cursor:default}
+.ol-pkt{width:5px;height:5px;border-radius:50%;background:var(--rule2);flex-shrink:0}
+.ol-tx{font-size:14px;color:var(--ink)}
+.ol-cur{display:inline-block;width:1.5px;height:15px;background:var(--tinte);
+  margin-left:1px;vertical-align:-3px}
+.ol-zu{font-size:11px;color:var(--ink3);background:var(--raise);border-radius:20px;
+  padding:1px 7px;margin-left:5px}
+.leer{color:var(--ink3);font-size:12.5px;margin:12px 4px 2px;max-width:78ch}
+.zettel{margin:13px auto 2px;width:max-content;background:var(--signal-s);
+  color:var(--signal);border:1px solid #eccfc8;border-radius:8px;
+  padding:7px 13px;font-size:12.5px}
+
+/* ---- Tastenliste ---- */
+table{border-collapse:collapse;width:100%}
+td{padding:6px 10px;border-bottom:1px solid var(--rule);font-size:13px;vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{width:160px;white-space:nowrap}
+.klar{color:var(--ink2);font-size:12.5px}
+kbd{font-family:var(--ff);font-size:11.5px;background:var(--raise);border:1px solid var(--rule2);
+  border-bottom-width:2px;border-radius:5px;padding:1px 6px;color:var(--ink2)}
+.hin{background:var(--tinte-s);border:1px solid #c9d0ea;border-radius:10px;
+  padding:14px 17px;font-size:12.5px;color:var(--ink2);max-width:78ch}
+.hin b{color:var(--ink)}
+</style></head><body><div class="blatt">
+
+<h1>Entwurf — Schritt 9, Outliner</h1>
+<p class="unter">Statisch. Nichts ist anklickbar, nichts wird gespeichert.
+Der Entwurf soll die Gestalt entscheiden, bevor sie etwas kostet.</p>
+
+<section class="karte"><h2><span class="nr">1</span>Gefüllt</h2><p class="was">Die Schreibmarke steht in einem Knoten. Ein Knoten ist ein Feld — es wird direkt darin geschrieben, es gibt keinen Dialog.</p><div class="buehne"><div class="ol-baum"><div class="ol-k" style="padding-left:0px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx" style="font-weight:650">Produktstrategie 2026</span></div><div class="ol-k" style="padding-left:24px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Marktlage</span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Vier Anbieter geprüft</span></div><div class="ol-k mark" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Zwei davon relevant<span class="ol-cur"></span></span></div><div class="ol-k" style="padding-left:24px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Positionierung</span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Einzeldatei als Merkmal</span></div><div class="ol-k" style="padding-left:24px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Preismodell</span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Staffeln ab Q4</span></div></div></div></section>
+
+<section class="karte"><h2><span class="nr">2</span>Zugeklappt</h2><p class="was">„Marktlage“ ist zu. Die beiden Unterknoten sind nicht verschwunden: <b>+2</b> sagt, wie viele darunter liegen. Nichts darf unsichtbar werden.</p><div class="buehne"><div class="ol-baum"><div class="ol-k" style="padding-left:0px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx" style="font-weight:650">Produktstrategie 2026</span></div><div class="ol-k" style="padding-left:24px"><button class="ol-drei zu" aria-label="Aufklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Marktlage</span><span class="ol-zu">+2</span></div><div class="ol-k" style="padding-left:24px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Positionierung</span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Einzeldatei als Merkmal</span></div><div class="ol-k" style="padding-left:24px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Preismodell</span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Staffeln ab Q4</span></div></div></div></section>
+
+<section class="karte"><h2><span class="nr">3</span>Leer</h2><p class="was">Ein leerer Knoten steht bereit, die Schreibmarke sitzt darin. Dazu ein Satz, der den Weg zeigt.</p><div class="buehne"><div class="ol-baum"><div class="ol-k mark" style="padding-left:0px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx" style="font-weight:650"><span class="ol-cur"></span></span></div></div><p class="leer">Noch keine Gliederung. Tippen Sie los — <b>↵</b> legt den nächsten Knoten an, <b>Tab</b> rückt ihn ein.</p></div></section>
+
+<section class="karte"><h2><span class="nr">4</span>Einrücken geht nicht</h2><p class="was">„Marktlage“ ist der erste Knoten unter seinem Elternknoten. Es gibt darüber niemanden auf gleicher Ebene, unter den er rutschen könnte. Das misslingt nicht still, es wird gesagt.</p><div class="buehne"><div class="ol-baum"><div class="ol-k" style="padding-left:0px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx" style="font-weight:650">Produktstrategie 2026</span></div><div class="ol-k mark" style="padding-left:24px"><button class="ol-drei" aria-label="Zuklappen"><svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button><span class="ol-pkt"></span><span class="ol-tx">Marktlage<span class="ol-cur"></span></span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Vier Anbieter geprüft</span></div><div class="ol-k" style="padding-left:48px"><span class="ol-drei leer"></span><span class="ol-pkt"></span><span class="ol-tx">Zwei davon relevant</span></div></div><div class="zettel">Kein Knoten darüber auf gleicher Ebene</div></div></section>
+
+<section class="karte">
+<h2><span class="nr">5</span>Tastenbelegung</h2>
+<p class="was">Alle Tasten gelten im Knoten, also während geschrieben wird.
+Sie kommen aus derselben Tabelle, aus der die Hilfe sie liest.</p>
+<table><tr><td><kbd>↵</kbd></td><td>Neuer Knoten darunter, gleiche Ebene</td></tr><tr><td><kbd>Tab</kbd></td><td>Einrücken, mit allen Unterknoten</td></tr><tr><td><kbd>⇧</kbd> <kbd>Tab</kbd></td><td>Ausrücken, mit allen Unterknoten</td></tr><tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>In den Knoten darüber oder darunter</td></tr><tr><td><kbd>Alt</kbd> <kbd>↑</kbd> <kbd>↓</kbd></td><td>Knoten verschieben, mit allen Unterknoten</td></tr><tr><td><kbd>⌫</kbd></td><td>Im leeren Knoten: löschen</td></tr><tr><td><span class="klar">Klick aufs Dreieck</span></td><td>Klappt zu und wieder auf</td></tr></table>
+</section>
+
+<section class="karte">
+<h2><span class="nr">6</span>Was der Entwurf offenlässt</h2>
+<div class="hin">
+<b>Kein Ziehen mit der Maus.</b> Verschoben wird mit <kbd>Alt</kbd> und den
+Pfeilen. Ziehen über Ebenen hinweg ist schwer zu treffen und schwer
+rückgängig zu machen.<br><br>
+<b>Nur eine Gliederung.</b> Kein Umschalten zwischen mehreren. Der oberste
+Knoten trägt den Titel.<br><br>
+<b>Keine Kennungen je Knoten.</b> Ein Knoten bleibt <b>{ebene, t}</b>, dazu
+neu <b>zu</b> fürs Klappen. Damit ist keine Migration bestehender
+Sicherungen nötig — der einzige Punkt in diesem Schritt, der sonst nicht
+umkehrbar wäre.
+</div>
+</section>
+
+</div></body></html>

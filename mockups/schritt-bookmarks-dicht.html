@@ -138,6 +138,11 @@ button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit
 <p class="unter">Drei Fassungen im Vergleich, alle mit denselben 24 Bookmarks aus
 sieben Gruppen. Nichts davon ist gebaut — dies ist der Entwurf zur
 Entscheidung. Die Höhenangaben sind gemessen, nicht geschätzt.</p>
+<p class="unter" style="margin-top:14px"><b>Die maßgebliche Breite ist 808 px.</b>
+Die Modulfläche ist in der Anwendung auf <code>860 px</code> gedeckelt
+(<code>.mitte{max-width:860px}</code>, davon 52 px Rand). Ein größerer
+Bildschirm ändert daran nichts — der Rest bleibt Rand. Die zweite Spalte
+in der Tabelle unten zeigt deshalb nicht das Fenster, sondern die Fläche.</p>
 
 <div class="stufe">
 <h2 class="gross">Ist-Zustand</h2>
@@ -217,7 +222,7 @@ Weg mit der Maus; der schnellste bleibt die Leiste mit <code>⌘K</code>.</div>
 <div class="stufe">
 <h2 class="gross">Fassung A</h2>
 <h3 class="gross">Dichte Liste — eine Zeile, Adresse rechts</h3>
-<div class="mass">Gemessen <b>1011 px</b> · gleich bei jeder Fensterbreite · gut halb so hoch wie heute</div>
+<div class="mass">Gemessen <b>1011 px</b> bei 808 px Flächenbreite · gleich bei jeder Breite</div>
 <div class="buehne">
 <div class="abs"><h2>Dev</h2><span class="r"></span>
   <span class="n">6</span></div>
@@ -329,7 +334,7 @@ und <i>auf dem iPad gibt es kein Überfahren.</i></div>
 <div class="stufe">
 <h2 class="gross">Fassung B</h2>
 <h3 class="gross">Gruppenkarten — jede Gruppe eine Karte, nebeneinander</h3>
-<div class="mass">Gemessen <b>333 px</b> bei 1000 px Breite · <b>583 px</b> bei 760 px</div>
+<div class="mass warn">Gemessen <b>483 px</b> bei 808 px Flächenbreite · 333 px erst ab 904 px</div>
 <div class="buehne"><div class="kr">
   <div class="kk">
     <div class="kkk"><h3>Dev</h3><span>6</span></div>
@@ -409,17 +414,18 @@ und <i>auf dem iPad gibt es kein Überfahren.</i></div>
   </div></div></div>
 <div class="merk"><b>Dafür:</b> Die Gruppen tragen die Übersicht, weil sie
 nebeneinander stehen statt untereinander. Man sieht mit einem Blick, wie
-viele es gibt und wie groß jede ist. <b>Am breiten Fenster ist sie die dichteste von allen</b> — 333 px.
-<b>Dagegen:</b> Sie hängt an der Fensterbreite. Fällt das Raster von vier
-Spalten auf zwei, wächst sie auf 583 px, also um drei Viertel. Und die
-Karten sind unterschiedlich hoch: eine Gruppe mit einem Eintrag neben
+viele es gibt und wie groß jede ist. <b>Dagegen — und das gibt den Ausschlag:</b> Sie braucht
+<b>vier Spalten</b>, um dicht zu sein, und dafür mindestens 904 px
+Flächenbreite. Die gibt es in dieser Anwendung nicht. Bei den
+tatsächlichen 808 px fällt sie auf drei Spalten und 483 px. Dazu sind
+die Karten unterschiedlich hoch: eine Gruppe mit einem Eintrag neben
 einer mit zwanzig macht das Raster löchrig. Die Adresse fällt weg.</div>
 </div>
 
 <div class="stufe">
 <h2 class="gross">Fassung C</h2>
 <h3 class="gross">Gruppenzeilen — Gruppenname links, Bookmarks als Chips</h3>
-<div class="mass">Gemessen <b>371 px</b> bei 1000 px Breite · <b>403 px</b> bei 760 px</div>
+<div class="mass">Gemessen <b>371 px</b> bei 808 px Flächenbreite · unverändert bis 1280 px</div>
 <div class="buehne"><div class="gz">
   <div class="gzz"><div class="gzn">Dev<em>6</em></div>
   <div class="gzc"><button class="ch an"><b>⌘1</b>MDN Web Docs</button><button class="ch an"><b>⌘2</b>GitHub</button><button class="ch">Can I Use</button><button class="ch an"><b>⌘4</b>Linear Docs</button><button class="ch">Node.js Doku</button><button class="ch">Obsidian API</button></div></div>
@@ -438,9 +444,9 @@ einer mit zwanzig macht das Raster löchrig. Die Adresse fällt weg.</div>
 <div class="merk"><b>Dafür:</b> Sehr dicht, und die Gruppen
 bleiben dabei lesbar, weil ihr Name als Randbeschriftung stehen bleibt.
 Eine Gruppe mit zwanzig Einträgen bricht einfach um, statt das Raster zu
-sprengen. Angeheftetes trägt sein Kürzel im Chip. <b>Und sie ist die stabilste:</b> Von 1000 auf 760 px Breite wächst sie
-nur von 371 auf 403 px — neun Prozent, gegen 75 Prozent bei Fassung B.
-<b>Dagegen:</b> Am ganz breiten Fenster ist B um 38 px dichter. Die Adresse
+sprengen. Angeheftetes trägt sein Kürzel im Chip. <b>Und sie ist die stabilste:</b> 371 px von 808 bis 1280 px
+Flächenbreite, unverändert; erst unter 700 px wächst sie überhaupt.
+Chips brechen um, wo Karten umbrechen müssen. <b>Dagegen:</b> Die Adresse
 ist weg — sie steht nur noch im Dialog. Lange Titel setzen der Dichte
 eine Grenze.</div>
 </div>
@@ -518,21 +524,20 @@ Ziehen im Planner, das dort ebenfalls nicht geht.</div>
 <div class="stufe">
 <h2 class="gross">Vergleich</h2>
 <table class="tab">
-<tr><th>&nbsp;</th><th>bei 1000 px</th><th>bei 760 px</th><th>Gruppen sichtbar</th><th>Adresse</th><th>Aufwand</th></tr>
+<tr><th>&nbsp;</th><th>bei 808 px<br><small>die echte Fläche</small></th><th>bei 904 px<br><small>hypothetisch</small></th><th>Gruppen sichtbar</th><th>Adresse</th><th>Aufwand</th></tr>
 <tr><td><b>Heute</b></td><td>≈ 1800 px</td><td>≈ 1800 px</td><td>untereinander</td><td>ja</td><td>—</td></tr>
 <tr><td><b>A — dichte Liste</b></td><td>1011 px</td><td>1011 px</td><td>untereinander</td><td>ja, rechts</td><td>klein</td></tr>
-<tr><td><b>B — Gruppenkarten</b></td><td><b>333 px</b></td><td><i>583 px</i></td><td>nebeneinander</td><td>nein</td><td>mittel</td></tr>
-<tr><td><b>C — Gruppenzeilen</b></td><td>371 px</td><td><b>403 px</b></td><td>als Randbeschriftung</td><td>nein</td><td>mittel</td></tr>
+<tr><td><b>B — Gruppenkarten</b></td><td><i>483 px</i></td><td><b>333 px</b></td><td>nebeneinander</td><td>nein</td><td>mittel</td></tr>
+<tr><td><b>C — Gruppenzeilen</b></td><td><b>371 px</b></td><td>371 px</td><td>als Randbeschriftung</td><td>nein</td><td>mittel</td></tr>
 </table>
 <div class="merk"><b>Empfehlung: C, dazu der Schnellzugriff und der
-Schalter Öffnen/Ordnen.</b> Nicht weil sie die dichteste wäre — am breiten Fenster
-ist B um 38 Pixel besser. Sondern weil sie die <b>stabilste</b> ist.<br><br>
-Das entscheidende Maß steht in der rechten Spalte: bei 760 Pixeln
-Fensterbreite, also dem iPad hochkant. Dort fällt B von vier Spalten auf
-zwei und wächst um 75 Prozent, C um neun. <b>Diese Zahl hatte ich vor dem
-Messen falsch geschätzt</b> — ich hielt B für die schwächere und C für die
-dichtere; tatsächlich ist es am breiten Fenster umgekehrt, und C gewinnt
-aus einem anderen Grund als vermutet.<br><br>
+Schalter Öffnen/Ordnen.</b> Bei der Breite, die es wirklich gibt — 808 Pixel — liegt C
+112 Pixel vor B, ein knappes Viertel.<br><br>
+<b>Die zweite Spalte der Tabelle ist bewusst als hypothetisch
+gekennzeichnet.</b> Dort wäre B die dichteste, aber diese Breite bekommt
+die Modulfläche nie: <code>.mitte</code> deckelt bei 860 px, und ein
+größerer Bildschirm ändert daran nichts. B braucht vier Spalten, um zu
+glänzen, und bekommt drei.<br><br>
 Dazu kommt: C fällt auch bei einer Gruppe mit zwanzig Einträgen nicht
 auseinander. Chips brechen um, Karten werden hoch und reißen Löcher ins
 Raster.<br><br>

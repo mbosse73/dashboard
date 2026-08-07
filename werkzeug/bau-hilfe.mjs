@@ -248,12 +248,14 @@ Nichts davon ist gebaut. Die Schaubilder zeigen 1920 px in halber Größe.</p>
 <div class="mass">Modul <b>10</b> · Index klebt beim Scrollen oben</div>
 ${buehne(hilfeFlaeche("",ruhe))}
 <p class="lupe2">1920 px in halber Größe</p>
-<div class="merk"><b>Was aus dem Register kommt und was nicht.</b> Die
-Modulliste, die Zahlen, die Gerüst-Marken und die Tastenkürzel erzeugen
-sich selbst — sie können deshalb nicht veralten. Der beschreibende Satz
-je Modul kommt aus einem neuen, freiwilligen Feld <code>hilfe</code> im
-Modulblock: Er steht damit <b>neben dem Code, den er beschreibt</b>, statt
-in einer zweiten Textsammlung, die driftet.</div>
+<div class="merk"><b>Was aus dem Register kommt.</b> Die Modulliste, die
+Zahlen, die Gerüst-Marken und die Tastenkürzel erzeugen sich selbst. Sie
+können deshalb nicht veralten.<br><br>
+<b>Der Erklärtext je Modul steht im Modulblock</b>, in einem neuen Feld
+<code>hilfe</code>. Er steht damit neben dem Code, den er beschreibt. Eine
+zweite Textsammlung würde davon abdriften.<br><br>
+<b>Er ist nicht freiwillig.</b> Der Prüflauf verlangt ihn und prüft seinen
+Stil — siehe weiter unten.</div>
 </div>
 
 <div class="stufe">
@@ -311,6 +313,72 @@ einmal durch, und wir wissen es. Genau dafür ist diese Datei da.<br><br>
 Bis dahin baue ich mit zwei Kandidaten. Weil beide Hilfen aus derselben
 Tabelle kommen, ist ein Auswechseln <b>eine Zeile</b> — und die
 Schnellhilfe zeigt danach von selbst das Richtige.</div>
+</div>
+
+<div class="stufe">
+<h2>Vollständigkeit</h2>
+<h3>Woher jeder Teil der Hilfe kommt</h3>
+<table class="tab">
+<tr><th>Was</th><th>Anzahl</th><th>Herkunft</th><th>bei etwas Neuem</th></tr>
+<tr><td><b>Module mit Fläche</b></td><td class="z">11</td>
+    <td>Register: Nummer, Name, Anzahl, Gerüst-Marke, Beiträge</td>
+    <td><b>erscheint von selbst</b></td></tr>
+<tr><td>ihr Erklärtext</td><td class="z">11</td>
+    <td>Feld <code>hilfe</code> im Modulblock</td>
+    <td><b>erzwungen</b> — siehe unten</td></tr>
+<tr><td><b>Tastenkürzel</b></td><td class="z">10</td>
+    <td>die Tabelle, die sie auch schaltet</td>
+    <td><b>erscheint von selbst</b></td></tr>
+<tr><td><b>Eingabemuster</b></td><td class="z">6</td>
+    <td>eine Tabelle, die auch deutet</td>
+    <td><b>erscheint von selbst</b></td></tr>
+<tr><td>Rechner</td><td class="z">1</td>
+    <td>versteckt, ohne Fläche — steht bei den Eingabemustern</td>
+    <td>—</td></tr>
+<tr><td>Leiste und Planner</td><td class="z">2</td>
+    <td>von Hand</td><td>kann nicht wachsen — siehe rechts</td></tr>
+<tr><td>Sichern, Laden, Themen</td><td class="z">3</td>
+    <td>von Hand</td><td>selten, im Prüflauf mitgeführt</td></tr>
+</table>
+<div class="merk"><b>Drei von vier Gruppen erscheinen ohne Zutun.</b> Die
+vierte kann nicht wachsen: <code>CLAUDE.md</code> sagt „Es gibt zwei feste
+Flächen". Eine dritte Oberfläche wäre ein Regelbruch, keine Ergänzung.<br><br>
+<b>Auch die Eingabemuster bekommen eine Tabelle.</b> Heute stehen sie als
+Regeln in <code>deuten()</code>. Eine Liste daneben würde abdriften —
+derselbe Fehler wie bei den Kürzeln. Künftig deutet und beschreibt
+dieselbe Stelle.</div>
+</div>
+
+<div class="stufe">
+<h2>Damit es so bleibt</h2>
+<h3>Der Prüflauf verlangt Hilfetexte — und prüft ihren Stil</h3>
+<div class="mass">drei Regeln · maschinell prüfbar</div>
+<table class="tab">
+<tr><th>Regel</th><th>warum</th></tr>
+<tr><td>Jedes Modul mit Fläche hat <code>hilfe</code></td>
+    <td>Sonst erscheint ein neues Modul ohne Erklärung. Die Hilfe verfällt still, Modul für Modul.</td></tr>
+<tr><td>Höchstens <b>20 Wörter</b> je Satz</td>
+    <td>Lange Sätze sind der Anfang jedes Schachtelsatzes.</td></tr>
+<tr><td>Höchstens <b>ein Komma</b> je Satz</td>
+    <td>Im Deutschen braucht fast jede Verschachtelung ein Komma.</td></tr>
+<tr><td>Mindestens <b>40 Zeichen</b></td>
+    <td>Gegen <code>hilfe:"TODO"</code>.</td></tr>
+</table>
+<div class="merk"><b>An echten Sätzen erprobt, bevor ich sie vorschlage:</b><br><br>
+<code style="color:var(--tinte)">✓</code> „Zwei Arten, Telefonnotiz vorbelegt.
+Export und Import als .md."<br>
+<code style="color:var(--tinte)">✓</code> „Der Planner zeigt zwei Werktage
+nebeneinander. Das Raster geht von 7 bis 18 Uhr."<br>
+<code style="color:var(--signal)">✗</code> „Beim Löschen werden alle Verweise
+auf den Kontakt geleert, in Terminen, Aufgaben, Notizen und in Workflows auf
+beiden Ebenen, wobei …" — <b>33 Wörter, 4 Kommas</b><br>
+<code style="color:var(--signal)">✗</code> <code>hilfe:"TODO"</code> —
+<b>zu kurz</b><br><br>
+Der Satz aus <code>SPEC.md</code> ist ein echter aus diesem Projekt. Genau
+solche Sätze sollen nicht in die Hilfe gelangen.<br><br>
+<b>Dazu eine Zeile in <code>CLAUDE.md</code>:</b> Ein neues Modul anlegen
+heißt jetzt <b>fünf Stellen</b> statt vier. <code>vorgabe()</code>, die
+Ladeliste, der Modulblock, <code>SPEC.md</code> — und <code>hilfe</code>.</div>
 </div>
 
 <div class="stufe">

@@ -60,13 +60,32 @@ const BM=[["MDN Web Docs",1],["GitHub",2],["Excalidraw",3],["Linear Docs",4],
   ["Radix UI",0],["Coolors",0],["Stratechery",0],["Paul Graham",0],
   ["Hacker News",0],["Refactoring Guru",0],["Fireship",0],["Kevin Powell",0],
   ["Baremetrics",0],["ChartMogul",0],["Intranet",0],["Confluence",0]];
-const chip=([t,n])=>`<span class="b-chip${n?" an":""}">${n?`<b>⌘${n}</b>`:""}${esc(t)}</span>`;
-const bmBlock=(inhalt,n)=>`<div class="b-block">${abs("Bookmarks",n)}${inhalt}</div>`;
+/* Zwei Zeichen, damit man Webseite und App auseinanderhaelt. Inline-SVG
+   mit stroke, nie ein gefuelltes Unicode-Zeichen — Fehlerbuch Punkt 2. */
+const IWEB='<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/>'
+  +'<path d="M2.4 6h11.2M2.4 10h11.2M8 2a12 12 0 0 0 0 12A12 12 0 0 0 8 2"/></svg>';
+const IAPP='<svg viewBox="0 0 16 16"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/>'
+  +'<path d="M2.2 6h11.6"/></svg>';
+/* Ein Platz: Nummer, Zeichen, Name. Belegt oder frei. */
+const platz=(n,art,t)=>t
+  ? `<span class="b-platz"><b>${n<=8?"⌘"+n:"·"}</b>${art==="app"?IAPP:IWEB}`
+    +`<span>${esc(t)}</span></span>`
+  : `<span class="b-platz frei"><b>·</b><span>frei</span></span>`;
+const bmBlock=(inhalt,n)=>`<div class="b-block">${abs("Anheftungen",n)}${inhalt}</div>`;
+/* So sieht es heute aus: vier belegte, die vier freien sieht man nicht. */
 const bmIst = bmBlock(`<div class="s-mk">${BM.filter(x=>x[1]).map(([t,n])=>
   `<span><b>⌘${n}</b> ${esc(t)}</span>`).join("")}</div>`,"alle 24 ›");
-const bmAlle = bmBlock(`<div class="b-chips">${BM.map(chip).join("")}</div>`,"alle 24");
-const bmHalb = bmBlock(`<div class="b-chips">${BM.slice(0,12).map(chip).join("")}</div>`,
-  "12 von 24 ›");
+/* Eine gemischte Pinnwand: Webseiten und Apps nebeneinander. */
+const PINN=[["MDN Web Docs","web"],["GitHub","web"],["MD-Editor","app"],
+  ["Excalidraw","web"],["Rechnungsdruck","app"],["Linear Docs","web"],
+  ["Vault-Manager","app"],["Hoppscotch","web"]];
+const bmAlle = bmBlock(`<div class="b-plaetze">${
+  Array.from({length:12},(_,i)=>platz(i+1,(PINN[i]||[])[1],(PINN[i]||[])[0])).join("")
+}</div>`,"8 von 12 belegt");
+const bmHalb = bmBlock(`<div class="b-plaetze">${
+  PINN.map((x,i)=>platz(i+1,x[1],x[0])).join("")
+  }<span class="b-platz mehr"><b>+</b><span>anheften · 4 frei</span></span></div>`,
+  "8 von 12 belegt");
 
 /* ---------- Der Kopf ---------- */
 const kopf = ein => `<div class="s-app knapp"><div class="s-kopf voll${ein?" ein":""}">
@@ -203,11 +222,18 @@ h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6
 .s-kachel{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:11px;
   background:var(--sheet);padding:15px;font-size:15px;font-weight:600;height:104px}
 .b-block{width:547px;background:var(--paper);padding:0 0 8px}
-.b-chips{display:flex;flex-wrap:wrap;gap:5px}
-.b-chip{font-size:13.5px;padding:5px 11px;border-radius:14px;border:1px solid var(--rule);
-  background:var(--sheet);white-space:nowrap}
-.b-chip.an{border-color:#d9dff1;background:var(--tinte-s)}
-.b-chip b{font-family:var(--etikett);font-size:10px;color:var(--tinte);margin-right:6px}
+.b-plaetze{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:5px}
+.b-platz{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;
+  border:1px solid var(--rule);background:var(--sheet);min-width:0}
+.b-platz b{font-family:var(--etikett);font-size:10.5px;color:var(--tinte);
+  min-width:19px;flex-shrink:0}
+.b-platz svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.3;
+  color:var(--ink3);flex-shrink:0}
+.b-platz > span{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.b-platz.frei{background:transparent;border-style:dashed;color:var(--ink3)}
+.b-platz.frei b{color:var(--rule2)}
+.b-platz.mehr{background:transparent;border-style:dashed;color:var(--tinte)}
+.b-platz.mehr b{color:var(--tinte)}
 .b-reihe{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
 .s-mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
 .s-mk span{padding:8px 10px;font-size:13.5px;color:var(--ink2);border-left:2px solid transparent}
@@ -471,43 +497,66 @@ sein Feld in der nächsten.</div>
 
 <div class="stufe">
 <h2>Punkt 5</h2>
-<h3>In der Leiste sind nur vier Bookmarks zu sehen</h3>
-<div class="mass warn">heute <b>4</b> in 64 px — weil die Leiste nur Angeheftetes zeigt und vier von acht Plätzen belegt sind</div>
+<h3>Die Leiste als Pinnwand</h3>
+<div class="mass warn">heute sind <b>4</b> zu sehen — vier von acht Plätzen sind belegt, die vier freien zeigt sie nicht</div>
 <div class="buehne" style="padding:14px 18px">${bmIst}</div>
-<div class="mass">Fassung A · alle <b>24</b> in <b>155 px</b> · Angeheftetes zuerst und mit Tinte</div>
+<div class="merk warn"><b>Der erste Vorschlag war falsch.</b> Ich wollte
+alle 24 Bookmarks auf die Leiste stellen. Das wird unruhig, es lässt keine
+Ordnung erkennen, und bei 60 Bookmarks wäre die Leiste eine Wand. Eine
+Darstellung, die mit den Daten wächst, gehört an diese Stelle nicht.<br><br>
+<b>Was die Leiste eigentlich ist:</b> eine <b>Pinnwand</b>. Darauf ist
+Platz für eine feste Zahl von Zetteln — mehr nicht, und das ist der Sinn.
+Der Aktenschrank darf tausend Ordner haben; auf die Pinnwand kommt, was
+man täglich braucht. In <code>CLAUDE.md</code> steht es schon so: „ohne
+Eingabe zeigt sie … <b>angeheftete</b> Bookmarks".</div>
+
+<div class="mass">Fassung A · <b>12 Plätze</b>, belegte und freie · 139 px</div>
 <div class="buehne" style="padding:14px 18px">${bmAlle}</div>
-<div class="mass">Fassung B · <b>12</b> in <b>91 px</b> · der Rest über „alle 24 ›"</div>
+<div class="mass">Fassung B · belegte Plätze, dazu ein Feld „anheften" · ruhiger</div>
 <div class="buehne" style="padding:14px 18px">${bmHalb}</div>
+
+<div class="merk"><b>Beides zeigt dasselbe Bild:</b> Webseiten und
+<b>Apps auf denselben Plätzen.</b> Auf Platz 3 liegt der MD-Editor, auf
+Platz 4 Excalidraw. Es sind nicht „Bookmark-Plätze", sondern einfach
+Plätze — später können dort auch Textbausteine liegen. Die beiden Zeichen
+sagen, woher ein Eintrag kommt: Kreis für eine Webseite, Fenster für eine
+App.<br><br>
+<b>Empfohlen: B.</b> Ihr Einwand war die Unruhe, und acht leere Kästen
+sind Unruhe. B zeigt die belegten Plätze und ein einziges gestricheltes
+Feld, das sagt, wie viele noch frei sind. Damit sieht man trotzdem, dass
+Platz ist — heute merkt man das nie.<br><br>
+<b>Warum ⌘ nur bis 8:</b> Es gibt nicht mehr freie Tastenkombinationen.
+Die ersten acht Plätze tragen ein Kürzel, die übrigen sind anklickbar. Ein
+Kürzel ist eine Zugabe, keine Bedingung.</div>
+
+<div class="merk"><b>Warum die Gruppen hier nicht auftauchen.</b> „Dev"
+und „Lesen" sind die Ordnung Ihrer <i>Sammlung</i>. Eine Anheftung ist eine
+Auswahl <i>quer dazu</i> — von Hand getroffen, aus verschiedenen Gruppen,
+demnächst sogar aus verschiedenen Modulen. Beides übereinanderzulegen war
+die Unruhe in Fassung A. Die Gruppen bleiben im Modul, wo sie tragen.</div>
+
 <table class="tab">
-<tr><th>&nbsp;</th><th>sichtbar</th><th>Höhe</th><th>gegen heute</th></tr>
-<tr><td>heute</td><td class="z">4</td><td class="z">64 px</td><td class="z">—</td></tr>
-<tr><td>Chips, 8</td><td class="z">8</td><td class="z">59 px</td><td class="z"><b>−5 px</b></td></tr>
-<tr><td>Chips, 12 <i>(B)</i></td><td class="z">12</td><td class="z">91 px</td><td class="z">+27 px</td></tr>
-<tr><td>Chips, 16</td><td class="z">16</td><td class="z">123 px</td><td class="z">+59 px</td></tr>
-<tr><td>Chips, 24 <i>(A)</i></td><td class="z"><b>24</b></td><td class="z">155 px</td><td class="z">+91 px</td></tr>
+<tr><th>Sammlung wächst auf</th><th>Modul Bookmarks</th><th>Leiste</th></tr>
+<tr><td class="z">24 Bookmarks</td><td class="z">315 px</td><td class="z"><b>139 px</b></td></tr>
+<tr><td class="z">60 Bookmarks</td><td class="z">rund 700 px</td><td class="z"><b>139 px</b></td></tr>
+<tr><td class="z">200 Bookmarks + 40 Apps</td><td class="z">mehrere Bildschirme</td><td class="z"><b>139 px</b></td></tr>
 </table>
-<div class="merk"><b>Acht Chips brauchen weniger Platz als heute vier.</b>
-Die jetzige Darstellung ist ein Raster aus 206 px breiten Feldern —
-„GitHub" bekommt darin so viel Platz wie „Refactoring Guru". Chips sind
-so breit wie ihr Wort.<br><br>
-<b>Empfohlen: A.</b> Die 91 px zusätzlich sind in der zweispaltigen
-Leiste vorhanden — dort bleiben 249 px frei. Angeheftetes steht vorn,
-trägt sein Kürzel und den Tintenton; alles Übrige folgt. Damit ist die
-Leiste vollständig, ohne dass man ins Modul wechseln muss.<br><br>
-<b>Wogegen A verstößt:</b> Die Leiste soll das Wesentliche zeigen, nicht
-alles. Bei 24 Bookmarks ist das noch zu überblicken — bei 80 wäre es eine
-Wand. Fassung B deckelt deshalb bei 12 und lässt den Rest im Modul.</div>
-<div class="merk warn"><b>Die eigentlich beste Auswahl fehlt uns:
-zuletzt geöffnet.</b> Ein Bookmark-Streifen sollte zeigen, was man
-tatsächlich benutzt — nicht die ersten zwölf der Erfassungsreihenfolge.
-Dafür bräuchte jedes Bookmark ein Feld <code>zul</code> mit dem Zeitpunkt
-des letzten Öffnens.<br><br>
-Das wäre eine <b>Änderung am Datenmodell</b> und gehört einzeln
-entschieden: Ein neues Feld überlebt in <code>heile()</code> auch alte
-Sicherungen, aber es steht danach in jeder Sicherung und in jedem Export.
-Bei 24 Bookmarks trägt die Erfassungsreihenfolge noch; bei mehr nicht.
-<b>Nicht Teil dieses Entwurfs</b> — hier nur genannt, damit die Frage
-nicht verlorengeht.</div>
+<div class="merk"><b>Das ist der eigentliche Gewinn.</b> Die Leiste ist an
+die Zahl der Plätze gebunden, nicht an die Größe der Sammlung. Sie sieht
+mit zweihundert Bookmarks genauso aus wie mit vierundzwanzig.</div>
+
+<div class="merk warn"><b>Das kostet eine Änderung an den gespeicherten
+Daten.</b> Heute merkt sich die Leiste nur Bookmark-Nummern. Damit auch
+eine App auf einem Platz liegen kann, muss jeder Platz zusätzlich
+festhalten, <i>woher</i> sein Eintrag stammt.<br><br>
+Und es betrifft den Modulvertrag: Die Leiste darf kein Modul beim Namen
+kennen — das ist eine harte Regel. „Bookmark oder App" fest einzutragen
+verstieße dagegen. Richtig wäre, dass ein Modul beim Anmelden <i>angibt</i>,
+ob und was es zum Anheften anbietet; die Leiste fragt dann das Register,
+so wie sie es bei Suche und Erfassen schon tut. Danach wären Textbausteine
+ohne eine Zeile in der Leiste anheftbar.<br><br>
+<b>Beides gehört einzeln entschieden</b> und ist nicht Teil dieses
+Entwurfs — hier steht nur, was es kostet.</div>
 </div>
 
 <div class="stufe">
@@ -521,7 +570,7 @@ nicht verlorengeht.</div>
 <tr><td>Aufgabenvorrat</td><td class="z">262 px starr</td><td class="z"><b>262–400 px</b></td></tr>
 <tr><td>Planner-Höhe bei 1300 px Fenster</td><td class="z"><i>786 px</i> · 459 leer</td><td class="z"><b>1245 px</b> · 0 leer</td></tr>
 <tr><td>Kopf</td><td class="z">volle Breite</td><td class="z">auf 1480 px eingerückt</td></tr>
-<tr><td>Bookmarks in der Leiste</td><td class="z"><i>4</i> · 64 px</td><td class="z"><b>24</b> · 155 px</td></tr>
+<tr><td>Anheftungen in der Leiste</td><td class="z"><i>4</i> von 8, freie unsichtbar</td><td class="z"><b>12 Plätze</b>, Web und Apps</td></tr>
 <tr><td>unter 1100 px</td><td class="z">—</td><td class="z">unverändert</td></tr>
 </table>
 <div class="merk"><b>Nicht dabei, mit Absicht:</b><br><br>

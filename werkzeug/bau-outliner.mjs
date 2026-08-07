@@ -4,8 +4,9 @@
 
    A — die uebernommene App: Tags, Notizzeile, Fokusmodus, Undo,
        Aufgaben mit Prioritaet und Fortschritt, dazu Gantt und Mindmap.
-   B — der schlanke Outliner, erweitert um Gantt und Mindmap. Nur
-       Struktur und Fristen, sonst nichts.
+   B — der schlanke Outliner, erweitert um Gantt und Mindmap, dazu
+       Fokusmodus, Notizzeile und Undo. Keine Etiketten, keine
+       Aufgaben, keine Filtersuche.
 
    Statisch. Nichts ist anklickbar, nichts wird gespeichert.
 
@@ -47,52 +48,62 @@ const kinderVon = i => {                       /* Wieviele haengen darunter? */
 };
 const spaet = k => (k.frist||k.bis) && (k.frist||k.bis) < HEUTE && !k.fertig;
 
-/* ---------- Gliederungszeile ----------
-   `voll` schaltet die Zutaten der Fassung A zu: Tags, Notizzeile,
-   Prioritaet, Fortschritt, Kaestchen. Fassung B zeigt nur Struktur
-   und Frist. */
-function zeile(k,i,voll,opt){
+/* ---------- Die Zutaten ----------
+   Frueher schaltete ein einziges `voll` alles zugleich. Seit Fassung B
+   Notizzeile, Fokus und Undo bekommt, aber weiterhin keine Etiketten
+   und keine Aufgaben, muss jede Zutat fuer sich schaltbar sein. */
+const FA={tags:1, aufgaben:1, notiz:1, spur:1, fasst:1, fort:1};
+const FB={notiz:1};
+
+/* ---------- Gliederungszeile ---------- */
+function zeile(k,i,f,opt){
   opt=opt||{};
+  /* Im Fokusmodus ist der angesprungene Punkt die Wurzel. Seine Kinder
+     ruecken deshalb auf Ebene 0 — sonst stuende der Zweig eingerueckt
+     unter einem Pfad, der ihn schon nennt. */
+  const e=k.e-(opt.rueck||0);
   const kinder=kinderVon(i);
   const drei = kinder
     ? '<button class="ol-drei'+(opt.zu?" zu":"")+'" aria-label="Zuklappen">'
       +'<svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg></button>'
     : '<span class="ol-drei leer"></span>';
 
-  const kasten = (voll && (k.frist||k.von||k.fertig||k.prio))
+  const kasten = (f.aufgaben && (k.frist||k.von||k.fertig||k.prio))
     ? '<span class="ol-kast'+(k.fertig?" an":"")+'">'
       +(k.fertig?'<svg viewBox="0 0 12 12"><path d="M2 6.2 4.6 9 10 3"/></svg>':'')+'</span>'
     : "";
 
   let text=esc(k.t);
-  if(voll && k.tag) text+=' <span class="ol-tag">#'+esc(k.tag)+'</span>';
+  if(f.tags) text+=' <span class="ol-tag">#'+esc(k.tag)+'</span>';
 
   const marken=[];
   if(k.frist) marken.push('<span class="ol-d'+(spaet(k)?" spaet":"")+'">'
     +(spaet(k)?"überfällig · ":"")+kurz(k.frist)+'</span>');
   if(k.von) marken.push('<span class="ol-d">'+kurz(k.von)+" – "+kurz(k.bis)+'</span>');
-  if(voll && k.prio) marken.push('<span class="ol-p">!'+k.prio+'</span>');
-  if(voll && k.fortschritt!=null) marken.push('<span class="ol-pz">'+k.fortschritt+' %</span>');
+  if(f.aufgaben && k.prio) marken.push('<span class="ol-p">!'+k.prio+'</span>');
+  if(f.aufgaben && k.fortschritt!=null) marken.push('<span class="ol-pz">'+k.fortschritt+' %</span>');
 
-  const notiz = (voll && k.notiz && !opt.zu)
-    ? '<div class="ol-notiz" style="margin-left:'+(k.e*24+46)+'px">'+esc(k.notiz)+'</div>'
+  const notiz = (f.notiz && k.notiz && !opt.zu)
+    ? '<div class="ol-notiz" style="margin-left:'+(e*24+46)+'px">'+esc(k.notiz)+'</div>'
     : "";
 
   /* Die Fuehrungslinie sitzt an der Kante des *uebergeordneten* Zweigs,
      nicht an der eigenen — sonst schneidet sie durch das eigene
      Dreieck. Die Wurzel hat keine, sie hat nichts ueber sich. */
-  const spur = (opt.spur && k.e>0)
-    ? '<span class="ol-spur" style="left:'+((k.e-1)*24+7)+'px"></span>' : "";
+  const spur = (opt.spur && e>0)
+    ? '<span class="ol-spur" style="left:'+((e-1)*24+7)+'px"></span>' : "";
 
-  return '<div class="ol-k'+(opt.mark?" mark":"")+(k.fertig?" fertig":"")
-    +'" style="padding-left:'+(k.e*24)+'px">'+spur
+  /* Durchgestrichen nur, wo es auch ein Kaestchen gibt. Ohne Aufgaben
+     waere ein durchgestrichener Knoten ein Zustand ohne Schalter. */
+  return '<div class="ol-k'+(opt.mark?" mark":"")+(f.aufgaben&&k.fertig?" fertig":"")
+    +'" style="padding-left:'+(e*24)+'px">'+spur
     +drei+kasten+'<span class="ol-pkt"></span>'
     +'<span class="ol-tx">'+text+'</span>'+marken.join("")
     +(opt.zu&&kinder?'<span class="ol-zu">+'+kinder+'</span>':'')
     +'</div>'+notiz;
 }
 
-function gliederung(voll,opt){
+function gliederung(f,opt){
   opt=opt||{};
   const aus=[];
   let ueber=-1;                 /* Ebene, ab der zugeklappt ist */
@@ -101,11 +112,11 @@ function gliederung(voll,opt){
     if(ueber>=0){ if(k.e>ueber) return; ueber=-1; }
     const zu = opt.zu===i;
     if(zu) ueber=k.e;
-    aus.push(zeile(k,i,voll,{
-      zu, mark:opt.mark===i,
+    aus.push(zeile(k,i,f,{
+      zu, mark:opt.mark===i, rueck:opt.rueck,
       /* Die Fuehrungslinie leuchtet nur im Zweig, in dem der Cursor
          steht — sie gibt es nur in Fassung A. */
-      spur: voll && opt.spur && opt.spur.includes(i)
+      spur: f.spur && opt.spur && opt.spur.includes(i)
     }));
   });
   return '<div class="ol-baum">'+aus.join("")+'</div>';
@@ -119,7 +130,7 @@ const G_VON="2026-08-03", G_BIS="2026-09-06";
 const G_TAGE=diff(G_VON,G_BIS)+1;
 const proz = d => (diff(G_VON,d)/G_TAGE*100);
 
-function gantt(voll){
+function gantt(f){
   /* Kopfzeile: eine Spalte je Woche */
   const wochen=[];
   for(let i=0;i<G_TAGE;i+=7){
@@ -133,7 +144,7 @@ function gantt(voll){
     let von=k.von||k.frist, bis=k.bis||k.frist, art=k.von?"balken":"raute";
 
     if(!von){
-      if(!voll) return;                     /* Fassung B: kein Datum, keine Reihe */
+      if(!f.fasst) return;                  /* Fassung B: kein Datum, keine Reihe */
       /* Fassung A: Zusammenfassung ueber den ganzen Teilbaum */
       const kinder=BAUM.slice(i+1,i+1+kinderVon(i)).filter(x=>x.von||x.frist);
       if(!kinder.length) return;
@@ -146,9 +157,9 @@ function gantt(voll){
     const koerper = art==="raute"
       ? '<span class="g-raute'+(spaet(k)?" spaet":"")+'" style="left:'+l+'%"></span>'
       : '<span class="g-balken '+art+(spaet(k)?" spaet":"")
-        +(voll && k.fortschritt!=null?" hat-fort":"")
+        +(f.fort && k.fortschritt!=null?" hat-fort":"")
         +'" style="left:'+l+'%;width:'+b+'%">'
-        +(voll && k.fortschritt!=null
+        +(f.fort && k.fortschritt!=null
           ? '<span class="g-fort" style="width:'+k.fortschritt+'%"></span>' : '')
         +'</span>';
 
@@ -165,9 +176,9 @@ function gantt(voll){
 }
 
 /* ---------- Mindmap ----------
-   Derselbe Zweig, radial. Fassung A faerbt Ueberfaelliges, Fassung B
-   zeigt nur die Struktur. */
-function mindmap(voll){
+   Derselbe Zweig, radial. Ueberfaelliges ist in beiden Fassungen rot —
+   Fristen hat auch die schlanke. */
+function mindmap(){
   /* Die Masse sind gemessen, nicht geschaetzt: mit engerem Radius und
      kleinerem Winkel schoben sich die Beschriftungen der zweiten Ebene
      uebereinander. */
@@ -190,7 +201,7 @@ function mindmap(voll){
       const w2 = w + (ci-(zwei.length-1)/2)*0.55;
       const x2 = MX+Math.cos(w2)*300, y2 = MY+Math.sin(w2)*175;
       teile.push('<path d="M'+x+' '+y+' Q'+((x+x2)/2)+' '+y2+' '+x2+' '+y2+'"/>');
-      text.push('<div class="m-kn zwei'+(voll&&spaet(c)?" spaet":"")
+      text.push('<div class="m-kn zwei'+(spaet(c)?" spaet":"")
         +'" style="left:'+x2+'px;top:'+y2+'px">'+esc(c.t)+'</div>');
     });
   });
@@ -219,6 +230,14 @@ const TASTEN_B=[
   [[],"Klick aufs Dreieck","Klappt zu und wieder auf"],
   [[],"@20.8. · @20.8...31.8.","Eigene Frist oder Zeitraum, getippt"]
 ];
+/* Fassung B bekommt Fokus, Notiz und Undo dazu — sonst nichts. */
+const TASTEN_B_PLUS=TASTEN_B.slice(0,7).concat([
+  [["⇧","↵"],"","Notizzeile öffnen"],
+  [["Alt","⇧","→"],"","In einen Punkt springen"],
+  [["Alt","⇧","←"],"","Wieder heraus"],
+  [["Strg","Z"],"","Rückgängig, auch mehrstufig"],
+  [[],"@20.8. · @20.8...31.8.","Eigene Frist oder Zeitraum, getippt"]
+]);
 const TASTEN_A=TASTEN_B.slice(0,7).concat([
   [["Strg","."],"","Zweig klappen"],
   [["⇧","↵"],"","Notizzeile öffnen"],
@@ -392,45 +411,55 @@ Priorität und Fortschritt, dazu Gantt und Mindmap. Rund 1400 Zeilen.</p>
 </div>
 
 ${karte("A1","Gliederung","Kästchen, Etiketten, Fristen, Priorität und Fortschritt stehen in der Zeile. Die Notizzeile hängt unter ihrem Punkt. Die blaue Führungslinie zeigt den Zweig, in dem der Cursor steht.",
-  schalter("Gliederung")+gliederung(true,{mark:3,spur:[1,2,3]}))}
+  schalter("Gliederung")+gliederung(FA,{mark:3,spur:[1,2,3]}))}
 
 ${karte("A2","Suche · <span style=\"font-family:var(--mono)\">#recherche</span>","Die Gliederung selbst wird gefiltert. Der Weg zum Treffer bleibt stehen — man sieht ihn im Zusammenhang und kann sofort darin weiterschreiben.",
-  gliederung(true,{nur:[0,1,2,3]}))}
+  gliederung(FA,{nur:[0,1,2,3]}))}
 
 ${karte("A3","Fokusmodus","In einen Punkt gesprungen: er ist jetzt die Wurzel, darüber steht der Weg zurück. Bei tiefen Gliederungen der eigentliche Nutzen.",
   '<div class="pfad">Produktstrategie 2026 <span>›</span> <b>Preismodell</b></div>'
-  +gliederung(true,{nur:[6,7,8]}))}
+  +gliederung(FA,{nur:[7,8],rueck:2}))}
 
 ${karte("A4","Gantt","Ein Zeitraum wird zum Balken, eine bloße Frist zur Raute. Der gefüllte Teil eines Balkens ist der Fortschritt. Ein Elternpunkt ohne eigenes Datum fasst zusammen, was darunter liegt — das ist der offene Rahmen. Die senkrechte Linie ist heute.",
-  schalter("Gantt")+gantt(true))}
+  schalter("Gantt")+gantt(FA))}
 
 ${karte("A5","Mindmap","Derselbe Zweig, radial angeordnet. Verbindungen als SVG, Beschriftungen als Text darüber. Überfälliges bleibt auch hier rot.",
-  schalter("Mindmap")+mindmap(true))}
+  schalter("Mindmap")+mindmap())}
 
 ${karte("A6","Tastenbelegung",'Alles Weitere wird getippt, nicht ausgewählt — <span style="font-family:var(--mono)">#tag</span>, <span style="font-family:var(--mono)">@datum</span>, <span style="font-family:var(--mono)">!hoch</span>, <span style="font-family:var(--mono)">%50</span>. Damit bleibt der Text die einzige Wahrheit.',
   tasten(TASTEN_A))}
 
 <div class="fassung">
 <h2>Fassung B — der schlanke Outliner, erweitert</h2>
-<p>Mein ursprünglicher Vorschlag, um Gantt und Mindmap ergänzt. Struktur,
-Klappen, Fristen — sonst nichts. Kein Tag, keine Notizzeile, kein Fokus,
-kein Undo, keine Priorität, kein Fortschritt. Rund 450 Zeilen.</p>
+<p>Mein ursprünglicher Vorschlag, ergänzt um Gantt und Mindmap und um die
+drei Zutaten, die Sie dazugenommen haben: <b>Fokusmodus, Notizzeile,
+Undo</b>. Weiterhin ohne Etiketten, ohne Aufgaben mit Priorität und
+Fortschritt, ohne Filtersuche und ohne Führungslinie. Rund 690 Zeilen.</p>
 </div>
 
-${karte("B1","Gliederung","Ein Knoten ist ein Feld mit einem Text und höchstens einer eigenen Frist. Kein Kästchen, kein Etikett — geordnet wird über die Struktur.",
-  schalter("Gliederung")+gliederung(false,{mark:3}))}
+${karte("B1","Gliederung","Ein Knoten ist ein Feld mit einem Text und höchstens einer eigenen Frist. Kein Kästchen, kein Etikett — geordnet wird über die Struktur. Die Notizzeile hängt unter ihrem Punkt und ist Prosa: ein Datum darin setzt keine Frist.",
+  schalter("Gliederung")+gliederung(FB,{mark:3}))}
 
 ${karte("B2","Zugeklappt","„Marktlage“ ist zu. Die beiden Unterknoten sind nicht verschwunden: <b>+2</b> sagt, wie viele darunter liegen. Nichts darf unsichtbar werden.",
-  gliederung(false,{zu:1}))}
+  gliederung(FB,{zu:1}))}
 
-${karte("B3","Gantt","Dieselbe Zeichnung, aber ohne Zusammenfassung und ohne Fortschritt: Es erscheint nur, was <b>selbst</b> ein Datum trägt. „Marktlage“ und „Preismodell“ fehlen deshalb hier.",
-  schalter("Gantt")+gantt(false))}
+${karte("B3","Fokusmodus","In einen Punkt gesprungen — er ist jetzt die Wurzel, darüber steht der Weg zurück. <b>Alt+⇧+→</b> hinein, <b>Alt+⇧+←</b> heraus. Bei tiefen Gliederungen der eigentliche Nutzen.",
+  '<div class="pfad">Produktstrategie 2026 <span>›</span> <b>Marktlage</b></div>'
+  +gliederung(FB,{nur:[2,3],rueck:2}))}
 
-${karte("B4","Mindmap","Unverändert — die Mindmap zeigt Struktur, und Struktur hat auch die schlanke Fassung.",
-  schalter("Mindmap")+mindmap(false))}
+${karte("B4","Gantt","Dieselbe Zeichnung, aber ohne Zusammenfassung und ohne Fortschritt: Es erscheint nur, was <b>selbst</b> ein Datum trägt. „Marktlage“ und „Preismodell“ fehlen deshalb hier.",
+  schalter("Gantt")+gantt(FB))}
 
-${karte("B5","Tastenbelegung","Sieben Tasten und eine getippte Angabe. Das ist die ganze Bedienung.",
-  tasten(TASTEN_B))}
+${karte("B5","Mindmap","Unverändert — die Mindmap zeigt Struktur, und Struktur hat auch die schlanke Fassung.",
+  schalter("Mindmap")+mindmap())}
+
+${karte("B6","Rückgängig","Undo liegt auf dem Datenmodell, nicht auf der Anzeige: Es merkt sich die berührten Knoten vorher und nachher. Tippen wird zu einem Schritt gebündelt, ein Umbau ist ein Schritt. Es gäbe Rückgängig damit <b>nur hier</b> — sonst hat das Dashboard es nirgends.",
+  '<div class="hin" style="max-width:none"><b>Strg+Z</b> nimmt zurück: '
+  +'Einrücken, Verschieben, Löschen, einen ganzen Absatz Tippen. '
+  +'<b>Strg+⇧+Z</b> stellt wieder her.</div>')}
+
+${karte("B7","Tastenbelegung","Elf Tasten und eine getippte Angabe. Das ist die ganze Bedienung.",
+  tasten(TASTEN_B_PLUS))}
 
 <div class="fassung">
 <h2>Gegenüberstellung</h2>
@@ -447,18 +476,19 @@ ${[
  ["Gantt",1,1],
  ["Gantt: Elternpunkt fasst zusammen",1,0],
  ["Mindmap",1,1],
+ ["Notizzeile",1,1],
+ ["Fokusmodus mit Pfad",1,1],
+ ["Rückgängig",1,1],
  ["Filtersuche in der Gliederung",1,0],
  ["Etiketten mit #",1,0],
- ["Notizzeile",1,0],
- ["Fokusmodus mit Pfad",1,0],
- ["Rückgängig",1,0],
+ ["Führungslinie des aktiven Zweigs",1,0],
  ["Aufgabe, Kästchen, Priorität, Fortschritt",1,0],
  ["Anheften auf die zwölf Plätze",1,0],
  ["Markdown-Ausgabe, Zweig sichern",1,0],
  ["Zeilen in dashboard.html",0,0]
 ].map(([t,a,b])=>'<tr><td>'+esc(t)+'</td>'
   +(t.startsWith("Zeilen")
-    ? '<td class="nein">≈ 1400</td><td class="nein">≈ 450</td>'
+    ? '<td class="nein">≈ 1400</td><td class="nein">≈ 690</td>'
     : '<td class="'+(a?"ja":"nein")+'">'+(a?"ja":"—")+'</td>'
       +'<td class="'+(b?"ja":"nein")+'">'+(b?"ja":"—")+'</td>')
   +'</tr>').join("")}

@@ -17,6 +17,12 @@ Datei, und Bookmarks zeigen auf `http(s)`. Der Apps-Teil von Schritt 7
 wartet weiter — dort steht `file:///C:/…`, und ob Edge das aus einer lokal
 geöffneten Datei zulässt, ist die Frage, die der Test beantwortet.
 
+**Am eigenen Gerät bestätigt (7. August):** Das Ändern einer Adresse
+lässt die Anheftung stehen. Und die obere Leiste ist auf dem iPhone im
+Querformat wieder da — der Wechsel von `100vh` auf `100dvh` trägt.
+Beides war von hier aus nicht nachweisbar: Chromium gibt `vh` und `dvh`
+denselben Wert, und der Prüfbrowser kennt nur die Demodaten.
+
 **Ein Datenumbau steckt darin:** Bookmarks hatten keine `id`, sie wurden
 über ihre Adresse erkannt, und `pins` merkte sich ebenfalls die Adresse.
 Sobald sich eine Adresse bearbeiten lässt, trägt das nicht mehr — die
@@ -321,6 +327,33 @@ Angesehen wurde er nur im Prüfbrowser. Am eigenen Gerät fehlt der Blick
 auf die Datumsfelder: Sie zeigten dort US-Format, was an der Spracheinstellung
 des Prüfbrowsers liegen dürfte — auf deutschem Edge sollte `22.04.2026`
 stehen. Betrifft alle Datumsfelder der Anwendung, nicht nur dieses Modul.
+
+### 4. Bookmarks dichter darstellen — Entwurf liegt, Entscheidung fehlt
+
+24 Bookmarks brauchen heute rund 1800 Pixel, also knapp drei Bildschirme.
+Der Entwurf unter `mockups/schritt-bookmarks-dicht.html` stellt drei
+Fassungen gegenüber, bei zwei Fensterbreiten gemessen:
+
+| | bei 1000 px | bei 760 px |
+|---|---|---|
+| heute | ≈ 1800 | ≈ 1800 |
+| A — dichte Liste | 1011 | 1011 |
+| B — Gruppenkarten | **333** | *583* |
+| C — Gruppenzeilen | 371 | **403** |
+
+Empfohlen ist **C**, nicht wegen der Dichte — bei 1000 px ist B besser —
+sondern wegen der Stabilität: Bei 760 px, dem iPad hochkant, wächst B um
+75 Prozent und C um neun.
+
+Dazu vorgeschlagen: ein Schnellzugriff-Streifen mit den acht Plätzen, und
+ein Schalter `Öffnen` / `Ordnen` für Anheften und Bearbeiten. Knöpfe beim
+Überfahren einzublenden scheidet aus — auf dem iPad gibt es kein
+Überfahren, siehe Punkt 2.
+
+**Was der Wechsel kostet:** Die Adresse verschwindet aus der Liste und
+steht nur noch im Dialog. Das ist die eigentliche offene Frage.
+
+Nicht gebaut. Liegt auf `mockup-bookmarks-dicht`, ohne Pull Request.
 
 ---
 

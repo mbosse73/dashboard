@@ -1,0 +1,333 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mockup — Breite auf 24 Zoll besser nutzen</title>
+<style>
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --etikett:var(--mono);
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink);margin:0}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;padding:0 0 90px}
+.blatt{max-width:1060px;margin:0 auto;padding:0 26px}
+h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6px;font-weight:400}
+.unter{font-size:14px;color:var(--ink2);line-height:1.6;max-width:72ch}
+.unter code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  padding:1px 5px;border-radius:4px}
+.stufe{margin:54px 0 0;padding:26px 0 0;border-top:2px solid var(--rule2)}
+.stufe h2{font-family:var(--etikett);font-size:11.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 5px;font-weight:700}
+.stufe h3{font-family:var(--serif);font-size:23px;font-weight:400;margin:0 0 9px;
+  letter-spacing:-.01em}
+.mass{display:inline-flex;gap:9px;align-items:baseline;margin:0 0 15px;flex-wrap:wrap;
+  font-family:var(--etikett);font-size:11px;letter-spacing:.05em;color:var(--ink3)}
+.mass b{color:var(--tinte);font-size:13px}
+.mass.warn b{color:var(--signal)}
+
+/* Die Bühne zeigt 1920 px in halber Größe. */
+.buehne{border:1px solid var(--rule2);border-radius:10px;background:var(--raise);
+  overflow:hidden;margin:0 0 6px}
+/* zoom statt transform:scale — der Rahmen bekommt dadurch seine
+   natuerliche Hoehe, statt eine geraten zu bekommen. Edge kann das. */
+.rahmen{width:1920px;zoom:.5;pointer-events:none}
+/* Die Kante des Sichtbaren: 895 px im Rumpf, hier in halber Groesse. */
+.s-app{min-height:950px}
+.lupe{font-family:var(--etikett);font-size:10px;letter-spacing:.09em;color:var(--ink3);
+  text-transform:uppercase;margin:0 0 22px}
+
+/* ---- Schaubild: die Anwendung ---- */
+.s-app{background:var(--paper);display:flex;flex-direction:column}
+.s-kopf{height:55px;background:var(--sheet);border-bottom:1px solid var(--rule);flex-shrink:0}
+.s-rumpf{flex:1;min-height:0;padding-bottom:26px}
+.s-mitte{margin:0 auto;padding:0 26px;width:100%}
+.s-zwei{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;align-items:start}
+.s-eins{max-width:860px}
+.s-abs{display:flex;align-items:center;gap:13px;padding:28px 0 10px}
+.s-abs h4{font-family:var(--etikett);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink3);margin:0;font-weight:700}
+.s-abs i{flex:1;height:1px;background:var(--rule);font-style:normal}
+.s-abs b{font-family:var(--etikett);font-size:11px;color:var(--ink3);font-weight:400}
+.s-z{display:flex;align-items:baseline;gap:12px;padding:9px 10px 9px 2px;
+  border-left:2px solid transparent;flex-wrap:wrap}
+.s-z.rot{border-left-color:var(--signal)}
+.s-z span{font-size:14.5px;flex:1 0 auto}
+.s-z em{font-style:normal;font-size:12px;color:var(--ink3);flex-basis:100%}
+.s-gross{font-family:var(--serif);font-size:31px;line-height:1.12;letter-spacing:-.02em}
+.s-klein{font-size:13.5px;color:var(--ink2);margin-top:9px}
+.s-feld{border:1px solid var(--rule2);border-radius:9px;background:var(--sheet);
+  padding:13px 15px;font-family:var(--mono);font-size:13px;line-height:1.55;color:var(--ink2)}
+.s-feld-gross{font-size:27px;color:var(--ink3);padding:22px 0 20px;
+  border-bottom:2px solid var(--tinte)}
+.s-feld-gross.tipp{color:var(--ink)}
+.s-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:9px}
+.s-kachel{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:11px;
+  background:var(--sheet);padding:15px;font-size:15px;font-weight:600;height:104px}
+.s-mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
+.s-mk span{padding:8px 10px;font-size:13.5px;color:var(--ink2);border-left:2px solid transparent}
+.s-mod{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
+.s-mod span{display:flex;gap:9px;padding:8px 10px;font-size:13.5px;color:var(--ink2)}
+.s-mod b{font-family:var(--etikett);font-size:10px;color:var(--ink3)}
+.s-tr{display:flex;gap:14px;align-items:baseline;padding:11px 12px;border-radius:9px;
+  background:var(--sheet);border:1px solid var(--rule);margin-bottom:5px}
+.s-tr i{font-family:var(--etikett);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink3);font-style:normal;min-width:82px}
+.s-tr span{font-size:15px;flex:1}
+.s-tr em{font-style:normal;font-size:12.5px;color:var(--ink3)}
+.s-kante{margin:26px 0 0;padding:9px 12px;border-top:2px dashed var(--signal);
+  font-family:var(--etikett);font-size:11px;letter-spacing:.06em;color:var(--signal)}
+
+/* ---- Schaubild: der Planner ---- */
+.s-planer{flex:1;min-height:0;display:flex;overflow:hidden;align-items:stretch}
+.s-planer.gedeckelt{width:100%;max-width:1480px;margin:0 auto;
+  border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+.s-sp{display:flex;flex-direction:column;align-self:stretch;border-right:1px solid var(--rule);
+  background:var(--paper);min-width:0;padding:0 0 10px}
+.s-sp.vorrat{background:var(--sheet);border-right:1px solid var(--rule2)}
+.s-sp-k{padding:14px 16px 10px;border-bottom:1px solid var(--rule)}
+.s-sp-k u{display:block;font-family:var(--etikett);font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--ink3);text-decoration:none}
+.s-sp-k b{font-size:16px;font-weight:600}
+.s-raster{position:relative;padding:6px 0 0}
+.s-std{height:44px;border-top:1px solid var(--rule);margin-left:44px;position:relative}
+.s-std u{position:absolute;left:-44px;top:-7px;font-family:var(--etikett);font-size:10px;
+  color:var(--ink3);text-decoration:none}
+.s-lage{position:absolute;inset:6px 8px 0 46px;display:flex;flex-direction:column;gap:5px}
+.s-blk{border:1px solid var(--rule2);border-left:2px solid var(--tinte);border-radius:8px;
+  background:var(--sheet);padding:8px 11px;height:39px}
+.s-blk b{display:block;font-size:14px}
+.s-blk span{font-size:12px;color:var(--ink3)}
+
+/* ---- Tabellen und Kästen ---- */
+.tab{width:100%;border-collapse:collapse;margin:16px 0 0;font-size:13.5px}
+.tab th,.tab td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--rule);
+  vertical-align:top;line-height:1.5}
+.tab th{font-family:var(--etikett);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink3);font-weight:700}
+.tab td b{color:var(--tinte)}
+.tab td i{font-style:normal;color:var(--signal)}
+.tab td.z{font-variant-numeric:tabular-nums}
+.merk{background:var(--sheet);border:1px solid var(--rule);border-left:2px solid var(--tinte);
+  border-radius:9px;padding:15px 18px;font-size:13.5px;line-height:1.6;color:var(--ink2);
+  margin:18px 0 0}
+.merk.warn{border-left-color:var(--signal);background:var(--signal-s)}
+.merk b{color:var(--ink)}
+.merk code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  padding:1px 5px;border-radius:4px}
+</style>
+
+<div class="blatt">
+<h1>Die Breite auf 24 Zoll besser nutzen</h1>
+<p class="unter">Entwurf zu Punkt 1 bis 3 der Breitenprüfung. Nichts davon ist
+gebaut. Alle Maße sind an der laufenden Anwendung bei <b>1920 × 950</b>
+gemessen — 24 Zoll unter Windows, Edge mit seiner üblichen Leistenhöhe;
+im Rumpf bleiben davon <b>895 px</b>. Die Schaubilder zeigen 1920 px in
+<b>halber Größe</b>.</p>
+
+<div class="stufe">
+<h2>Der Befund</h2>
+<h3>Drei Flächen scrollen, während 1060 px leer bleiben</h3>
+<table class="tab">
+<tr><th>Fläche</th><th>Inhalt</th><th>unter der Kante</th><th>ungenutzte Breite</th></tr>
+<tr><td>Leiste</td><td class="z">1181 px</td><td class="z"><i>286 px</i></td><td class="z">1060 px</td></tr>
+<tr><td>Notizen</td><td class="z">1134 px</td><td class="z"><i>239 px</i></td><td class="z">1060 px</td></tr>
+<tr><td>Aufgaben</td><td class="z">920 px</td><td class="z"><i>25 px</i></td><td class="z">1060 px</td></tr>
+<tr><td>Planner</td><td class="z">—</td><td class="z">—</td><td class="z"><b>keine</b> — nimmt alles</td></tr>
+</table>
+<div class="merk warn"><b>Die naheliegende Lösung wurde geprüft und
+verworfen.</b> <code>max-width</code> von 860 auf 1180 zu setzen bringt
+gemessen: Leiste −66 px, Notizen −19 px, Aufgaben ±0. Der Grund: Diese
+Flächen sind <b>gestapelte Abschnitte</b>, keine Raster. Ein Stapel wird
+nicht kürzer, wenn man ihn breiter macht.</div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 1 · Ist-Zustand</h2>
+<h3>Die Leiste, einspaltig</h3>
+<div class="mass warn">Gemessen <b>1181 px</b> · sichtbar 895 · die halbe Modulliste liegt darunter</div>
+<div class="buehne"><div class="rahmen"
+  style="width:1920px"><div class="s-app"><div class="s-kopf"></div>
+  <div class="s-rumpf"><div class="s-mitte" style="max-width:860px">
+  <div class="s-feld-gross">› Tippen — suchen, rechnen, erfassen</div><div class="s-abs"><h4>Überfällig</h4><i></i><b>2</b></div><div class="s-z rot"><span>Rechnung 2026-114 freigeben</span><em>Aufgabe · Eva Bergmann</em></div><div class="s-z rot"><span>Vertrag Meinhardt IT</span><em>Workflow · Schritt 4 von 8</em></div><div class="s-abs"><h4>Als Nächstes</h4><i></i></div><div class="s-gross">Standup</div><div class="s-klein">Team · in 27 Minuten</div><div class="s-abs"><h4>Schmierzettel</h4><i></i><b>Notizen ›</b></div><div class="s-feld">Sitzungsraum 2.14 ab 14 Uhr<br>Code Drucker: 4417</div><div class="s-abs"><h4>Favoriten</h4><i></i><b>alle 6 ›</b></div><div class="s-kacheln"><div class="s-kachel">Eva Bergmann</div><div class="s-kachel">Jan Kowalski</div><div class="s-kachel">Lisa Meier</div></div><div class="s-abs"><h4>Bookmarks</h4><i></i><b>alle 24 ›</b></div><div class="s-mk"><span>⌘1 MDN Web Docs</span><span>⌘2 GitHub</span><span>⌘3 Excalidraw</span><span>⌘4 Linear Docs</span></div>
+  <div class="s-kante">▾ ab hier unter der Kante — 286 px</div><div class="s-abs"><h4>Module</h4><i></i><b>12 angemeldet</b></div><div class="s-mod"><span><b>01</b>Notizen</span><span><b>02</b>Kontakte</span><span><b>04</b>Aufgaben</span><span><b>05</b>Textbausteine</span><span><b>06</b>Kalender</span><span><b>08</b>Appstarter</span><span><b>09</b>Bookmarks</span><span><b>13</b>Workflows</span><span><b>14</b>Jahreskalender</span><span><b>15</b>Outliner</span><span><b>16</b>Code-Beautifier</span><span><b>07</b>Planner öffnen</span></div>
+  </div></div></div></div></div>
+<p class="lupe">1920 px in halber Größe</p>
+</div>
+
+<div class="stufe">
+<h2>Punkt 1 · Vorschlag</h2>
+<h3>Zweispaltig ab 1100 px — links was drängt, rechts was man greift</h3>
+<div class="mass">Gemessen <b>646 px</b> · links 456, rechts 495, dazu das Eingabefeld · 249 px Luft</div>
+<div class="buehne"><div class="rahmen"
+  style="width:1920px"><div class="s-app"><div class="s-kopf"></div>
+  <div class="s-rumpf"><div class="s-mitte" style="max-width:1180px">
+  <div class="s-feld-gross">› Tippen — suchen, rechnen, erfassen</div><div class="s-zwei">
+    <div><div class="s-abs"><h4>Überfällig</h4><i></i><b>2</b></div><div class="s-z rot"><span>Rechnung 2026-114 freigeben</span><em>Aufgabe · Eva Bergmann</em></div><div class="s-z rot"><span>Vertrag Meinhardt IT</span><em>Workflow · Schritt 4 von 8</em></div><div class="s-abs"><h4>Als Nächstes</h4><i></i></div><div class="s-gross">Standup</div><div class="s-klein">Team · in 27 Minuten</div><div class="s-abs"><h4>Schmierzettel</h4><i></i><b>Notizen ›</b></div><div class="s-feld">Sitzungsraum 2.14 ab 14 Uhr<br>Code Drucker: 4417</div></div>
+    <div><div class="s-abs"><h4>Favoriten</h4><i></i><b>alle 6 ›</b></div><div class="s-kacheln"><div class="s-kachel">Eva Bergmann</div><div class="s-kachel">Jan Kowalski</div><div class="s-kachel">Lisa Meier</div></div><div class="s-abs"><h4>Bookmarks</h4><i></i><b>alle 24 ›</b></div><div class="s-mk"><span>⌘1 MDN Web Docs</span><span>⌘2 GitHub</span><span>⌘3 Excalidraw</span><span>⌘4 Linear Docs</span></div><div class="s-abs"><h4>Module</h4><i></i><b>12 angemeldet</b></div><div class="s-mod"><span><b>01</b>Notizen</span><span><b>02</b>Kontakte</span><span><b>04</b>Aufgaben</span><span><b>05</b>Textbausteine</span><span><b>06</b>Kalender</span><span><b>08</b>Appstarter</span><span><b>09</b>Bookmarks</span><span><b>13</b>Workflows</span><span><b>14</b>Jahreskalender</span><span><b>15</b>Outliner</span><span><b>16</b>Code-Beautifier</span><span><b>07</b>Planner öffnen</span></div></div>
+  </div></div></div></div></div></div>
+<p class="lupe">1920 px in halber Größe</p>
+<div class="merk"><b>Der Schnitt ist nicht willkürlich.</b> Links steht,
+was eine Handlung verlangt — Überfälliges, der nächste Termin, der
+Schmierzettel. Rechts, wonach man greift: Favoriten, Bookmarks, Module.
+Die beiden Spalten sind mit 456 und 495 px fast gleich hoch; das ist
+Zufall, aber ein günstiger.<br><br>
+<b>249 px bleiben frei.</b> Das ist Absicht: Überfälliges wächst, und die
+Leiste soll auch dann nicht scrollen.</div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 1 · Der Fall, der einspaltig bleiben muss</h2>
+<h3>Suchergebnisse</h3>
+<div class="mass">Breite wie bisher gedeckelt: <b>860 px</b></div>
+<div class="buehne"><div class="rahmen"
+  style="width:1920px"><div class="s-app"><div class="s-kopf"></div>
+  <div class="s-rumpf"><div class="s-mitte" style="max-width:1180px">
+  <div class="s-feld-gross tipp">› meier</div>
+  <div class="s-eins">
+  <div class="s-tr"><i>Anrufen</i><span>Lisa Meier</span><em>+49 …</em></div><div class="s-tr"><i>Mailen</i><span>Lisa Meier</span><em>lisa@…</em></div><div class="s-tr"><i>Kontakt</i><span>Meierhof GmbH</span><em>Firma</em></div>
+  </div></div></div></div></div></div>
+<div class="merk"><b>Zwei Spalten wären hier ein Fehler.</b> Treffer sind
+nach Rang geordnet, und <code>↵</code> nimmt den obersten. In zwei Spalten
+steht der zweitbeste Treffer neben dem besten statt darunter — die
+Reihenfolge, auf der die Bedienung beruht, wäre nicht mehr abzulesen.
+Der Ruhezustand wird zweispaltig, das Suchergebnis nicht.</div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 1 · Schmal</h2>
+<h3>Unter 1100 px bleibt alles wie heute</h3>
+<div class="mass">Bühne <b>860 px</b>, ungeteilt</div>
+<div class="buehne"><div class="rahmen"
+  style="width:860px"><div class="s-app"><div class="s-kopf schmal"></div>
+  <div class="s-rumpf"><div class="s-mitte" style="max-width:1180px">
+  <div class="s-feld-gross">› Tippen — suchen, rechnen, erfassen</div><div class="s-abs"><h4>Überfällig</h4><i></i><b>2</b></div><div class="s-z rot"><span>Rechnung 2026-114 freigeben</span><em>Aufgabe · Eva Bergmann</em></div><div class="s-z rot"><span>Vertrag Meinhardt IT</span><em>Workflow · Schritt 4 von 8</em></div><div class="s-abs"><h4>Als Nächstes</h4><i></i></div><div class="s-gross">Standup</div><div class="s-klein">Team · in 27 Minuten</div><div class="s-abs"><h4>Schmierzettel</h4><i></i><b>Notizen ›</b></div><div class="s-feld">Sitzungsraum 2.14 ab 14 Uhr<br>Code Drucker: 4417</div><div class="s-abs"><h4>Favoriten</h4><i></i><b>alle 6 ›</b></div><div class="s-kacheln"><div class="s-kachel">Eva Bergmann</div><div class="s-kachel">Jan Kowalski</div><div class="s-kachel">Lisa Meier</div></div>
+  </div></div></div></div></div>
+<div class="merk">Die zweite Spalte hängt an einer Medienabfrage. Darunter
+— Laptop, iPad, iPhone — steht die Leiste wie bisher untereinander. Es
+kommt nichts weg, es ordnet sich nur anders.</div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 2 · Ist-Zustand</h2>
+<h3>Der Planner nimmt alles</h3>
+<div class="mass warn">Spalten <b>262 / 830 / 830</b> px · Terminblöcke <b>767 px</b> breit · 226 px tot unter 18:00</div>
+<div class="buehne"><div class="rahmen"
+  style="width:1920px"><div class="s-app"><div class="s-kopf"></div>
+  <div class="s-planer"><div class="s-sp vorrat" style="flex:0 0 262px">
+    <div class="s-sp-k"><u>Nicht eingeplant</u><b>Aufgaben</b></div>
+    <div class="s-z rot"><span>Rechnung 2026-114 freigeben</span><em>überfällig · Eva Bergmann</em></div>
+    <div class="s-z"><span>Backup-Skript testen</span><em>ohne Frist</em></div>
+    <div class="s-z"><span>Rückruf Kanzlei</span><em>Nachverfolgen · ohne Frist · Eva Bergmann</em></div>
+    <div class="s-z"><span>Lizenzverlängerung</span><em>Nachverfolgen · 21. Aug</em></div></div><div class="s-sp" style="flex:1 1 0;max-width:9999px">
+    <div class="s-sp-k"><u>Heute</u><b>Freitag, 7. Aug</b></div>
+    <div class="s-raster"><div class="s-std"><u>07:00</u></div><div class="s-std"><u>08:00</u></div><div class="s-std"><u>09:00</u></div><div class="s-std"><u>10:00</u></div><div class="s-std"><u>11:00</u></div>
+      <div class="s-lage"><div class="s-blk"><b>Standup</b><span>08:00 · Team</span></div><div class="s-blk"><b>Strategie-Call</b><span>10:00 · Video · Lisa Meier</span></div></div>
+    </div></div>
+  <div class="s-sp" style="flex:1 1 0;max-width:9999px">
+    <div class="s-sp-k"><u>Danach</u><b>Montag, 10. Aug</b></div>
+    <div class="s-raster"><div class="s-std"><u>07:00</u></div><div class="s-std"><u>08:00</u></div><div class="s-std"><u>09:00</u></div><div class="s-std"><u>10:00</u></div><div class="s-std"><u>11:00</u></div>
+      <div class="s-lage"><div class="s-blk"><b>Sprint-Planung</b><span>09:00 · Team</span></div><div class="s-blk"><b>Vertragsgespräch</b><span>15:30 · Kanzlei · Eva Bergmann</span></div></div>
+    </div></div></div></div></div></div>
+<p class="lupe">1920 px in halber Größe</p>
+<div class="merk warn">Ein halbstündiger Standup bekommt einen Block von
+767 Pixeln. Gleichzeitig steht der Aufgabenvorrat starr bei 262 px, und
+ausgerechnet dort brechen die Titel um. <b>Die Breite liegt bei den
+Stundenrastern, die sie nicht brauchen, und fehlt der Liste, die sie
+bräuchte.</b></div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 2 · Vorschlag</h2>
+<h3>Tagesspalten deckeln, den Überschuss dem Vorrat geben</h3>
+<div class="mass">Spalten <b>400 / 540 / 540</b> px · Blöcke <b>477 px</b> · Planner auf 1480 px zentriert</div>
+<div class="buehne"><div class="rahmen"
+  style="width:1920px"><div class="s-app"><div class="s-kopf"></div>
+  <div class="s-planer gedeckelt"><div class="s-sp vorrat" style="flex:0 0 400px">
+    <div class="s-sp-k"><u>Nicht eingeplant</u><b>Aufgaben</b></div>
+    <div class="s-z rot"><span>Rechnung 2026-114 freigeben</span><em>überfällig · Eva Bergmann</em></div>
+    <div class="s-z"><span>Backup-Skript testen</span><em>ohne Frist</em></div>
+    <div class="s-z"><span>Rückruf Kanzlei</span><em>Nachverfolgen · ohne Frist · Eva Bergmann</em></div>
+    <div class="s-z"><span>Lizenzverlängerung</span><em>Nachverfolgen · 21. Aug</em></div></div><div class="s-sp" style="flex:1 1 0;max-width:540px">
+    <div class="s-sp-k"><u>Heute</u><b>Freitag, 7. Aug</b></div>
+    <div class="s-raster"><div class="s-std"><u>07:00</u></div><div class="s-std"><u>08:00</u></div><div class="s-std"><u>09:00</u></div><div class="s-std"><u>10:00</u></div><div class="s-std"><u>11:00</u></div>
+      <div class="s-lage"><div class="s-blk"><b>Standup</b><span>08:00 · Team</span></div><div class="s-blk"><b>Strategie-Call</b><span>10:00 · Video · Lisa Meier</span></div></div>
+    </div></div>
+  <div class="s-sp" style="flex:1 1 0;max-width:540px">
+    <div class="s-sp-k"><u>Danach</u><b>Montag, 10. Aug</b></div>
+    <div class="s-raster"><div class="s-std"><u>07:00</u></div><div class="s-std"><u>08:00</u></div><div class="s-std"><u>09:00</u></div><div class="s-std"><u>10:00</u></div><div class="s-std"><u>11:00</u></div>
+      <div class="s-lage"><div class="s-blk"><b>Sprint-Planung</b><span>09:00 · Team</span></div><div class="s-blk"><b>Vertragsgespräch</b><span>15:30 · Kanzlei · Eva Bergmann</span></div></div>
+    </div></div></div></div></div></div>
+<p class="lupe">1920 px in halber Größe</p>
+<table class="tab">
+<tr><th>Fensterbreite</th><th>Vorrat</th><th>Tag 1</th><th>Tag 2</th><th>Block</th><th>heute Tag 1</th></tr>
+<tr><td class="z">1920</td><td class="z">400</td><td class="z">540</td><td class="z">539</td><td class="z">477</td><td class="z"><i>830</i></td></tr>
+<tr><td class="z">1600</td><td class="z">336</td><td class="z">572</td><td class="z">571</td><td class="z">509</td><td class="z"><i>669</i></td></tr>
+<tr><td class="z">1440</td><td class="z">302</td><td class="z">568</td><td class="z">567</td><td class="z">505</td><td class="z">589</td></tr>
+<tr><td class="z">1280</td><td class="z">269</td><td class="z">505</td><td class="z">504</td><td class="z">442</td><td class="z">510</td></tr>
+<tr><td class="z">1100</td><td class="z"><b>262</b></td><td class="z">419</td><td class="z">418</td><td class="z">356</td><td class="z">419</td></tr>
+<tr><td class="z">852</td><td class="z"><b>262</b></td><td class="z">295</td><td class="z">294</td><td class="z">232</td><td class="z">295</td></tr>
+</table>
+<div class="merk"><b>Der Vorrat wächst nur mit dem Fenster, nie auf Kosten
+der Tage.</b> <code>clamp(262px, 21vw, 400px)</code> — unter 1250 px
+bleibt er bei seinen 262, und die Tagesspalten sind dort so breit wie
+heute. Zwei frühere Fassungen ließen ihn einfach mitwachsen; die nahmen
+den Tagen bei 1280 px je 70 Pixel weg. Das war der Grund, eine dritte zu
+bauen.<br><br>
+<b>Eine Merkwürdigkeit, die bleibt:</b> Zwischen 1600 und 1920 px werden
+die Tagesspalten um 32 px <i>schmaler</i>, weil der Planner bei 1480 px
+gedeckelt ist und der Vorrat weiter wächst. Das ließe sich glattziehen,
+kostete aber eine weitere Regel für 32 Pixel, die niemand sieht.</div>
+</div>
+
+<div class="stufe">
+<h2>Punkt 3</h2>
+<h3><code>.mitte</code> von 860 auf 1180 px</h3>
+<div class="merk"><b>Für sich genommen fast wirkungslos</b> — das steht
+oben, gemessen. Trotzdem gehört es dazu, aus drei Gründen:<br><br>
+<b>Erstens</b> ist es die Voraussetzung für Punkt 1. Zwei Spalten
+brauchen Platz; in 860 px wären es zwei Spalten à 400 px, und die
+Kontaktkacheln (Mindestbreite 236) stünden dann einzeln untereinander.<br><br>
+<b>Zweitens</b> nutzen die vorhandenen Raster den Platz von selbst.
+Kontaktkacheln, Bookmark-Chips, Modulliste und Schnellzugriff sind alle
+mit <code>auto-fill</code> gebaut — sie brauchen keine Zeile Code, um
+breiter zu werden.<br><br>
+<b>Drittens</b> steht die Zahl 1180 bereits im Stylesheet, als
+<code>.weit{max-width:1180px}</code>, und wird von niemandem benutzt.
+Totes CSS, das den Bedarf schon einmal vorweggenommen hat.<br><br>
+<b>Was 1180 nicht wird:</b> die Fließtextbreite. Der Hinweistext unter
+einer Überschrift und die Vorschau einer Notiz bleiben schmal — 1180 px
+Fließtext liest niemand. Das betrifft <code>.hinweis</code>, <code>.leer</code>
+und die Notizvorschau.</div>
+</div>
+
+<div class="stufe">
+<h2>Zusammen</h2>
+<table class="tab">
+<tr><th>&nbsp;</th><th>heute</th><th>Vorschlag</th></tr>
+<tr><td>Leiste, Ruhezustand</td><td class="z"><i>1181 px</i> · scrollt</td><td class="z"><b>646 px</b> · scrollt nicht</td></tr>
+<tr><td>Leiste, Suchergebnis</td><td class="z">860 px breit</td><td class="z">860 px breit — unverändert</td></tr>
+<tr><td>Notizen</td><td class="z"><i>1134 px</i> · scrollt</td><td class="z">1115 px · scrollt weiter</td></tr>
+<tr><td>Terminblock im Planner</td><td class="z"><i>767 px</i></td><td class="z"><b>477 px</b></td></tr>
+<tr><td>Aufgabenvorrat</td><td class="z">262 px starr</td><td class="z"><b>262–400 px</b></td></tr>
+<tr><td>unter 1100 px</td><td class="z">—</td><td class="z">unverändert</td></tr>
+</table>
+<div class="merk"><b>Nicht dabei, mit Absicht:</b><br><br>
+<b>Notizen und Aufgaben scrollen weiter.</b> Sie sind lange Listen, und
+eine lange Liste soll scrollen. Sie zweispaltig zu setzen hieße, die
+Reihenfolge nach Datum aufzugeben — derselbe Einwand wie beim
+Suchergebnis.<br><br>
+<b>Die 226 px unter 18:00 im Planner</b> bleiben leer. Sie zu füllen
+hieße, das Stundenraster zu dehnen; dann wäre eine halbe Stunde je nach
+Fenstergröße verschieden hoch, und das Raster verlöre seinen Maßstab.<br><br>
+<b>Das Jahreskalender-Fenster</b> bleibt bei 1080 px. Es ist ein
+schwebendes Fenster, kein Rumpfbereich, und 12 × 31 Zellen sind dort
+lesbar. Ein dritter Wert neben 1180 und 1480, aber ein begründeter.</div>
+</div>
+</div>

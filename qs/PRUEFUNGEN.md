@@ -389,6 +389,58 @@ antippen, Tag und Uhrzeit setzen. So entschieden.
 
 ---
 
+## Bookmarks dichter — Fassung C
+
+Die Fläche ist umgebaut: Gruppenname links, Chips daneben, Schnellzugriff
+oben, Schalter `ordnen ›`. Gemessen bei 808 px Flächenbreite: **315 px**
+statt vorher rund 1800.
+
+### Ruhezustand
+
+- [ ] Alle 24 Bookmarks sind **ohne Scrollen** zu sehen **[nur du]**
+- [ ] Ein Klick auf einen Chip öffnet in einem **neuen Tab** **[vorgeprüft]**
+- [ ] Angeheftete Chips tragen ihr Kürzel und einen Tintenton, die
+      übrigen nicht **[vorgeprüft]**
+- [ ] **Keine** Nadel, kein Stift, kein „umbenennen" zu sehen **[vorgeprüft]**
+- [ ] Im Schnellzugriff stehen acht Felder — vier belegt, vier
+      gestrichelt und mit „frei" beschriftet **[vorgeprüft]**
+- [ ] Ein Klick auf ein belegtes Feld öffnet **[vorgeprüft]**
+
+### Zustand „Ordnen"
+
+- [ ] `ordnen ›` rechts neben „Alle Bookmarks" schaltet um; der Knopf
+      heißt danach `fertig ›` **[vorgeprüft]**
+- [ ] Jeder Chip trägt Nadel und Stift, jede Gruppe „umbenennen", jede
+      Zeile „+ neues Bookmark" **[vorgeprüft]**
+- [ ] Die Nadel heftet an und löst — der Zustand bleibt dabei auf
+      „Ordnen" stehen **[vorgeprüft]**
+- [ ] Der Stift öffnet den Dialog **[vorgeprüft]**
+- [ ] „+ neues Bookmark" in der Zeile *Werkzeug* — im Dialog steht die
+      Gruppe schon auf **Werkzeug** **[vorgeprüft]**
+- [ ] `fertig ›` schaltet zurück, die Knöpfe verschwinden **[vorgeprüft]**
+- [ ] **Seite neu laden** — die Fläche steht wieder im Ruhezustand. Der
+      Schalter ist eine Ansicht, kein Datum, und wird nicht gesichert
+      **[vorgeprüft]**
+
+### Umbrechen und Ränder
+
+- [ ] Fenster schmaler ziehen — die Chips brechen um, nichts läuft
+      seitlich hinaus **[nur du]**
+- [ ] Auf dem **iPhone** ansehen: Schnellzugriff zweispaltig, Chips
+      untereinander, kein waagerechtes Scrollen **[nur du]**
+- [ ] Thema **Basecamp** — Chips grün statt tintenfarben, sonst gleich
+      **[vorgeprüft]**
+- [ ] Alle Bookmarks löschen — der Leertext nennt den Weg über „Ordnen"
+      **[vorgeprüft]**
+
+### Symbole
+
+- [ ] Nadel und Stift sind als **Umrisse** zu sehen, nicht als dunkle
+      Blöcke. Beides ist Inline-SVG mit `stroke="currentColor"`;
+      Fehlerbuch Punkt 2 **[nur du]**
+
+---
+
 ## Vollhöhe auf dem iPhone · **bestätigt**
 
 Fehlerbuch Punkt 15. `100vh` ist auf iOS die Höhe *ohne* die

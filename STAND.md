@@ -7,7 +7,32 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
-**Zuletzt: Bookmarks sind fertig.** Anlegen, Bearbeiten, Löschen,
+**Zuletzt: die Bookmark-Fläche ist dichter.** Aus rund 1800 Pixeln für
+24 Bookmarks sind **315** geworden. Gruppenname links als
+Randbeschriftung, die Bookmarks daneben als Chips; darüber ein
+Schnellzugriff mit den acht Plätzen, freie gestrichelt gezeigt.
+
+**Die maßgebliche Breite ist 808 px, nicht die des Bildschirms.**
+`.mitte{max-width:860px}` deckelt die Modulfläche, davon 52 px Rand. Das
+hat die Entscheidung gedreht: Ein Kartenraster wäre bei 904 px die
+dichteste Fassung gewesen, braucht dafür aber vier Spalten und bekommt
+bei 808 px drei — 483 statt 333 px. Chips brauchen keine Spalten, sie
+brechen um. Drei Fassungen mit gemessenen Höhen stehen in
+`mockups/schritt-bookmarks-dicht.html`.
+
+Nebenbei aufgefallen: `.weit{max-width:1180px}` in der Gestalt wird von
+**niemandem** benutzt — totes CSS. Damit ließe sich die Fläche
+verbreitern. Bewusst nicht angefasst: 860 px sind eine Lesebreite für die
+ganze Anwendung.
+
+**Zwei Zustände statt eingeblendeter Knöpfe.** Im Ruhezustand öffnet ein
+Klick, mehr nicht; `ordnen ›` blendet Nadel, Stift, „umbenennen" und
+„+ neues Bookmark" ein. Beim Überfahren einzublenden wäre naheliegend und
+auf dem iPad unbrauchbar — dort gibt es kein Überfahren, derselbe Fehler
+wie beim Ziehen im Planner. `mkOrdnen` liegt außerhalb von `Z`: Ansicht,
+keine Daten.
+
+**Davor: Bookmarks sind fertig geworden.** Anlegen, Bearbeiten, Löschen,
 Anheften und Lösen, Gruppen umbenennen und zusammenlegen. Öffnen in einem
 neuen Tab — aus dem Modul, aus der Suche, von den Kacheln der Leiste und
 über ⌘1 bis ⌘8. Das Gerüstband ist weg, die Meldungen sagen die Wahrheit.
@@ -327,33 +352,6 @@ Angesehen wurde er nur im Prüfbrowser. Am eigenen Gerät fehlt der Blick
 auf die Datumsfelder: Sie zeigten dort US-Format, was an der Spracheinstellung
 des Prüfbrowsers liegen dürfte — auf deutschem Edge sollte `22.04.2026`
 stehen. Betrifft alle Datumsfelder der Anwendung, nicht nur dieses Modul.
-
-### 4. Bookmarks dichter darstellen — Entwurf liegt, Entscheidung fehlt
-
-24 Bookmarks brauchen heute rund 1800 Pixel, also knapp drei Bildschirme.
-Der Entwurf unter `mockups/schritt-bookmarks-dicht.html` stellt drei
-Fassungen gegenüber, bei zwei Fensterbreiten gemessen:
-
-| | bei 1000 px | bei 760 px |
-|---|---|---|
-| heute | ≈ 1800 | ≈ 1800 |
-| A — dichte Liste | 1011 | 1011 |
-| B — Gruppenkarten | **333** | *583* |
-| C — Gruppenzeilen | 371 | **403** |
-
-Empfohlen ist **C**, nicht wegen der Dichte — bei 1000 px ist B besser —
-sondern wegen der Stabilität: Bei 760 px, dem iPad hochkant, wächst B um
-75 Prozent und C um neun.
-
-Dazu vorgeschlagen: ein Schnellzugriff-Streifen mit den acht Plätzen, und
-ein Schalter `Öffnen` / `Ordnen` für Anheften und Bearbeiten. Knöpfe beim
-Überfahren einzublenden scheidet aus — auf dem iPad gibt es kein
-Überfahren, siehe Punkt 2.
-
-**Was der Wechsel kostet:** Die Adresse verschwindet aus der Liste und
-steht nur noch im Dialog. Das ist die eigentliche offene Frage.
-
-Nicht gebaut. Liegt auf `mockup-bookmarks-dicht`, ohne Pull Request.
 
 ---
 

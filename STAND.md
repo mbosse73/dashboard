@@ -20,7 +20,7 @@ hilft, ist **Zweispaltigkeit**: 1181 auf 895 px, kein Rollbalken mehr.
 
 Die Leiste ist im Ruhezustand zweispaltig ab 1100 px — links was
 auffordert, rechts wonach man greift. **Das Suchergebnis bleibt
-einspaltig:** Treffer sind nach Rang geordnet, und ⌘↵ nimmt den obersten.
+einspaltig:** Treffer sind nach Rang geordnet, und `↵` nimmt den obersten.
 
 **Der Planner** ist auf 1480 px gedeckelt und zentriert, der Vorrat wächst
 über `clamp(262px,21vw,400px)` nur mit dem Fenster. Und er **füllt jetzt
@@ -59,6 +59,11 @@ Nebenbei aufgefallen: `.weit{max-width:1180px}` in der Gestalt wird von
 **niemandem** benutzt — totes CSS. Damit ließe sich die Fläche
 verbreitern. Bewusst nicht angefasst: 860 px sind eine Lesebreite für die
 ganze Anwendung.
+
+> **Überholt:** Inzwischen angefasst. `.mitte` trägt die 1180 px selbst,
+> die tote Regel ist entfallen. Die Lesebreite ist damit nicht aufgegeben,
+> sondern an den Fließtext gewandert: `.hinweis` und `.leer` bleiben bei
+> 78 Zeichen.
 
 **Zwei Zustände statt eingeblendeter Knöpfe.** Im Ruhezustand öffnet ein
 Klick, mehr nicht; `ordnen ›` blendet Nadel, Stift, „umbenennen" und

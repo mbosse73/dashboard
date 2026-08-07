@@ -7,6 +7,8 @@ einzeln übergeben — nicht mehrere gleichzeitig anfangen.
 nachträglich dazu, Schritt 6 ist ans Ende gerückt. Offen ist heute, in
 dieser Reihenfolge:
 
+0. **Schritt 0** ist erledigt — alle Prüfungen bestanden, nichts mehr
+   blockiert
 1. **Schritt 8** — Hilfe, baut sich aus dem Register auf
 2. **Schritt 9** — Outliner
 3. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —

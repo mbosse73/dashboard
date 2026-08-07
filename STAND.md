@@ -7,6 +7,27 @@ Dokumente um das, was noch offen ist.
 
 ## Wo wir stehen
 
+**Der Browsertest ist bestanden — alle Prüfungen (7. August 2026).**
+localStorage, Zwischenablage, eine andere lokale Datei öffnen, `tel:` und
+`mailto:`. **Damit ist nichts mehr blockiert**, und keiner der drei
+Notwege wird gebraucht, die seit Beginn in den Dokumenten standen:
+
+* **Schritt 4, Textbausteine** darf `navigator.clipboard.writeText`
+  benutzen. Das versteckte Textfeld entfällt.
+* **Schritt 7, Apps** darf `window.open` benutzen. Der anklickbare
+  Verweis als Notweg entfällt.
+* **Die Kontaktkacheln** übergeben wirklich an Telefon und Mail — die
+  beiden Knöpfe sind keine Attrappen.
+
+Der Test bleibt in `browsertest.html` stehen; auf einem neuen Rechner
+oder nach einem Edge-Wechsel ist er wieder fällig.
+
+Für die geplante Pinnwand ändert das etwas: Eine App darf jetzt auf einen
+Platz, weil sie sich auch öffnen lässt. Meine Ankündigung, den Appstarter
+vorerst wegzulassen, ist hinfällig.
+
+---
+
 **Zuletzt: die Breite auf 24 Zoll.** Alle zwölf Modulflächen benutzten
 860 px und ließen 1060 px leer, während drei von ihnen scrollten. Der
 Planner machte das Gegenteil und nahm alle 1920 px — ein halbstündiger

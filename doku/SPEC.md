@@ -149,8 +149,9 @@ Nach Gruppen geordnet. Platzhalter in der Form `{Name}`.
 Zwischenablage, Anlegen und Bearbeiten, Gruppen verwalten.
 Variable `{Datum}` soll automatisch das heutige Datum einsetzen.
 
-**Vor dem Bau:** `browsertest.html` sagt, ob die Zwischenablage direkt
-funktioniert oder der Notweg über ein verstecktes Textfeld nötig ist.
+**Der Weg steht fest:** `browsertest.html` hat am 7. August 2026 bestätigt, dass
+`navigator.clipboard.writeText` aus einer lokal geöffneten Datei heraus
+funktioniert. Der Notweg über ein verstecktes Textfeld entfällt.
 
 ---
 
@@ -205,10 +206,9 @@ Lokale HTML-Werkzeuge, öffnen in einem neuen Tab.
 
 **Fehlt noch:** Anlegen und Bearbeiten der Einträge.
 
-**Vor dem Bau:** `browsertest.html` prüfen. Chromium ist beim Öffnen von
-`file://` aus `file://` teilweise restriktiv. Blockiert Edge den
-Skriptaufruf, muss ein anklickbarer Link statt `window.open` verwendet
-werden.
+**Der Weg steht fest:** `browsertest.html` hat am 7. August 2026 bestätigt, dass
+Edge eine andere lokale Datei öffnet. `window.open` genügt; der
+anklickbare Verweis als Notweg entfällt.
 
 ---
 

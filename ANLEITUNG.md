@@ -63,14 +63,16 @@ Alle Knöpfe der Reihe nach drücken. Drei Antworten notieren:
 
 | Prüfung | dein Ergebnis |
 |---|---|
-| localStorage nutzbar | |
-| Zwischenablage | |
-| Andere lokale Datei öffnen | |
+| localStorage nutzbar | **ja** |
+| Zwischenablage | **ja** |
+| Andere lokale Datei öffnen | **ja** |
 
 Diese drei in `doku/ROADMAP.md` unter Schritt 0 eintragen. Sie bestimmen,
 wie Textbausteine und Appstarter später gebaut werden.
 
-**Ohne diesen Test nicht mit Schritt 4 oder 7 anfangen.**
+**Erledigt am 7. August 2026 — alle Prüfungen bestanden.** Schritt 4 und 7 sind
+damit frei. Der Test bleibt hier stehen: Er ist auf einem neuen Rechner
+oder nach einem Edge-Wechsel wieder fällig.
 
 ---
 
@@ -187,14 +189,14 @@ Ausführlich in `doku/ROADMAP.md`. Hier die Kurzfassung mit Begründung:
 
 | # | Schritt | warum an dieser Stelle |
 |---|---------|------------------------|
-| 0 | Browsertest | drei Antworten blockieren sonst Schritt 4 und 7 |
+| 0 | Browsertest | **erledigt** — alle Prüfungen bestanden |
 | 1 | Kontakte | alles verweist darauf |
 | 2 | Dialog-Baustein | aus Schritt 1 herausziehen, nicht vorher erfinden |
 | 3 | Aufgaben und Termine | erste Nutzung des Bausteins |
-| 4 | Textbausteine | braucht Antwort zur Zwischenablage |
+| 4 | Textbausteine | Zwischenablage geht — Weg geklärt |
 | 5 | Notizen mit Markdown | größter einzelner Brocken |
 | 6 | Workflows | braucht den Baustein aus Schritt 2 |
-| 7 | Bookmarks und Apps | braucht Antwort zum Dateiöffnen |
+| 7 | Bookmarks und Apps | Bookmarks fertig, Dateiöffnen geht |
 | 8 | Hilfe | baut sich aus dem Register auf |
 | 9 | Outliner | eigenständig, jederzeit möglich |
 

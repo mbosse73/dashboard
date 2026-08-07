@@ -7,16 +7,17 @@ einzeln übergeben — nicht mehrere gleichzeitig anfangen.
 nachträglich dazu, Schritt 6 ist ans Ende gerückt. Offen ist heute, in
 dieser Reihenfolge:
 
+0. **Schritt 0** ist erledigt — alle Prüfungen bestanden, nichts mehr
+   blockiert
 1. **Schritt 8** — Hilfe, baut sich aus dem Register auf
 2. **Schritt 9** — Outliner
-3. **Schritt 4** und der Apps-Teil von **Schritt 7** — warten auf den
-   Browsertest. Die Bookmarks aus Schritt 7 sind erledigt; sie hingen
-   nicht am Test.
+3. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —
+   seit dem bestandenen Browsertest nicht mehr blockiert
 4. **Schritt 6** — Workflows, zuletzt
 
 ---
 
-## Schritt 0 — Browsertest (vor allem anderen)
+## Schritt 0 — Browsertest · **erledigt, alle Prüfungen bestanden**
 
 `browsertest.html` per **Doppelklick** in Edge öffnen, nicht per Ziehen in
 ein offenes Fenster. Alle Prüfungen durchlaufen lassen.
@@ -33,9 +34,16 @@ Drei Ergebnisse entscheiden über spätere Schritte:
 
 | Prüfung | Ergebnis | Datum |
 |---|---|---|
-| localStorage nutzbar | noch offen | |
-| Zwischenablage | noch offen | |
-| Andere lokale Datei öffnen | noch offen | |
+| localStorage nutzbar | **ja** | 7. August 2026 |
+| Zwischenablage | **ja** | 7. August 2026 |
+| Andere lokale Datei öffnen | **ja** | 7. August 2026 |
+| `tel:` übergeben | **ja** | 7. August 2026 |
+| `mailto:` übergeben | **ja** | 7. August 2026 |
+
+**Damit ist nichts mehr blockiert.** Keiner der Notwege wird gebraucht:
+Textbausteine dürfen `navigator.clipboard` benutzen, der Appstarter
+`window.open`. Beide Umwege, die in den Dokumenten seit Beginn als
+Möglichkeit standen, entfallen.
 
 ---
 
@@ -130,7 +138,9 @@ derselben Stelle steht.
 * Anlegen und Bearbeiten samt Gruppen
 * Platzhalter `{Name}` erkennen und eine Eingabemaske erzeugen
 * `{Datum}` automatisch mit dem heutigen Datum füllen
-* Ergebnis in die Zwischenablage, Weg je nach Ergebnis aus Schritt 0
+* Ergebnis in die Zwischenablage über `navigator.clipboard.writeText` —
+  Schritt 0 hat bestätigt, dass das aus einer lokal geöffneten Datei
+  heraus funktioniert. Der Notweg über ein verstecktes Textfeld entfällt.
 
 **Fertig, wenn** ein Baustein mit drei Platzhaltern in vier Klicks als
 fertiger Text in der Zwischenablage liegt.
@@ -208,10 +218,10 @@ Entwurf mit drei Fassungen und gemessenen Höhen unter
 Der Teil hing **nicht** am Browsertest: Der betrifft das Öffnen einer
 lokalen Datei, und Bookmarks zeigen auf `http(s)`. Deshalb vorgezogen.
 
-**Apps: offen, wartet weiter auf Schritt 0.** Ein Appstarter zeigt auf
-`file:///C:/…`. Ob Edge das aus einer lokal geöffneten Datei heraus
-zulässt, entscheidet, ob `window.open` genügt oder ob es ein anklickbarer
-Verweis sein muss. Ohne diese Antwort wäre der Weg geraten.
+**Apps: offen, aber nicht mehr blockiert.** Schritt 0 hat bestätigt, dass
+Edge eine andere lokale Datei aus einer lokal geöffneten Datei heraus
+öffnet. `window.open` genügt, der anklickbare Verweis als Notweg entfällt.
+Zu bauen bleiben: Anlegen, Bearbeiten, Löschen und das Starten selbst.
 
 ---
 

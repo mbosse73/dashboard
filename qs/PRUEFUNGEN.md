@@ -33,19 +33,23 @@ in `doku/FEHLERBUCH.md`.
 
 ---
 
-## Schritt 0 — Browsertest · **offen, blockiert Schritt 4 und den Apps-Teil von 7**
+## Schritt 0 — Browsertest · **erledigt am 7. August 2026**
+
+Alle Prüfungen bestanden: localStorage, Zwischenablage, andere lokale
+Datei öffnen, `tel:` und `mailto:`. **Keiner der Notwege wird gebraucht.**
+Die Haken unten stehen deshalb.
 
 `browsertest.html` per Doppelklick öffnen, alle Knöpfe der Reihe nach drücken.
 
-- [ ] **localStorage nutzbar** — Abschnitt „Speicherwege“, läuft ohne Knopfdruck **[nur du]**
-      → Ergebnis: `________`  ·  Bei *nein*: vor jedem Schließen sichern
-- [ ] **Zwischenablage** — Knopf „Kopieren testen“ **[nur du]**
-      → Ergebnis: `ja` / `notweg` / `nein`: `________`
-      Bei *notweg* oder *nein*: Textbausteine brauchen ein verstecktes Textfeld
-- [ ] **Andere lokale Datei öffnen** — Knopf „Appstart testen“, vorher eine beliebige
+- [x] **localStorage nutzbar** — Abschnitt „Speicherwege“, läuft ohne Knopfdruck **[nur du]**
+      → Ergebnis: **ja**
+- [x] **Zwischenablage** — Knopf „Kopieren testen“ **[nur du]**
+      → Ergebnis: **ja**, der gerade Weg über `navigator.clipboard`
+- [x] **Andere lokale Datei öffnen** — Knopf „Appstart testen“, vorher eine beliebige
       `test2.html` danebenlegen **[nur du]**
+      → Ergebnis: **ja**, `window.open` genügt
       → Ergebnis: `________`  ·  Bei *nein*: Appstarter braucht einen Link statt `window.open`
-- [ ] **Anrufen und Mailen** — Knöpfe „Anruf-Übergabe“ und „Mail-Übergabe“ **[nur du]**
+- [x] **Anrufen und Mailen** — Knöpfe „Anruf-Übergabe“ und „Mail-Übergabe“ **[nur du]**
       → Ergebnis: `________`  ·  Steht nicht in der Roadmap, ist aber seit Schritt 1a
       echter Code und keine Meldung mehr
 
@@ -522,7 +526,8 @@ Wert. Diese Zeilen können nur vom Gerät kommen.
 
 ## Schritt 7 — Bookmarks
 
-Der Apps-Teil von Schritt 7 fehlt weiter und wartet auf Schritt 0.
+Der Apps-Teil von Schritt 7 fehlt weiter — seit dem bestandenen
+Browsertest aber nicht mehr blockiert.
 
 **Am 7. August am eigenen Gerät bestätigt:** Das Ändern einer Adresse
 lässt die Anheftung stehen — der Umbau von Adresse auf Kennung trägt
@@ -608,13 +613,14 @@ Kurzliste, die für jeden künftigen Schritt gilt. `doku/ARBEITSWEISE.md` §5 bi
 Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 
 - **Schritt 4 — Textbausteine:** Ein Baustein mit drei Platzhaltern liegt in vier
-  Klicks als fertiger Text in der Zwischenablage. *Braucht Schritt 0*
+  Klicks als fertiger Text in der Zwischenablage. *Schritt 0 bestanden,
+  der gerade Weg über `navigator.clipboard` ist frei*
 - **Schritt 6 — Workflows:** Neue Instanz hat sofort alle acht Teilschritte mit leeren
   Werten · Durchlauf bis zum Ende klickbar · überfälliger aktiver Schritt erscheint in
   Leiste und Planner · Klick auf Schritt 6 ändert den Stand **nicht**
 - **Schritt 7, Apps-Teil:** Eine App startet auf dem Zielrechner wirklich.
-  *Braucht Schritt 0* — die Bookmarks aus Schritt 7 sind erledigt und oben
-  abzuhaken.
+  *Schritt 0 bestanden, `window.open` ist frei* — die Bookmarks aus
+  Schritt 7 sind erledigt und oben abzuhaken.
 - **Schritt 8 — Hilfe:** Baut sich aus dem Register auf, ein neues Modul erscheint
   dort von selbst
 - **Schritt 9 — Outliner:** `Tab` rückt ein, `Umschalt+Tab` aus

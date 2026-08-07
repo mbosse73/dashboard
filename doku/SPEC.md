@@ -165,6 +165,29 @@ Nach Gruppen geordnet. Acht anheftbare Plätze auf `⌘1` bis `⌘8`, sichtbar
 im Ruhezustand der Leiste. Ein Klick auf den Titel öffnet in einem neuen
 Tab, `⌘1` bis `⌘8` und die Kacheln der Leiste ebenso.
 
+**Die Fläche ist auf Dichte gebaut.** Der Gruppenname steht links als
+Randbeschriftung, die Bookmarks daneben als Chips. 24 Bookmarks brauchten
+als Zeilen rund 1800 Pixel, jetzt sind es **315** — bei 808 Pixeln, der
+Breite, die `.mitte{max-width:860px}` der Fläche wirklich lässt. Ein
+größerer Bildschirm ändert daran nichts; der Rest bleibt Rand.
+
+Gegen ein Kartenraster entschieden: Karten brauchen vier Spalten, um dicht
+zu sein, und bekommen bei 808 Pixeln drei. Chips brechen dagegen um — eine
+Gruppe mit zwanzig Einträgen sprengt nichts, sondern wird zwei Zeilen hoch.
+
+**Darüber der Schnellzugriff:** die acht Plätze mit ihrem Kürzel. Freie
+werden gestrichelt gezeigt, nicht verschwiegen — sonst sieht man nie, dass
+noch welche zu vergeben sind.
+
+**Zwei Zustände statt eingeblendeter Knöpfe.** Im Ruhezustand öffnet ein
+Klick, mehr nicht. `ordnen ›` schaltet um: Dann trägt jeder Chip Nadel und
+Stift, jede Gruppe ihr „umbenennen", jede Zeile ein „+ neues Bookmark" mit
+schon gesetzter Gruppe. Knöpfe beim Überfahren einzublenden wäre
+naheliegend und auf dem iPad unbrauchbar — dort gibt es kein Überfahren,
+derselbe Fehler wie beim Ziehen im Planner. Der Zustand liegt in
+`mkOrdnen`, bewusst außerhalb von `Z`: Er beschreibt die Ansicht, nicht
+die Daten, und wird deshalb nicht gesichert.
+
 **Adressen stehen so da, wie man sie liest** — `github.com`, ohne Schema.
 Beim Öffnen setzt `mkUrl()` `https://` davor. Wer selbst ein Schema angibt
 (`mailto:`, `file:`), bekommt es unverändert zurück. Der Verweis trägt

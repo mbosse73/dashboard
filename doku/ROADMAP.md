@@ -199,6 +199,12 @@ Format wie die Felder des Dialog-Bausteins.
 Gruppen umbenennen und zusammenlegen. Öffnen in einem neuen Tab, aus dem
 Modul, aus der Suche, von den Kacheln der Leiste und über `⌘1` bis `⌘8`.
 
+**Nachgeschoben: die Fläche dichter.** Aus 1800 Pixeln wurden 315 —
+Gruppenname links als Randbeschriftung, Bookmarks daneben als Chips, dazu
+ein Schnellzugriff mit den acht Plätzen und ein Schalter `ordnen ›`.
+Entwurf mit drei Fassungen und gemessenen Höhen unter
+`mockups/schritt-bookmarks-dicht.html`.
+
 Der Teil hing **nicht** am Browsertest: Der betrifft das Öffnen einer
 lokalen Datei, und Bookmarks zeigen auf `http(s)`. Deshalb vorgezogen.
 

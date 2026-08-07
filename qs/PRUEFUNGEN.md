@@ -389,9 +389,32 @@ antippen, Tag und Uhrzeit setzen. So entschieden.
 
 ---
 
+## Vollhöhe auf dem iPhone · **bestätigt**
+
+Fehlerbuch Punkt 15. `100vh` ist auf iOS die Höhe *ohne* die
+Safari-Leisten; im Querformat rutschte der Kopf dadurch aus dem
+Sichtbaren, und `body{overflow:hidden}` ließ ihn nicht zurückholen.
+
+- [x] iPhone, **Querformat** — die obere Leiste mit Uhrzeit, Sichern und
+      dem Themen-Umschalter ist zu sehen
+      **[nur du · am 7. August bestätigt]**
+- [ ] Dasselbe im Hochformat und auf dem iPad **[nur du]**
+- [ ] Ein Dialog im Querformat — Kopf und Fuß beide erreichbar?
+      `.dlg` hing am selben Maß **[nur du]**
+
+Am Rechner nicht nachweisbar: Chromium gibt `vh` und `dvh` denselben
+Wert. Diese Zeilen können nur vom Gerät kommen.
+
+---
+
 ## Schritt 7 — Bookmarks
 
 Der Apps-Teil von Schritt 7 fehlt weiter und wartet auf Schritt 0.
+
+**Am 7. August am eigenen Gerät bestätigt:** Das Ändern einer Adresse
+lässt die Anheftung stehen — der Umbau von Adresse auf Kennung trägt
+also auch mit echten, aus `localStorage` geladenen Daten, nicht nur mit
+den Demodaten im Prüfbrowser.
 
 ### Öffnen
 
@@ -414,9 +437,9 @@ Der Apps-Teil von Schritt 7 fehlt weiter und wartet auf Schritt 0.
       **[vorgeprüft]**
 - [ ] Anlegen mit gesetztem Schalter **Auf die Leiste heften** — der
       Eintrag steht danach sofort auf der Leiste **[vorgeprüft]**
-- [ ] Ein Bookmark bearbeiten und seine **Adresse ändern** — die
+- [x] Ein Bookmark bearbeiten und seine **Adresse ändern** — die
       Anheftung bleibt bestehen. (Genau das ging vor dem Umbau auf `id`
-      nicht.) **[vorgeprüft]**
+      nicht.) **[vorgeprüft · am 7. August am eigenen Gerät bestätigt]**
 - [ ] Ein angeheftetes Bookmark löschen — die Rückfrage nennt den frei
       werdenden Platz, danach rücken die dahinter auf **[vorgeprüft]**
 

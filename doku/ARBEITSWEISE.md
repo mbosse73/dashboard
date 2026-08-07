@@ -181,15 +181,17 @@ Diese Vorschläge sind bei üblichen Projekten sinnvoll und hier verboten:
 
 ## Ein neues Modul anlegen
 
-Vier Stellen, und keine darf fehlen:
+Fünf Stellen, und keine darf fehlen:
 
 1. `vorgabe()` — Datenbereich ergänzen, etwa `beispiel: []`
 2. Liste im Ladevorgang — Schlüssel `"beispiel"` eintragen
 3. Modulblock samt Marker in Abschnitt 4
-4. `doku/SPEC.md` — Modul mit Stand eintragen
+4. **`hilfe` im Modulblock** — kurze Sätze, siehe `CLAUDE.md`
+5. `doku/SPEC.md` — Modul mit Stand eintragen
 
 Fehlt Punkt 1 oder 2, funktioniert das Modul, seine Daten überleben aber
-kein Laden einer Sicherung. `werkzeug/pruefen.mjs` schlägt darauf an.
+kein Laden einer Sicherung. Fehlt Punkt 4, erscheint es in der Hilfe ohne
+Erklärung. `werkzeug/pruefen.mjs` schlägt auf beides an.
 
 Den Vertrag findest du in `doku/ARCHITEKTUR.md` unter „Der Modulvertrag".
 

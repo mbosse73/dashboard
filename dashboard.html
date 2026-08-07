@@ -421,6 +421,47 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
   text-decoration:underline;text-underline-offset:2px;padding:0;font-weight:400}
 .mini:hover{color:var(--ink)}
 
+/* ---------- Modul Hilfe und Schnellhilfe ----------
+   Index links, Inhalt rechts. Der Index klebt beim Scrollen oben. */
+.hi-suche{position:relative;margin:0 0 6px}
+.hi-suche input{width:100%;border:1px solid var(--rule2);border-radius:10px;
+  padding:11px 15px 11px 40px;font-size:15px;background:var(--sheet);color:var(--ink);
+  font-family:inherit}
+.hi-suche input:focus{outline:0;border-color:var(--tinte);box-shadow:0 0 0 3px var(--tinte-s)}
+.hi-suche .lupe{position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  width:17px;height:17px;color:var(--ink3);pointer-events:none}
+.hi-suche .weg{position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  font-family:var(--etikett);font-size:11px;color:var(--ink3);padding:5px 8px;border-radius:6px}
+.hi-suche .weg:hover{background:var(--raise);color:var(--ink)}
+.hi-hin{font-size:12.5px;color:var(--ink3);padding:0 0 4px}
+.hi-hin b{color:var(--tinte)}
+.hi-zwei{display:grid;gap:0 40px;align-items:start;padding-top:14px}
+@media(min-width:980px){.hi-zwei{grid-template-columns:224px 1fr}}
+.hi-index{display:flex;flex-direction:column;gap:1px;position:sticky;top:0}
+.hi-i{padding:7px 11px;border-radius:7px;font-size:13.5px;color:var(--ink2);
+  border-left:2px solid transparent}
+.hi-i:hover{background:var(--sheet);color:var(--ink)}
+.hi-i.wahl{background:var(--tinte-s);color:var(--tinte);border-left-color:var(--tinte);
+  font-weight:600}
+.hi-p{font-size:14.5px;line-height:1.65;color:var(--ink2);margin:0;max-width:70ch}
+.hi-p b{color:var(--ink)}
+.hi-p + .hi-p{margin-top:9px}
+.hi-tab{width:100%;border-collapse:collapse;font-size:14px}
+.hi-tab td{padding:8px 12px 8px 0;border-bottom:1px solid var(--rule);vertical-align:top;
+  line-height:1.5;color:var(--ink2)}
+.hi-tab td.k{width:158px;white-space:nowrap}
+.hi-tab td.o{width:190px;font-size:12px;color:var(--ink3);text-align:right}
+.hi-tab .mt{display:block;font-size:12.5px;color:var(--ink3);margin-top:2px;max-width:62ch}
+.hi-tab .nr{font-family:var(--etikett);font-size:11px;color:var(--ink3);font-weight:700}
+.hi-tab code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  padding:2px 6px;border-radius:4px;color:var(--ink)}
+.hi-k{font-family:var(--etikett);font-size:12px;background:var(--raise);color:var(--ink);
+  border:1px solid var(--rule2);border-bottom-width:2px;border-radius:6px;padding:3px 8px;
+  white-space:nowrap;display:inline-block}
+.hi-off{font-family:var(--etikett);font-size:10px;letter-spacing:.06em;color:var(--signal)}
+.hi-fuss{margin-top:14px;font-size:12.5px;color:var(--ink3);line-height:1.55;
+  border-top:1px solid var(--rule);padding-top:11px;max-width:70ch}
+
 .modliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
 .ml{display:flex;align-items:baseline;gap:9px;padding:8px 10px;border-radius:7px}
 .ml:hover{background:var(--sheet)}
@@ -1719,6 +1760,7 @@ function treff(art,titel,meta,taste,fn){
 /* ===== MODUL kontakte ===== */
 registriere({
   id:"kontakte", nr:"02", nm:"Kontakte",
+  hilfe:"Menschen mit Telefon und Mail. Jede Kachel bietet Anrufen und Mailen als echten Verweis. Der Stern macht einen Favoriten daraus. Favoriten stehen oben und zusätzlich in der Leiste. Beim Löschen werden alle Verweise geleert. Die Einträge selbst bleiben erhalten.",
   zahl:()=>KONTAKTE.length,
   /* Favoriten ab dem ersten Buchstaben, übrige ab dem dritten.
      Ein Kontakt liefert zwei eigenständige Treffer. */
@@ -1926,6 +1968,7 @@ function kLoeschen(k){
 /* ===== MODUL aufgaben ===== */
 registriere({
   id:"aufgaben", nr:"04", nm:"Aufgaben",
+  hilfe:"Zwei Arten: To-do für sich selbst, Nachverfolgen für andere. Eine Aufgabe darf jedes Datum tragen oder gar keins. Überfällige tragen eine rote Kante. Abgehaktes zieht nach unten und lässt sich dort löschen.",
   zahl:()=>DATEN.aufgaben.filter(a=>!a.fertig).length,
   suche(q){
     return DATEN.aufgaben.filter(a=>a.titel.toLowerCase().includes(q)).map(a=>
@@ -2065,6 +2108,7 @@ function erledigteLoeschen(zahl){
 /* ===== MODUL kalender ===== */
 registriere({
   id:"kalender", nr:"06", nm:"Kalender",
+  hilfe:"Termine für heute und den nächsten Werktag. Mehr Tage gibt es hier nicht. Der Tag ist eine Auswahl aus genau zweien. So kann kein Termin an einem Ort landen, den niemand ansieht. Verschoben wird im Planner.",
   zahl:()=>DATEN.termine.length,
   suche(q){
     return DATEN.termine.filter(t=>t.titel.toLowerCase().includes(q)).map(t=>
@@ -2429,6 +2473,7 @@ function jkSpeichern(){
 /* ===== MODUL jahr ===== */
 registriere({
   id:"jahr", nr:"14", nm:"Jahreskalender",
+  hilfe:"Alle Tage eines Jahres als Raster. Ein Klick auf einen Tag legt einen Eintrag an. Ein Eintrag hat Anfang und Ende, aber keine Uhrzeit. Zwei Arten: Urlaub und sonstiger Termin. Dieser Bestand ist vom Kalender getrennt.",
   zahl:()=>DATEN.jahrestermine.length,
   suche(q){
     return DATEN.jahrestermine
@@ -2470,6 +2515,7 @@ registriere({
 /* ===== MODUL notizen ===== */
 registriere({
   id:"notizen", nr:"01", nm:"Notizen",
+  hilfe:"Zwei Arten: Telefonnotiz und allgemeine Notiz. Die Telefonnotiz setzt Datum, Uhrzeit und Anrufer selbst. Der Text versteht Markdown. Jede Notiz lässt sich als Datei ausgeben und wieder einlesen.",
   zahl:()=>DATEN.notizen.length,
   suche(q){
     return DATEN.notizen.filter(n=>(n.titel+" "+n.text+" "+notizWer(n))
@@ -2631,6 +2677,7 @@ function notizZeile(n){
 /* ===== MODUL bausteine ===== */
 registriere({
   id:"bausteine", nr:"05", nm:"Textbausteine",
+  hilfe:"Vorlagen für wiederkehrende Texte. Platzhalter stehen in geschweiften Klammern. Beim Einsetzen werden sie abgefragt. Das Ergebnis geht in die Zwischenablage.",
   geruest:"Die Bausteine lassen sich ansehen. Anlegen, Bearbeiten und das "
     +"Einsetzen in die Zwischenablage fehlen noch.",
   zahl:()=>BAUSTEINE.length,
@@ -2665,6 +2712,7 @@ registriere({
 /* ===== MODUL apps ===== */
 registriere({
   id:"apps", nr:"08", nm:"Appstarter",
+  hilfe:"Lokale Werkzeuge zum Starten. Ein Klick öffnet die Datei in einem neuen Tab. Apps lassen sich anheften. Sie liegen dann auf denselben Plätzen wie Bookmarks.",
   geruest:"Starten und Anheften tragen. Anlegen, Bearbeiten und Löschen "
     +"fehlen noch.",
   zahl:()=>APPS.length,
@@ -2717,6 +2765,7 @@ function appOeffne(a){
 /* ===== MODUL marken ===== */
 registriere({
   id:"marken", nr:"09", nm:"Bookmarks",
+  hilfe:"Verweise ins Netz, nach Gruppen geordnet. Ein Klick öffnet in einem neuen Tab. Die Adresse darf ohne https davorstehen. Zwölf Plätze nehmen auf, was man täglich braucht. Ordnen schaltet Anheften und Bearbeiten frei.",
   zahl:()=>MARKEN.length,
   /* Was dieses Modul zum Anheften anbietet. Die Leiste fragt danach,
      ohne das Modul beim Namen zu kennen. */
@@ -3008,10 +3057,236 @@ function mkGruppeDialog(g){
   });
 }
 
+/* ---------- 10 Hilfe ---------- */
+/* ===== MODUL hilfe ===== */
+registriere({
+  id:"hilfe", nr:"10", nm:"Hilfe",
+  hilfe:"Erklärt alle Flächen, Module und Tastenkürzel. Die Suche hier "
+    +"durchsucht nur die Hilfe. Wer Daten sucht, nimmt die Leiste. "
+    +"Die Schnellhilfe zeigt zusätzlich alle Kürzel in einem Fenster.",
+  /* Bewusst kein `suche`: Die Hilfe darf in der Leiste gar nicht
+     auftauchen. Nicht „sie tut es nicht", sondern „sie kann nicht" —
+     die beiden Suchen bleiben damit konstruktiv getrennt. */
+  flaeche(b){ hiMalen(b); }
+});
+/* ===== ENDE hilfe ===== */
+
+/* Suchstand der Hilfe. Wie kSuche bei den Kontakten ausserhalb von Z:
+   Er beschreibt die Ansicht, nicht die Daten. */
+let hiSuche="", hiWahl="flaechen";
+
+/* Die Abschnitte. `bau` zeichnet, `text` liefert alles Durchsuchbare
+   als eine Zeichenkette — damit die Suche nichts uebersieht. */
+function hiTeile(){
+  const mods=MODULE.filter(m=>m.flaeche).sort((a,b)=>a.nr<b.nr?-1:1);
+  return [
+    {id:"flaechen", nm:"Zwei Oberflächen", bau:hiFlaechen,
+     text:"leiste planner oberflächen einstieg arbeitsfläche stundenraster "
+       +"überfällig termin schmierzettel plätze vorrat ziehen"},
+    {id:"muster", nm:"Eingabemuster", bau:hiMuster,
+     text:MUSTER.map(m=>m.bsp+" "+m.was).join(" ")},
+    {id:"tasten", nm:"Tastenkürzel", bau:hiTasten,
+     text:TASTEN.map(t=>t.t+" "+t.nm+" "+t.wo).join(" ")},
+    {id:"module", nm:"Module", bau:hiModule,
+     text:mods.map(m=>m.nr+" "+m.nm+" "+(m.hilfe||"")+" "+(m.geruest||"")).join(" ")},
+    {id:"daten", nm:"Sichern und Laden", bau:hiDaten,
+     text:"sichern laden export json markdown datei localstorage browser "
+       +"speicher sicherung rundlauf"},
+    {id:"thema", nm:"Themen", bau:hiThema,
+     text:"thema themen standard basecamp optik farben umschalter"}
+  ];
+}
+
+function hiMalen(b){
+  const q=hiSuche.trim().toLowerCase();
+  const teile=hiTeile();
+  const passt = t => !q || (t.nm+" "+t.text).toLowerCase().includes(q);
+  const treffer = teile.filter(passt);
+
+  b.appendChild(hiSuchfeld(treffer.length, teile.length));
+
+  const zwei=el("div","hi-zwei");
+  const nav=el("div","hi-index");
+  (q ? treffer : teile).forEach(t=>{
+    const a=el("button","hi-i"+(!q&&t.id===hiWahl?" wahl":""),esc(t.nm));
+    a.onclick=()=>{ hiWahl=t.id; hiSuche=""; male();
+      const z=document.getElementById("hi-"+t.id);
+      if(z) z.scrollIntoView({block:"start"}); };
+    nav.appendChild(a);
+  });
+  const rumpf=el("div");
+  if(!treffer.length){
+    rumpf.appendChild(el("div","leer",
+      "Nichts gefunden zu „"+esc(hiSuche)+"“. Die Hilfe durchsucht nur sich "
+      +"selbst — Kontakte, Aufgaben und Termine findet die Leiste."));
+  }
+  treffer.forEach(t=>{
+    const k=abschnitt(t.nm,null);
+    k.id="hi-"+t.id;
+    rumpf.appendChild(k);
+    t.bau(rumpf,q);
+  });
+  zwei.append(nav,rumpf);
+  b.appendChild(zwei);
+}
+
+function hiSuchfeld(n,ganz){
+  const w=el("div");
+  const s=el("div","hi-suche",'<span class="lupe">'+IK.lupe+'</span>');
+  const i=el("input");
+  i.type="text"; i.value=hiSuche;
+  i.placeholder="Hilfe durchsuchen — Funktion, Kürzel, Modul";
+  i.setAttribute("aria-label","Hilfe durchsuchen");
+  i.oninput=()=>{
+    const stelle=i.selectionStart;
+    hiSuche=i.value; male();
+    const neu=document.querySelector(".hi-suche input");
+    if(neu){ neu.focus(); neu.setSelectionRange(stelle,stelle); }
+  };
+  s.appendChild(i);
+  if(hiSuche){
+    const x=el("button","weg","zurücksetzen");
+    x.onclick=()=>{ hiSuche=""; male(); };
+    s.appendChild(x);
+  }
+  w.appendChild(s);
+  w.appendChild(el("div","hi-hin", hiSuche
+    ? "<b>"+n+" von "+ganz+"</b> Abschnitten passen. Diese Suche geht nur "
+      +"durch die Hilfe."
+    : "Diese Suche geht nur durch die Hilfe. Daten findet die Leiste."));
+  return w;
+}
+
+function hiFlaechen(b){
+  b.appendChild(el("p","hi-p","<b>Es gibt zwei Flächen, mehr nicht.</b>"));
+  b.appendChild(el("p","hi-p",
+    "Die <b>Leiste</b> ist der Einstieg. Ein Feld für alles: suchen, rechnen, "
+    +"erfassen. Ohne Eingabe zeigt sie Überfälliges und den nächsten Termin. "
+    +"Dazu den Schmierzettel, die Plätze, Favoriten und alle Module."));
+  b.appendChild(el("p","hi-p",
+    "Der <b>Planner</b> ist die Arbeitsfläche. Er zeigt zwei Werktage "
+    +"nebeneinander. Das Raster geht von 7 bis 18 Uhr. Links stehen die "
+    +"Aufgaben ohne Zeit. Ziehen gibt einer Aufgabe eine Uhrzeit."));
+  b.appendChild(el("div","hi-fuss",
+    "Werktage sind Montag bis Freitag. Fällt heute auf ein Wochenende, "
+    +"nimmt der Planner die beiden nächsten."));
+}
+
+function hiMuster(b){
+  const t=el("table","hi-tab");
+  MUSTER.forEach(m=>{
+    const r=el("tr");
+    r.append(el("td","k",'<code>'+esc(m.bsp)+'</code>'), el("td",null,esc(m.was)));
+    t.appendChild(r);
+  });
+  b.appendChild(t);
+  b.appendChild(el("div","hi-fuss",
+    "Beispiel: <code>Rückruf Kanzlei ? mo</code> legt eine Aufgabe zum "
+    +"Nachverfolgen auf den nächsten Montag."));
+}
+
+function hiTasten(b){
+  b.appendChild(hiTastenTabelle());
+  b.appendChild(el("div","hi-fuss",
+    "Diese Liste kommt aus derselben Stelle, die die Tasten auch schaltet. "
+    +"Ein Kürzel kann hier deshalb nicht stehen, ohne zu wirken."));
+}
+
+/* Wird zweimal gebraucht: im Modul und in der Schnellhilfe. */
+function hiTastenTabelle(){
+  const t=el("table","hi-tab");
+  TASTEN.forEach(k=>{
+    const r=el("tr");
+    r.append(el("td","k",'<span class="hi-k">'+esc(k.t)+'</span>'),
+      el("td",null,esc(k.nm)),
+      el("td","o",esc(k.wo)+(k.pruefen
+        ? '<br><span class="hi-off">noch nicht bestätigt</span>' : "")));
+    t.appendChild(r);
+  });
+  return t;
+}
+
+function hiModule(b){
+  const mods=MODULE.filter(m=>m.flaeche).sort((a,b)=>a.nr<b.nr?-1:1);
+  const t=el("table","hi-tab");
+  mods.forEach(m=>{
+    const bei=[];
+    if(m.suche) bei.push("in der Suche");
+    if(m.erfassen) bei.push("erfassen aus der Leiste");
+    if(m.heftbar) bei.push("anheftbar");
+    const r=el("tr");
+    r.append(el("td","k",'<b class="nr">'+esc(m.nr)+'</b>'),
+      el("td",null,esc(m.nm)
+        +(m.geruest?' <em class="gz">Gerüst</em>':"")
+        +'<span class="mt">'+esc(m.hilfe||"")
+        +(m.geruest?"<br>Noch nicht fertig: "+esc(m.geruest):"")+'</span>'),
+      el("td","o",esc(bei.join(" · "))));
+    t.appendChild(r);
+  });
+  b.appendChild(t);
+  b.appendChild(el("div","hi-fuss",
+    "Diese Liste kommt aus dem Register. Ein neues Modul erscheint hier von "
+    +"selbst. Der Prüflauf verlangt dabei einen Hilfetext."));
+}
+
+function hiDaten(b){
+  b.appendChild(el("p","hi-p",
+    "<b>Der Speicher hängt am Browser.</b> Jede Änderung wird sofort "
+    +"abgelegt. Beim nächsten Öffnen ist alles wieder da."));
+  b.appendChild(el("p","hi-p",
+    "<b>Sichern</b> schreibt eine Datei mit allem. <b>Laden</b> holt sie "
+    +"zurück. Das ist der Weg für ein Sicherheitsnetz oder einen anderen "
+    +"Rechner."));
+  b.appendChild(el("p","hi-p",
+    "<b>Export</b> schreibt Markdown zum Lesen. Dieser Weg führt nicht "
+    +"zurück. Wer sichern will, nimmt Sichern."));
+}
+
+function hiThema(b){
+  b.appendChild(el("p","hi-p",
+    "Zwei Optiken: <b>Standard</b> und <b>Basecamp</b>. Die Knöpfe stehen "
+    +"oben rechts. Es ändert sich nur das Aussehen."));
+  b.appendChild(el("p","hi-p",
+    "Die Wahl gehört zur Ansicht, nicht zu den Daten. Sie steht deshalb "
+    +"nicht in der Sicherung."));
+}
+
+/* ---------- Die Schnellhilfe ----------
+   Schwebendes Fenster wie der Jahreskalender. Es traegt sich selbst in
+   dlgOffen ein — damit greifen Escape und der Klick daneben, ohne dass
+   es eine zweite Mechanik dafuer braeuchte. */
+function shOeffnen(){
+  dialogZu();
+  const s=el("div","schleier auf");
+  const d=el("div","dlg");
+  const k=el("div","dlg-k",
+    '<span class="art">Schnellhilfe</span>'
+    +'<h2 class="dlg-t">Alle Tastenkürzel</h2><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×");
+  zu.setAttribute("aria-label","Schließen"); zu.onclick=dialogZu;
+  k.appendChild(zu);
+  const rumpf=el("div","dlg-b");
+  rumpf.appendChild(hiTastenTabelle());
+  rumpf.appendChild(el("div","hi-fuss",
+    "<b>Esc</b> schließt dieses Fenster. Die ausführliche Hilfe steht als "
+    +"eigene Fläche bereit."));
+  const f=el("div","dlg-f");
+  f.appendChild(el("span","sp"));
+  const hin=el("button","tat still","Zur ausführlichen Hilfe");
+  hin.onclick=()=>{ dialogZu(); zeigeFlaeche("hilfe"); };
+  f.appendChild(hin);
+  d.append(k,rumpf,f);
+  s.appendChild(d);
+  s.onclick=ev=>{ if(ev.target===s) dialogZu(); };
+  document.body.appendChild(s);
+  dlgOffen=s;
+}
+
 /* ---------- 13 Workflows ---------- */
 /* ===== MODUL workflows ===== */
 registriere({
   id:"workflows", nr:"13", nm:"Workflows",
+  hilfe:"Wiederkehrende Abläufe mit festen Teilschritten. Genau ein Schritt ist aktiv. Alles davor gilt als erledigt. Überfällig heißt: Die Frist des aktiven Schritts ist verstrichen.",
   geruest:"Weiterschalten trägt bereits und bleibt erhalten. Anlegen, "
     +"Bearbeiten und die Eigenschaften je Teilschritt fehlen noch.",
   zahl:()=>WORKFLOWS.filter(w=>!wfFertig(w)).length,
@@ -3108,6 +3383,7 @@ function rechne(text){
 /* ===== MODUL outliner ===== */
 registriere({
   id:"outliner", nr:"15", nm:"Outliner",
+  hilfe:"Gliederungen mit eingerückten Knoten. Gedacht zum Ordnen von Gedanken. Tab rückt ein, Umschalt und Tab rücken aus.",
   geruest:"Die Gliederung lässt sich ansehen, aber noch nicht bearbeiten.",
   zahl:()=>BAUM.length,
   suche(q){
@@ -3134,6 +3410,7 @@ registriere({
 /* ===== MODUL beautifier ===== */
 registriere({
   id:"beautifier", nr:"16", nm:"Code-Beautifier",
+  hilfe:"Formatiert JSON lesbar. Der Weg dorthin führt auch über die Leiste. Wer dort JSON eintippt, bekommt das Angebot sofort.",
   suche(q, roh){
     const t=roh.trim();
     const wieJSON = (t.startsWith("{")||t.startsWith("[")) && t.length>6;
@@ -3173,14 +3450,35 @@ let vorlage=null;
    5 — DEUTUNG DER EINGABE
    ============================================================ */
 const KUERZEL={so:0,mo:1,di:2,mi:3,"do":4,fr:5,sa:6};
+/* ---------- Die Eingabemuster ----------
+   Eine Stelle, zwei Verwendungen: `deuten()` liest hier seine Regeln,
+   und die Hilfe liest dieselbe Liste. Eine Aufstellung daneben wuerde
+   abdriften — derselbe Fehler wie bei den Tastenkuerzeln.
+   Ein neues Muster erscheint dadurch von selbst in der Hilfe. */
+const MUSTER=[
+  {re:/(^|\s)\?(\s|$)/, bsp:"?",
+   was:"Macht daraus eine Aufgabe zum Nachverfolgen."},
+  {re:/\s@(\S+)/, bsp:"@kowalski",
+   was:"Hängt den Eintrag an einen Kontakt."},
+  {re:/\s(\d{1,2}):(\d{2})(\s|$)/, bsp:"14:30",
+   was:"Setzt die Uhrzeit. Ohne Tag gilt heute."},
+  {re:/\s(heute|übermorgen|uebermorgen|morgen|mo|di|mi|do|fr)(\s|$)/i,
+   bsp:"heute · morgen · übermorgen · mo–fr",
+   was:"Setzt den Tag."},
+  {re:null, bsp:"17*1,19",
+   was:"Rechnet. Das Komma gilt wie ein Punkt."},
+  {re:null, bsp:'{"a":1}',
+   was:"Erkennt JSON und bietet Formatieren an."}
+];
+
 function deuten(text){
   let rest=" "+text+" ";
   const o={};
-  if(/(^|\s)\?(\s|$)/.test(rest)){ o.nach=true; rest=rest.replace(/(^|\s)\?(\s|$)/," "); }
-  const p=rest.match(/\s@(\S+)/); if(p){ o.person=p[1]; rest=rest.replace(p[0]," "); }
-  let z=rest.match(/\s(\d{1,2}):(\d{2})(\s|$)/);
+  if(MUSTER[0].re.test(rest)){ o.nach=true; rest=rest.replace(MUSTER[0].re," "); }
+  const p=rest.match(MUSTER[1].re); if(p){ o.person=p[1]; rest=rest.replace(p[0]," "); }
+  let z=rest.match(MUSTER[2].re);
   if(z){ o.zeit=p2(+z[1])+":"+z[2]; rest=rest.replace(z[0]," "); }
-  const t=rest.match(/\s(heute|übermorgen|uebermorgen|morgen|mo|di|mi|do|fr)(\s|$)/i);
+  const t=rest.match(MUSTER[3].re);
   if(t){ const w=t[1].toLowerCase(); const h=new Date(); h.setHours(0,0,0,0); let ziel;
     if(w==="heute"){ ziel=h; o.tag="heute"; }
     else if(w==="übermorgen"||w==="uebermorgen"){ ziel=new Date(h);
@@ -3766,19 +4064,55 @@ function standZeigen(){
 /* ============================================================
    10 — TASTATUR
    ============================================================ */
+/* ---------- Die Tastenkuerzel ----------
+   Eine Tabelle, zwei Verwendungen: Sie schaltet die Tasten, und die
+   Schnellhilfe zeigt sie an. Eine Aufstellung daneben wuerde abdriften —
+   ein Kuerzel, das nicht funktioniert, koennte dort stehen. Genau das
+   ist Fehlerbuch Punkt 9.
+
+   `tun` fehlt bei den ortsabhaengigen Tasten. Escape bedeutet je nach
+   Ort etwas anderes, und die Pfeile gelten nur bei getippter Eingabe;
+   beide bleiben unten als Sonderfaelle stehen. Sie stehen hier
+   trotzdem, weil die Hilfe sie nennen muss.
+
+   `pruefen:true` heisst: Das Kuerzel ist noch nicht am Zielrechner
+   bestaetigt. Die Hilfe schreibt das dazu. Eine Beschriftung ohne
+   nachgewiesene Tat waere Fehlerbuch Punkt 9. */
+const TASTEN=[
+  {t:"⌘K", nm:"Leiste öffnen", wo:"überall", mod:true, key:"k",
+   tun:()=>zeigeFlaeche("leiste")},
+  {t:"⌘P", nm:"Planner öffnen", wo:"überall", mod:true, key:"p",
+   tun:()=>zeigeFlaeche("planner")},
+  {t:"⌘S", nm:"Sichern", wo:"überall", mod:true, key:"s",
+   tun:()=>$("#sichern").click()},
+  {t:"⌘1 – ⌘8", nm:"Platz 1 bis 8 öffnen", wo:"überall"},
+  {t:"F1", nm:"Schnellhilfe öffnen", wo:"überall", key:"F1",
+   tun:()=>shOeffnen(), pruefen:true},
+  {t:"⇧F1", nm:"Hilfe öffnen", wo:"überall", umschalt:true, key:"F1",
+   tun:()=>zeigeFlaeche("hilfe"), pruefen:true},
+  {t:"Esc", nm:"Eingabe leeren · zurück zur Leiste · Fenster schließen",
+   wo:"je nach Ort"},
+  {t:"↑ ↓", nm:"Treffer wählen", wo:"Leiste, wenn getippt"},
+  {t:"↵", nm:"Gewählten Treffer nehmen", wo:"Leiste, wenn getippt"},
+  {t:"a–z", nm:"Springt ins Suchfeld", wo:"Leiste"}
+];
+
 document.addEventListener("keydown",e=>{
   const mod=e.metaKey||e.ctrlKey, imFeld=e.target.tagName==="INPUT"||e.target.tagName==="TEXTAREA";
   if(dlgOffen){
     if(e.key==="Escape"){ e.preventDefault(); dialogZu(); }
+    /* Die Schnellhilfe soll sich mit derselben Taste wieder schliessen. */
+    if(e.key==="F1"){ e.preventDefault(); dialogZu(); }
     return; }
   if(mod&&e.key>="1"&&e.key<="8"){ e.preventDefault();
     const p=PINS[+e.key-1];
     if(p) heftOeffne(p);
     else melde("Platz ⌘"+e.key+" ist frei");
     return; }
-  if(mod&&e.key==="k"){ e.preventDefault(); zeigeFlaeche("leiste"); return; }
-  if(mod&&e.key==="p"){ e.preventDefault(); zeigeFlaeche("planner"); return; }
-  if(mod&&e.key==="s"){ e.preventDefault(); $("#sichern").click(); return; }
+  /* Alles, was ein `tun` hat, kommt aus der Tabelle. */
+  const tr=TASTEN.find(x=>x.tun && x.key===e.key
+    && !!x.mod===!!mod && !!x.umschalt===!!e.shiftKey);
+  if(tr){ e.preventDefault(); tr.tun(); return; }
   if(e.key==="Escape"){
     if(flaeche==="leiste"&&eingabe){ eingabe=""; male(); }
     else if(flaeche!=="leiste") zeigeFlaeche("leiste");

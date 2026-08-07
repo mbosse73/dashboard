@@ -41,6 +41,11 @@ registriere({
   // Modul als fertig; die drei Zahlen im README zählt pruefen.mjs daraus.
   geruest:"Die Liste steht. Anlegen und Bearbeiten fehlen noch.",
 
+  // Pflicht, sobald das Modul eine `flaeche` hat. Die Hilfe baut sich
+  // daraus auf. Kurze Sätze: höchstens 20 Wörter und ein Komma je Satz,
+  // mindestens 40 Zeichen. pruefen.mjs schlägt sonst an.
+  hilfe:"Wofür das Modul da ist. Was man dort tut. Was es nicht tut.",
+
   zahl(){ return Z.beispiel.length; },
 
   // Treffer für die Leiste. q ist kleingeschrieben, roh im Original.

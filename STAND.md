@@ -28,7 +28,35 @@ vorerst wegzulassen, ist hinfällig.
 
 ---
 
-**Zuletzt: die Leiste als Pinnwand.** Statt „acht angeheftete Bookmarks"
+**Zuletzt: die Hilfe.** Zwei Flächen. Die **Hilfe** ist Modul 10 mit
+Index links, Inhalt rechts und eigenem Suchfeld. Die **Schnellhilfe** ist
+ein schwebendes Fenster mit allen Tastenkürzeln. `F1` öffnet die
+Schnellhilfe, `⇧F1` die Hilfe.
+
+**Die beiden Suchen sind konstruktiv getrennt.** Das Hilfe-Modul meldet
+**kein `suche`** an. Es kann in der Leiste gar nicht auftauchen — nicht
+„es tut es nicht", sondern „es kann nicht". Sein Feld hat einen eigenen
+Zustand `hiSuche` außerhalb von `Z`.
+
+**Zwei Tabellen, die je zweimal benutzt werden.** `TASTEN` schaltet die
+Tasten und füllt die Schnellhilfe. `MUSTER` liefert `deuten()` seine
+Regeln und der Hilfe ihre Beschreibung. Ein Kürzel kann dadurch nicht in
+der Liste stehen, ohne zu wirken — Fehlerbuch Punkt 9 in Bauform.
+
+**Jedes Modul beschreibt sich selbst**, über `hilfe` im eigenen Block.
+Der Text steht neben dem Code, den er beschreibt. `pruefen.mjs` verlangt
+ihn und prüft drei Regeln: höchstens 20 Wörter je Satz, höchstens ein
+Komma, mindestens 40 Zeichen. **Gegen alle drei Verstöße erprobt**, bevor
+sie eingebaut wurden: fehlender Text, echter Schachtelsatz, `"TODO"`.
+
+**Offen:** `F1` und `⇧F1` sind am Zielrechner nicht bestätigt. Die Liste
+schreibt „noch nicht bestätigt" dazu — eine Beschriftung ohne
+nachgewiesene Tat wäre Fehlerbuch Punkt 9. Die Tastenprüfung in
+`browsertest.html` ist als eigener Schritt vorgemerkt.
+
+---
+
+**Davor: die Leiste als Pinnwand.** Statt „acht angeheftete Bookmarks"
 gibt es **zwölf Plätze**, auf denen alles liegen darf — Webseiten wie
 Apps, später auch Textbausteine. Die Überschrift heißt **„Häufig
 benutzt"**. `⌘1` bis `⌘8` liegen auf den ersten acht; mehr freie

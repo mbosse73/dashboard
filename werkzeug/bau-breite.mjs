@@ -53,6 +53,21 @@ function vorrat(breit){
     ${zeile("Lizenzverlängerung","Nachverfolgen · 21. Aug")}</div>`;
 }
 
+/* ---------- Bookmarks in der Leiste ---------- */
+const BM=[["MDN Web Docs",1],["GitHub",2],["Excalidraw",3],["Linear Docs",4],
+  ["Can I Use",0],["Node.js Doku",0],["Obsidian API",0],["Raycast",0],
+  ["Hoppscotch",0],["Notion",0],["Figma Shortcuts",0],["Tailwind Docs",0],
+  ["Radix UI",0],["Coolors",0],["Stratechery",0],["Paul Graham",0],
+  ["Hacker News",0],["Refactoring Guru",0],["Fireship",0],["Kevin Powell",0],
+  ["Baremetrics",0],["ChartMogul",0],["Intranet",0],["Confluence",0]];
+const chip=([t,n])=>`<span class="b-chip${n?" an":""}">${n?`<b>⌘${n}</b>`:""}${esc(t)}</span>`;
+const bmBlock=(inhalt,n)=>`<div class="b-block">${abs("Bookmarks",n)}${inhalt}</div>`;
+const bmIst = bmBlock(`<div class="s-mk">${BM.filter(x=>x[1]).map(([t,n])=>
+  `<span><b>⌘${n}</b> ${esc(t)}</span>`).join("")}</div>`,"alle 24 ›");
+const bmAlle = bmBlock(`<div class="b-chips">${BM.map(chip).join("")}</div>`,"alle 24");
+const bmHalb = bmBlock(`<div class="b-chips">${BM.slice(0,12).map(chip).join("")}</div>`,
+  "12 von 24 ›");
+
 /* ---------- Der Kopf ---------- */
 const kopf = ein => `<div class="s-app knapp"><div class="s-kopf voll${ein?" ein":""}">
   <span class="k-uhr">08:07</span><span class="k-dat">Freitag, 7. August</span>
@@ -187,6 +202,13 @@ h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6
 .s-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:9px}
 .s-kachel{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:11px;
   background:var(--sheet);padding:15px;font-size:15px;font-weight:600;height:104px}
+.b-block{width:547px;background:var(--paper);padding:0 0 8px}
+.b-chips{display:flex;flex-wrap:wrap;gap:5px}
+.b-chip{font-size:13.5px;padding:5px 11px;border-radius:14px;border:1px solid var(--rule);
+  background:var(--sheet);white-space:nowrap}
+.b-chip.an{border-color:#d9dff1;background:var(--tinte-s)}
+.b-chip b{font-family:var(--etikett);font-size:10px;color:var(--tinte);margin-right:6px}
+.b-reihe{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
 .s-mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
 .s-mk span{padding:8px 10px;font-size:13.5px;color:var(--ink2);border-left:2px solid transparent}
 .s-mod{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
@@ -448,6 +470,47 @@ sein Feld in der nächsten.</div>
 </div>
 
 <div class="stufe">
+<h2>Punkt 5</h2>
+<h3>In der Leiste sind nur vier Bookmarks zu sehen</h3>
+<div class="mass warn">heute <b>4</b> in 64 px — weil die Leiste nur Angeheftetes zeigt und vier von acht Plätzen belegt sind</div>
+<div class="buehne" style="padding:14px 18px">${bmIst}</div>
+<div class="mass">Fassung A · alle <b>24</b> in <b>155 px</b> · Angeheftetes zuerst und mit Tinte</div>
+<div class="buehne" style="padding:14px 18px">${bmAlle}</div>
+<div class="mass">Fassung B · <b>12</b> in <b>91 px</b> · der Rest über „alle 24 ›"</div>
+<div class="buehne" style="padding:14px 18px">${bmHalb}</div>
+<table class="tab">
+<tr><th>&nbsp;</th><th>sichtbar</th><th>Höhe</th><th>gegen heute</th></tr>
+<tr><td>heute</td><td class="z">4</td><td class="z">64 px</td><td class="z">—</td></tr>
+<tr><td>Chips, 8</td><td class="z">8</td><td class="z">59 px</td><td class="z"><b>−5 px</b></td></tr>
+<tr><td>Chips, 12 <i>(B)</i></td><td class="z">12</td><td class="z">91 px</td><td class="z">+27 px</td></tr>
+<tr><td>Chips, 16</td><td class="z">16</td><td class="z">123 px</td><td class="z">+59 px</td></tr>
+<tr><td>Chips, 24 <i>(A)</i></td><td class="z"><b>24</b></td><td class="z">155 px</td><td class="z">+91 px</td></tr>
+</table>
+<div class="merk"><b>Acht Chips brauchen weniger Platz als heute vier.</b>
+Die jetzige Darstellung ist ein Raster aus 206 px breiten Feldern —
+„GitHub" bekommt darin so viel Platz wie „Refactoring Guru". Chips sind
+so breit wie ihr Wort.<br><br>
+<b>Empfohlen: A.</b> Die 91 px zusätzlich sind in der zweispaltigen
+Leiste vorhanden — dort bleiben 249 px frei. Angeheftetes steht vorn,
+trägt sein Kürzel und den Tintenton; alles Übrige folgt. Damit ist die
+Leiste vollständig, ohne dass man ins Modul wechseln muss.<br><br>
+<b>Wogegen A verstößt:</b> Die Leiste soll das Wesentliche zeigen, nicht
+alles. Bei 24 Bookmarks ist das noch zu überblicken — bei 80 wäre es eine
+Wand. Fassung B deckelt deshalb bei 12 und lässt den Rest im Modul.</div>
+<div class="merk warn"><b>Die eigentlich beste Auswahl fehlt uns:
+zuletzt geöffnet.</b> Ein Bookmark-Streifen sollte zeigen, was man
+tatsächlich benutzt — nicht die ersten zwölf der Erfassungsreihenfolge.
+Dafür bräuchte jedes Bookmark ein Feld <code>zul</code> mit dem Zeitpunkt
+des letzten Öffnens.<br><br>
+Das wäre eine <b>Änderung am Datenmodell</b> und gehört einzeln
+entschieden: Ein neues Feld überlebt in <code>heile()</code> auch alte
+Sicherungen, aber es steht danach in jeder Sicherung und in jedem Export.
+Bei 24 Bookmarks trägt die Erfassungsreihenfolge noch; bei mehr nicht.
+<b>Nicht Teil dieses Entwurfs</b> — hier nur genannt, damit die Frage
+nicht verlorengeht.</div>
+</div>
+
+<div class="stufe">
 <h2>Zusammen</h2>
 <table class="tab">
 <tr><th>&nbsp;</th><th>heute</th><th>Vorschlag</th></tr>
@@ -458,6 +521,7 @@ sein Feld in der nächsten.</div>
 <tr><td>Aufgabenvorrat</td><td class="z">262 px starr</td><td class="z"><b>262–400 px</b></td></tr>
 <tr><td>Planner-Höhe bei 1300 px Fenster</td><td class="z"><i>786 px</i> · 459 leer</td><td class="z"><b>1245 px</b> · 0 leer</td></tr>
 <tr><td>Kopf</td><td class="z">volle Breite</td><td class="z">auf 1480 px eingerückt</td></tr>
+<tr><td>Bookmarks in der Leiste</td><td class="z"><i>4</i> · 64 px</td><td class="z"><b>24</b> · 155 px</td></tr>
 <tr><td>unter 1100 px</td><td class="z">—</td><td class="z">unverändert</td></tr>
 </table>
 <div class="merk"><b>Nicht dabei, mit Absicht:</b><br><br>

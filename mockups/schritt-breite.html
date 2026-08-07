@@ -82,6 +82,13 @@ h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6
 .s-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:9px}
 .s-kachel{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:11px;
   background:var(--sheet);padding:15px;font-size:15px;font-weight:600;height:104px}
+.b-block{width:547px;background:var(--paper);padding:0 0 8px}
+.b-chips{display:flex;flex-wrap:wrap;gap:5px}
+.b-chip{font-size:13.5px;padding:5px 11px;border-radius:14px;border:1px solid var(--rule);
+  background:var(--sheet);white-space:nowrap}
+.b-chip.an{border-color:#d9dff1;background:var(--tinte-s)}
+.b-chip b{font-family:var(--etikett);font-size:10px;color:var(--tinte);margin-right:6px}
+.b-reihe{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
 .s-mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
 .s-mk span{padding:8px 10px;font-size:13.5px;color:var(--ink2);border-left:2px solid transparent}
 .s-mod{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
@@ -416,6 +423,47 @@ sein Feld in der nächsten.</div>
 </div>
 
 <div class="stufe">
+<h2>Punkt 5</h2>
+<h3>In der Leiste sind nur vier Bookmarks zu sehen</h3>
+<div class="mass warn">heute <b>4</b> in 64 px — weil die Leiste nur Angeheftetes zeigt und vier von acht Plätzen belegt sind</div>
+<div class="buehne" style="padding:14px 18px"><div class="b-block"><div class="s-abs"><h4>Bookmarks</h4><i></i><b>alle 24 ›</b></div><div class="s-mk"><span><b>⌘1</b> MDN Web Docs</span><span><b>⌘2</b> GitHub</span><span><b>⌘3</b> Excalidraw</span><span><b>⌘4</b> Linear Docs</span></div></div></div>
+<div class="mass">Fassung A · alle <b>24</b> in <b>155 px</b> · Angeheftetes zuerst und mit Tinte</div>
+<div class="buehne" style="padding:14px 18px"><div class="b-block"><div class="s-abs"><h4>Bookmarks</h4><i></i><b>alle 24</b></div><div class="b-chips"><span class="b-chip an"><b>⌘1</b>MDN Web Docs</span><span class="b-chip an"><b>⌘2</b>GitHub</span><span class="b-chip an"><b>⌘3</b>Excalidraw</span><span class="b-chip an"><b>⌘4</b>Linear Docs</span><span class="b-chip">Can I Use</span><span class="b-chip">Node.js Doku</span><span class="b-chip">Obsidian API</span><span class="b-chip">Raycast</span><span class="b-chip">Hoppscotch</span><span class="b-chip">Notion</span><span class="b-chip">Figma Shortcuts</span><span class="b-chip">Tailwind Docs</span><span class="b-chip">Radix UI</span><span class="b-chip">Coolors</span><span class="b-chip">Stratechery</span><span class="b-chip">Paul Graham</span><span class="b-chip">Hacker News</span><span class="b-chip">Refactoring Guru</span><span class="b-chip">Fireship</span><span class="b-chip">Kevin Powell</span><span class="b-chip">Baremetrics</span><span class="b-chip">ChartMogul</span><span class="b-chip">Intranet</span><span class="b-chip">Confluence</span></div></div></div>
+<div class="mass">Fassung B · <b>12</b> in <b>91 px</b> · der Rest über „alle 24 ›"</div>
+<div class="buehne" style="padding:14px 18px"><div class="b-block"><div class="s-abs"><h4>Bookmarks</h4><i></i><b>12 von 24 ›</b></div><div class="b-chips"><span class="b-chip an"><b>⌘1</b>MDN Web Docs</span><span class="b-chip an"><b>⌘2</b>GitHub</span><span class="b-chip an"><b>⌘3</b>Excalidraw</span><span class="b-chip an"><b>⌘4</b>Linear Docs</span><span class="b-chip">Can I Use</span><span class="b-chip">Node.js Doku</span><span class="b-chip">Obsidian API</span><span class="b-chip">Raycast</span><span class="b-chip">Hoppscotch</span><span class="b-chip">Notion</span><span class="b-chip">Figma Shortcuts</span><span class="b-chip">Tailwind Docs</span></div></div></div>
+<table class="tab">
+<tr><th>&nbsp;</th><th>sichtbar</th><th>Höhe</th><th>gegen heute</th></tr>
+<tr><td>heute</td><td class="z">4</td><td class="z">64 px</td><td class="z">—</td></tr>
+<tr><td>Chips, 8</td><td class="z">8</td><td class="z">59 px</td><td class="z"><b>−5 px</b></td></tr>
+<tr><td>Chips, 12 <i>(B)</i></td><td class="z">12</td><td class="z">91 px</td><td class="z">+27 px</td></tr>
+<tr><td>Chips, 16</td><td class="z">16</td><td class="z">123 px</td><td class="z">+59 px</td></tr>
+<tr><td>Chips, 24 <i>(A)</i></td><td class="z"><b>24</b></td><td class="z">155 px</td><td class="z">+91 px</td></tr>
+</table>
+<div class="merk"><b>Acht Chips brauchen weniger Platz als heute vier.</b>
+Die jetzige Darstellung ist ein Raster aus 206 px breiten Feldern —
+„GitHub" bekommt darin so viel Platz wie „Refactoring Guru". Chips sind
+so breit wie ihr Wort.<br><br>
+<b>Empfohlen: A.</b> Die 91 px zusätzlich sind in der zweispaltigen
+Leiste vorhanden — dort bleiben 249 px frei. Angeheftetes steht vorn,
+trägt sein Kürzel und den Tintenton; alles Übrige folgt. Damit ist die
+Leiste vollständig, ohne dass man ins Modul wechseln muss.<br><br>
+<b>Wogegen A verstößt:</b> Die Leiste soll das Wesentliche zeigen, nicht
+alles. Bei 24 Bookmarks ist das noch zu überblicken — bei 80 wäre es eine
+Wand. Fassung B deckelt deshalb bei 12 und lässt den Rest im Modul.</div>
+<div class="merk warn"><b>Die eigentlich beste Auswahl fehlt uns:
+zuletzt geöffnet.</b> Ein Bookmark-Streifen sollte zeigen, was man
+tatsächlich benutzt — nicht die ersten zwölf der Erfassungsreihenfolge.
+Dafür bräuchte jedes Bookmark ein Feld <code>zul</code> mit dem Zeitpunkt
+des letzten Öffnens.<br><br>
+Das wäre eine <b>Änderung am Datenmodell</b> und gehört einzeln
+entschieden: Ein neues Feld überlebt in <code>heile()</code> auch alte
+Sicherungen, aber es steht danach in jeder Sicherung und in jedem Export.
+Bei 24 Bookmarks trägt die Erfassungsreihenfolge noch; bei mehr nicht.
+<b>Nicht Teil dieses Entwurfs</b> — hier nur genannt, damit die Frage
+nicht verlorengeht.</div>
+</div>
+
+<div class="stufe">
 <h2>Zusammen</h2>
 <table class="tab">
 <tr><th>&nbsp;</th><th>heute</th><th>Vorschlag</th></tr>
@@ -426,6 +474,7 @@ sein Feld in der nächsten.</div>
 <tr><td>Aufgabenvorrat</td><td class="z">262 px starr</td><td class="z"><b>262–400 px</b></td></tr>
 <tr><td>Planner-Höhe bei 1300 px Fenster</td><td class="z"><i>786 px</i> · 459 leer</td><td class="z"><b>1245 px</b> · 0 leer</td></tr>
 <tr><td>Kopf</td><td class="z">volle Breite</td><td class="z">auf 1480 px eingerückt</td></tr>
+<tr><td>Bookmarks in der Leiste</td><td class="z"><i>4</i> · 64 px</td><td class="z"><b>24</b> · 155 px</td></tr>
 <tr><td>unter 1100 px</td><td class="z">—</td><td class="z">unverändert</td></tr>
 </table>
 <div class="merk"><b>Nicht dabei, mit Absicht:</b><br><br>

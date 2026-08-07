@@ -30,9 +30,43 @@ export const BAUM=[
   {e:2,t:"Staffeln ab Q4",von:"2026-08-24",bis:"2026-09-04",prio:"mittel"}
 ];
 
-export const kinderVon = i => {
+/* ---------- Eine grosse Gliederung ----------
+   Acht Zeilen und fuenf Wochen sind der freundliche Fall. Zum Pruefen
+   der PDF-Ausgabe braucht es einen Bestand, der auf ein A4-Blatt nicht
+   mehr passt: hier 43 Zeilen ueber ein halbes Jahr. Fest gerechnet,
+   nicht zufaellig — sonst saehe jede Ausgabe anders aus. */
+export const GROSS=(()=>{
+  const L=[{e:0,t:"Produktentwicklung 2026 / 27"}];
+  const start=tag("2026-08-10");
+  const nachN=n=>new Date(start.getTime()+n*86400000).toISOString().slice(0,10);
+  const bereiche=[
+    ["Marktlage und Wettbewerb",  ["Anbieter erfassen","Preise vergleichen","Lücken benennen","Bericht schreiben"]],
+    ["Positionierung",            ["Merkmale schärfen","Zielgruppen trennen","Botschaft festlegen"]],
+    ["Preismodell",               ["Staffeln entwerfen","Rabattlogik prüfen","Mit Vertrieb abstimmen","Freigabe einholen"]],
+    ["Technik",                   ["Einzeldatei absichern","Offlinebetrieb prüfen","Datenformat festschreiben","Sicherung testen","Lasttest fahren"]],
+    ["Einführung",                ["Schulungsunterlagen","Pilotgruppe begleiten","Rückmeldungen sammeln","Breite Einführung"]],
+    ["Betrieb",                   ["Fehlerbuch führen","Vierteljahresbericht","Nachschulung"]]
+  ];
+  let t=0;
+  bereiche.forEach(([b,kinder])=>{
+    L.push({e:1,t:b});
+    kinder.forEach(k=>{
+      const d=t*9;
+      L.push(t%3===2
+        ? {e:2,t:k,frist:nachN(d+7)}
+        : {e:2,t:k,von:nachN(d),bis:nachN(d+11),
+           fortschritt: t<4 ? [100,70,40,15][t] : undefined});
+      t++;
+    });
+  });
+  return L;
+})();
+
+/* Wieviele Knoten haengen unter dem an Stelle `i`? Nimmt die Liste
+   mit, weil es zwei gibt — die kleine und die grosse. */
+export const kinderVon = (L,i) => {
   let n=0;
-  for(let j=i+1;j<BAUM.length && BAUM[j].e>BAUM[i].e;j++) n++;
+  for(let j=i+1;j<L.length && L[j].e>L[i].e;j++) n++;
   return n;
 };
 export const spaet = k => (k.frist||k.bis) && (k.frist||k.bis) < HEUTE && !k.fertig;

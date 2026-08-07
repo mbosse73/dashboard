@@ -376,6 +376,8 @@ h1{font-size:21px;letter-spacing:-.2px;margin-bottom:5px}
 
 /* ---- Listen und Hinweise ---- */
 table{border-collapse:collapse;width:100%}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--ink3);padding:6px 10px;border-bottom:1px solid var(--rule2);font-weight:600}
 td{padding:6px 10px;border-bottom:1px solid var(--rule);font-size:13px;vertical-align:top}
 tr:last-child td{border-bottom:0}
 td:first-child{width:190px;white-space:nowrap}
@@ -459,19 +461,49 @@ ${karte("B6","Rückgängig","Undo liegt auf dem Datenmodell, nicht auf der Anzei
   +'Einrücken, Verschieben, Löschen, einen ganzen Absatz Tippen. '
   +'<b>Strg+⇧+Z</b> stellt wieder her.</div>')}
 
-${karte("B7","PDF-Ausgabe","Gantt und Mindmap gehen als PDF heraus — <b>ohne Druckdialog und ohne Bibliothek</b>. Die Datei wird byteweise selbst geschrieben. <b>Die beiden Beispiele liegen als echte PDF neben diesem Entwurf</b>: <span style=\"font-family:var(--mono)\">mockups/outliner-gantt.pdf</span> und <span style=\"font-family:var(--mono)\">outliner-mindmap.pdf</span>. Bitte dort ansehen — eine Abbildung davon würde nichts beweisen.",
+${karte("B7","PDF-Ausgabe","Gantt und Mindmap gehen als PDF heraus — <b>ohne Druckdialog und ohne Bibliothek</b>. Die Datei wird byteweise selbst geschrieben. <b>Fünf echte Beispiele liegen neben diesem Entwurf</b>, darunter zwei mit einer Gliederung aus 30 Punkten über sieben Monate. Bitte dort ansehen — eine Abbildung würde nichts beweisen.",
+  '<table><tr><th>Datei</th><th>was sie zeigt</th></tr>'
+  +[["outliner-gantt.pdf","kleiner Plan, A4, ein Blatt"],
+    ["outliner-mindmap.pdf","kleine Mindmap, A4"],
+    ["outliner-gantt-gross-a4.pdf","<b>30 Punkte, A4 — zwei Blätter</b>, Kopf und Namensspalte wiederholt"],
+    ["outliner-gantt-gross-a2.pdf","<b>dieselben 30 Punkte, A2 — ein Blatt</b>, größere Schrift"],
+    ["outliner-mindmap-gross.pdf","30 Punkte, Format selbst gewählt: A3"]]
+   .map(([d,w])=>'<tr><td style="width:250px;font-family:var(--mono);font-size:11.5px">'
+     +esc(d)+'</td><td>'+w+'</td></tr>').join("")
+  +'</table>')}
+
+${karte("B7b","Groß drucken: zwei Wege, und wo sie enden","Ein Gantt wächst in zwei Richtungen. Die beiden verlangen verschiedene Antworten — das ist keine Feinheit, sondern der Kern der Sache.",
   '<div class="hin" style="max-width:none">'
-  +'<b>Was das kostet:</b> rund 300 Zeilen — ein PDF-Schreiber und die '
-  +'beiden Zeichnungen. Der Schreiber kennt Flächen, Linien, Kurven und '
-  +'Text.<br><br>'
+  +'<b>Nach unten, mit der Zahl der Zeilen.</b> Dagegen hilft ein Umbruch. '
+  +'Jedes Blatt wiederholt Kopf und Namensspalte und trägt „Blatt 2 von 3“ — '
+  +'sonst weiß niemand, welcher Balken zu welcher Zeile gehört.<br><br>'
+  +'<b>Nach rechts, mit der Länge des Zeitraums.</b> Dagegen hilft <b>kein</b> '
+  +'Umbruch: Ein Zeitstrahl, der mitten im November aufhört und auf dem '
+  +'nächsten Blatt weitergeht, ist nicht mehr zu lesen. Die Achse wird '
+  +'deshalb immer auf die Blattbreite gerechnet, und nur die Beschriftung '
+  +'wird gröber: <b>Wochen → Monate → Vierteljahre</b>. Im großen Beispiel '
+  +'schaltet sie von selbst auf Monate um.<br><br>'
+  +'<b>Wahlweise größer statt mehrseitig.</b> A4 bis A0, quer, alles nach DIN. '
+  +'Passt alles auf ein Blatt, werden die Zeilen auseinandergezogen, bis der '
+  +'Bogen gefüllt ist, und Schrift und Balken wachsen mit — ein A2-Plan mit '
+  +'A4-Schrift wäre korrekt gerechnet und trotzdem unbrauchbar.<br><br>'
+  +'<b>Eine Mindmap wird nie umgebrochen.</b> Ein zerschnittener Ast ist kein '
+  +'halber Ast. Sie bekommt das kleinste Format, auf dem ihre Schrift über '
+  +'sieben Punkt bleibt — im großen Beispiel A3. Die Fußzeile nennt das '
+  +'gewählte Format.'
+  +'</div>')}
+
+${karte("B7c","Was das kostet","Der Schreiber und die beiden Zeichnungen zusammen.",
+  '<div class="hin" style="max-width:none">'
+  +'<b>Rund 400 Zeilen</b> — etwas mehr als die 300 von vorhin, weil '
+  +'Blattformate, Seitenumbruch und die mitwachsende Zeitachse dazugekommen '
+  +'sind.<br><br>'
   +'<b>Warum es ohne Bibliothek geht:</b> Ein PDF ist ein Textformat aus '
-  +'nummerierten Objekten und einem Strom von Zeichenbefehlen. Benutzt '
-  +'werden nur die vierzehn Standardschriften — Helvetica ist darunter '
-  +'und muss nicht eingebettet werden. Das spart die Schriftdatei und die '
-  +'Lizenzfrage.<br><br>'
-  +'<b>Zwei Fallen, beide ausgeräumt:</b> Der Nullpunkt liegt unten links, '
-  +'nicht oben links. Und die Standardschriften erwarten WinAnsi statt '
-  +'UTF-8 — ohne Umrechnung stünde statt „ü“ Kauderwelsch im Blatt.'
+  +'nummerierten Objekten und einem Strom von Zeichenbefehlen. Benutzt werden '
+  +'nur die vierzehn Standardschriften — Helvetica ist darunter und muss nicht '
+  +'eingebettet werden.<br><br>'
+  +'<b>Die Grenze:</b> Pfeile und Häkchen werden im PDF zu „?“. Namen, '
+  +'Umlaute und das Eurozeichen nicht.'
   +'</div>')}
 
 ${karte("B8","Tastenbelegung","Elf Tasten und eine getippte Angabe. Das ist die ganze Bedienung.",

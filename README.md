@@ -110,9 +110,10 @@ sodass sich einzelne Teile ersetzen lassen, ohne die Datei anzufassen.
 ## Stand
 
 Beide Oberflächen stehen. 12 Module angemeldet,
-davon 7 fertig und 5 als Gerüst.
+davon 8 fertig und 4 als Gerüst.
 Fertig heißt: Anlegen, Bearbeiten und Löschen tragen — Kontakte,
-Aufgaben, Kalender, Jahreskalender, Notizen, Rechner, Code-Beautifier. Die übrigen fünf
+Aufgaben, Kalender, Jahreskalender, Notizen, Bookmarks, Rechner,
+Code-Beautifier. Die übrigen vier
 sagen auf ihrer Fläche selbst, was ihnen noch fehlt. Die Reihenfolge
 steht in `doku/ROADMAP.md`.
 

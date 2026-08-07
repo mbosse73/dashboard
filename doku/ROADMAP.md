@@ -9,7 +9,9 @@ dieser Reihenfolge:
 
 1. **Schritt 8** — Hilfe, baut sich aus dem Register auf
 2. **Schritt 9** — Outliner
-3. **Schritt 4** und **Schritt 7** — warten auf den Browsertest
+3. **Schritt 4** und der Apps-Teil von **Schritt 7** — warten auf den
+   Browsertest. Die Bookmarks aus Schritt 7 sind erledigt; sie hingen
+   nicht am Test.
 4. **Schritt 6** — Workflows, zuletzt
 
 ---
@@ -193,8 +195,17 @@ Format wie die Felder des Dialog-Bausteins.
 
 ## Schritt 7 — Bookmarks und Apps bearbeiten
 
-Anlegen, Bearbeiten, Löschen, Gruppen verwalten. Bei Apps den in Schritt 0
-ermittelten Weg verwenden.
+**Bookmarks: erledigt.** Anlegen, Bearbeiten, Löschen, Anheften und Lösen,
+Gruppen umbenennen und zusammenlegen. Öffnen in einem neuen Tab, aus dem
+Modul, aus der Suche, von den Kacheln der Leiste und über `⌘1` bis `⌘8`.
+
+Der Teil hing **nicht** am Browsertest: Der betrifft das Öffnen einer
+lokalen Datei, und Bookmarks zeigen auf `http(s)`. Deshalb vorgezogen.
+
+**Apps: offen, wartet weiter auf Schritt 0.** Ein Appstarter zeigt auf
+`file:///C:/…`. Ob Edge das aus einer lokal geöffneten Datei heraus
+zulässt, entscheidet, ob `window.open` genügt oder ob es ein anklickbarer
+Verweis sein muss. Ohne diese Antwort wäre der Weg geraten.
 
 ---
 

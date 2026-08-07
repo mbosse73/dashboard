@@ -791,9 +791,12 @@ function wegKnopf(art, ziel){
 }
 /* Aus einem Treffer der Leiste heraus gibt es kein <a> zum Anklicken.
    Ein kurz eingehängter Verweis leistet dasselbe. */
-function oeffneWeg(url){
+function oeffneWeg(url, neuerTab){
   const a=document.createElement("a");
   a.href=url; a.style.display="none";
+  /* `rel` gehört zwingend zu `target`: Ohne das bekäme die geöffnete
+     Seite über window.opener Zugriff auf diese hier. */
+  if(neuerTab){ a.target="_blank"; a.rel="noopener noreferrer"; }
   document.body.appendChild(a); a.click(); a.remove();
 }
 
@@ -1456,6 +1459,28 @@ function heile(z){
     if(!/^\d{1,2}:\d{2}$/.test(String(t.zeit))){ t.zeit="09:00"; n++; }
     if(!(Number(t.dauer)>0)){ t.dauer=30; n++; }
   });
+  /* Bookmarks hatten anfangs keine id — sie wurden über ihre Adresse
+     erkannt, und `pins` merkte sich ebenfalls die Adresse. Sobald sich
+     eine Adresse bearbeiten lässt, trägt das nicht mehr: Die Anheftung
+     risse ab, und zwei Marken mit derselben Adresse wären nicht zu
+     unterscheiden. Einmal nachgezogen — beim Start wie beim Laden einer
+     älteren Sicherung. Die Vorgabe läuft absichtlich durch denselben
+     Weg, damit er bei jedem Start benutzt wird und nicht verrottet. */
+  (z.marken||[]).forEach((m,i)=>{ if(!m.id){ m.id="m-"+(i+1); n++; } });
+  if(Array.isArray(z.pins)){
+    const gilt=[];
+    z.pins.forEach(p=>{
+      if((z.marken||[]).some(m=>m.id===p)){ gilt.push(p); return; }
+      const m=(z.marken||[]).find(x=>x.u===p);
+      n++;
+      /* Zeigt ein Platz ins Leere, fällt er weg. Ein leerer Platz in der
+         Mitte verschöbe sonst alle Tastenkürzel dahinter. */
+      if(m) gilt.push(m.id);
+    });
+    if(gilt.length!==z.pins.length || gilt.some((p,i)=>p!==z.pins[i])){
+      z.pins.length=0; gilt.forEach(p=>z.pins.push(p));
+    }
+  }
   return n;
 }
 heile(Z);
@@ -2505,37 +2530,225 @@ registriere({
 /* ===== MODUL marken ===== */
 registriere({
   id:"marken", nr:"09", nm:"Bookmarks",
-  geruest:"Anheften und Lösen tragen bereits. Öffnen, Anlegen und Bearbeiten "
-    +"fehlen noch — auch hinter ⌘1 bis ⌘8 passiert deshalb nichts.",
   zahl:()=>MARKEN.length,
   suche(q){
-    return MARKEN.filter(m=>(m.t+" "+m.u).toLowerCase().includes(q)).slice(0,6).map(m=>
-      treff("Bookmark",m.t,m.u+" · "+m.g,"↵",()=>melde(nochNicht(m.u))));
+    return MARKEN.filter(m=>(m.t+" "+m.u+" "+m.g).toLowerCase().includes(q)).slice(0,6)
+      .map(m=>treff("Bookmark",m.t,m.u+" · "+m.g+mkPlatz(m),"↵",()=>mkOeffne(m)));
+  },
+  /* Nur bei etwas, das wirklich nach einer Adresse aussieht. Sonst böte
+     die Leiste bei jedem Satz mit Punkt ein Bookmark an. */
+  erfassen(d){
+    if(!mkNachUrl(d.titel)) return [];
+    return [treff("Bookmark",d.titel,"als neues Bookmark anlegen","↵",
+      ()=>mkDialog(null,d.titel))];
   },
   flaeche(b){
+    /* „Alle Bookmarks“, nicht „Bookmarks“ — der Modulkopf darüber sagt
+       den Namen schon, zweimal untereinander liest sich wie ein Fehler. */
+    const a=abschnitt("Alle Bookmarks",String(MARKEN.length));
+    const neu=el("button","n","neues Bookmark +");
+    neu.onclick=()=>mkDialog(null);
+    a.appendChild(neu);
+    b.appendChild(a);
     b.appendChild(el("div","hinweis",
-      "Angeheftetes bekommt einen Platz auf der Leiste. Acht Plätze, mehr nicht."));
-    [...new Set(MARKEN.map(m=>m.g))].forEach(g=>{
+      "Ein Klick auf den Titel öffnet in einem neuen Tab. Angeheftetes bekommt einen "
+      +"Platz auf der Leiste und liegt unter ⌘1 bis ⌘8 — acht Plätze, mehr nicht. "
+      +"Eine Gruppe entsteht mit dem ersten Bookmark darin und verschwindet mit dem letzten."));
+    if(!MARKEN.length){
+      b.appendChild(el("div","leer",
+        "Noch kein Bookmark erfasst. „neues Bookmark +“ legt das erste an."));
+      return;
+    }
+    mkGruppen().forEach(g=>{
       const l=MARKEN.filter(m=>m.g===g);
-      b.appendChild(abschnitt(g,String(l.length)));
-      l.forEach(m=>{
-        const an=PINS.indexOf(m.u)>=0;
-        const r=el("div","z");
-        r.append(el("span","zb",'<span class="zt">'+esc(m.t)+'</span>'
-          +'<span class="zm">'+esc(m.u)+'</span>'));
-        const t=el("button","tat still", an?"⌘"+(PINS.indexOf(m.u)+1):"anheften");
-        t.onclick=e=>{ e.stopPropagation();
-          if(an) PINS.splice(PINS.indexOf(m.u),1);
-          else { if(PINS.length>=8){ melde("Acht Plätze belegt"); return; } PINS.push(m.u); }
-          bewahre(); male(); };
-        r.appendChild(t);
-        r.onclick=()=>melde(nochNicht(m.u));
-        b.appendChild(r);
-      });
+      const k=abschnitt(g,String(l.length));
+      const um=el("button","n","umbenennen");
+      um.setAttribute("aria-label","Gruppe "+g+" umbenennen");
+      um.onclick=()=>mkGruppeDialog(g);
+      k.appendChild(um);
+      b.appendChild(k);
+      l.forEach(m=>b.appendChild(mkZeile(m)));
     });
   }
 });
 /* ===== ENDE marken ===== */
+
+/* ---------- Bookmarks: Adressen, Plätze, Gruppen ---------- */
+
+/* Gespeichert wird die Adresse so, wie man sie liest: „github.com“.
+   Zum Öffnen braucht der Browser ein Schema. Wer selbst eines angibt —
+   mailto:, file: — meint es und bekommt es unverändert zurück. */
+function mkUrl(u){
+  const s=String(u||"").trim();
+  return /^[a-z][a-z0-9+.-]*:/i.test(s) ? s : "https://"+s;
+}
+const mkNachUrl = t =>
+  /^[a-z][a-z0-9+.-]*:\/\//i.test(t) || /^[^\s]+\.[a-z]{2,}(\/[^\s]*)?$/i.test(t);
+
+function mkOeffne(m){
+  if(!String(m.u||"").trim()){ melde(m.t+" hat keine Adresse"); return; }
+  oeffneWeg(mkUrl(m.u), true);
+  melde(m.t+" geöffnet");
+}
+/* Reihenfolge der Gruppen ist die Reihenfolge ihres ersten Bookmarks —
+   keine Sortierung. Wer umsortieren will, verschiebt Einträge. */
+const mkGruppen = () => [...new Set(MARKEN.map(m=>m.g))];
+const mkPlatz = m => PINS.indexOf(m.id)>=0 ? " · ⌘"+(PINS.indexOf(m.id)+1) : "";
+
+function mkZeile(m){
+  const i=PINS.indexOf(m.id), an=i>=0;
+  const r=el("div","z");
+  /* Ein echter Knopf statt eines Klicks auf die Zeile: mit der Tastatur
+     erreichbar, und der Zeiger sagt von selbst, dass es hier weitergeht. */
+  const oeff=el("button","zb",'<span class="zt">'+esc(m.t)+'</span>'
+    +'<span class="zm">'+esc(m.u)+'</span>');
+  oeff.setAttribute("aria-label",m.t+" öffnen — "+m.u);
+  oeff.onclick=()=>mkOeffne(m);
+  /* Angeheftet trägt Tinte, weil der Platz dann belegt und benutzbar
+     ist — kein Kategorieton, sondern „aktiv“. */
+  const p=el("button", an?"tat":"tat still", an?"⌘"+(i+1):"anheften");
+  p.setAttribute("aria-label",(an?"Anheftung lösen: ":"Anheften: ")+m.t);
+  p.onclick=()=>mkHeften(m);
+  const bx=el("button","tat still","bearbeiten");
+  bx.setAttribute("aria-label",m.t+" bearbeiten");
+  bx.onclick=()=>mkDialog(m);
+  r.append(oeff,p,bx);
+  return r;
+}
+
+function mkHeften(m){
+  const i=PINS.indexOf(m.id);
+  if(i>=0){ PINS.splice(i,1); bewahre(); male(); melde("Anheftung gelöst: "+m.t); return; }
+  if(PINS.length>=8){ melde("Acht Plätze belegt — erst einen lösen"); return; }
+  PINS.push(m.id); bewahre(); male();
+  melde(m.t+" liegt auf ⌘"+PINS.length);
+}
+
+/* ---------- Der Bookmark-Dialog ----------
+   Titel und Gruppe nebeneinander, die Adresse breit darunter. Das Feld
+   für eine neue Gruppe steht direkt bei der Auswahl, die es hervorruft —
+   näher an seinem Auslöser als an der Reihenfolge Was → Wann → Wer. */
+const MKLEER={id:null,t:"",u:"",g:"",gneu:"",fest:false};
+const MK_NEU="__neu";
+
+function mkFelder(){
+  return [
+    {schl:"t", nm:"Titel", art:"text"},
+    {schl:"g", nm:"Gruppe", art:"auswahl", schaltet:true,
+     optionen: mkGruppen().map(g=>[g,g]).concat([[MK_NEU,"Neue Gruppe …"]])},
+    {schl:"gneu", nm:"Name der neuen Gruppe", art:"text", breit:true,
+     nurWenn: w=>w.g===MK_NEU},
+    {schl:"u", nm:"Adresse", art:"text", breit:true,
+     sub:"Ohne https:// genügt — das ergänzt sich beim Öffnen."},
+    {schl:"fest", nm:"Auf die Leiste heften", art:"schalter",
+     sub:"Belegt einen der acht Plätze ⌘1 bis ⌘8."}
+  ];
+}
+
+function mkDialog(m, vorbelegt){
+  const neu=!m;
+  const start=Object.assign({}, MKLEER, m||{});
+  if(neu){
+    if(vorbelegt) start.u=vorbelegt;
+    start.g=mkGruppen()[0]||MK_NEU;
+  }
+  start.fest = !neu && PINS.indexOf(m.id)>=0;
+  dialog({
+    art: neu ? "Neues Bookmark" : "Bookmark bearbeiten",
+    titel: w=>String(w.t||"").trim()||String(w.u||"").trim(),
+    felder: mkFelder(),
+    werte: start,
+    merk: "<b>Titel und Adresse sind Pflicht.</b> Die Adresse darf ohne Schema stehen; "
+      +"beim Öffnen wird <code>https://</code> davorgesetzt. Wer <code>mailto:</code> oder "
+      +"<code>file:</code> selbst angibt, bekommt es unverändert zurück.",
+    pruefe: w=>{
+      if(!String(w.t||"").trim()) return {schl:"t", text:"Ohne Titel geht es nicht."};
+      if(!String(w.u||"").trim()) return {schl:"u", text:"Ohne Adresse geht es nicht."};
+      if(w.g===MK_NEU && !String(w.gneu||"").trim())
+        return {schl:"gneu", text:"Die neue Gruppe braucht einen Namen."};
+      return null;
+    },
+    loeschen: neu ? null : {
+      frage: w=>{
+        const i=PINS.indexOf(m.id), letzte=MARKEN.filter(x=>x.g===m.g).length===1;
+        return "<b>"+esc(String(w.t||"").trim()||m.t)+" wirklich löschen?</b><ul>"
+          +"<li>Die Zeile verschwindet aus der Gruppe „"+esc(m.g)+"“.</li>"
+          +"<li>"+(i>=0
+            ? "Platz ⌘"+(i+1)+" wird frei; was dahinter liegt, rückt auf."
+            : "Es ist nichts angeheftet, kein Platz ändert sich.")+"</li>"
+          +(letzte ? "<li>Es ist das letzte in „"+esc(m.g)
+            +"“ — die Gruppe verschwindet mit.</li>" : "")
+          +"</ul>";
+      },
+      tun: ()=>mkLoeschen(m)
+    },
+    speichern: w=>mkSpeichern(w,neu)
+  });
+}
+
+function mkSpeichern(w,neu){
+  w.t=String(w.t||"").trim();
+  w.u=String(w.u||"").trim();
+  let g=String(w.g||"").trim();
+  if(g===MK_NEU) g=String(w.gneu||"").trim();
+  w.g=g||"Ohne Gruppe";
+  delete w.gneu;
+  const fest=!!w.fest; delete w.fest;
+
+  if(neu){ w.id=neueId("m"); MARKEN.push(w); }
+  else {
+    /* An Ort und Stelle ändern, nicht austauschen — PINS und die Leiste
+       zeigen auf dieses Objekt. */
+    const z=MARKEN.find(x=>x.id===w.id);
+    if(!z){ melde("Das Bookmark ist nicht mehr da."); male(); return; }
+    ["t","u","g"].forEach(s=>{ z[s]=w[s]; });
+  }
+  const i=PINS.indexOf(w.id);
+  let zusatz="";
+  if(fest && i<0){
+    if(PINS.length>=8) zusatz=" · acht Plätze belegt, nicht angeheftet";
+    else { PINS.push(w.id); zusatz=" · liegt auf ⌘"+PINS.length; }
+  } else if(!fest && i>=0){ PINS.splice(i,1); zusatz=" · Anheftung gelöst"; }
+  bewahre(); male();
+  melde(w.t+(neu?" angelegt":" gespeichert")+zusatz);
+}
+
+function mkLoeschen(m){
+  const nm=m.t, i=PINS.indexOf(m.id);
+  if(i>=0) PINS.splice(i,1);
+  const j=MARKEN.indexOf(m);
+  if(j>=0) MARKEN.splice(j,1);          /* splice, nie neu zuweisen */
+  bewahre(); male();
+  melde(nm+" gelöscht"+(i>=0?" · Platz ⌘"+(i+1)+" frei":""));
+}
+
+/* Eine Gruppe ist kein eigener Datensatz, sondern das Feld `g` an den
+   Bookmarks. Umbenennen heißt deshalb: an allen ändern. Ein Löschen gibt
+   es folgerichtig nicht — eine Gruppe verschwindet, wenn ihr letztes
+   Bookmark geht oder umzieht. */
+function mkGruppeDialog(g){
+  const n=MARKEN.filter(m=>m.g===g).length;
+  dialog({
+    art:"Gruppe umbenennen",
+    titel: w=>String(w.g||"").trim()||g,
+    felder:[{schl:"g", nm:"Name der Gruppe", art:"text", breit:true}],
+    werte:{g},
+    merk:"Der Name ändert sich an "+(n===1?"dem einen Bookmark":"allen "+n+" Bookmarks")
+      +" dieser Gruppe. Trägt man den Namen einer vorhandenen Gruppe ein, werden beide "
+      +"zu einer — das ist der Weg, Gruppen zusammenzulegen.",
+    pruefe: w=>String(w.g||"").trim() ? null
+      : {schl:"g", text:"Ohne Namen geht es nicht."},
+    speichern: w=>{
+      const neu=String(w.g).trim();
+      if(neu===g) return;
+      const rein=mkGruppen().indexOf(neu)>=0;
+      MARKEN.forEach(m=>{ if(m.g===g) m.g=neu; });
+      bewahre(); male();
+      melde(rein ? "„"+g+"“ in „"+neu+"“ aufgegangen"
+                 : "Gruppe heißt jetzt „"+neu+"“");
+    }
+  });
+}
 
 /* ---------- 13 Workflows ---------- */
 /* ===== MODUL workflows ===== */
@@ -2871,12 +3084,14 @@ function ruhezustand(box){
   alle.onclick=()=>zeigeFlaeche("marken"); a.appendChild(alle);
   box.appendChild(a);
   const g=el("div","marken");
-  PINS.forEach((u,i)=>{
-    const m=MARKEN.find(x=>x.u===u); if(!m) return;
+  PINS.forEach((id,i)=>{
+    const m=MARKEN.find(x=>x.id===id); if(!m) return;
     const n=el("button","mk",'<b>⌘'+(i+1)+'</b><span>'+esc(m.t)+'</span>');
-    n.onclick=()=>melde(nochNicht(m.u)); g.appendChild(n);
+    n.setAttribute("aria-label",m.t+" öffnen — "+m.u);
+    n.onclick=()=>mkOeffne(m); g.appendChild(n);
   });
-  if(!PINS.length) g.appendChild(el("div","leer","Nichts angeheftet."));
+  if(!PINS.length) g.appendChild(el("div","leer",
+    "Nichts angeheftet. Im Modul Bookmarks „anheften“ legt einen Eintrag hierher."));
   box.appendChild(g);
 
   box.appendChild(abschnitt("Module",MODULE.filter(m=>!m.versteckt).length+" angemeldet"));
@@ -3257,8 +3472,9 @@ document.addEventListener("keydown",e=>{
     if(e.key==="Escape"){ e.preventDefault(); dialogZu(); }
     return; }
   if(mod&&e.key>="1"&&e.key<="8"){ e.preventDefault();
-    const u=PINS[+e.key-1];
-    if(u){ const m=MARKEN.find(x=>x.u===u); melde(nochNicht(m?m.t:u)); }
+    const id=PINS[+e.key-1];
+    const m=id ? MARKEN.find(x=>x.id===id) : null;
+    if(m) mkOeffne(m);
     else melde("Platz ⌘"+e.key+" ist frei");
     return; }
   if(mod&&e.key==="k"){ e.preventDefault(); zeigeFlaeche("leiste"); return; }

@@ -159,12 +159,40 @@ werden.
 
 ---
 
-## 09 Bookmarks — Gerüst
+## 09 Bookmarks — fertig
 
 Nach Gruppen geordnet. Acht anheftbare Plätze auf `⌘1` bis `⌘8`, sichtbar
-im Ruhezustand der Leiste.
+im Ruhezustand der Leiste. Ein Klick auf den Titel öffnet in einem neuen
+Tab, `⌘1` bis `⌘8` und die Kacheln der Leiste ebenso.
 
-**Fehlt noch:** Anlegen, Bearbeiten, Löschen, Gruppen verwalten.
+**Adressen stehen so da, wie man sie liest** — `github.com`, ohne Schema.
+Beim Öffnen setzt `mkUrl()` `https://` davor. Wer selbst ein Schema angibt
+(`mailto:`, `file:`), bekommt es unverändert zurück. Der Verweis trägt
+`target="_blank"` und zwingend `rel="noopener noreferrer"`.
+
+**Jedes Bookmark hat eine `id`.** Anfangs wurden sie über ihre Adresse
+erkannt, und `pins` merkte sich ebenfalls die Adresse — sobald sich eine
+Adresse bearbeiten lässt, risse damit die Anheftung ab. `heile()` zieht
+das beim Start und beim Laden einer älteren Sicherung einmal nach: fehlende
+`id` vergeben, `pins` von Adressen auf `id` umstellen, ins Leere zeigende
+Plätze streichen. Ein leerer Platz in der Mitte verschöbe sonst alle
+Tastenkürzel dahinter.
+
+**Eine Gruppe ist kein eigener Datensatz**, sondern das Feld `g` an den
+Bookmarks. Sie entsteht mit dem ersten Eintrag darin und verschwindet mit
+dem letzten. Umbenennen ändert `g` an allen Einträgen der Gruppe; trägt man
+den Namen einer vorhandenen Gruppe ein, werden beide zu einer — das ist der
+Weg, Gruppen zusammenzulegen. Ein Löschen der Gruppe gibt es folgerichtig
+nicht; es wäre ein Löschen ihrer Bookmarks unter falschem Namen.
+
+Im Dialog stehen Titel und Gruppe nebeneinander, die Adresse breit
+darunter. Das Feld für eine neue Gruppe hängt über `nurWenn` an der
+Auswahl und steht direkt bei ihr — näher an seinem Auslöser als an der
+Reihenfolge Was → Wann → Wer.
+
+Die Leiste bietet ein Bookmark beim Erfassen nur an, wenn die Eingabe
+wirklich nach einer Adresse aussieht: ein Punkt, kein Leerzeichen, eine
+Endung aus Buchstaben. Sonst käme das Angebot bei jedem Satz mit Punkt.
 
 ---
 

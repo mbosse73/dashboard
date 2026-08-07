@@ -441,6 +441,67 @@ statt vorher rund 1800.
 
 ---
 
+## Die Breite auf 24 Zoll · Vorgang 1
+
+Gemessen bei 1920 × 950 — im Rumpf bleiben 895 px.
+
+### Die Leiste, Ruhezustand
+
+- [ ] Alle sechs Blöcke sind **ohne Scrollen** zu sehen: links
+      Überfälliges, nächster Termin, Schmierzettel — rechts Favoriten,
+      Bookmarks, Module **[nur du]**
+- [ ] Die Modulliste ist vollständig. Vorher lagen 286 px unter der
+      Kante **[nur du]**
+- [ ] Beide Spalten beginnen auf derselben Höhe **[vorgeprüft]**
+
+### Umbrechen
+
+- [ ] Fenster auf unter 1100 px ziehen — alles steht wieder
+      **untereinander**, in der alten Reihenfolge **[nur du]**
+- [ ] Bei 1024, 852 und 390 px läuft nichts seitlich hinaus
+      **[vorgeprüft]**
+- [ ] Auf dem iPhone ansehen — einspaltig wie bisher **[nur du]**
+
+### Das Suchergebnis bleibt schmal
+
+- [ ] `meier` eintippen. Die Treffer stehen **einspaltig** und rund
+      860 px breit, nicht über die volle Fläche **[vorgeprüft]**
+- [ ] Feld leeren — die Fläche wird wieder zweispaltig **[vorgeprüft]**
+      *Der Grund: Treffer sind nach Rang geordnet, und `↵` nimmt den
+      obersten. In zwei Spalten stünde der zweitbeste daneben statt
+      darunter.*
+
+### Der Planner
+
+- [ ] Die Spaltenränder reichen bis zum **unteren Rand** der Fläche.
+      Vorher hörten sie mitten im Bild auf **[nur du]**
+- [ ] Die Terminblöcke sind schmaler als vorher — ein halbstündiger
+      Standup füllt nicht mehr die halbe Breite **[nur du]**
+- [ ] Der Aufgabenvorrat links ist breiter; „Rückruf Kanzlei · Nach-
+      verfolgen · ohne Frist · Eva Bergmann" bricht weniger um **[nur du]**
+- [ ] Fenster auf 1280 px ziehen — die Tagesspalten sind **nicht**
+      schmaler als vor der Änderung **[vorgeprüft]**
+- [ ] Ziehen funktioniert unverändert: Aufgabe aus der Liste auf eine
+      Stunde, und wieder zurück **[nur du]**
+
+### Der Kopf
+
+- [ ] Der Themen-Umschalter steht näher am Inhalt, nicht mehr in der
+      Ecke. Die helle Leiste selbst läuft weiter über die volle Breite
+      **[nur du]**
+
+### Übergreifend
+
+- [ ] Thema **Basecamp** — dieselbe Anordnung, andere Farben
+      **[vorgeprüft]**
+- [ ] Alle Modulflächen einmal öffnen: nichts läuft seitlich hinaus,
+      erklärender Text bleibt schmal **[nur du]**
+- [ ] Seite neu laden — unverändert **[vorgeprüft]**
+- [ ] Sichern, laden — unverändert. Es hat sich nichts an den Daten
+      geändert, das muss also durchlaufen **[vorgeprüft]**
+
+---
+
 ## Vollhöhe auf dem iPhone · **bestätigt**
 
 Fehlerbuch Punkt 15. `100vh` ist auf iOS die Höhe *ohne* die

@@ -1,0 +1,213 @@
+/* Erzeugt mockups/schritt-pinnwand-seite.html — links oder rechts?
+   Beide Anordnungen bei voller Belegung, mit der Kante des Sichtbaren.
+   Alle Zahlen an der laufenden Anwendung gemessen. */
+import {writeFileSync} from "node:fs";
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+const IWEB='<svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/>'
+  +'<path d="M2.4 6h11.2M2.4 10h11.2M8 2a12 12 0 0 0 0 12A12 12 0 0 0 8 2"/></svg>';
+const IAPP='<svg viewBox="0 0 16 16"><rect x="2.2" y="3" width="11.6" height="10" rx="1.6"/>'
+  +'<path d="M2.2 6h11.6"/></svg>';
+
+const abs=(t,n,kl)=>`<div class="s-abs"><h4${kl?' class="'+kl+'"':''}>${esc(t)}</h4>`
+  +`<i></i>${n?`<b>${esc(n)}</b>`:""}</div>`;
+const zeile=(t,m,rot)=>`<div class="s-z${rot?" rot":""}"><span>${esc(t)}</span><em>${esc(m)}</em></div>`;
+
+const PINN=[["MD-Editor","app"],["MDN Web Docs","web"],["GitHub","web"],
+  ["Can I Use","web"],["Linear Docs","web"],["Node.js Doku","web"],
+  ["Obsidian API","web"],["Excalidraw","web"],["Raycast","web"],
+  ["Hoppscotch","web"],["Notion","web"],["Figma Shortcuts","web"]];
+const platz=(n,art,t)=>`<span class="p-platz"><b>${n<=8?"⌘"+n:"·"}</b>`
+  +(art==="app"?IAPP:IWEB)+`<span>${esc(t)}</span></span>`;
+/* Gemessen an der Anwendung bei 542 px Spaltenbreite. Die Zeichnung
+   traegt dieselben Hoehen, sonst laege die Kante des Sichtbaren falsch. */
+const blk=(h,inhalt)=>`<div class="s-blk" style="height:${h}px">${inhalt}</div>`;
+const pinnwand = n => blk(197, abs("Häufig benutzt", n+" von 12")
+  + `<div class="p-raster">${PINN.slice(0,n).map((x,i)=>platz(i+1,x[1],x[0])).join("")}</div>`);
+
+const ueberfaellig = blk(176, abs("Überfällig","2","eilig")
+  + zeile("Rechnung 2026-114 freigeben","Aufgabe · Eva Bergmann",1)
+  + zeile("Vertrag Meinhardt IT","Workflow · Schritt 4 von 8",1));
+const naechstes = blk(113, abs("Als Nächstes",null,"jetzt")
+  + `<div class="s-gross">Standup</div><div class="s-klein">Team · in 27 Minuten</div>`);
+const zettel = blk(167, abs("Schmierzettel","Notizen ›")
+  + `<div class="s-feld">Sitzungsraum 2.14 ab 14 Uhr<br>Code Drucker: 4417</div>`);
+const favoriten = blk(282, abs("Favoriten","alle 6 ›")
+  + `<div class="s-kacheln">${["Eva Bergmann","Jan Kowalski","Lisa Meier"]
+      .map(t=>`<div class="s-kachel">${esc(t)}</div>`).join("")}</div>`);
+const MOD=[["01","Notizen"],["02","Kontakte"],["04","Aufgaben"],["05","Textbausteine"],
+  ["06","Kalender"],["08","Appstarter"],["09","Bookmarks"],["13","Workflows"],
+  ["14","Jahreskalender"],["15","Outliner"],["16","Code-Beautifier"],["07","Planner öffnen"]];
+const module = blk(278, abs("Module","12 angemeldet")
+  + `<div class="s-mod">${MOD.map(([n,t])=>`<span><b>${n}</b>${esc(t)}</span>`).join("")}</div>`);
+const feld = `<div class="s-blk" style="height:151px;display:flex;align-items:center">`
+  +`<div class="s-feld-gross">› Tippen — suchen, rechnen, erfassen</div></div>`;
+
+const leiste=(pinLinks,n)=>`<div class="s-app"><div class="s-kopf"></div>
+  <div class="s-rumpf"><div class="s-mitte">${feld}<div class="s-zwei">
+    <div class="stapel">${ueberfaellig}${naechstes}${zettel}${pinLinks?pinnwand(n):""}</div>
+    <div class="stapel">${favoriten}${pinLinks?"":pinnwand(n)}${module}</div>
+  </div><div class="s-kante"><span>Kante des Sichtbaren — 895 px</span></div>
+  </div></div></div>`;
+
+const buehne=(inhalt)=>`<div class="buehne"><div class="rahmen">${inhalt}</div></div>`;
+
+const html=`<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pinnwand — links oder rechts?</title>
+<style>
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --etikett:var(--mono);
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink);margin:0}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased;padding:0 0 90px}
+.blatt{max-width:1060px;margin:0 auto;padding:0 26px}
+h1{font-family:var(--serif);font-size:31px;letter-spacing:-.02em;margin:44px 0 6px;font-weight:400}
+.unter{font-size:14px;color:var(--ink2);line-height:1.6;max-width:72ch}
+.unter code{font-family:var(--mono);font-size:12.5px;background:var(--raise);
+  padding:1px 5px;border-radius:4px}
+.stufe{margin:52px 0 0;padding:26px 0 0;border-top:2px solid var(--rule2)}
+.stufe h2{font-family:var(--etikett);font-size:11.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink3);margin:0 0 5px;font-weight:700}
+.stufe h3{font-family:var(--serif);font-size:23px;font-weight:400;margin:0 0 9px}
+.mass{display:inline-flex;gap:9px;align-items:baseline;margin:0 0 15px;flex-wrap:wrap;
+  font-family:var(--etikett);font-size:11px;letter-spacing:.05em;color:var(--ink3)}
+.mass b{color:var(--tinte);font-size:13px}
+.mass.warn b{color:var(--signal)}
+.buehne{border:1px solid var(--rule2);border-radius:10px;background:var(--raise);
+  overflow-x:auto;margin:0 0 6px}
+.rahmen{width:1920px;zoom:.5;pointer-events:none}
+.lupe{font-family:var(--etikett);font-size:10px;letter-spacing:.09em;color:var(--ink3);
+  text-transform:uppercase;margin:0 0 22px}
+
+.s-app{background:var(--paper);display:flex;flex-direction:column;min-height:1010px}
+.s-kopf{height:55px;background:var(--sheet);border-bottom:1px solid var(--rule);flex-shrink:0}
+.s-rumpf{flex:1;min-height:0;position:relative}
+.s-mitte{max-width:1180px;margin:0 auto;padding:0 26px 48px;width:100%;position:relative}
+.s-zwei{display:grid;grid-template-columns:1fr 1fr;gap:0 44px;align-items:start}
+.stapel{display:flex;flex-direction:column}
+/* Wo der Bildschirm zu Ende ist: 895 px unter dem Kopf. */
+.s-kante{position:absolute;left:-26px;right:-26px;top:895px;z-index:2;border-top:2px dashed var(--signal)}
+.s-kante span{position:absolute;right:0;top:5px;font-family:var(--etikett);font-size:11px;
+  letter-spacing:.07em;color:var(--signal);background:var(--paper);padding:0 6px}
+.s-blk{overflow:hidden}
+.s-blk > .s-abs:first-child{padding-top:0}
+.s-abs{display:flex;align-items:center;gap:13px;padding:28px 0 10px}
+.s-abs h4{font-family:var(--etikett);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink3);margin:0;font-weight:700}
+.s-abs h4.eilig{color:var(--signal)} .s-abs h4.jetzt{color:var(--tinte)}
+.s-abs i{flex:1;height:1px;background:var(--rule);font-style:normal}
+.s-abs b{font-family:var(--etikett);font-size:11px;color:var(--ink3);font-weight:400}
+.s-z{display:flex;flex-direction:column;gap:3px;padding:9px 10px 9px 2px;
+  border-left:2px solid transparent}
+.s-z.rot{border-left-color:var(--signal)}
+.s-z span{font-size:14.5px} .s-z em{font-style:normal;font-size:12px;color:var(--ink3)}
+.s-gross{font-family:var(--serif);font-size:31px;line-height:1.12;letter-spacing:-.02em}
+.s-klein{font-size:13.5px;color:var(--ink2);margin-top:9px}
+.s-feld{border:1px solid var(--rule2);border-radius:9px;background:var(--sheet);
+  padding:13px 15px;font-family:var(--mono);font-size:13px;line-height:1.55;color:var(--ink2)}
+.s-feld-gross{font-size:27px;color:var(--ink3);padding:22px 0 20px;
+  border-bottom:2px solid var(--tinte)}
+.s-kacheln{display:grid;grid-template-columns:repeat(auto-fill,minmax(236px,1fr));gap:9px}
+.s-kachel{border:1px solid var(--rule);border-left:2px solid var(--tinte);border-radius:11px;
+  background:var(--sheet);padding:15px;font-size:15px;font-weight:600;height:104px}
+.s-mod{display:grid;grid-template-columns:repeat(auto-fill,minmax(212px,1fr));gap:1px}
+.s-mod span{display:flex;gap:9px;padding:8px 10px;font-size:13.5px;color:var(--ink2)}
+.s-mod b{font-family:var(--etikett);font-size:10px;color:var(--ink3)}
+.p-raster{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px}
+.p-platz{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;
+  border:1px solid var(--rule);background:var(--sheet);min-width:0}
+.p-platz b{font-family:var(--etikett);font-size:10.5px;color:var(--tinte);min-width:19px}
+.p-platz svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.3;
+  color:var(--ink3);flex-shrink:0}
+.p-platz > span{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.tab{width:100%;border-collapse:collapse;margin:16px 0 0;font-size:13.5px}
+.tab th,.tab td{text-align:left;padding:9px 12px 9px 0;border-bottom:1px solid var(--rule)}
+.tab th{font-family:var(--etikett);font-size:10px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--ink3)}
+.tab td.z{font-variant-numeric:tabular-nums}
+.tab td b{color:var(--tinte)} .tab td i{font-style:normal;color:var(--signal)}
+.merk{background:var(--sheet);border:1px solid var(--rule);border-left:2px solid var(--tinte);
+  border-radius:9px;padding:15px 18px;font-size:13.5px;line-height:1.6;color:var(--ink2);margin:18px 0 0}
+.merk.warn{border-left-color:var(--signal);background:var(--signal-s)}
+.merk b{color:var(--ink)}
+.merk code{font-family:var(--mono);font-size:12.5px;background:var(--raise);padding:1px 5px;border-radius:4px}
+</style>
+
+<div class="blatt">
+<h1>Pinnwand — links oder rechts?</h1>
+<p class="unter">Beide Anordnungen bei <b>voller Belegung</b>, zwölf Plätze.
+Die gestrichelte rote Linie ist die Kante des Sichtbaren: 895 px, was ein
+24-Zoll-Schirm unter dem Kopf übrig lässt. Was darunter liegt, erreicht
+man nur durch Scrollen. Die Schaubilder zeigen 1920 px in halber Größe.</p>
+
+<div class="stufe">
+<h2>So ist es gebaut</h2>
+<h3>Pinnwand links, unter dem Schmierzettel</h3>
+<div class="mass">links <b>652 px</b> · rechts <b>561 px</b> · nichts unter der Kante</div>
+${buehne(leiste(true,12))}
+<p class="lupe">1920 px in halber Größe</p>
+<div class="merk">Links steht damit alles, was im Arbeitsfluss angefasst
+wird — Überfälliges, der nächste Termin, der Schmierzettel, die Plätze.
+Rechts bleibt, wonach man nachschlägt: Kontaktkacheln und Modulliste.<br><br>
+Die Spalten sind mit 652 und 561 px ungleich, aber <b>beide unter der
+Kante</b>. Und die Pinnwand ist der einzige Block, der wächst — links hat
+er dafür Luft.</div>
+</div>
+
+<div class="stufe">
+<h2>Ihre ursprüngliche Wahl</h2>
+<h3>Pinnwand rechts, zwischen Favoriten und Modulliste</h3>
+<div class="mass warn">links <b>455 px</b> · rechts <b>758 px</b> · Inhalt <b>13 px</b> unter der Kante · Rollbalken <b>61 px</b></div>
+${buehne(leiste(false,12))}
+<p class="lupe">1920 px in halber Größe</p>
+<div class="merk warn">Die rechte Spalte trägt drei Blöcke plus die
+Pinnwand. Die letzte Zeile der Modulliste rutscht unter die Kante —
+genau das, was der Vorgang davor gerade behoben hatte.<br><br>
+<b>Zwei Zahlen, die man nicht verwechseln darf.</b> Der <i>Inhalt</i>
+ragt nur 13 px unter die Kante — man sieht die letzte Modulzeile noch
+halb. Der <i>Rollbalken</i> springt bei 61 px an, weil unter dem Inhalt
+noch 48 px Zierabstand stehen. Beides ist wahr; das Störende ist der
+Balken, denn er sagt „hier geht es weiter", wo fast nichts mehr
+kommt.<br><br>
+<b>Und es beginnt früh:</b> nicht erst bei zwölf Plätzen, sondern schon
+beim sechsten.</div>
+</div>
+
+<div class="stufe">
+<h2>Die Schwelle</h2>
+<h3>Ab wann scrollt es?</h3>
+<table class="tab">
+<tr><th>belegte Plätze</th><th>rechts</th><th>links</th></tr>
+<tr><td class="z">4</td><td>passt</td><td>passt</td></tr>
+<tr><td class="z">5</td><td>passt</td><td>passt</td></tr>
+<tr><td class="z"><b>6</b></td><td><i>scrollt +23 px</i></td><td>passt</td></tr>
+<tr><td class="z">8</td><td><i>scrollt +24 px</i></td><td>passt</td></tr>
+<tr><td class="z">10</td><td><i>scrollt +61 px</i></td><td>passt</td></tr>
+<tr><td class="z">12</td><td><i>scrollt +61 px</i></td><td><b>passt</b></td></tr>
+</table>
+<div class="merk"><b>Sechs Plätze sind keine Ausnahme.</b> Heute sind vier
+belegt; wer die Pinnwand benutzt, kommt schnell auf sechs. Deshalb steht
+sie links.<br><br>
+<b>Erst versucht und verworfen:</b> dichteres Raster (16 px gespart),
+Chips statt Kästen (16 px), dreispaltige Modulliste (65 px, aber das
+„GERÜST"-Schild lief in die Nachbarspalte). Keine dieser Kosmetiken
+reicht gegen 61 px.<br><br>
+<b>Zurückzudrehen ist eine Zeile</b> — dann steht die Pinnwand wieder
+rechts, mit dem Scrollen als Preis.</div>
+</div>
+</div>
+`;
+writeFileSync(new URL("../mockups/schritt-pinnwand-seite.html", import.meta.url), html);
+console.log("geschrieben, "+html.length+" Zeichen");

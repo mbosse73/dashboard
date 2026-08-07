@@ -373,15 +373,6 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
 .naechst-t{font-family:var(--serif);font-size:clamp(23px,3vw,31px);line-height:1.12;
   letter-spacing:-.02em;font-weight:400}
 .naechst-m{font-size:13.5px;color:var(--ink2);margin-top:9px}
-.marken{display:grid;grid-template-columns:repeat(auto-fill,minmax(206px,1fr));gap:2px}
-.mk{display:flex;align-items:baseline;gap:10px;padding:8px 10px;border-radius:8px;
-  border-left:2px solid transparent}
-.mk:hover{background:var(--sheet);border-left-color:var(--tinte)}
-.mk b{font-family:var(--etikett);font-size:10.5px;color:var(--ink3);font-weight:700;min-width:20px}
-.mk:hover b{color:var(--tinte)}
-.mk span{font-size:13.5px;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mk:hover span{color:var(--ink)}
-
 /* ---------- Modul Bookmarks, Fassung C ----------
    Gruppenname links als Randbeschriftung, die Bookmarks daneben als
    Chips. 24 Stück brauchten als Zeilen rund 1800 Pixel, hier 371 — bei
@@ -395,8 +386,14 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
 .bm-platz b{font-family:var(--etikett);font-size:10.5px;color:var(--tinte);min-width:19px}
 .bm-platz span{font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bm-platz:hover{border-color:var(--tinte);background:var(--tinte-s)}
+.bm-platz svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.3;
+  color:var(--ink3);flex-shrink:0}
+.bm-platz:hover svg{color:var(--tinte)}
 .bm-platz.frei{background:transparent;border-style:dashed;color:var(--ink3)}
 .bm-platz.frei b{color:var(--ink3)}
+/* Nicht acht leere Kaesten, sondern ein Feld mit der Restzahl. */
+.bm-platz.mehr{background:transparent;border-style:dashed;color:var(--tinte)}
+.bm-platz.mehr b{color:var(--tinte)}
 .bm-gruppen{display:flex;flex-direction:column}
 .bm-zeile{display:flex;flex-wrap:wrap;gap:4px 16px;padding:9px 0;align-items:baseline}
 .bm-zeile + .bm-zeile{box-shadow:inset 0 1px 0 var(--rule)}
@@ -846,6 +843,11 @@ const IK={
   liste: IKON('<path d="M9.5 6.5h11M9.5 12h11M9.5 17.5h11"/>'
         +'<path d="M4 6.5h.01M4 12h.01M4 17.5h.01"/>'),
   linie: IKON('<path d="M3.5 12h17"/>'),
+  /* Herkunft eines angehefteten Eintrags: Webseite oder lokale App */
+  web:   IKON('<circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/>'
+        +'<path d="M12 3a17 17 0 0 0 0 18 17 17 0 0 0 0-18"/>'),
+  app:   IKON('<rect x="3.2" y="4.5" width="17.6" height="15" rx="2.4"/>'
+        +'<path d="M3.2 9h17.6"/>'),
   /* Zeichen des Ordnen-Zustands bei den Bookmarks */
   nadel: IKON('<path d="M9 3h6M12 3v7M7 10h10l-1.5 4.5h-7z"/><path d="M12 14.5V21"/>'),
   stift: IKON('<path d="M17.2 3.8a2.1 2.1 0 0 1 3 3L9.5 17.5 5 19l1.5-4.5z"/>')
@@ -1548,6 +1550,10 @@ function heile(z){
   if(Array.isArray(z.pins)){
     const gilt=[];
     z.pins.forEach(p=>{
+      /* Was schon die neue Form hat, geht unangetastet durch. Ohne
+         diese Zeile frisst Stufe 1 jeden Platz aus einer neueren
+         Sicherung — gefunden beim Durchspielen, nicht im Betrieb. */
+      if(p && typeof p==="object"){ gilt.push(p); return; }
       if((z.marken||[]).some(m=>m.id===p)){ gilt.push(p); return; }
       const m=(z.marken||[]).find(x=>x.u===p);
       n++;
@@ -1557,6 +1563,21 @@ function heile(z){
     });
     if(gilt.length!==z.pins.length || gilt.some((p,i)=>p!==z.pins[i])){
       z.pins.length=0; gilt.forEach(p=>z.pins.push(p));
+    }
+    /* Zweite Stufe: Ein Platz merkt sich jetzt auch, aus welchem Modul
+       sein Eintrag stammt — sonst könnte dort nur je ein Modul liegen.
+       Die Reihenfolge der beiden Stufen ist zwingend: Eine alte
+       Sicherung enthält Adressen, die oben erst zu Kennungen werden.
+       Liefe diese Stufe zuerst, wickelte sie Adressen ein, die danach
+       niemand mehr auflösen kann. */
+    const paare=[];
+    z.pins.forEach(p=>{
+      if(p && typeof p==="object" && p.m && p.id){ paare.push(p); return; }
+      if(typeof p==="string" && p){ paare.push({m:"marken", id:p}); n++; }
+      else n++;                       /* unbrauchbar — Platz fällt weg */
+    });
+    if(paare.length!==z.pins.length || paare.some((p,i)=>p!==z.pins[i])){
+      z.pins.length=0; paare.forEach(p=>z.pins.push(p));
     }
   }
   return n;
@@ -1570,6 +1591,66 @@ const DATEN = Z;                       /* DATEN.termine, .aufgaben, .notizen */
 
 /* Inhalt austauschen, ohne den Verweis zu zerreißen */
 function ersetze(ziel, neu){ ziel.length=0; neu.forEach(x=>ziel.push(x)); }
+
+/* ---------- Die Plätze ----------
+   Ein Platz zeigt auf {m: Modul-Kennung, id: Eintrag-Kennung}. Welches
+   Modul etwas zum Anheften anbietet, sagt das Register über `heftbar` —
+   die Leiste kennt kein Modul beim Namen. Deshalb kostet ein weiteres
+   anheftbares Modul später keine Zeile hier.
+
+   Zwölf Plätze, Tastenkürzel nur auf den ersten acht: Mehr freie
+   Kombinationen gibt es nicht. Ein Kürzel ist eine Zugabe, keine
+   Bedingung. */
+const HEFT_MAX=12, HEFT_TASTEN=8;
+
+/* Liefert {mod, e} oder null, wenn der Eintrag nicht mehr existiert —
+   gelöschtes Bookmark, entferntes Modul. */
+function heftHole(p){
+  if(!p || !p.m) return null;
+  const mod=MODULE.find(x=>x.id===p.m);
+  if(!mod || !mod.heftbar) return null;
+  const e=(mod.heftbar.liste()||[]).find(x=>String(x.id)===String(p.id));
+  return e ? {mod,e} : null;
+}
+const heftWo = (modId,id) => PINS.findIndex(p=>p&&p.m===modId&&String(p.id)===String(id));
+/* Was hinter einem Titel steht: „ · ⌘3" oder „ · angeheftet". */
+const heftPlatz = (modId,id) => {
+  const i=heftWo(modId,id);
+  return i<0 ? "" : (i<HEFT_TASTEN ? " · ⌘"+(i+1) : " · angeheftet");
+};
+function heftOeffne(p){
+  const t=heftHole(p);
+  if(!t){ melde("Der Eintrag ist nicht mehr da"); return false; }
+  t.mod.heftbar.oeffne(t.e); return true;
+}
+function heften(modId,id,titel){
+  const i=heftWo(modId,id);
+  if(i>=0){ PINS.splice(i,1); bewahre(); male();
+    melde("Anheftung gelöst: "+titel); return; }
+  if(PINS.length>=HEFT_MAX){
+    melde(HEFT_MAX+" Plätze belegt — erst einen lösen"); return; }
+  PINS.push({m:modId, id:id}); bewahre(); male();
+  melde(titel+(PINS.length<=HEFT_TASTEN ? " liegt auf ⌘"+PINS.length : " angeheftet"));
+}
+/* Plätze, die ins Leere zeigen, fallen weg — gelöschtes Bookmark,
+   entferntes Modul, von Hand verbogene Sicherung. Das kann nicht in
+   heile() stehen: Dort ist das Register noch leer, weil die Module sich
+   erst weiter unten anmelden. Läuft einmal beim Start und nach jedem
+   Laden einer Datei. */
+function heftAufraeumen(){
+  const gut=PINS.filter(p=>heftHole(p));
+  if(gut.length===PINS.length) return 0;
+  const weg=PINS.length-gut.length;
+  ersetze(PINS,gut); bewahre();
+  return weg;
+}
+
+/* Alle Plätze mit ihrem aufgelösten Eintrag. Was ins Leere zeigt,
+   verschwindet hier und wird beim nächsten Zeichnen still übersprungen —
+   gelöscht wird es erst in heile() beim nächsten Start. */
+function heftStand(){
+  return PINS.map((p,i)=>({p, i, t:heftHole(p)})).filter(x=>x.t);
+}
 
 /* Beide vertragen einen fehlenden Vornamen: Pflicht ist nur der
    Nachname, und ohne diese Absicherung liefert ini() „undefinedM“. */
@@ -2584,24 +2665,52 @@ registriere({
 /* ===== MODUL apps ===== */
 registriere({
   id:"apps", nr:"08", nm:"Appstarter",
-  geruest:"Die Liste steht. Starten, Anlegen und Bearbeiten fehlen noch.",
+  geruest:"Starten und Anheften tragen. Anlegen, Bearbeiten und Löschen "
+    +"fehlen noch.",
   zahl:()=>APPS.length,
+  /* Apps liegen auf denselben Plätzen wie Bookmarks — es sind keine
+     Bookmark-Plätze, sondern Plätze. Das Zeichen unterscheidet sie. */
+  heftbar:{
+    zeichen:IK.app,
+    liste:()=>APPS.map(a=>({id:a.id, titel:a.titel, meta:a.url})),
+    oeffne(e){ const a=APPS.find(x=>x.id===e.id); if(a) appOeffne(a); }
+  },
   suche(q){
     return APPS.filter(a=>a.titel.toLowerCase().includes(q)).map(a=>
-      treff("App starten",a.titel,a.url,"↵",()=>melde(nochNicht(a.titel))));
+      treff("App starten",a.titel,a.url+heftPlatz("apps",a.id),"↵",
+        ()=>appOeffne(a)));
   },
   flaeche(b){
     b.appendChild(abschnitt("Apps",String(APPS.length)));
-    b.appendChild(el("div","hinweis","Jede App öffnet in einem neuen Tab."));
+    b.appendChild(el("div","hinweis",
+      "Jede App öffnet in einem neuen Tab. „anheften“ legt sie auf einen "
+      +"der Plätze in der Leiste — dieselben, auf denen auch Bookmarks liegen."));
     APPS.forEach(a=>{
+      const i=heftWo("apps",a.id), an=i>=0;
       const r=el("div","z");
-      r.append(el("span","zb",'<span class="zt">'+esc(a.titel)+'</span>'
-        +'<span class="zm">'+esc(a.url)+'</span>'));
-      const t=el("button","tat still","Starten"); t.onclick=()=>melde(nochNicht(a.titel));
-      r.appendChild(t); b.appendChild(r);
+      const st=el("button","zb",'<span class="zt">'+esc(a.titel)+'</span>'
+        +'<span class="zm">'+esc(a.url)+'</span>');
+      st.setAttribute("aria-label",a.titel+" starten");
+      st.onclick=()=>appOeffne(a);
+      const p=el("button", an?"tat":"tat still",
+        an ? (i<HEFT_TASTEN?"⌘"+(i+1):"angeheftet") : "anheften");
+      p.setAttribute("aria-label",(an?"Anheftung lösen: ":"Anheften: ")+a.titel);
+      p.onclick=()=>heften("apps",a.id,a.titel);
+      r.append(st,p); b.appendChild(r);
     });
   }
 });
+
+/* Eine App ist eine lokale Datei. Der Browsertest hat am 7. August 2026
+   bestätigt, dass Edge sie aus einer lokal geöffneten Datei heraus
+   öffnet — der Notweg über einen anklickbaren Verweis entfällt. Es
+   bleibt derselbe Weg wie bei einem Bookmark, nur ohne `https://`
+   davor: `mkUrl` lässt ein vorhandenes Schema unangetastet. */
+function appOeffne(a){
+  if(!String(a.url||"").trim()){ melde(a.titel+" hat keine Adresse"); return; }
+  oeffneWeg(mkUrl(a.url), true);
+  melde(a.titel+" gestartet");
+}
 /* ===== ENDE apps ===== */
 
 /* ---------- 09 Bookmarks ---------- */
@@ -2609,9 +2718,17 @@ registriere({
 registriere({
   id:"marken", nr:"09", nm:"Bookmarks",
   zahl:()=>MARKEN.length,
+  /* Was dieses Modul zum Anheften anbietet. Die Leiste fragt danach,
+     ohne das Modul beim Namen zu kennen. */
+  heftbar:{
+    zeichen:IK.web,
+    liste:()=>MARKEN.map(m=>({id:m.id, titel:m.t, meta:m.u})),
+    oeffne(e){ const m=MARKEN.find(x=>x.id===e.id); if(m) mkOeffne(m); }
+  },
   suche(q){
     return MARKEN.filter(m=>(m.t+" "+m.u+" "+m.g).toLowerCase().includes(q)).slice(0,6)
-      .map(m=>treff("Bookmark",m.t,m.u+" · "+m.g+mkPlatz(m),"↵",()=>mkOeffne(m)));
+      .map(m=>treff("Bookmark",m.t,m.u+" · "+m.g+heftPlatz("marken",m.id),"↵",
+        ()=>mkOeffne(m)));
   },
   /* Nur bei etwas, das wirklich nach einer Adresse aussieht. Sonst böte
      die Leiste bei jedem Satz mit Punkt ein Bookmark an. */
@@ -2668,7 +2785,6 @@ function mkOeffne(m){
 /* Reihenfolge der Gruppen ist die Reihenfolge ihres ersten Bookmarks —
    keine Sortierung. Wer umsortieren will, verschiebt Einträge. */
 const mkGruppen = () => [...new Set(MARKEN.map(m=>m.g))];
-const mkPlatz = m => PINS.indexOf(m.id)>=0 ? " · ⌘"+(PINS.indexOf(m.id)+1) : "";
 
 /* Ansichtszustand, bewusst außerhalb von Z: Er beschreibt, wie man
    gerade hinsieht, nicht die Daten, und hat in einer Sicherung nichts
@@ -2688,19 +2804,27 @@ function mkSchalter(){
   return s;
 }
 
-/* Die acht Plätze zuoberst. Freie werden gezeigt, nicht verschwiegen —
-   sonst sieht man nie, dass noch welche zu vergeben sind. */
+/* Die Plätze zuoberst. Hier — auf der Verwaltungsfläche — werden auch
+   die freien gezeigt: Man soll sehen, wie viele noch zu vergeben sind.
+   In der Leiste steht dafür nur ein Feld mit der Restzahl; zwölf leere
+   Kästen wären dort Unruhe.
+   Es sind ausdrücklich nicht nur Bookmarks: Was ein anderes Modul
+   angeheftet hat, steht hier mit seinem eigenen Zeichen. */
 function mkSchnellzugriff(){
   const w=el("div");
-  w.appendChild(abschnitt("Schnellzugriff", PINS.length+" von 8 Plätzen", "jetzt"));
+  const stand=heftStand();
+  w.appendChild(abschnitt("Häufig benutzt",
+    stand.length+" von "+HEFT_MAX+" Plätzen", "jetzt"));
   const r=el("div","bm-schnell");
-  for(let i=0;i<8;i++){
-    const m=PINS[i] ? MARKEN.find(x=>x.id===PINS[i]) : null;
-    if(!m){ r.appendChild(el("div","bm-platz frei",
-      '<b>·</b><span>frei</span>')); continue; }
-    const k=el("button","bm-platz",'<b>⌘'+(i+1)+'</b><span>'+esc(m.t)+'</span>');
-    k.setAttribute("aria-label",m.t+" öffnen — "+m.u+", Tastenkürzel ⌘"+(i+1));
-    k.onclick=()=>mkOeffne(m);
+  for(let i=0;i<HEFT_MAX;i++){
+    const t=heftHole(PINS[i]);
+    if(!t){ r.appendChild(el("div","bm-platz frei",'<b>·</b><span>frei</span>'));
+      continue; }
+    const k=el("button","bm-platz",'<b>'+(i<HEFT_TASTEN?"⌘"+(i+1):"·")+'</b>'
+      +(t.mod.heftbar.zeichen||"")+'<span>'+esc(t.e.titel)+'</span>');
+    k.setAttribute("aria-label",t.e.titel+" öffnen — "+(t.e.meta||t.mod.nm)
+      +(i<HEFT_TASTEN?", Tastenkürzel ⌘"+(i+1):""));
+    k.onclick=()=>heftOeffne(PINS[i]);
     r.appendChild(k);
   }
   w.appendChild(r);
@@ -2729,11 +2853,11 @@ function mkGruppenzeile(g){
 }
 
 function mkChip(m){
-  const i=PINS.indexOf(m.id), an=i>=0;
+  const i=heftWo("marken",m.id), an=i>=0;
   /* Angeheftet trägt Tinte, weil der Platz dann belegt und benutzbar
      ist — kein Kategorieton, sondern „aktiv“. */
   const c=el("div","bm-chip"+(an?" an":""));
-  const oeff=el("button",null,(an?'<b>⌘'+(i+1)+'</b>':"")+esc(m.t));
+  const oeff=el("button",null,(an&&i<HEFT_TASTEN?'<b>⌘'+(i+1)+'</b>':"")+esc(m.t));
   oeff.setAttribute("aria-label",m.t+" öffnen — "+m.u);
   oeff.onclick=()=>mkOeffne(m);
   c.appendChild(oeff);
@@ -2741,7 +2865,7 @@ function mkChip(m){
     const p=el("button","bm-tat",IK.nadel);
     p.setAttribute("aria-label",(an?"Anheftung lösen: ":"Anheften: ")+m.t);
     p.title=an?"Anheftung lösen":"Anheften";
-    p.onclick=()=>mkHeften(m);
+    p.onclick=()=>heften("marken",m.id,m.t);
     const bx=el("button","bm-tat",IK.stift);
     bx.setAttribute("aria-label",m.t+" bearbeiten");
     bx.title="Bearbeiten";
@@ -2749,14 +2873,6 @@ function mkChip(m){
     c.append(p,bx);
   }
   return c;
-}
-
-function mkHeften(m){
-  const i=PINS.indexOf(m.id);
-  if(i>=0){ PINS.splice(i,1); bewahre(); male(); melde("Anheftung gelöst: "+m.t); return; }
-  if(PINS.length>=8){ melde("Acht Plätze belegt — erst einen lösen"); return; }
-  PINS.push(m.id); bewahre(); male();
-  melde(m.t+" liegt auf ⌘"+PINS.length);
 }
 
 /* ---------- Der Bookmark-Dialog ----------
@@ -2776,7 +2892,8 @@ function mkFelder(){
     {schl:"u", nm:"Adresse", art:"text", breit:true,
      sub:"Ohne https:// genügt — das ergänzt sich beim Öffnen."},
     {schl:"fest", nm:"Auf die Leiste heften", art:"schalter",
-     sub:"Belegt einen der acht Plätze ⌘1 bis ⌘8."}
+     sub:"Einer von "+HEFT_MAX+" Plätzen; die ersten "+HEFT_TASTEN
+       +" tragen ⌘1 bis ⌘8."}
   ];
 }
 
@@ -2790,7 +2907,7 @@ function mkDialog(m, vorbelegt, gruppe){
     if(vorbelegt) start.u=vorbelegt;
     start.g=gruppe||mkGruppen()[0]||MK_NEU;
   }
-  start.fest = !neu && PINS.indexOf(m.id)>=0;
+  start.fest = !neu && heftWo("marken",m.id)>=0;
   dialog({
     art: neu ? "Neues Bookmark" : "Bookmark bearbeiten",
     titel: w=>String(w.t||"").trim()||String(w.u||"").trim(),
@@ -2808,11 +2925,12 @@ function mkDialog(m, vorbelegt, gruppe){
     },
     loeschen: neu ? null : {
       frage: w=>{
-        const i=PINS.indexOf(m.id), letzte=MARKEN.filter(x=>x.g===m.g).length===1;
+        const i=heftWo("marken",m.id), letzte=MARKEN.filter(x=>x.g===m.g).length===1;
         return "<b>"+esc(String(w.t||"").trim()||m.t)+" wirklich löschen?</b><ul>"
           +"<li>Die Zeile verschwindet aus der Gruppe „"+esc(m.g)+"“.</li>"
           +"<li>"+(i>=0
-            ? "Platz ⌘"+(i+1)+" wird frei; was dahinter liegt, rückt auf."
+            ? "Platz "+(i<HEFT_TASTEN?"⌘"+(i+1):String(i+1))
+              +" wird frei; was dahinter liegt, rückt auf."
             : "Es ist nichts angeheftet, kein Platz ändert sich.")+"</li>"
           +(letzte ? "<li>Es ist das letzte in „"+esc(m.g)
             +"“ — die Gruppe verschwindet mit.</li>" : "")
@@ -2841,23 +2959,25 @@ function mkSpeichern(w,neu){
     if(!z){ melde("Das Bookmark ist nicht mehr da."); male(); return; }
     ["t","u","g"].forEach(s=>{ z[s]=w[s]; });
   }
-  const i=PINS.indexOf(w.id);
+  const i=heftWo("marken",w.id);
   let zusatz="";
   if(fest && i<0){
-    if(PINS.length>=8) zusatz=" · acht Plätze belegt, nicht angeheftet";
-    else { PINS.push(w.id); zusatz=" · liegt auf ⌘"+PINS.length; }
+    if(PINS.length>=HEFT_MAX) zusatz=" · "+HEFT_MAX+" Plätze belegt, nicht angeheftet";
+    else { PINS.push({m:"marken", id:w.id});
+      zusatz=PINS.length<=HEFT_TASTEN ? " · liegt auf ⌘"+PINS.length : " · angeheftet"; }
   } else if(!fest && i>=0){ PINS.splice(i,1); zusatz=" · Anheftung gelöst"; }
   bewahre(); male();
   melde(w.t+(neu?" angelegt":" gespeichert")+zusatz);
 }
 
 function mkLoeschen(m){
-  const nm=m.t, i=PINS.indexOf(m.id);
+  const nm=m.t, i=heftWo("marken",m.id);
   if(i>=0) PINS.splice(i,1);
   const j=MARKEN.indexOf(m);
   if(j>=0) MARKEN.splice(j,1);          /* splice, nie neu zuweisen */
   bewahre(); male();
-  melde(nm+" gelöscht"+(i>=0?" · Platz ⌘"+(i+1)+" frei":""));
+  melde(nm+" gelöscht"+(i>=0?" · Platz "
+    +(i<HEFT_TASTEN?"⌘"+(i+1):String(i+1))+" frei":""));
 }
 
 /* Eine Gruppe ist kein eigener Datensatz, sondern das Feld `g` an den
@@ -3223,6 +3343,43 @@ function ruhezustand(raum){
   box.appendChild(sa);
   box.appendChild(schmierKlein());
 
+  /* Die Pinnwand, links unter dem Schmierzettel. Sie stand zuerst
+     rechts — dort trug die Spalte sie nicht: Mit Favoriten, Pinnwand und
+     Modulliste war sie ab dem sechsten belegten Platz 918 px hoch, bei
+     895 px sichtbarer Hoehe. Links passt sie bis zum zwoelften.
+     Zwölf Plätze, von Hand belegt — sie wächst nicht mit
+     der Sammlung, egal ob es zwanzig Bookmarks sind oder zweihundert.
+     Gezeigt werden nur die belegten, dazu ein Feld mit der Restzahl:
+     Acht leere Kästen wären Unruhe, aber gar nichts zu sagen hieße, dass
+     man nie merkt, dass noch Platz ist. */
+  const stand=heftStand();
+  const a=abschnitt("Häufig benutzt", stand.length+" von "+HEFT_MAX);
+  box.appendChild(a);
+  const g=el("div","bm-schnell");
+  stand.forEach(({t,i})=>{
+    const k=el("button","bm-platz",'<b>'+(i<HEFT_TASTEN?"⌘"+(i+1):"·")+'</b>'
+      +(t.mod.heftbar.zeichen||"")+'<span>'+esc(t.e.titel)+'</span>');
+    k.setAttribute("aria-label",t.e.titel+" öffnen — "+(t.e.meta||t.mod.nm)
+      +(i<HEFT_TASTEN?", Tastenkürzel ⌘"+(i+1):""));
+    k.onclick=()=>heftOeffne(t.p||PINS[i]);
+    g.appendChild(k);
+  });
+  const frei=HEFT_MAX-stand.length;
+  if(frei>0){
+    /* Führt dorthin, wo am meisten anzuheften ist — nicht zu einem
+       Auswahlmenü, das es nicht gibt. */
+    const quelle=MODULE.filter(m=>m.heftbar&&m.flaeche)
+      .sort((x,y)=>(y.heftbar.liste()||[]).length-(x.heftbar.liste()||[]).length)[0];
+    const z=el("button","bm-platz mehr",'<b>+</b><span>'
+      +(stand.length?"noch "+frei+" frei":"nichts angeheftet")+'</span>');
+    z.setAttribute("aria-label","Etwas anheften — "+frei+" Plätze frei"
+      +(quelle?", öffnet "+quelle.nm:""));
+    z.onclick=()=> quelle ? zeigeFlaeche(quelle.id)
+      : melde("Kein Modul bietet etwas zum Anheften an");
+    g.appendChild(z);
+  }
+  box.appendChild(g);
+
   const fa=abschnitt("Favoriten",null);
   const alleK=el("button","n","alle "+KONTAKTE.length+" ›");
   alleK.onclick=()=>zeigeFlaeche("kontakte"); fa.appendChild(alleK);
@@ -3232,20 +3389,6 @@ function ruhezustand(raum){
     "Noch kein Favorit. Im Modul Kontakte den Stern auf einer Kachel setzen — "
     +"dann steht der Kontakt hier."));
 
-  const a=abschnitt("Bookmarks",null);
-  const alle=el("button","n","alle "+MARKEN.length+" ›");
-  alle.onclick=()=>zeigeFlaeche("marken"); a.appendChild(alle);
-  rechts.appendChild(a);
-  const g=el("div","marken");
-  PINS.forEach((id,i)=>{
-    const m=MARKEN.find(x=>x.id===id); if(!m) return;
-    const n=el("button","mk",'<b>⌘'+(i+1)+'</b><span>'+esc(m.t)+'</span>');
-    n.setAttribute("aria-label",m.t+" öffnen — "+m.u);
-    n.onclick=()=>mkOeffne(m); g.appendChild(n);
-  });
-  if(!PINS.length) g.appendChild(el("div","leer",
-    "Nichts angeheftet. Im Modul Bookmarks „anheften“ legt einen Eintrag hierher."));
-  rechts.appendChild(g);
 
   rechts.appendChild(abschnitt("Module",MODULE.filter(m=>!m.versteckt).length+" angemeldet"));
   rechts.appendChild(el("div","hinweis",
@@ -3526,9 +3669,13 @@ $("#laden").onchange=e=>{
       if(typeof neu[k]==="string"){ Z[k]=neu[k]; if(neu[k]) zahl++; }
     });
     const heil=heile(Z);
+    /* Erst nach heile(): Dort werden die Plätze in ihre heutige Form
+       gebracht, hier fallen die weg, die ins Leere zeigen. */
+    const leer=heftAufraeumen();
     bewahre(); male();
     melde(zahl+" Einträge aus "+f.name+" geladen"
-      +(heil?" · "+heil+(heil>1?" Felder":" Feld")+" ergänzt":""));
+      +(heil?" · "+heil+(heil>1?" Felder":" Feld")+" ergänzt":"")
+      +(leer?" · "+leer+(leer>1?" Plätze":" Platz")+" ins Leere entfernt":""));
   };
   r.onerror=()=>melde("Datei konnte nicht gelesen werden");
   r.readAsText(f,"utf-8"); e.target.value="";
@@ -3625,9 +3772,8 @@ document.addEventListener("keydown",e=>{
     if(e.key==="Escape"){ e.preventDefault(); dialogZu(); }
     return; }
   if(mod&&e.key>="1"&&e.key<="8"){ e.preventDefault();
-    const id=PINS[+e.key-1];
-    const m=id ? MARKEN.find(x=>x.id===id) : null;
-    if(m) mkOeffne(m);
+    const p=PINS[+e.key-1];
+    if(p) heftOeffne(p);
     else melde("Platz ⌘"+e.key+" ist frei");
     return; }
   if(mod&&e.key==="k"){ e.preventDefault(); zeigeFlaeche("leiste"); return; }
@@ -3656,6 +3802,8 @@ function uhr(){
   if(d.getMinutes()!==letzteMin){ letzteMin=d.getMinutes(); if(!eingabe) male(); }
 }
 standZeigen();
+/* Nach allen Modulanmeldungen: Plätze aufräumen, die ins Leere zeigen. */
+heftAufraeumen();
 male();
 uhr();
 setInterval(uhr,15000);

@@ -40,9 +40,14 @@ nur ihr Inhalt rückt zum übrigen Inhalt.
 
 **Die Leiste ist im Ruhezustand zweispaltig**, ab 1100 px. Links steht,
 was zu einer Handlung auffordert: Überfälliges, der nächste Termin, der
-Schmierzettel. Rechts, wonach man greift: Kontaktkacheln, Anheftungen,
-Modulliste. Einspaltig war der Inhalt 1181 px hoch und passte damit nicht
-auf einen 24-Zoll-Schirm, der im Rumpf 895 px lässt.
+Schmierzettel, die Pinnwand. Rechts, wonach man nachschlägt:
+Kontaktkacheln und Modulliste. Einspaltig war der Inhalt 1181 px hoch und
+passte damit nicht auf einen 24-Zoll-Schirm, der im Rumpf 895 px lässt.
+
+Die Pinnwand stand zuerst rechts — dort trug die Spalte sie nicht: Mit
+Favoriten, Pinnwand und Modulliste war sie ab dem **sechsten** belegten
+Platz 918 px hoch. Links sind es bei voller Belegung 652 px gegen 561 px
+rechts, und nichts scrollt.
 
 **Das Suchergebnis bleibt einspaltig.** Treffer sind nach Rang geordnet,
 und `↵` nimmt den obersten; in zwei Spalten stünde der zweitbeste neben
@@ -202,9 +207,16 @@ auf.
 
 ## 08 Appstarter — Gerüst
 
-Lokale HTML-Werkzeuge, öffnen in einem neuen Tab.
+Lokale HTML-Werkzeuge, öffnen in einem neuen Tab. **Starten trägt** —
+`appOeffne()` benutzt denselben Weg wie ein Bookmark, nur ohne
+`https://` davor, weil `mkUrl()` ein vorhandenes Schema unangetastet
+lässt.
 
-**Fehlt noch:** Anlegen und Bearbeiten der Einträge.
+**Apps sind anheftbar** und liegen auf denselben Plätzen wie Bookmarks.
+Es sind keine Bookmark-Plätze, sondern Plätze; das Zeichen im Platz sagt,
+woher der Eintrag kommt.
+
+**Fehlt noch:** Anlegen, Bearbeiten und Löschen der Einträge.
 
 **Der Weg steht fest:** `browsertest.html` hat am 7. August 2026 bestätigt, dass
 Edge eine andere lokale Datei öffnet. `window.open` genügt; der
@@ -228,9 +240,13 @@ Gegen ein Kartenraster entschieden: Karten brauchen vier Spalten, um dicht
 zu sein, und bekommen bei 808 Pixeln drei. Chips brechen dagegen um — eine
 Gruppe mit zwanzig Einträgen sprengt nichts, sondern wird zwei Zeilen hoch.
 
-**Darüber der Schnellzugriff:** die acht Plätze mit ihrem Kürzel. Freie
-werden gestrichelt gezeigt, nicht verschwiegen — sonst sieht man nie, dass
-noch welche zu vergeben sind.
+**Darüber „Häufig benutzt":** die zwölf Plätze. Auf der Verwaltungsfläche
+werden auch die freien gestrichelt gezeigt — man soll sehen, wie viele
+noch zu vergeben sind. In der Leiste steht dafür nur ein Feld mit der
+Restzahl; zwölf leere Kästen wären dort Unruhe.
+
+Es sind **nicht nur Bookmarks**: Was ein anderes Modul angeheftet hat,
+steht hier mit seinem eigenen Zeichen.
 
 **Zwei Zustände statt eingeblendeter Knöpfe.** Im Ruhezustand öffnet ein
 Klick, mehr nicht. `ordnen ›` schaltet um: Dann trägt jeder Chip Nadel und
@@ -269,6 +285,48 @@ Reihenfolge Was → Wann → Wer.
 Die Leiste bietet ein Bookmark beim Erfassen nur an, wenn die Eingabe
 wirklich nach einer Adresse aussieht: ein Punkt, kein Leerzeichen, eine
 Endung aus Buchstaben. Sonst käme das Angebot bei jedem Satz mit Punkt.
+
+---
+
+## Die Plätze — „Häufig benutzt"
+
+Eine Pinnwand mit **zwölf Plätzen**, von Hand belegt. Sie wächst nicht mit
+der Sammlung: Ob zwanzig Bookmarks oder zweihundert, die Leiste bleibt
+gleich hoch. Das ist der Zweck — der Aktenschrank darf beliebig groß sein,
+auf die Pinnwand kommt, was man täglich braucht.
+
+`⌘1` bis `⌘8` liegen auf den ersten acht. Mehr freie Tastenkombinationen
+gibt es nicht; ein Kürzel ist eine Zugabe, keine Bedingung.
+
+**Ein Platz merkt sich, woher sein Eintrag stammt:**
+
+```js
+Z.pins = [ {m:"marken", id:"m-1"}, {m:"apps", id:"p1"}, … ]
+```
+
+Welches Modul etwas anbietet, sagt `heftbar` im Register — **die Leiste
+kennt kein Modul beim Namen.** Ein weiteres anheftbares Modul kostet dort
+deshalb keine Zeile. Der Vertrag steht in `ARCHITEKTUR.md`.
+
+**Zwei Migrationen in `heile()`, deren Reihenfolge zwingend ist.** Ganz
+alte Sicherungen enthalten Adressen, ältere blanke Kennungen, neue
+Objekte. Erst Adresse → Kennung, dann Kennung → Objekt; umgekehrt liefe
+die zweite ins Leere. Und Stufe 1 muss fertige Objekte durchlassen, sonst
+frisst sie jeden Platz aus einer neueren Sicherung — das ist beim
+Durchspielen aufgefallen, nicht im Betrieb.
+
+**Plätze, die ins Leere zeigen**, räumt `heftAufraeumen()` ab: nach allen
+Modulanmeldungen und nach jedem Laden einer Datei. In `heile()` ginge das
+nicht — dort ist das Register noch leer.
+
+**Warum Kontakte nicht anheftbar sind:** Ein Platz hat eine Handlung, eine
+Kontaktkachel hat zwei — anrufen und mailen. Der Stern bleibt etwas
+anderes als die Pinnwand.
+
+**In der Leiste steht die Pinnwand links**, unter dem Schmierzettel.
+Rechts trug die Spalte sie nicht: Mit Favoriten, Pinnwand und Modulliste
+war sie ab dem sechsten belegten Platz 918 px hoch, bei 895 px sichtbarer
+Höhe. Links passt sie bis zum zwölften.
 
 ---
 

@@ -239,10 +239,17 @@ der Planner machte das Gegenteil und nahm alles.
 * Planner füllt die Höhe (`min-height:100%`)
 * Kopf über `padding-inline` auf dieselben 1480 px eingerückt
 
-**Offen (Vorgang 2)**
-* Die Leiste als Pinnwand mit zwölf Plätzen, über das Register auch für
-  Apps. Braucht eine Änderung an den gespeicherten Daten und eine
-  Erweiterung des Modulvertrags.
+**Umgesetzt (Vorgang 2)**
+* Die Leiste als Pinnwand: zwölf Plätze, `⌘1` bis `⌘8` auf den ersten
+  acht, „Häufig benutzt" statt „Bookmarks"
+* Der Modulvertrag wächst um `heftbar` — die Leiste kennt weiter kein
+  Modul beim Namen
+* `pins` merkt sich, aus welchem Modul ein Eintrag stammt; zwei
+  Migrationen in `heile()`, deren Reihenfolge zwingend ist
+* Der Appstarter startet wirklich und ist anheftbar — möglich geworden
+  durch den bestandenen Browsertest
+* Die Pinnwand steht links, nicht rechts: Rechts scrollte die Leiste ab
+  dem sechsten belegten Platz
 
 Entwurf mit gemessenen Zahlen: `mockups/schritt-breite.html`.
 

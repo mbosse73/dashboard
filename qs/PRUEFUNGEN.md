@@ -445,6 +445,71 @@ statt vorher rund 1800.
 
 ---
 
+## Die Pinnwand · Vorgang 2
+
+Zwölf Plätze, „Häufig benutzt", links unter dem Schmierzettel. Auf ihnen
+liegen Webseiten **und** Apps.
+
+### In der Leiste
+
+- [ ] Der Block heißt **„Häufig benutzt"** und steht **links**, unter dem
+      Schmierzettel **[vorgeprüft]**
+- [ ] Belegte Plätze tragen ihr Kürzel, ein Zeichen für die Herkunft und
+      den Namen. Ein gestricheltes Feld nennt die Restzahl **[vorgeprüft]**
+- [ ] Ein Klick auf einen Platz öffnet — Webseite in einem neuen Tab, App
+      als lokale Datei **[nur du]**
+- [ ] `⌘1` bis `⌘8` öffnen die ersten acht. `⌘9` tut nichts — es gibt
+      keine Kombination dafür
+      **[nur du — ⌘ fängt der Browser ab, nicht im Test prüfbar]**
+- [ ] Alle zwölf belegen. Die Leiste **scrollt nicht** **[vorgeprüft]**
+
+### Anheften
+
+- [ ] Modul Bookmarks · `ordnen ›` · Nadel an einem Chip — der Eintrag
+      erscheint in der Leiste **[vorgeprüft]**
+- [ ] Modul Appstarter · „anheften" an einer App — dasselbe, mit dem
+      Fenster-Zeichen statt der Weltkugel **[vorgeprüft]**
+- [ ] Beide stehen im selben Streifen, nicht in zwei getrennten
+      **[vorgeprüft]**
+- [ ] Einen dreizehnten anheften — „12 Plätze belegt — erst einen lösen",
+      es passiert nichts weiter **[vorgeprüft]**
+- [ ] Im Modul Bookmarks zeigt „Häufig benutzt" alle zwölf Plätze, freie
+      gestrichelt **[vorgeprüft]**
+
+### Der Appstarter startet
+
+- [ ] Eine App anklicken — sie öffnet sich wirklich. Vorher meldete das
+      Modul nur „Noch nicht eingebaut" **[nur du]**
+- [ ] Das Gerüstband sagt jetzt „Starten und Anheften tragen. Anlegen,
+      Bearbeiten und Löschen fehlen noch." **[vorgeprüft]**
+
+### Die Migration — der heikelste Teil
+
+- [ ] **Eine Sicherung von vor Schritt 7 laden**, in der `pins` Adressen
+      enthält. Die Anheftungen stehen danach an derselben Stelle
+      **[nur du]**
+- [ ] **Eine Sicherung von gestern laden**, in der `pins` blanke
+      Kennungen enthält. Dasselbe **[nur du]**
+- [ ] Heute sichern, alles leeren, wieder laden — zwölf Plätze,
+      unverändert **[vorgeprüft]**
+- [ ] Ein angeheftetes Bookmark löschen — der Platz wird frei, die
+      dahinter rücken auf **[vorgeprüft]**
+- [ ] Eine Sicherung mit einem Platz auf ein nicht vorhandenes Modul
+      laden — er fällt weg, die Meldung sagt es **[vorgeprüft]**
+
+*Sechs Sicherungsformen sind im Prüfbrowser durchgespielt worden:
+Adressen, blanke Kennungen, Objekte, gemischt, mutwillig kaputt, leer.
+Dabei kam heraus, dass Stufe 1 der Migration zunächst jeden Platz fraß,
+der schon die neue Form hatte.*
+
+### Zeichen
+
+- [ ] Weltkugel und Fenster sind **Umrisse**, keine dunklen Blöcke.
+      Beides Inline-SVG mit `stroke="currentColor"`; Fehlerbuch Punkt 2
+      **[nur du]**
+
+---
+
 ## Die Breite auf 24 Zoll · Vorgang 1
 
 Gemessen bei 1920 × 950 — im Rumpf bleiben 895 px.

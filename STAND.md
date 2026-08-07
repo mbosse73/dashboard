@@ -28,7 +28,39 @@ vorerst wegzulassen, ist hinfällig.
 
 ---
 
-**Zuletzt: die Breite auf 24 Zoll.** Alle zwölf Modulflächen benutzten
+**Zuletzt: die Leiste als Pinnwand.** Statt „acht angeheftete Bookmarks"
+gibt es **zwölf Plätze**, auf denen alles liegen darf — Webseiten wie
+Apps, später auch Textbausteine. Die Überschrift heißt **„Häufig
+benutzt"**. `⌘1` bis `⌘8` liegen auf den ersten acht; mehr freie
+Tastenkombinationen gibt es nicht.
+
+**Der Modulvertrag wächst um `heftbar`.** Ein Modul gibt beim Anmelden
+an, was es zum Anheften anbietet — Zeichen, Liste, Öffnen. Die Leiste
+fragt das Register und kennt kein Modul beim Namen. Der teurere Weg, aber
+der einzige, der die harte Regel wahrt: Ein weiteres anheftbares Modul
+kostet in der Leiste jetzt **keine Zeile**.
+
+**Der Appstarter startet wirklich** und ist anheftbar. Beides erst durch
+den bestandenen Browsertest möglich.
+
+**Zwei Fehler, die das Durchspielen gefunden hat, nicht der Betrieb.**
+Die Migration von `pins` läuft in zwei Stufen — Adresse → Kennung,
+Kennung → Objekt —, und Stufe 1 fraß zunächst jeden Platz, der schon die
+neue Form hatte. Eine Sicherung von morgen hätte beim Laden alle
+Anheftungen verloren. Sechs Sicherungsformen durchgespielt, darunter eine
+mutwillig kaputte.
+
+**Die Pinnwand steht links, nicht rechts — gegen die frühere
+Entscheidung.** Rechts trug die Spalte sie nicht: Mit Favoriten, Pinnwand
+und Modulliste scrollte die Leiste **ab dem sechsten belegten Platz**,
+und das hätte zurückgenommen, was der Vorgang davor gerade behoben hatte.
+Dichteres Raster und Chips brachten nur 16 bis 24 px — zu wenig. Links
+sind es bei voller Belegung 652 gegen 561 px, und nichts scrollt.
+Zurückzudrehen ist das eine Zeile.
+
+---
+
+**Davor: die Breite auf 24 Zoll.** Alle zwölf Modulflächen benutzten
 860 px und ließen 1060 px leer, während drei von ihnen scrollten. Der
 Planner machte das Gegenteil und nahm alle 1920 px — ein halbstündiger
 Termin bekam einen Block von 767 px.
@@ -59,9 +91,10 @@ Entwurf bei 860 px gemessen statt bei der späteren Spaltenbreite von
 542 — im Plan standen 646 px, gemessen wurden 909.
 
 **Offen als Vorgang 2:** die Leiste als Pinnwand mit zwölf Plätzen, über
-das Register auch für Apps. Braucht eine Änderung an den gespeicherten
-Daten und eine Erweiterung des Modulvertrags. Entschieden ist es, gebaut
-nicht. Entwurf: `mockups/schritt-breite.html`.
+das Register auch für Apps.
+
+> **Überholt:** Vorgang 2 ist gebaut, siehe ganz oben. Die Pinnwand steht
+> dabei links statt rechts — der Grund steht dort.
 
 **Davor: die Bookmark-Fläche ist dichter.** Aus rund 1800 Pixeln für
 24 Bookmarks sind **315** geworden. Gruppenname links als

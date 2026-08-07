@@ -51,6 +51,17 @@ registriere({
         () => zeigeFlaeche("beispiel")));
   },
 
+  // Was dieses Modul zum Anheften anbietet. Fehlt der Schlüssel, bietet
+  // es nichts an. Die Leiste fragt das Register — sie kennt kein Modul
+  // beim Namen, und ein weiteres anheftbares Modul kostet dort deshalb
+  // keine Zeile.
+  heftbar:{
+    zeichen: IK.web,                       // Inline-SVG für die Herkunft
+    liste: () => Z.beispiel.map(x =>
+             ({id:x.id, titel:x.titel, meta:"Zusatzinfo"})),
+    oeffne(e){ /* e stammt aus liste() */ }
+  },
+
   // Angebot, wenn der Text nichts trifft. d kommt aus deuten().
   erfassen(d){
     return [treff("Beispiel", d.titel, "als Beispiel anlegen", "↵",

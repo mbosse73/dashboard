@@ -560,11 +560,56 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
 .zurueck:hover{color:var(--ink)}
 .karte{padding:12px 14px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);
   margin-bottom:4px}
-.baum{padding-left:0}
-.knoten{display:flex;align-items:baseline;gap:9px;padding:6px 8px;border-radius:7px}
-.knoten:hover{background:var(--sheet)}
-.knoten .pkt{width:5px;height:5px;border-radius:50%;background:var(--rule2);flex-shrink:0}
-.knoten .tx{font-size:14px}
+/* ---------- 15 Outliner ---------- */
+.ol-baum{padding:2px 0 40px}
+.ol-k{position:relative;display:flex;align-items:flex-start;gap:7px;
+  padding:4px 8px;border-radius:7px;min-height:28px}
+.ol-k:hover{background:var(--sheet)}
+.ol-k.mark{background:var(--tinte-s)}
+.ol-drei{width:15px;height:22px;flex-shrink:0;border:0;background:none;padding:0;
+  color:var(--ink3);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ol-drei svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;transform:rotate(90deg)}
+.ol-drei.zu svg{transform:rotate(0)}
+.ol-drei.leer{cursor:default}
+.ol-pkt{width:5px;height:5px;border-radius:50%;background:var(--rule2);
+  flex-shrink:0;margin-top:9px;cursor:pointer}
+.ol-pkt.hat{box-shadow:0 0 0 3px var(--raise)}
+/* Der Knoten ist ein Feld, kein Text mit Dialog dahinter. Randlos und
+   in derselben Schrift wie der Rest — man soll nicht sehen, dass es
+   ein Formularfeld ist. */
+.ol-tx{flex:1;border:0;background:none;resize:none;overflow:hidden;
+  font-family:var(--ff);font-size:14px;line-height:1.5;color:var(--ink);
+  padding:3px 0;min-height:22px}
+.ol-tx:focus{outline:none}
+.ol-k.wurzel .ol-tx{font-weight:650}
+.ol-notiz{border:0;background:none;resize:none;overflow:hidden;width:100%;
+  font-family:var(--ff);font-size:12.5px;line-height:1.5;color:var(--ink3);
+  padding:2px 0 4px 10px;border-left:2px solid var(--rule2);min-height:20px}
+.ol-notiz:focus{outline:none;border-left-color:var(--tinte)}
+.ol-nz{margin:-3px 0 4px}
+.ol-zu{font-size:11px;color:var(--ink3);background:var(--raise);border-radius:20px;
+  padding:1px 7px;margin-top:5px;flex-shrink:0}
+.ol-d{font-family:var(--mono);font-size:11px;color:var(--ink3);background:var(--raise);
+  border-radius:5px;padding:1px 6px;margin-top:5px;white-space:nowrap;flex-shrink:0}
+.ol-d.spaet{background:var(--signal-s);color:var(--signal);font-weight:600}
+/* Die Fuehrungslinie des Zweigs, in dem die Schreibmarke steht. Sie
+   sitzt an der Kante des uebergeordneten Zweigs, nicht an der eigenen —
+   sonst schnitte sie durch das eigene Dreieck. */
+.ol-spur{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--tinte);
+  opacity:.45;border-radius:2px}
+.ol-pfad{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink3);
+  margin:2px 0 10px;flex-wrap:wrap}
+.ol-pfad button{border:0;background:none;color:var(--ink3);font-size:12px;
+  font-family:var(--ff);cursor:pointer;padding:0}
+.ol-pfad button:hover{color:var(--tinte);text-decoration:underline}
+.ol-pfad b{color:var(--ink);font-weight:600}
+.ol-leiste{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:2px 0 12px}
+.ol-schalter{display:inline-flex;gap:2px;background:var(--raise);border-radius:8px;padding:3px}
+.ol-schalter button{font-size:12.5px;padding:3px 12px;border-radius:6px;color:var(--ink2);
+  border:0;background:none;font-family:var(--ff);cursor:pointer}
+.ol-schalter button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
+  font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
 textarea.code{width:100%;min-height:150px;border:1px solid var(--rule2);border-radius:9px;
   background:var(--sheet);padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;
   resize:vertical;color:var(--ink)}
@@ -1548,10 +1593,22 @@ function vorgabe(){ return {
   {t:"Intranet",u:"intranet.example.com",g:"Intern"},{t:"Confluence",u:"confluence.example.com",g:"Intern"}
  ],
  pins:["developer.mozilla.org","github.com","excalidraw.com","linear.app/docs"],
+ /* Der Outliner. `e` ist die Ebene, die Liste ist flach: ein Teilbaum
+    ist ein zusammenhängender Abschnitt. Ein- und Ausrücken, Verschieben
+    und Löschen sind damit ein `splice`.
+    `frist`, `von` und `bis` gehören dem Outliner allein — sie erscheinen
+    nicht im Planner, nicht im Kalender und nicht im Jahreskalender. */
  baum:[
-  {ebene:0,t:"Produktstrategie 2026"},{ebene:1,t:"Marktlage"},{ebene:2,t:"Vier Anbieter geprüft"},
-  {ebene:2,t:"Zwei davon relevant"},{ebene:1,t:"Positionierung"},{ebene:2,t:"Einzeldatei als Merkmal"},
-  {ebene:1,t:"Preismodell"},{ebene:2,t:"Staffeln ab Q4"}
+  {id:"b1",e:0,t:"Produktstrategie 2026"},
+  {id:"b2",e:1,t:"Marktlage"},
+  {id:"b3",e:2,t:"Vier Anbieter geprüft"},
+  {id:"b4",e:2,t:"Zwei davon relevant",frist:tagPlus(5),
+   notiz:"Nordstern und Kranich. Beide setzen auf eine einzelne Datei."},
+  {id:"b5",e:1,t:"Positionierung"},
+  {id:"b6",e:2,t:"Einzeldatei als Merkmal",von:tagPlus(3),bis:tagPlus(14)},
+  {id:"b7",e:1,t:"Preismodell"},
+  {id:"b8",e:2,t:"Rabattlogik prüfen",frist:tagPlus(-2)},
+  {id:"b9",e:2,t:"Staffeln ab Q4",von:tagPlus(17),bis:tagPlus(28)}
  ]
 };}
 
@@ -1621,6 +1678,17 @@ function heile(z){
       z.pins.length=0; paare.forEach(p=>z.pins.push(p));
     }
   }
+
+  /* Der Outliner hatte anfangs `ebene` und keine Kennung. Beides trägt
+     nicht mehr: Fokusmodus und Rückgängig müssen sich einen Knoten
+     merken, und eine Position taugt dafür nicht, sobald etwas
+     verschoben wird. Das Feld heißt jetzt `e` — kürzer, weil es in
+     jedem Knoten steht. */
+  (z.baum||[]).forEach((k,i)=>{
+    if(k.e===undefined && k.ebene!==undefined){ k.e=k.ebene; delete k.ebene; n++; }
+    if(!(k.e>=0)) { k.e=0; n++; }
+    if(!k.id){ k.id="b-alt-"+(i+1); n++; }
+  });
   return n;
 }
 heile(Z);
@@ -3383,28 +3451,397 @@ function rechne(text){
 /* ===== MODUL outliner ===== */
 registriere({
   id:"outliner", nr:"15", nm:"Outliner",
-  hilfe:"Gliederungen mit eingerückten Knoten. Gedacht zum Ordnen von Gedanken. Tab rückt ein, Umschalt und Tab rücken aus.",
-  geruest:"Die Gliederung lässt sich ansehen, aber noch nicht bearbeiten.",
+  hilfe:"Gliederungen mit eingerückten Knoten. Ein Knoten ist ein Feld. Enter legt den nächsten an. Tab rückt ein, Umschalt und Tab rücken aus. Alt und Pfeil verschieben einen Knoten samt allem darunter. Umschalt und Enter öffnen eine Notizzeile. Ein Klick auf den Punkt springt hinein. Strg und Z nehmen zurück.",
   zahl:()=>BAUM.length,
   suche(q){
+    if(q.length<3) return [];
     return BAUM.filter(k=>k.t.toLowerCase().includes(q)).slice(0,4).map(k=>
-      treff("Gliederung",k.t,"Ebene "+(k.ebene+1)+" · Produktstrategie 2026","↵",
-        ()=>zeigeFlaeche("outliner")));
+      treff("Gliederung", k.t, "Ebene "+(k.e+1)+" · "+(BAUM[0]?BAUM[0].t:"Gliederung"), "↵",
+        ()=>{ olFokus=null; olMarke=k.id; zeigeFlaeche("outliner"); }));
   },
-  flaeche(b){
-    b.appendChild(abschnitt("Produktstrategie 2026",BAUM.length+" Knoten"));
-    const baum=el("div","baum");
-    BAUM.forEach(k=>{
-      const n=el("div","knoten",'<span class="pkt"></span>'
-        +'<span class="tx" style="font-weight:'+(k.ebene===0?650:400)+'">'+esc(k.t)+'</span>');
-      n.style.paddingLeft=(k.ebene*22+8)+"px";
-      n.onclick=()=>melde(nochNicht(k.t));
-      baum.appendChild(n);
-    });
-    b.appendChild(baum);
-  }
+  flaeche(b){ olMalen(b); }
 });
 /* ===== ENDE outliner ===== */
+
+/* ---------- Der Outliner, ausführlich ----------
+   Die Liste ist flach. `e` ist die Ebene, ein Teilbaum ist ein
+   zusammenhängender Abschnitt. Ein- und Ausrücken, Verschieben und
+   Löschen sind deshalb ein `splice` und kein Umhängen.
+
+   Rückgängig liegt als Abzug der ganzen Liste auf einem Stapel, nicht
+   als Befehlsstapel je Knoten. Bei einigen Hundert Knoten kostet ein
+   Abzug nichts, und er kann nicht danebenliegen — ein Befehlsstapel
+   kann. Getipptes wird zu einem Schritt gebündelt.
+
+   Nichts davon liegt in `Z`: Schreibmarke, Fokus und Stapel sind
+   Ansicht, kein Anwendungsdatum. */
+let olFokus=null;                /* Kennung des Knotens, in dem wir stehen */
+let olMarke=null;                /* Kennung des Knotens mit der Schreibmarke */
+let olFeld="t";                  /* "t" oder "notiz" */
+let olPos=null;                  /* Cursorstelle, null = ans Ende */
+let olAnsicht="gliederung";
+const OL_STAPEL=[]; let olZeiger=-1, olLetzte=0;
+
+const olWo   = id => BAUM.findIndex(k=>k.id===id);
+const olHole = id => BAUM.find(k=>k.id===id);
+/* Wie viele Knoten hängen unter dem an Stelle `i`? */
+function olTeil(i){
+  let n=0;
+  for(let j=i+1; j<BAUM.length && BAUM[j].e>BAUM[i].e; j++) n++;
+  return n;
+}
+const olAbzug = () => BAUM.map(k=>Object.assign({},k));
+
+function olStapelStart(){
+  OL_STAPEL.length=0; OL_STAPEL.push(olAbzug()); olZeiger=0; olLetzte=0;
+}
+/* Nach jeder Änderung aufrufen. `buendeln` fasst Tippen zusammen:
+   Wer einen Satz schreibt, will ihn mit einem Strg+Z los sein und
+   nicht dreißigmal drücken. */
+function olFertig(buendeln){
+  const jetzt=Date.now();
+  if(buendeln && jetzt-olLetzte<900 && olZeiger>=0){
+    OL_STAPEL[olZeiger]=olAbzug();
+  } else {
+    OL_STAPEL.splice(olZeiger+1);
+    OL_STAPEL.push(olAbzug());
+    while(OL_STAPEL.length>60) OL_STAPEL.shift();
+    olZeiger=OL_STAPEL.length-1;
+  }
+  olLetzte=jetzt;
+  bewahre();
+}
+function olSchritt(richtung){
+  const z=olZeiger+richtung;
+  if(z<0 || z>=OL_STAPEL.length){
+    melde(richtung<0 ? "Nichts mehr zurückzunehmen" : "Nichts wiederherzustellen");
+    return;
+  }
+  olZeiger=z;
+  ersetze(BAUM, OL_STAPEL[z].map(k=>Object.assign({},k)));
+  /* Fokus und Schreibmarke können auf Knoten zeigen, die es nach dem
+     Zurücknehmen nicht mehr gibt. Dann auf den ersten sichtbaren
+     ausweichen — nicht einfach löschen. Ohne Schreibmarke verlässt der
+     Fokus die Fläche, und danach greift keine weitere Taste mehr:
+     Zurücknehmen ging dann genau einmal. */
+  if(olFokus && !olHole(olFokus)) olFokus=null;
+  if(olMarke && !olHole(olMarke)) olMarke=null;
+  if(!olMarke){ const s=olSichtbar(); if(s.length) olMarke=s[0].k.id; }
+  olFeld="t"; olPos=null; olLetzte=0;
+  bewahre(); male();
+  melde(richtung<0 ? "Zurückgenommen" : "Wiederhergestellt");
+}
+
+/* ---------- Welche Knoten sind zu sehen? ----------
+   Zugeklapptes bleibt weg, aber sein Zähler sagt, wie viel darunter
+   liegt — nichts darf unsichtbar werden. Im Fokusmodus zählt nur der
+   Teilbaum des angesprungenen Knotens; er selbst steht im Pfad und
+   nicht noch einmal als Zeile. */
+function olSichtbar(){
+  let von=0, bis=BAUM.length, rueck=0;
+  if(olFokus){
+    const i=olWo(olFokus);
+    if(i<0){ olFokus=null; }
+    else { von=i+1; bis=i+1+olTeil(i); rueck=BAUM[i].e+1; }
+  }
+  const aus=[]; let zuAb=-1;
+  for(let i=von;i<bis;i++){
+    const k=BAUM[i];
+    if(zuAb>=0){ if(k.e>zuAb) continue; zuAb=-1; }
+    if(k.zu && olTeil(i)>0) zuAb=k.e;
+    aus.push({k, i, tiefe:k.e-rueck});
+  }
+  return aus;
+}
+
+/* ---------- Zeichnen ---------- */
+function olHoehe(f){ f.style.height="auto"; f.style.height=(f.scrollHeight)+"px"; }
+
+function olMalen(b){
+  if(OL_STAPEL.length===0) olStapelStart();
+  if(!BAUM.length){ BAUM.push({id:neueId("b"), e:0, t:""}); bewahre(); }
+
+  b.appendChild(olLeisteMalen());
+  if(olFokus) b.appendChild(olPfadMalen());
+  if(olAnsicht!=="gliederung"){ olAnsichtMalen(b); return; }
+
+  const sicht=olSichtbar();
+  const spurBis=olSpur();
+  const baum=el("div","ol-baum");
+
+  sicht.forEach(({k,i,tiefe})=>{
+    const kinder=olTeil(i);
+    const z=el("div","ol-k"+(k.id===olMarke?" mark":"")+(tiefe===0?" wurzel":""));
+    z.style.paddingLeft=(tiefe*24)+"px";
+
+    if(spurBis.includes(k.id) && tiefe>0){
+      const sp=el("span","ol-spur");
+      sp.style.left=((tiefe-1)*24+7)+"px";
+      z.appendChild(sp);
+    }
+
+    if(kinder){
+      const d=el("button","ol-drei"+(k.zu?" zu":""),
+        '<svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg>');
+      d.setAttribute("aria-label",(k.zu?"Aufklappen: ":"Zuklappen: ")+(k.t||"ohne Text"));
+      d.onclick=()=>{ k.zu=!k.zu; olFertig(); male(); };
+      z.appendChild(d);
+    } else z.appendChild(el("span","ol-drei leer"));
+
+    const pkt=el("span","ol-pkt"+(kinder?" hat":""));
+    pkt.title="Hineinspringen";
+    pkt.onclick=()=>olHinein(k.id);
+    z.appendChild(pkt);
+
+    const f=el("textarea","ol-tx");
+    f.rows=1; f.value=k.t; f.spellcheck=false;
+    f.setAttribute("aria-label","Knoten, Ebene "+(k.e+1));
+    f.oninput=()=>{ k.t=f.value; olHoehe(f); olFertig(true); };
+    f.onfocus=()=>{ olMarke=k.id; olFeld="t"; };
+    f.onkeydown=e=>olTaste(e,k,i,f,"t");
+    z.appendChild(f);
+
+    if(k.zu && kinder) z.appendChild(el("span","ol-zu","+"+kinder));
+    olMarkeMalen(z,k);
+
+    baum.appendChild(z);
+
+    if(k.notiz!=null){
+      const nz=el("div","ol-nz");
+      nz.style.paddingLeft=(tiefe*24+30)+"px";
+      const n=el("textarea","ol-notiz");
+      n.rows=1; n.value=k.notiz; n.placeholder="Notiz"; n.spellcheck=false;
+      n.setAttribute("aria-label","Notiz zu "+(k.t||"diesem Knoten"));
+      n.oninput=()=>{ k.notiz=n.value; olHoehe(n); olFertig(true); };
+      n.onfocus=()=>{ olMarke=k.id; olFeld="notiz"; };
+      n.onkeydown=e=>olTaste(e,k,i,n,"notiz");
+      nz.appendChild(n);
+      baum.appendChild(nz);
+    }
+  });
+
+  b.appendChild(baum);
+
+  /* Erst nachdem `male()` die Fläche ins Dokument gehängt hat. `flaeche`
+     bekommt einen losgelösten Knoten — dort ist `scrollHeight` null und
+     `focus()` wirkungslos. Ohne diesen Aufschub verlor die Schreibmarke
+     nach jedem Neuzeichnen den Halt, und jede weitere Taste ging ins
+     Leere. Ein Mikrotask läuft, sobald `male()` fertig ist. */
+  queueMicrotask(()=>{
+    if(!baum.isConnected) return;
+    baum.querySelectorAll("textarea").forEach(olHoehe);
+    olMarkeSetzen(baum);
+  });
+}
+
+/* Der Zweig, in dem die Schreibmarke steht — alle Vorfahren des
+   markierten Knotens, er selbst eingeschlossen. */
+function olSpur(){
+  const i=olWo(olMarke);
+  if(i<0) return [];
+  const aus=[BAUM[i].id];
+  let e=BAUM[i].e;
+  for(let j=i-1;j>=0 && e>0;j--){
+    if(BAUM[j].e<e){ e=BAUM[j].e; aus.push(BAUM[j].id); }
+  }
+  return aus;
+}
+
+function olMarkeSetzen(baum){
+  if(!olMarke) return;
+  const zeilen=[...baum.querySelectorAll(".ol-k")];
+  const treffer=zeilen[olSichtbar().findIndex(x=>x.k.id===olMarke)];
+  if(!treffer) return;
+  const f = olFeld==="notiz"
+    ? (treffer.nextSibling && treffer.nextSibling.querySelector
+       ? treffer.nextSibling.querySelector(".ol-notiz") : null)
+    : treffer.querySelector(".ol-tx");
+  if(!f) return;
+  f.focus();
+  const p = olPos==null ? f.value.length : Math.min(olPos, f.value.length);
+  f.setSelectionRange(p,p);
+  olPos=null;
+}
+
+function olLeisteMalen(){
+  const l=el("div","ol-leiste");
+  const sch=el("div","ol-schalter");
+  [["gliederung","Gliederung"],["gantt","Gantt"],["mindmap","Mindmap"]].forEach(([id,nm])=>{
+    const kn=el("button",null,nm);
+    kn.setAttribute("aria-current",String(olAnsicht===id));
+    kn.onclick=()=>{ olAnsicht=id; male(); };
+    sch.appendChild(kn);
+  });
+  l.appendChild(sch);
+  return l;
+}
+
+function olPfadMalen(){
+  const p=el("div","ol-pfad");
+  const kette=[]; let i=olWo(olFokus), e=BAUM[i].e;
+  for(let j=i-1;j>=0 && e>0;j--) if(BAUM[j].e<e){ e=BAUM[j].e; kette.unshift(BAUM[j]); }
+  const ganz=el("button",null,"Ganze Gliederung");
+  ganz.onclick=()=>{ olFokus=null; male(); };
+  p.append(ganz);
+  kette.forEach(k=>{
+    p.appendChild(el("span",null,"›"));
+    const kn=el("button",null,esc(k.t||"Ohne Text"));
+    kn.onclick=()=>{ olFokus=k.id; male(); };
+    p.appendChild(kn);
+  });
+  p.appendChild(el("span",null,"›"));
+  p.appendChild(el("b",null,esc(BAUM[i].t||"Ohne Text")));
+  return p;
+}
+
+function olHinein(id){
+  const i=olWo(id);
+  if(olTeil(i)===0){ melde("Nichts darunter, worauf man springen könnte"); return; }
+  olFokus=id; olMarke=null; male();
+}
+function olHeraus(){
+  if(!olFokus){ melde("Schon in der ganzen Gliederung"); return; }
+  const i=olWo(olFokus); let e=BAUM[i].e, hoch=null;
+  for(let j=i-1;j>=0;j--) if(BAUM[j].e<e){ hoch=BAUM[j].id; break; }
+  olFokus=hoch; male();
+}
+
+/* ---------- Die Tasten ----------
+   Sie hängen am Feld, nicht an `document`. Rückgängig gibt es sonst
+   nirgends im Dashboard; eine Taste, die überall angeboten wird und
+   meist ins Leere geht, wäre schlechter als eine, die nur dort wirkt,
+   wo sie etwas kann. */
+function olTaste(e,k,i,f,welches){
+  const mod=e.ctrlKey||e.metaKey;
+  const pos=f.selectionStart, ende=f.value.length;
+
+  if(mod && e.key.toLowerCase()==="z"){
+    e.preventDefault(); olSchritt(e.shiftKey?1:-1); return; }
+  if(mod && e.key.toLowerCase()==="y"){ e.preventDefault(); olSchritt(1); return; }
+
+  if(mod && (e.key==="."||e.code==="Period")){
+    e.preventDefault();
+    if(olTeil(i)===0){ melde("Nichts zum Klappen"); return; }
+    k.zu=!k.zu; olMarke=k.id; olFertig(); male(); return;
+  }
+  if(e.altKey && e.shiftKey && e.key==="ArrowRight"){ e.preventDefault(); olHinein(k.id); return; }
+  if(e.altKey && e.shiftKey && e.key==="ArrowLeft"){ e.preventDefault(); olHeraus(); return; }
+
+  /* --- in der Notizzeile gilt weniger --- */
+  if(welches==="notiz"){
+    if(e.key==="Escape" || (e.key==="Enter"&&!e.shiftKey)){
+      e.preventDefault(); olMarke=k.id; olFeld="t"; olPos=null; male(); return;
+    }
+    if(e.key==="Backspace" && f.value===""){
+      e.preventDefault(); k.notiz=null; olMarke=k.id; olFeld="t";
+      olFertig(); male(); return;
+    }
+    return;
+  }
+
+  if(e.key==="Enter" && e.shiftKey){
+    e.preventDefault();
+    if(k.notiz==null) k.notiz="";
+    olMarke=k.id; olFeld="notiz"; olPos=null;
+    olFertig(); male(); return;
+  }
+  if(e.key==="Enter"){
+    e.preventDefault();
+    /* Teilt an der Schreibmarke — was rechts steht, wandert in den
+       neuen Knoten. Ein Knoten mit Kindern bekommt sein Geschwister
+       hinter dem ganzen Teilbaum, nicht mitten hinein. */
+    const rest=f.value.slice(pos);
+    k.t=f.value.slice(0,pos);
+    const neu={id:neueId("b"), e:k.e, t:rest};
+    BAUM.splice(i+1+olTeil(i), 0, neu);
+    olMarke=neu.id; olFeld="t"; olPos=0;
+    olFertig(); male(); return;
+  }
+
+  if(e.key==="Tab"){
+    e.preventDefault();
+    olPos=pos;
+    if(e.shiftKey) olAusruecken(k,i); else olEinruecken(k,i);
+    return;
+  }
+
+  if(e.altKey && (e.key==="ArrowUp"||e.key==="ArrowDown")){
+    e.preventDefault(); olPos=pos; olSchieben(i, e.key==="ArrowUp"?-1:1); return;
+  }
+
+  if(e.key==="ArrowUp" || e.key==="ArrowDown"){
+    const sicht=olSichtbar();
+    const stelle=sicht.findIndex(x=>x.k.id===k.id);
+    const ziel=sicht[stelle+(e.key==="ArrowUp"?-1:1)];
+    if(!ziel) return;
+    e.preventDefault();
+    olMarke=ziel.k.id; olFeld="t"; olPos=Math.min(pos, ziel.k.t.length);
+    male(); return;
+  }
+
+  if(e.key==="Backspace" && pos===0 && f.selectionEnd===0){
+    const sicht=olSichtbar();
+    const stelle=sicht.findIndex(x=>x.k.id===k.id);
+    const vor=sicht[stelle-1];
+    if(!vor) return;
+    if(olTeil(i)>0){
+      e.preventDefault();
+      melde("Erst die Unterknoten wegräumen oder ausrücken");
+      return;
+    }
+    e.preventDefault();
+    const zi=olWo(vor.k.id);
+    olPos=vor.k.t.length;
+    vor.k.t += f.value;
+    BAUM.splice(i,1);
+    olMarke=vor.k.id; olFeld="t";
+    olFertig(); male(); return;
+  }
+
+  if(e.key==="Escape"){ e.preventDefault(); f.blur(); zeigeFlaeche("leiste"); return; }
+}
+
+/* ---------- Umbauen ---------- */
+function olEinruecken(k,i){
+  /* Es braucht einen Knoten darüber auf gleicher Ebene, unter den
+     dieser rutschen kann. Fehlt er, misslingt es nicht still. */
+  let vor=null;
+  for(let j=i-1;j>=0;j--){ if(BAUM[j].e===k.e){ vor=BAUM[j]; break; } if(BAUM[j].e<k.e) break; }
+  if(!vor){ melde("Kein Knoten darüber auf gleicher Ebene"); return; }
+  const n=olTeil(i);
+  for(let j=i;j<=i+n;j++) BAUM[j].e++;
+  if(vor.zu) vor.zu=false;          /* sonst verschwände der Knoten sofort */
+  olFertig(); male();
+}
+function olAusruecken(k,i){
+  if(k.e===0){ melde("Steht schon ganz links"); return; }
+  const n=olTeil(i);
+  for(let j=i;j<=i+n;j++) BAUM[j].e--;
+  /* Was hinter dem Teilbaum auf der alten Ebene folgte, gehört jetzt
+     unter diesen Knoten — sonst risse die Gliederung auseinander. */
+  olFertig(); male();
+}
+function olSchieben(i, richtung){
+  const n=olTeil(i)+1;
+  const teil=BAUM.slice(i,i+n);
+  if(richtung<0){
+    let vor=-1;
+    for(let j=i-1;j>=0;j--){ if(BAUM[j].e===BAUM[i].e){ vor=j; break; }
+      if(BAUM[j].e<BAUM[i].e) break; }
+    if(vor<0){ melde("Kein Geschwister darüber"); return; }
+    BAUM.splice(i,n); BAUM.splice(vor,0,...teil);
+  } else {
+    const nach=i+n;
+    if(nach>=BAUM.length || BAUM[nach].e<BAUM[i].e){ melde("Kein Geschwister darunter"); return; }
+    const m=olTeil(nach)+1;
+    BAUM.splice(i,n); BAUM.splice(i+m,0,...teil);
+  }
+  olFertig(); male();
+}
+
+/* Platzhalter — Gantt und Mindmap kommen in den nächsten Stufen. */
+function olAnsichtMalen(b){ b.appendChild(el("div","leer","Kommt gleich.")); }
+function olMarkeMalen(){}
 
 /* ---------- Code-Beautifier ---------- */
 /* ===== MODUL beautifier ===== */

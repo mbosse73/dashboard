@@ -432,9 +432,10 @@ ${karte("A6","Tastenbelegung",'Alles Weitere wird getippt, nicht ausgewählt —
 <div class="fassung">
 <h2>Fassung B — der schlanke Outliner, erweitert</h2>
 <p>Mein ursprünglicher Vorschlag, ergänzt um Gantt und Mindmap und um die
-drei Zutaten, die Sie dazugenommen haben: <b>Fokusmodus, Notizzeile,
-Undo</b>. Weiterhin ohne Etiketten, ohne Aufgaben mit Priorität und
-Fortschritt, ohne Filtersuche und ohne Führungslinie. Rund 690 Zeilen.</p>
+Zutaten, die Sie dazugenommen haben: <b>Fokusmodus, Notizzeile, Undo</b>
+und <b>PDF-Ausgabe für Gantt und Mindmap</b>. Weiterhin ohne Etiketten,
+ohne Aufgaben mit Priorität und Fortschritt, ohne Filtersuche und ohne
+Führungslinie. Rund 990 Zeilen.</p>
 </div>
 
 ${karte("B1","Gliederung","Ein Knoten ist ein Feld mit einem Text und höchstens einer eigenen Frist. Kein Kästchen, kein Etikett — geordnet wird über die Struktur. Die Notizzeile hängt unter ihrem Punkt und ist Prosa: ein Datum darin setzt keine Frist.",
@@ -458,7 +459,22 @@ ${karte("B6","Rückgängig","Undo liegt auf dem Datenmodell, nicht auf der Anzei
   +'Einrücken, Verschieben, Löschen, einen ganzen Absatz Tippen. '
   +'<b>Strg+⇧+Z</b> stellt wieder her.</div>')}
 
-${karte("B7","Tastenbelegung","Elf Tasten und eine getippte Angabe. Das ist die ganze Bedienung.",
+${karte("B7","PDF-Ausgabe","Gantt und Mindmap gehen als PDF heraus — <b>ohne Druckdialog und ohne Bibliothek</b>. Die Datei wird byteweise selbst geschrieben. <b>Die beiden Beispiele liegen als echte PDF neben diesem Entwurf</b>: <span style=\"font-family:var(--mono)\">mockups/outliner-gantt.pdf</span> und <span style=\"font-family:var(--mono)\">outliner-mindmap.pdf</span>. Bitte dort ansehen — eine Abbildung davon würde nichts beweisen.",
+  '<div class="hin" style="max-width:none">'
+  +'<b>Was das kostet:</b> rund 300 Zeilen — ein PDF-Schreiber und die '
+  +'beiden Zeichnungen. Der Schreiber kennt Flächen, Linien, Kurven und '
+  +'Text.<br><br>'
+  +'<b>Warum es ohne Bibliothek geht:</b> Ein PDF ist ein Textformat aus '
+  +'nummerierten Objekten und einem Strom von Zeichenbefehlen. Benutzt '
+  +'werden nur die vierzehn Standardschriften — Helvetica ist darunter '
+  +'und muss nicht eingebettet werden. Das spart die Schriftdatei und die '
+  +'Lizenzfrage.<br><br>'
+  +'<b>Zwei Fallen, beide ausgeräumt:</b> Der Nullpunkt liegt unten links, '
+  +'nicht oben links. Und die Standardschriften erwarten WinAnsi statt '
+  +'UTF-8 — ohne Umrechnung stünde statt „ü“ Kauderwelsch im Blatt.'
+  +'</div>')}
+
+${karte("B8","Tastenbelegung","Elf Tasten und eine getippte Angabe. Das ist die ganze Bedienung.",
   tasten(TASTEN_B_PLUS))}
 
 <div class="fassung">
@@ -485,10 +501,11 @@ ${[
  ["Aufgabe, Kästchen, Priorität, Fortschritt",1,0],
  ["Anheften auf die zwölf Plätze",1,0],
  ["Markdown-Ausgabe, Zweig sichern",1,0],
+ ["PDF-Ausgabe für Gantt und Mindmap",0,1],
  ["Zeilen in dashboard.html",0,0]
 ].map(([t,a,b])=>'<tr><td>'+esc(t)+'</td>'
   +(t.startsWith("Zeilen")
-    ? '<td class="nein">≈ 1400</td><td class="nein">≈ 690</td>'
+    ? '<td class="nein">≈ 1400</td><td class="nein">≈ 990</td>'
     : '<td class="'+(a?"ja":"nein")+'">'+(a?"ja":"—")+'</td>'
       +'<td class="'+(b?"ja":"nein")+'">'+(b?"ja":"—")+'</td>')
   +'</tr>').join("")}

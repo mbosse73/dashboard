@@ -324,6 +324,22 @@ Leiste oder Planner, Ziehen im Raster zum Verschieben einer Spanne.
 
 ---
 
+## Schritt 16 — SQL im Code-Beautifier · **erledigt**
+
+Nicht Teil der ursprünglichen Reihenfolge, nachträglich verlangt. Der
+Beautifier formatiert jetzt auch SQL und erkennt es in der Leiste.
+
+Drei Vorgaben haben die Umsetzung bestimmt: `CASE` bricht um, SQL wird
+erkannt, und **Tabellen- und Spaltennamen dürfen sich nicht ändern,
+auch nicht im Schriftfall**. Die letzte war die folgenreichste — sie hat
+die Liste der großzuschreibenden Wörter von rund siebzig auf
+vierundzwanzig zusammengestrichen und eine zweite Prüfung in die
+Rückprobe gebracht.
+
+Einzelheiten in `doku/SPEC.md`, Modul 16.
+
+---
+
 ## Später
 
 * Code-Beautifier um HTML und CSS erweitern

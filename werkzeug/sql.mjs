@@ -69,17 +69,25 @@ const VERBUND=[
 /* Nach diesen Klauseln steht die Liste eingerückt unter der Klausel. */
 const MIT_LISTE=new Set(["SELECT","SELECT DISTINCT","GROUP BY","ORDER BY","SET","VALUES","RETURNING"]);
 
-const SCHLUESSEL=new Set([
-  ...KLAUSEL.flatMap(k=>k.split(" ")), ...VERBUND.flatMap(k=>k.split(" ")),
-  "AND","OR","NOT","IN","IS","NULL","LIKE","ILIKE","BETWEEN","EXISTS","CASE",
-  "WHEN","THEN","ELSE","END","AS","ASC","DESC","DISTINCT","ALL","ANY","OVER",
-  "PARTITION","BY","CAST","COALESCE","NULLIF","INTERVAL","TRUE","FALSE",
-  "PRIMARY","KEY","FOREIGN","REFERENCES","DEFAULT","CONSTRAINT","UNIQUE",
-  "INT","INTEGER","BIGINT","TEXT","VARCHAR","CHAR","DATE","TIMESTAMP",
-  "BOOLEAN","NUMERIC","DECIMAL","SERIAL","ADD","COLUMN","TABLE","VIEW",
-  "INTO","FIRST","ROWS","ONLY","RECURSIVE","OUTER","INNER","CROSS","NATURAL",
-  "LEFT","RIGHT","FULL","GROUPING","SETS","FILTER","WITHIN","ROW","RANGE",
-  "UNBOUNDED","PRECEDING","FOLLOWING","CURRENT"
+/* ---------- Was großgeschrieben werden darf ----------
+   **Nur das hier.** Alles andere bleibt Zeichen für Zeichen so stehen,
+   wie es getippt wurde — ein Tabellen- oder Spaltenname wird nie
+   angefasst, auch nicht im Schriftfall.
+
+   Die Liste war einmal deutlich länger und enthielt Datentypen und
+   Wörter wie TEXT, DATE, KEY, NAME, FIRST, ROW. Das war falsch: Eine
+   Spalte darf so heißen, und dann hätte der Formatierer sie
+   umgeschrieben. Was nur in einer Wortfolge vorkommt — LEFT, INNER,
+   OUTER, INTO — steht ebenfalls nicht hier; das erledigt die
+   Folgenerkennung, und `left(name,3)` bleibt damit unberührt. */
+/* Wörter, die nur als Teil einer erkannten Wortfolge großgeschrieben
+   werden — SELECT, LEFT JOIN, INSERT INTO und so fort. */
+const SCHRITT_WORT=new Set(
+  [...KLAUSEL, ...VERBUND].flatMap(k=>k.split(" ")));
+const GROSS_ERLAUBT=new Set([
+  "AND","OR","NOT","IS","IN","LIKE","ILIKE","BETWEEN","EXISTS","NULL",
+  "CASE","WHEN","THEN","ELSE","END","AS","ASC","DESC","DISTINCT",
+  "ALL","ANY","OVER","PARTITION","BY","TRUE","FALSE"
 ]);
 
 /* Sucht ab Stelle `i` die längste passende Wortfolge aus `liste`. */
@@ -122,6 +130,9 @@ export function formatiere(quelle, opt){
   /* Je offener Klammer merken, ob sie umgebrochen wurde. Nur dann wird
      beim Schließen wieder ausgerückt. */
   const klammern=[];
+  /* Je offenem CASE ein Eintrag — damit auch ein CASE in einem CASE
+     wieder richtig ausrückt. */
+  const faelle=[];
 
   const flush=()=>{
     if(puffer.trim()) zeilen.push(EIN.repeat(Math.max(0,tiefe))+puffer.trim());
@@ -194,8 +205,19 @@ export function formatiere(quelle, opt){
         i=vb.bis; continue;
       }
       const gross=x.w.toUpperCase();
+
+      /* CASE bricht um: WHEN, ELSE und END beginnen je eine Zeile,
+         THEN bleibt bei seinem WHEN. Bei drei Zweigen wäre eine Zeile
+         noch zu lesen, bei acht nicht mehr. */
+      if(gross==="CASE"){ flush(); roh("CASE"); flush(); tiefe++; faelle.push(true);
+        i++; continue; }
+      if(faelle.length && (gross==="WHEN" || gross==="ELSE")){
+        flush(); roh(gross); i++; continue; }
+      if(faelle.length && gross==="END"){
+        flush(); tiefe--; faelle.pop(); roh("END"); i++; continue; }
+
       if(gross==="AND" || gross==="OR"){ flush(); roh(gross); i++; continue; }
-      setz(x, SCHLUESSEL.has(gross) ? gross : x.w);
+      setz(x, GROSS_ERLAUBT.has(gross) ? gross : x.w);
       if(nachTabelle) vorher={a:"tabelle", w:x.w};
       nachTabelle=false;
       i++; continue;
@@ -245,15 +267,27 @@ export function formatiere(quelle, opt){
      Ausgabe erneut zerlegen und Bestandteil für Bestandteil
      vergleichen. Nur der Schriftfall der Schlüsselwörter darf sich
      unterscheiden. Stimmt etwas nicht, wird nichts ausgegeben. */
-  const kern = s => zerlege(s).filter(y=>y.a!=="raum")
-    .map(y=> y.a+"|"+(y.a==="wort" ? y.w.toUpperCase() : y.w));
-  const vor=kern(quelle), nach=kern(text);
+  const vor=zerlege(quelle).filter(y=>y.a!=="raum");
+  const nach=zerlege(text).filter(y=>y.a!=="raum");
   if(vor.length!==nach.length)
     return {text:"", ok:false,
       grund:"Die Rückprobe fand "+nach.length+" Bestandteile statt "+vor.length+"."};
-  for(let k=0;k<vor.length;k++)
-    if(vor[k]!==nach[k])
-      return {text:"", ok:false,
-        grund:"Die Rückprobe stolperte bei „"+vor[k].split("|").slice(1).join("|")+"“."};
+  for(let k=0;k<vor.length;k++){
+    const a=vor[k], b=nach[k];
+    if(a.a!==b.a)
+      return {text:"", ok:false, grund:"Die Rückprobe stolperte bei „"+a.w+"“."};
+    if(a.a==="wort"){
+      if(a.w.toUpperCase()!==b.w.toUpperCase())
+        return {text:"", ok:false, grund:"Die Rückprobe stolperte bei „"+a.w+"“."};
+      /* Der Schriftfall darf sich nur bei den wenigen erlaubten Wörtern
+         unterscheiden. Vorher verglich die Probe alle Wörter ohne
+         Rücksicht auf Groß und Klein — ein umgeschriebener Spaltenname
+         wäre ihr damit nie aufgefallen, und genau das soll sie fangen. */
+      if(a.w!==b.w && !GROSS_ERLAUBT.has(a.w.toUpperCase()) && !SCHRITT_WORT.has(a.w.toUpperCase()))
+        return {text:"", ok:false,
+          grund:"„"+a.w+"“ hätte seinen Schriftfall verloren. Namen bleiben, wie sie stehen."};
+    } else if(a.w!==b.w)
+      return {text:"", ok:false, grund:"Die Rückprobe stolperte bei „"+a.w+"“."};
+  }
   return {text, ok:true, zeilen:text.split("\n").length};
 }

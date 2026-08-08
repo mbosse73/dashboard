@@ -607,3 +607,60 @@ selbst geschrieben werden.
 ## Reihenfolge
 
 Siehe `ROADMAP.md`.
+
+---
+
+## 17 Einstellungen — fertig
+
+Sechs Einstellungen und zwei Knöpfe, in vier Abschnitten. Was hier
+steht, gilt sofort; ein Speichern gibt es nicht.
+
+**Wo die Werte liegen, ist eine Entscheidung, keine Technikfrage.**
+
+* **Anzeige** — Thema, Schriftgröße, Startfläche, dazu die Leisten-Blöcke
+  und die Sicherungs-Erinnerung. Sie gehören zum Rechner, nicht zu den
+  Daten: Ein anderer Bildschirm braucht andere Werte. Sie liegen in
+  `localStorage` unter `anzeige` und stehen **nicht** in Sicherung oder
+  Export. Das Thema behält aus älteren Zeiten seinen eigenen Schlüssel.
+* **Arbeit** — der Vorlauf für „überfällig". Er ändert, wie Fristen
+  gedeutet werden, und liegt deshalb als `Z.vorlauf` **in der
+  Sicherung**. Auf einem anderen Rechner muss er gleich sein, sonst
+  sähen dieselben Daten anders aus.
+
+**Die Schriftgröße** ist `zoom` auf `body`, nicht eine geänderte
+Grundschrift. Alle Maße dieser Datei stehen in Pixeln — 825 Stück —,
+eine Grundschrift wirkte deshalb auf fast nichts. Dazu gehört zwingend
+eine zweite Regel: `.app` teilt seine Höhe durch denselben Faktor. Ohne
+sie wird die Fläche bei 1,15 um fünfzehn Prozent höher als das Fenster,
+und ein Rollbalken erscheint. Gemessen: 1035 px in einem 900-px-Fenster.
+Das ist Fehlerbuch 15 auf dem Rückweg.
+
+**Überfällig ab** hat drei Stufen: am Tag danach (wie bisher), am Tag
+selbst, einen Tag vorher. Gerechnet wird `d <= tagPlus(vorlauf - 1)` —
+bei 0 ist das genau das alte `d < HEUTE`.
+
+**Die Leisten-Blöcke** lassen sich einzeln abschalten. Wer alle sechs
+abschaltet, bekommt nicht nichts: „Die Leiste nie leer lassen" ist eine
+harte Regel, also steht dort ein Satz und ein Weg zurück in die
+Einstellungen.
+
+**Beispieldaten erkennen** geht über die Kennung — und, wo es keine
+gibt, über den Inhalt. Bookmarks bekommen ihre Kennung erst in
+`heile()`; ein Vergleich allein über Kennungen fand deshalb null von
+vierundzwanzig. Wer ein Beispiel bearbeitet hat, macht es damit zu
+seinem: Es zählt nicht mehr als Beispiel, und das ist richtig so.
+
+**Beide Löschknöpfe fragen vorher und zählen ab**, was verschwindet.
+Eine Frage ohne Zahlen ist keine Frage.
+
+**Bewusst nicht dabei**
+
+* **Ein drittes Thema.** Es ist geplant, aber nicht gebaut. Ein Knopf
+  ohne Wirkung wäre Fehlerbuch 9.
+* **Die Planner-Stunden** und **die Werktage.** Der Planner bleibt bei
+  7 bis 18 Uhr und Montag bis Freitag. Ein Termin um 19:30 erscheint
+  dort nicht; der Kalender zeigt ihn.
+* **Ein voreingestelltes PDF-Format.** Der Dialog fragt jedes Mal.
+* **Freie Farben, freie Tastenkürzel, die Zahl der Plätze,
+  Einstellungen für den Beautifier.**
+

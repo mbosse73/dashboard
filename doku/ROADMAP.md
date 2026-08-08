@@ -16,8 +16,8 @@ dieser Reihenfolge:
    Edge das PDF des Outliners überhaupt herunterlädt
 3. **Schritt 6** — Workflows, zuletzt
 
-**Schritt 7 ist seit dem Apps-Teil vollständig.** Von dreizehn Modulen
-sind elf fertig; Gerüst sind nur noch Textbausteine (05) und
+**Schritt 7 ist seit dem Apps-Teil vollständig.** Von vierzehn Modulen
+sind zwölf fertig; Gerüst sind nur noch Textbausteine (05) und
 Workflows (13).
 
 ---
@@ -355,8 +355,30 @@ Einzelheiten in `doku/SPEC.md`, Modul 16.
 
 ---
 
+## Modul 17 — Einstellungen · **erledigt**
+
+Nicht Teil der ursprünglichen Reihenfolge, nachträglich verlangt. Sechs
+Einstellungen und zwei Knöpfe; Einzelheiten in `doku/SPEC.md`.
+
+Zwei Vorschläge sind im Entwurf gestrichen worden, beide auf Wunsch:
+ein voreingestelltes PDF-Format, und alles, was den Planner beträfe.
+
+Ein dritter ist an der Sache gescheitert: **„Wochenende mitzählen"** war
+nicht zu bauen, ohne den Planner anzufassen. Planner und Kalender holen
+ihre zwei Tage aus derselben Funktion `planTage()`; es gäbe keinen Weg,
+den Planner davon auszunehmen. Im Entwurf stand noch, die Einstellung
+betreffe „Fristen und den Kalender, der Planner bleibt" — das war
+falsch und ist zurückgenommen.
+
+**Das dritte Thema** ist geplant, aber nicht Teil dieses Schritts. Es
+ist eine eigene Arbeit mit eigenen Farbwerten und eigener
+Kontrastprüfung.
+
+---
+
 ## Später
 
+* Ein drittes Thema
 * Code-Beautifier um HTML und CSS erweitern
 * Planner: Termine im Raster ziehen, um die Uhrzeit zu ändern
 * Wiederkehrende Termine

@@ -645,6 +645,39 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
 .olm-k.wurzel{font-size:13.5px;font-weight:650;color:var(--ink);
   background:var(--raise);border-color:var(--rule2)}
 .olm-k.spaet{border-color:var(--signal);color:var(--signal);background:var(--signal-s)}
+/* ---------- 17 Schriftgröße ----------
+   Alle Maße dieser Datei stehen in Pixeln — 825 Stück. Eine
+   Grundschrift zu ändern wirkte deshalb auf fast nichts. `zoom`
+   vergrößert alles zugleich, auch Abstände und Rahmen.
+
+   Die zweite Zeile ist nicht Kosmetik, sondern Pflicht: Ohne sie wird
+   `.app` bei 1,15 um 15 % höher als das Fenster, und ein senkrechter
+   Rollbalken erscheint — gemessen 1035 px in einem 900-px-Fenster. Das
+   ist Fehlerbuch 15 auf dem Rückweg. Die Höhe muss durch denselben
+   Faktor geteilt werden, durch den der Zoom sie streckt. */
+body[data-schrift="klein"]{--zoom:.9}
+body[data-schrift="gross"]{--zoom:1.15}
+body[data-schrift="klein"],body[data-schrift="gross"]{zoom:var(--zoom)}
+body[data-schrift="klein"] .app,body[data-schrift="gross"] .app{
+  height:calc(100vh / var(--zoom));height:calc(100dvh / var(--zoom))}
+
+/* 17 Einstellungen */
+.ein-z{padding:9px 0;border-bottom:1px solid var(--rule)}
+.ein-z:last-child{border-bottom:0}
+.ein-k{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ein-nm{flex:1;min-width:170px;font-size:13.5px}
+.ein-u{color:var(--ink3);font-size:12px;margin-top:4px;max-width:70ch}
+.ein-f{color:var(--ink3);font-size:12px;margin-top:12px;padding-top:10px;
+  border-top:1px solid var(--rule);max-width:74ch}
+.ein-w{display:inline-flex;gap:2px;background:var(--raise);border-radius:8px;padding:3px;
+  flex-shrink:0}
+.ein-w button{font-size:12.5px;padding:3px 12px;border-radius:6px;color:var(--ink2);
+  border:0;background:none;font-family:var(--ff);cursor:pointer;white-space:nowrap}
+.ein-w button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
+  font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.ein-hk{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);
+  margin:3px 18px 3px 0;cursor:pointer}
+
 /* 16 Code-Beautifier */
 .cb-schalter{display:inline-flex;gap:2px;background:var(--raise);border-radius:8px;
   padding:3px;margin:2px 0 12px}
@@ -901,6 +934,27 @@ const LS_OK=(()=>{ try{localStorage.setItem("db-probe","1");
 const store={ get(k,d){ try{const v=localStorage.getItem(k); return v?JSON.parse(v):d;}catch(e){return d;} },
               set(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} } };
 
+/* ---------- Anzeige-Einstellungen ----------
+   Sie gehören zum Rechner, nicht zu den Daten: Ein anderer Bildschirm
+   braucht andere Werte. Deshalb liegen sie wie das Thema in
+   `localStorage` und nicht in `Z` — sie stehen weder in der Sicherung
+   noch im Export. Das Thema hat aus älteren Zeiten einen eigenen
+   Schlüssel; hier steht alles Übrige.
+
+   Was die Deutung der Daten ändert, gehört nicht hierher, sondern in
+   `Z`. Das ist bisher nur der Vorlauf für „überfällig". */
+const ANZ_VORGABE={
+  schrift:"normal", start:"leiste", erinnerung:7,
+  leiste:{spaet:true, termin:true, zettel:true, pinnwand:true,
+          favoriten:true, module:true}
+};
+const ANZ=(()=>{
+  const g=store.get("anzeige",{})||{};
+  return Object.assign({}, ANZ_VORGABE, g,
+    {leiste:Object.assign({}, ANZ_VORGABE.leiste, g.leiste||{})});
+})();
+function anzSichern(){ store.set("anzeige",ANZ); }
+
 function istWerktag(d){ const t=d.getDay(); return t>=1&&t<=5; }
 function naechsterWerktag(v){ const d=new Date(v); d.setHours(0,0,0,0);
   do{ d.setDate(d.getDate()+1); }while(!istWerktag(d)); return d; }
@@ -918,13 +972,18 @@ function frist(x){
   if(!x.d) return "ohne Frist";
   const diff=Math.round((new Date(x.d+"T00:00:00")-new Date(HEUTE+"T00:00:00"))/86400000);
   const d=new Date(x.d+"T00:00:00");
-  if(diff<0) return "überfällig";
+  if(x.d <= spaetAb()) return "überfällig";
   if(diff===0) return x.zeit||"heute";
   if(diff===1) return "morgen";
   if(diff<7) return TAGL[d.getDay()];
   return d.getDate()+". "+MONK[d.getMonth()];
 }
-const istSpaet = x => !x.fertig && x.d && x.d < HEUTE;
+/* Ab wann etwas rot wird. Ohne Vorlauf ist das der Tag nach der
+   Frist — genau wie früher, als hier `x.d < HEUTE` stand. Ein Vorlauf
+   von einem Tag färbt schon am Fristtag, zwei Tage einen davor. */
+const vorlauf = () => { const v=Number(Z && Z.vorlauf); return v>=0&&v<=2 ? v : 0; };
+const spaetAb = () => tagPlus(vorlauf()-1);
+const istSpaet = x => !x.fertig && x.d && x.d <= spaetAb();
 
 function abschnitt(t,n,kl){
   const a=el("div","abs",'<h2'+(kl?' class="'+kl+'"':'')+'>'+esc(t)+'</h2><span class="r"></span>');
@@ -1530,6 +1589,9 @@ const wfVorlage = id => VORLAGEN.find(v=>v.id===id);
 
 function vorgabe(){ return {
  format: 1,
+ /* Der einzige Wert hier, der keine Liste ist und kein Text: Er ändert,
+    wie Fristen gedeutet werden, und muss deshalb in die Sicherung. */
+ vorlauf: 0,
  kontakte:[
   {id:"k1",nach:"Meier",vor:"Lisa",firma:"Nordstern GmbH",tel:"0391 55512-40",mail:"l.meier@nordstern.de",fav:true,notiz:"Produktleitung"},
   {id:"k2",nach:"Kowalski",vor:"Jan",firma:"Nordstern GmbH",tel:"0391 55512-41",mail:"j.kowalski@nordstern.de",fav:true,notiz:"Gestaltung"},
@@ -1726,6 +1788,11 @@ function heile(z){
      merken, und eine Position taugt dafür nicht, sobald etwas
      verschoben wird. Das Feld heißt jetzt `e` — kürzer, weil es in
      jedem Knoten steht. */
+  /* Eine Sicherung aus der Zeit vor den Einstellungen kennt den
+     Vorlauf nicht. Ohne diese Zeile stünde dort `undefined`, und jeder
+     Vergleich damit wäre falsch. */
+  if(!(Number(z.vorlauf)>=0 && Number(z.vorlauf)<=2)){ z.vorlauf=0; n++; }
+
   (z.baum||[]).forEach((k,i)=>{
     if(k.e===undefined && k.ebene!==undefined){ k.e=k.ebene; delete k.ebene; n++; }
     if(!(k.e>=0)) { k.e=0; n++; }
@@ -4516,6 +4583,248 @@ function olPdfMindmap(format){
   melde("PDF ausgegeben · "+gew+" quer");
 }
 
+/* ---------- 17 Einstellungen ---------- */
+/* ===== MODUL einstellungen ===== */
+registriere({
+  id:"einstellungen", nr:"17", nm:"Einstellungen",
+  hilfe:"Stellt ein, wie das Dashboard aussieht und sich verhält. Thema, Schriftgröße und Startfläche gehören zum Rechner. Sie stehen nicht in der Sicherung. Der Vorlauf für Überfälliges gehört zu den Daten. Er wird mitgesichert. Hier lassen sich auch die Beispieldaten entfernen. Und alles auf den Auslieferungsstand zurücksetzen.",
+  suche(q){
+    const woerter=["einstellung","einstellungen","thema","schrift","schriftgröße",
+      "startfläche","zurücksetzen","beispieldaten"];
+    if(q.length<3 || !woerter.some(w=>w.startsWith(q))) return [];
+    return [treff("Werkzeug","Einstellungen öffnen",
+      "Anzeige, Arbeit, Leiste, Daten","↵",()=>zeigeFlaeche("einstellungen"))];
+  },
+  flaeche(b){ einMalen(b); }
+});
+/* ===== ENDE einstellungen ===== */
+
+/* ---------- Die Einstellungen, ausführlich ----------
+   Eine Zeile ist: Beschriftung links, Schalter rechts, Erklärung
+   darunter. Die Erklärung steht **unter** der Zeile, nie in der
+   Beschriftung — dieselbe Regel wie für Dialogfelder. */
+function einZeile(nm, steuer, unter){
+  const z=el("div","ein-z");
+  const k=el("div","ein-k");
+  k.appendChild(el("span","ein-nm",esc(nm)));
+  k.appendChild(steuer);
+  z.appendChild(k);
+  if(unter) z.appendChild(el("div","ein-u",unter));
+  return z;
+}
+function einWahl(optionen, jetzt, tun){
+  const w=el("div","ein-w");
+  optionen.forEach(([wert,text])=>{
+    const kn=el("button",null,esc(text));
+    kn.setAttribute("aria-current",String(wert===jetzt));
+    kn.onclick=()=>tun(wert);
+    w.appendChild(kn);
+  });
+  return w;
+}
+function einHaken(nm, an, tun){
+  const l=el("label","ein-hk");
+  const i=el("input"); i.type="checkbox"; i.checked=an;
+  i.onchange=()=>tun(i.checked);
+  l.append(i, document.createTextNode(nm));
+  return l;
+}
+function einKarte(b, titel){
+  b.appendChild(abschnitt(titel,null));
+  const k=el("div","karte"); b.appendChild(k); return k;
+}
+
+function einMalen(b){
+  b.appendChild(el("div","hinweis",
+    "Was hier steht, gilt sofort. Ein Speichern gibt es nicht."));
+
+  /* --- Anzeige --- */
+  const a=einKarte(b,"Anzeige");
+  a.appendChild(einZeile("Thema",
+    einWahl([["standard","Standard"],["basecamp","Basecamp"]],
+      store.get("thema","standard"), t=>{ themaSetzen(t); male(); }),
+    "Steht auch oben im Kopf. Dort ist es ein Klick."));
+  a.appendChild(einZeile("Schriftgröße",
+    einWahl([["klein","Klein"],["normal","Normal"],["gross","Groß"]],
+      ANZ.schrift, w=>{ schriftSetzen(w); male(); }),
+    "Drei Stufen, nicht frei wählbar. Ein freier Wert bricht das Raster."));
+  a.appendChild(einZeile("Womit die App startet",
+    einWahl([["leiste","Leiste"],["planner","Planner"]],
+      ANZ.start, w=>{ ANZ.start=w; anzSichern(); male(); }),
+    "Gilt beim nächsten Öffnen der Datei."));
+  a.appendChild(el("div","ein-f",
+    "Diese drei bleiben an diesem Rechner. Sie stehen <b>nicht</b> in der "
+    +"Sicherung — ein anderer Bildschirm braucht andere Werte."));
+
+  /* --- Arbeit --- */
+  const w=einKarte(b,"Arbeit");
+  w.appendChild(einZeile("Überfällig ab",
+    einWahl([[0,"am Tag danach"],[1,"am Tag selbst"],[2,"einen Tag vorher"]],
+      vorlauf(), v=>{ Z.vorlauf=v; bewahre(); male(); }),
+    "Wann eine Frist rot wird. Bisher erst am Tag nach der Frist."));
+  w.appendChild(el("div","ein-f",
+    "Dieser Wert kommt <b>in die Sicherung</b>. Er ändert, wie Ihre Daten "
+    +"gedeutet werden; auf einem anderen Rechner muss er gleich sein."));
+
+  /* --- Leiste --- */
+  const l=einKarte(b,"Was in der Leiste steht");
+  const kasten=el("div","ein-z");
+  const reihe=el("div");
+  [["spaet","Überfälliges"],["termin","Nächster Termin"],["zettel","Schmierzettel"],
+   ["pinnwand","Häufig benutzt"],["favoriten","Favoriten"],["module","Modulliste"]]
+   .forEach(([k,nm])=>reihe.appendChild(einHaken(nm, ANZ.leiste[k],
+      an=>{ ANZ.leiste[k]=an; anzSichern(); male(); })));
+  kasten.appendChild(reihe);
+  kasten.appendChild(el("div","ein-u",
+    "Ausgeschaltetes verschwindet nur aus der Leiste. Die Einträge selbst "
+    +"bleiben und sind über ihr Modul erreichbar."));
+  l.appendChild(kasten);
+
+  /* --- Daten --- */
+  const d=einKarte(b,"Daten");
+  d.appendChild(einZeile("Erinnerung ans Sichern",
+    einWahl([[0,"aus"],[3,"nach 3 Tagen"],[7,"nach 7 Tagen"]],
+      ANZ.erinnerung, v=>{ ANZ.erinnerung=v; anzSichern(); standZeigen(); male(); }),
+    "Oben im Kopf steht, wann zuletzt gesichert wurde. Bisher sagte die App "
+    +"nichts dazu, wenn es lange her war."));
+
+  const bz=beispielZaehlen();
+  const kb=el("button","tat weg","Beispieldaten entfernen");
+  kb.disabled = bz.summe===0;
+  kb.onclick=()=>beispielDialog(bz);
+  d.appendChild(einZeile("Beispieldaten", kb,
+    bz.summe
+      ? "Noch "+bz.summe+" Einträge aus der Auslieferung. Was Sie selbst "
+        +"angelegt haben, bleibt."
+      : "Keine mehr da."));
+
+  const kz=el("button","tat weg","Auf Auslieferungsstand");
+  kz.onclick=()=>zuruecksetzenDialog();
+  d.appendChild(einZeile("Alles zurücksetzen", kz,
+    "Löscht sämtliche Daten und stellt die Beispieldaten wieder her."));
+}
+
+/* ---------- Beispieldaten ----------
+   Was aus der Auslieferung stammt, erkennt man an seiner Kennung: Die
+   steht so in `vorgabe()`. Selbst Angelegtes bekommt eine Kennung aus
+   `neueId()` und sieht anders aus. Verglichen wird gegen eine frische
+   `vorgabe()`, nicht gegen eine Liste von Hand — sonst driftet beides
+   auseinander, sobald jemand ein Beispiel ergänzt. */
+const EIN_BEREICHE=["kontakte","termine","jahrestermine","aufgaben","notizen",
+  "workflows","bausteine","apps","marken","baum"];
+
+/* Nicht jeder Bereich hat in `vorgabe()` Kennungen: Bookmarks bekommen
+   ihre erst in `heile()`. Ein Vergleich allein über die Kennung fand
+   deshalb null Bookmarks, obwohl vierzehn dastanden — und ihre
+   angehefteten Plätze wären mit ihnen stehen geblieben. Fehlt die
+   Kennung, wird über den Inhalt verglichen. Wer ein Beispiel bearbeitet
+   hat, macht es damit zu seinem: Es zählt dann nicht mehr als Beispiel,
+   und das ist richtig so. */
+function einSig(x){ const y=Object.assign({},x); delete y.id; return JSON.stringify(y); }
+
+function einBeispielPruefer(k){
+  const v=vorgabe()[k]||[];
+  const ids=new Set(v.filter(x=>x.id).map(x=>x.id));
+  const sigs=new Set(v.filter(x=>!x.id).map(einSig));
+  return x => (x.id && ids.has(x.id)) || sigs.has(einSig(x));
+}
+
+function beispielZaehlen(){
+  const je={}; let summe=0;
+  EIN_BEREICHE.forEach(k=>{
+    const ist=einBeispielPruefer(k);
+    const n=(Z[k]||[]).filter(ist).length;
+    je[k]=n; summe+=n;
+  });
+  return {je, summe};
+}
+
+function beispielEntfernen(){
+  const weg=new Set();
+  EIN_BEREICHE.forEach(k=>{
+    const ist=einBeispielPruefer(k);
+    const bleibt=(Z[k]||[]).filter(x=>{
+      if(ist(x)){ weg.add(k+"|"+x.id); return false; }
+      return true;
+    });
+    ersetze(Z[k], bleibt);
+  });
+  /* Plätze, die ins Leere zeigen würden, fallen mit. */
+  const gut=PINS.filter(p=>p && !weg.has(p.m+"|"+p.id));
+  const frei=PINS.length-gut.length;
+  ersetze(PINS, gut);
+  bewahre(); male();
+  melde("Beispieldaten entfernt"+(frei?" · "+frei+(frei>1?" Plätze":" Platz")+" frei":""));
+}
+
+function beispielDialog(bz){
+  const nm={kontakte:"Kontakte",termine:"Termine",jahrestermine:"Jahrestermine",
+    aufgaben:"Aufgaben",notizen:"Notizen",workflows:"Workflows",
+    bausteine:"Textbausteine",apps:"Apps",marken:"Bookmarks",baum:"Gliederungsknoten"};
+  const teile=EIN_BEREICHE.filter(k=>bz.je[k]).map(k=>bz.je[k]+" "+nm[k]);
+  einFrage("Beispieldaten entfernen",
+    "<b>Beispieldaten wirklich entfernen?</b><ul>"
+    +"<li>"+esc(teile.join(", "))+" verschwinden.</li>"
+    +"<li>Was Sie selbst angelegt haben, bleibt.</li>"
+    +"<li>Angeheftete Plätze, die darauf zeigen, werden frei.</li>"
+    +"<li><b>Das lässt sich nicht rückgängig machen.</b> Vorher sichern.</li></ul>",
+    "Ja, entfernen", beispielEntfernen);
+}
+
+function zuruecksetzenDialog(){
+  let n=0; EIN_BEREICHE.forEach(k=>n+=(Z[k]||[]).length);
+  einFrage("Alles zurücksetzen",
+    "<b>Wirklich alles zurücksetzen?</b><ul>"
+    +"<li>Alle "+n+" Einträge werden gelöscht, auch die selbst angelegten.</li>"
+    +"<li>Der Schmierzettel wird geleert, alle Plätze werden frei.</li>"
+    +"<li>Die Beispieldaten kommen zurück.</li>"
+    +"<li><b>Das lässt sich nicht rückgängig machen.</b> Vorher sichern.</li></ul>",
+    "Ja, zurücksetzen", ()=>{
+      const v=vorgabe();
+      EIN_BEREICHE.forEach(k=>ersetze(Z[k], v[k]||[]));
+      ersetze(PINS, v.pins||[]);
+      Z.schmierzettel=v.schmierzettel||"";
+      Z.vorlauf=v.vorlauf||0;
+      heile(Z); heftAufraeumen();
+      bewahre(); male();
+      melde("Auf Auslieferungsstand zurückgesetzt");
+    });
+}
+
+/* Eine Rückfrage ohne Eingabefelder. `dialog()` ist dafür gebaut, dass
+   etwas gespeichert wird; hier wird nur gefragt. */
+function einFrage(titel, text, knopf, tun){
+  /* Die kleine Zeile darüber sagt, woher der Dialog kommt, die große,
+     worum es geht. Stand in beiden dasselbe, war eine davon überflüssig. */
+  const art="Einstellungen";
+  dialogZu();
+  const d=el("div","dlg");
+  d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true");
+  d.setAttribute("aria-label",titel);
+  const kopf=el("div","dlg-k",'<span class="art">'+esc(art)+'</span>'
+    +'<h2 class="dlg-t">'+esc(titel)+'</h2><span class="sp"></span>');
+  const zu=el("button","dlg-zu","×");
+  zu.setAttribute("aria-label","Schließen"); zu.onclick=dialogZu;
+  kopf.appendChild(zu);
+  const rumpf=el("div","dlg-b");
+  rumpf.appendChild(el("div","merk warn",text));
+  const fuss=el("div","dlg-f");
+  const ja=el("button","tat weg ernst",knopf);
+  ja.onclick=()=>{ tun(); dialogZu(); };
+  fuss.appendChild(ja);
+  fuss.appendChild(el("span","sp"));
+  const nein=el("button","tat still","Doch nicht");
+  nein.onclick=dialogZu;
+  fuss.appendChild(nein);
+  d.append(kopf,rumpf,fuss);
+  const sch=el("div","schleier auf");
+  sch.appendChild(d);
+  sch.onclick=ev=>{ if(ev.target===sch) dialogZu(); };
+  document.body.appendChild(sch);
+  dlgOffen=sch;
+  nein.focus();
+}
+
 /* ---------- Code-Beautifier ---------- */
 /* ===== MODUL beautifier ===== */
 registriere({
@@ -5049,7 +5358,7 @@ function ruhezustand(raum){
   zwei.append(box,rechts);
   raum.appendChild(zwei);
 
-  const sp=ueberfaellig();
+  const sp=ANZ.leiste.spaet ? ueberfaellig() : [];
   if(sp.length){
     box.appendChild(abschnitt("Überfällig",String(sp.length),"eilig"));
     sp.forEach(x=>{
@@ -5072,7 +5381,8 @@ function ruhezustand(raum){
       box.appendChild(r);
     });
   }
-  const nt=naechsterTermin();
+  const nt=ANZ.leiste.termin ? naechsterTermin() : null;
+  if(ANZ.leiste.termin){
   box.appendChild(abschnitt(nt?"Als Nächstes":"Heute",null,"jetzt"));
   const w=el("div");
   if(nt){
@@ -5083,6 +5393,7 @@ function ruhezustand(raum){
   } else w.innerHTML='<div class="naechst-t">Kein Termin mehr.</div>'
     +'<div class="naechst-m">Der Rest des Tages gehört dir.</div>';
   box.appendChild(w);
+  }
 
   /* Favoriten stehen zwischen dem nächsten Termin und den Bookmarks:
      erst was drängt, dann wen man am häufigsten braucht, dann der Rest. */
@@ -5090,11 +5401,13 @@ function ruhezustand(raum){
   /* Der Schmierzettel steht hier, weil die Leiste von oben nach unten
      von „drängt“ zu „liegt bereit“ geht — und er das Einzige ist, in
      das man schreibt. Derselbe Text steht groß im Modul Notizen. */
-  const sa=abschnitt("Schmierzettel",null);
-  const zumModul=el("button","n","Notizen ›");
-  zumModul.onclick=()=>zeigeFlaeche("notizen"); sa.appendChild(zumModul);
-  box.appendChild(sa);
-  box.appendChild(schmierKlein());
+  if(ANZ.leiste.zettel){
+    const sa=abschnitt("Schmierzettel",null);
+    const zumModul=el("button","n","Notizen ›");
+    zumModul.onclick=()=>zeigeFlaeche("notizen"); sa.appendChild(zumModul);
+    box.appendChild(sa);
+    box.appendChild(schmierKlein());
+  }
 
   /* Die Pinnwand, links unter dem Schmierzettel. Sie stand zuerst
      rechts — dort trug die Spalte sie nicht: Mit Favoriten, Pinnwand und
@@ -5105,6 +5418,7 @@ function ruhezustand(raum){
      Gezeigt werden nur die belegten, dazu ein Feld mit der Restzahl:
      Acht leere Kästen wären Unruhe, aber gar nichts zu sagen hieße, dass
      man nie merkt, dass noch Platz ist. */
+  if(ANZ.leiste.pinnwand){
   const stand=heftStand();
   const a=abschnitt("Häufig benutzt", stand.length+" von "+HEFT_MAX);
   box.appendChild(a);
@@ -5132,7 +5446,9 @@ function ruhezustand(raum){
     g.appendChild(z);
   }
   box.appendChild(g);
+  }
 
+  if(ANZ.leiste.favoriten){
   const fa=abschnitt("Favoriten",null);
   const alleK=el("button","n","alle "+KONTAKTE.length+" ›");
   alleK.onclick=()=>zeigeFlaeche("kontakte"); fa.appendChild(alleK);
@@ -5141,8 +5457,9 @@ function ruhezustand(raum){
   else rechts.appendChild(el("div","leer",
     "Noch kein Favorit. Im Modul Kontakte den Stern auf einer Kachel setzen — "
     +"dann steht der Kontakt hier."));
+  }
 
-
+  if(ANZ.leiste.module){
   rechts.appendChild(abschnitt("Module",MODULE.filter(m=>!m.versteckt).length+" angemeldet"));
   rechts.appendChild(el("div","hinweis",
     "Diese Liste erzeugt sich aus dem Register. Ein neues Modul erscheint hier von selbst."));
@@ -5159,6 +5476,20 @@ function ruhezustand(raum){
   const pl=el("button","ml",'<b>07</b><span>Planner öffnen</span><em>⌘P</em>');
   pl.onclick=()=>zeigeFlaeche("planner");
   ml.appendChild(pl);
+  }
+
+  /* „Die Leiste nie leer lassen“ ist eine harte Regel. Wer alle sechs
+     Blöcke abschaltet, bekommt deshalb nicht nichts, sondern den Weg
+     zurück. */
+  if(!zwei.textContent.trim()){
+    const l=el("div","leer",
+      "Alle Blöcke der Leiste sind ausgeschaltet. Das Suchfeld oben "
+      +"funktioniert weiter.");
+    const k=el("button","tat still","Einstellungen öffnen");
+    k.style.marginTop="10px";
+    k.onclick=()=>zeigeFlaeche("einstellungen");
+    box.append(l,k);
+  }
 }
 
 /* ============================================================
@@ -5322,7 +5653,8 @@ function vorratZeile(a){
    Zwei feste Oberflächen, dazu die Flächen einzelner Module.
    Aus einer Modulfläche führt ESC zurück zur Leiste.
    ============================================================ */
-let flaeche="leiste";
+/* Womit die App startet. Bisher immer die Leiste. */
+let flaeche = ANZ.start==="planner" ? "planner" : "leiste";
 function zeigeFlaeche(id){ dialogZu(); flaeche=id; if(id==="leiste") eingabe=""; male(); }
 
 function male(){
@@ -5361,6 +5693,16 @@ function themaSetzen(t){
   $("#th-basecamp").setAttribute("aria-current",String(t==="basecamp"));
   store.set("thema",t);
 }
+function schriftSetzen(w){
+  ANZ.schrift = ["klein","normal","gross"].includes(w) ? w : "normal";
+  /* An `body`, nicht an `.app` — Dialoge und der Meldungszettel hängen
+     als eigene Zweige direkt an `body` und blieben sonst klein. */
+  if(ANZ.schrift==="normal") delete document.body.dataset.schrift;
+  else document.body.dataset.schrift=ANZ.schrift;
+  anzSichern();
+}
+schriftSetzen(ANZ.schrift);
+
 $("#th-standard").onclick=()=>themaSetzen("standard");
 $("#th-basecamp").onclick=()=>themaSetzen("basecamp");
 themaSetzen(store.get("thema","standard"));
@@ -5392,7 +5734,11 @@ function datei(name, inhalt, typ){
 $("#sichern").onclick=()=>{
   const d=new Date();
   datei("dashboard-"+iso(d)+".json", JSON.stringify(Z,null,1), "application/json");
-  store.set("db-stand", d.toLocaleString("de-DE")); standZeigen();
+  store.set("db-stand", d.toLocaleString("de-DE"));
+  /* Zusätzlich als Zahl. Der Text oben ist für Menschen gemacht und
+     lässt sich nicht zurückrechnen. */
+  store.set("db-zeit", d.getTime());
+  standZeigen();
   melde("Gesichert · alle Bereiche");
 };
 
@@ -5420,6 +5766,10 @@ $("#laden").onchange=e=>{
        zwar in der Sicherung, kämen beim Laden aber nie zurück. */
     ["schmierzettel"].forEach(k=>{
       if(typeof neu[k]==="string"){ Z[k]=neu[k]; if(neu[k]) zahl++; }
+    });
+    ["vorlauf"].forEach(k=>{
+      const v=Number(neu[k]);
+      if(v>=0 && v<=2) Z[k]=v;
     });
     const heil=heile(Z);
     /* Erst nach heile(): Dort werden die Plätze in ihre heutige Form
@@ -5511,6 +5861,22 @@ $("#mdlesen").onchange=e=>{
 function standZeigen(){
   const w=store.get("db-stand",null);
   $("#stand").textContent = w ? "gesichert "+w : "noch nie gesichert";
+
+  /* Die Erinnerung ans Sichern. Sie verdrängt die Warnung darunter
+     nicht — die ist wichtiger und wird gleich danach gesetzt. */
+  const tage=ANZ.erinnerung;
+  if(tage>0){
+    const z=Number(store.get("db-zeit",0));
+    const her=z ? Math.floor((Date.now()-z)/86400000) : null;
+    if(her===null || her>=tage){
+      $("#warn").hidden=false;
+      $("#warn").innerHTML = her===null
+        ? "<b>Noch nie gesichert.</b> Ein Druck auf „Sichern“ legt eine Datei ab, "
+          +"mit der sich alles zurückholen lässt."
+        : "<b>Seit "+her+" Tagen nicht gesichert.</b> Ein Druck auf „Sichern“ genügt.";
+    }
+  }
+
   if(!LS_OK){ $("#warn").hidden=false;
     $("#warn").innerHTML="<b>Dieser Browser behält nichts zwischen zwei Sitzungen.</b> "
       +"Vor dem Schließen auf „Sichern“ drücken, beim nächsten Start über „Laden“ zurückholen."; }

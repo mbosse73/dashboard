@@ -469,3 +469,38 @@ danach und nannte einen Bezeichner, den es nicht gab.
 gelten die deutschen Anführungszeichen, die im Projekt ohnehin üblich
 sind.
 
+---
+
+## 25 — `zoom` bricht die Vollhöhe
+
+Die Schriftgröße ist `zoom` auf `body`. Das vergrößert alles zugleich —
+auch die Höhe von `.app`, die auf `100dvh` steht. Bei Faktor 1,15 wurde
+die Fläche **1035 px hoch in einem 900-px-Fenster**, und ein senkrechter
+Rollbalken erschien. Damit war Fehlerbuch 15 auf dem Rückweg, nur von
+der anderen Seite.
+
+**Regel:** Wer `zoom` benutzt, muss jede Länge, die sich auf das
+*Fenster* bezieht, durch denselben Faktor teilen:
+
+```css
+body[data-schrift="gross"]{--zoom:1.15; zoom:var(--zoom)}
+body[data-schrift="gross"] .app{height:calc(100dvh / var(--zoom))}
+```
+
+Gemessen bei 1400×900, 1920×1080 und 390×844: Höhe gleich der
+Fensterhöhe, kein Rollbalken.
+
+---
+
+## 26 — Über eine Kennung vergleichen, die es noch gar nicht gibt
+
+Die Einstellungen erkennen Beispieldaten daran, dass ihre Kennung so in
+`vorgabe()` steht. Bei Bookmarks fand das **null von vierundzwanzig** —
+denn dort stehen sie *ohne* Kennung, sie bekommen sie erst in `heile()`.
+Die Folge wäre gewesen: Beispiel-Bookmarks bleiben stehen, und ihre
+angehefteten Plätze mit ihnen.
+
+**Regel:** Bevor man über ein Feld vergleicht, nachsehen, ob es an
+dieser Stelle überhaupt schon existiert. Fehlt es, hilft der Inhalt:
+der Eintrag ohne seine Kennung, als Zeichenkette.
+

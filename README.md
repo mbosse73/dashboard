@@ -68,7 +68,7 @@ doku/ARCHITEKTUR.md       Modulvertrag, Datenmodell, Formate
 doku/SPEC.md              alle Module und ihr Stand
 doku/ROADMAP.md           Reihenfolge der Arbeit
 doku/ARBEITSWEISE.md      wie Claude Code einen Schritt abarbeitet
-doku/FEHLERBUCH.md        24 Fehler, die schon passiert sind
+doku/FEHLERBUCH.md        26 Fehler, die schon passiert sind
 
 referenz/workflow-dialog.html   Entwurf des Workflow-Dialogs
 
@@ -110,8 +110,8 @@ sodass sich einzelne Teile ersetzen lassen, ohne die Datei anzufassen.
 
 ## Stand
 
-Beide Oberflächen stehen. 13 Module angemeldet,
-davon 11 fertig und 2 als Gerüst.
+Beide Oberflächen stehen. 14 Module angemeldet,
+davon 12 fertig und 2 als Gerüst.
 Fertig heißt: Anlegen, Bearbeiten und Löschen tragen — Kontakte,
 Aufgaben, Kalender, Jahreskalender, Notizen, Bookmarks, Rechner,
 Code-Beautifier, Hilfe. Die übrigen vier

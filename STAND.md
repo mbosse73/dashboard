@@ -1,6 +1,23 @@
 # Stand
 
-**Zuletzt: Der Apps-Teil von Schritt 7 — Anlegen, Bearbeiten, Löschen.**
+**Zuletzt: Modul 17 — Einstellungen.**
+
+Sechs Einstellungen und zwei Knöpfe. Von vierzehn Modulen sind zwölf
+fertig; Gerüst sind nur noch Textbausteine (05) und Workflows (13).
+
+Drei Vorschläge aus dem Entwurf sind nicht gebaut worden: das
+voreingestellte PDF-Format und alles zum Planner auf Ihren Wunsch —
+und **„Wochenende mitzählen"**, weil es nicht zu bauen war, ohne den
+Planner anzufassen. Ich hatte im Entwurf das Gegenteil behauptet; das
+ist zurückgenommen und in `doku/ROADMAP.md` festgehalten.
+
+**Das dritte Thema fehlt noch.** Die Einstellungen bieten Standard und
+Basecamp an. Ein dritter Knopf käme erst, wenn es das Thema gibt — ein
+Knopf ohne Wirkung wäre Fehlerbuch 9.
+
+---
+
+**Davor: Der Apps-Teil von Schritt 7 — Anlegen, Bearbeiten, Löschen.**
 
 Damit ist Schritt 7 vollständig. Der Appstarter meldet sich nicht mehr
 als Gerüst an; von dreizehn Modulen sind elf fertig, zwei sind Gerüst

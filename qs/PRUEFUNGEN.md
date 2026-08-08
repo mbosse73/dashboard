@@ -916,3 +916,56 @@ Leiste → Appstarter.
     einer leeren Fläche?
 14. Sichern, neu laden, Laden — kommt alles zurück?
 
+---
+
+## Modul 17 — Einstellungen
+
+Leiste → Einstellungen.
+
+### Anzeige
+
+1. **Thema** umschalten — ändert sich die Fläche? Ändert sich auch der
+   Umschalter oben im Kopf mit?
+2. **Schriftgröße** auf *Groß* — wird alles größer, und bleibt die
+   Seite **ohne senkrechten Rollbalken**? Das ist der wichtigste Punkt.
+3. Bei *Groß*: einen Dialog öffnen — ist er auch größer?
+4. **Schriftgröße** auf *Klein* — dasselbe in die andere Richtung.
+5. Seite neu laden — bleibt die Schriftgröße erhalten?
+6. **Startfläche** auf *Planner*, dann neu laden — startet die App im
+   Planner?
+
+### Arbeit
+
+7. Eine Aufgabe mit Frist **heute** anlegen. **Überfällig ab** auf
+   *am Tag selbst* — wird sie rot? Steht bei ihr „überfällig"?
+8. Zurück auf *am Tag danach* — ist sie wieder normal?
+9. Sichern, neu laden, Laden — kommt der Wert zurück? (Er steht in der
+   Sicherung, anders als die Anzeige-Einstellungen.)
+
+### Leiste
+
+10. Einzelne Haken entfernen — verschwinden die Blöcke aus der Leiste?
+11. **Alle sechs** entfernen — steht dort ein Satz und ein Knopf zurück
+    in die Einstellungen? Die Leiste darf nie leer sein.
+12. Haken wieder setzen — kommt alles zurück?
+
+### Daten
+
+13. **Erinnerung ans Sichern** auf *nach 3 Tagen*. Wenn Sie länger nicht
+    gesichert haben: steht die Zeile oben?
+14. Auf *aus* — verschwindet sie?
+15. **Beispieldaten entfernen**: Zählt die Rückfrage alle Bereiche auf,
+    auch die Bookmarks?
+16. Nach dem Entfernen: Sind die Beispiel-Bookmarks weg **und** die
+    Plätze frei, die auf sie zeigten?
+17. Etwas selbst Angelegtes bleibt stehen?
+18. **Alles zurücksetzen**: Kommen die Beispieldaten zurück?
+19. Beide Rückfragen mit *Doch nicht* verlassen — bleibt alles?
+
+### Was nicht sein soll
+
+20. Ein drittes Thema wird **nicht** angeboten. Es ist noch nicht
+    gebaut.
+21. Für die Planner-Stunden gibt es **keine** Einstellung. Ein Termin um
+    19:30 erscheint dort weiterhin nicht.
+

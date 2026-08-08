@@ -223,6 +223,93 @@ function pruefeNamen(name, css) {
    dort nach Schritt 2 weiter „zehn Fehler" und „neun Module als Gerüst",
    während im Schrittbericht „README nachgezogen" abgehakt war.
    Deshalb zählt der Prüfer die drei Zahlen selbst nach. ---------- */
+/* ---------- Kontrast ----------
+   CLAUDE.md verlangt 4,5 : 1 für tragenden Text. Zweimal ist das schon
+   gerissen worden: --ink3 im Standardthema kam auf 3,46 : 1, und ein
+   Entwurf fürs dritte Thema auf 4,13 : 1. Beide Male fiel es erst beim
+   Nachrechnen von Hand auf. CLAUDE.md sagt: Was sich automatisch prüfen
+   lässt, gehört hierher.
+
+   Geprüft wird jeder Themenblock für sich. Ein Thema, das ein Token
+   nicht überschreibt, erbt den Wert aus `:root` — genau wie im
+   Browser. */
+const KONTRAST_MIN = 4.5;
+/* Diese Liste wird von Hand gepflegt und muss zur wirklichen
+   Verwendung passen. Sie enthält nur Paare, die in der Datei
+   tatsächlich vorkommen — als Regel mit Vorder- und Hintergrund
+   zugleich, oder als Text auf einer der drei Flächen.
+
+   Ein erfundenes Paar wäre schlimmer als gar keine Prüfung: Der erste
+   Entwurf dieser Liste trug `--gut` auf `--gut-s` und meldete Basecamp
+   mit 2,15 : 1 an. Dabei steht `--gut-s` in drei Themenblöcken und
+   wird in der ganzen Anwendung **null Mal** benutzt; `--gut` selbst
+   färbt nur Streifen und einen Stern, nie Text. Die Prüfung hätte auf
+   etwas gezeigt, das es nicht gibt. */
+const PAARE = [
+  ["--ink",   "--paper",    "Text auf Fläche"],
+  ["--ink",   "--sheet",    "Text auf Karte"],
+  ["--ink",   "--raise",    "Text auf Leiste"],
+  ["--ink",   "--tinte-s",  "Text auf Tintenfläche"],
+  ["--ink2",  "--paper",    "Nebentext auf Fläche"],
+  ["--ink2",  "--sheet",    "Nebentext auf Karte"],
+  ["--ink2",  "--raise",    "Nebentext auf Leiste"],
+  ["--ink3",  "--paper",    "Metazeile auf Fläche"],
+  ["--ink3",  "--sheet",    "Metazeile auf Karte"],
+  ["--ink3",  "--raise",    "Metazeile auf Leiste"],
+  ["--tinte", "--sheet",    "Tinte auf Karte"],
+  ["--tinte", "--raise",    "Tinte auf Leiste"],
+  ["--tinte", "--tinte-s",  "Tinte auf Tintenfläche"],
+  ["--signal","--signal-s", "Überfällig"],
+];
+
+const kanal = (c) => { c /= 255; return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; };
+function leucht(hex) {
+  const h = hex.slice(1);
+  const v = h.length === 3 ? [...h].map((x) => x + x) : h.match(/../g);
+  const [r, g, b] = v.map((x) => parseInt(x, 16));
+  return 0.2126 * kanal(r) + 0.7152 * kanal(g) + 0.0722 * kanal(b);
+}
+function kontrast(a, b) {
+  const [x, y] = [leucht(a), leucht(b)].sort((p, q) => q - p);
+  return (x + 0.05) / (y + 0.05);
+}
+
+/* Sammelt die Farbtoken eines Blocks. Alles, was kein Farbwert ist —
+   Schriftlisten, `var(...)`, das RGB-Trio — bleibt draußen; es ist für
+   den Kontrast nicht zu gebrauchen. */
+function tokenAus(block) {
+  const t = {};
+  for (const m of block.matchAll(/(--[a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{3,8})\s*[;}]/g))
+    t[m[1]] = m[2].length === 9 || m[2].length === 5 ? m[2].slice(0, -2) : m[2];
+  return t;
+}
+
+function pruefeKontrast(name, css) {
+  const bloecke = [];
+  const wurzel = css.match(/:root\s*\{([\s\S]*?)\n\}/);
+  if (!wurzel) { warn(name + ": kein :root-Block gefunden, Kontrast nicht geprüft"); return; }
+  const grund = tokenAus(wurzel[1]);
+  bloecke.push(["Standard", grund]);
+
+  for (const m of css.matchAll(/body\[data-theme="([a-z0-9-]+)"\]\s*\{([\s\S]*?)\n\}/g))
+    bloecke.push([m[1], Object.assign({}, grund, tokenAus(m[2]))]);
+
+  const schlecht = [];
+  let geprueft = 0;
+  for (const [thema, t] of bloecke) {
+    for (const [v, h, was] of PAARE) {
+      if (!t[v] || !t[h]) continue;
+      geprueft++;
+      const w = kontrast(t[v], t[h]);
+      if (w < KONTRAST_MIN)
+        schlecht.push(thema + " · " + was + " " + w.toFixed(2).replace(".", ",") + " : 1");
+    }
+  }
+  if (schlecht.length) bad(name + ": Kontrast unter " + KONTRAST_MIN + " : 1 — " + schlecht.join(" · "));
+  else ok(name + ": Kontrast — " + geprueft + " Paare in " + bloecke.length
+          + " Themen über " + KONTRAST_MIN + " : 1");
+}
+
 function pruefeReadme() {
   if (!existsSync("README.md") || !existsSync("dashboard.html")) return;
   /* Zeilenumbrüche glätten: Der Satz darf im Dokument umbrechen, wo er will. */
@@ -271,6 +358,7 @@ for (const f of DATEIEN) {
   pruefeSpezifitaet(f, css);
   pruefeFlaechen(f, css);
   pruefeNamen(f, css);
+  pruefeKontrast(f, css);
   pruefeMarker(f, js);
   if (f === "dashboard.html") pruefeSicherung(f, js);
   if (f === "dashboard.html") pruefeHilfe(f, js);

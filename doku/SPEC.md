@@ -664,3 +664,68 @@ Eine Frage ohne Zahlen ist keine Frage.
 * **Freie Farben, freie Tastenkürzel, die Zahl der Plätze,
   Einstellungen für den Beautifier.**
 
+---
+
+## Wartung — was eine Durchsicht gefunden hat
+
+Kein neues Modul, sondern vier Fehler und zwei Nachbesserungen an
+Bestehendem. Ausführlich in `doku/FEHLERBUCH.md`, Punkte 27 bis 30.
+
+**Der SQL-Formatierer gab kaputtes SQL aus** und meldete Erfolg dabei —
+sechs Schreibweisen, darunter `->>`, `@>` und `1.5e10`. Der Zerleger
+kennt jetzt dreizeichige Operatoren, Exponenten und Hexzahlen. Darunter
+liegt neu die **Klebeprobe**: Sie merkt sich, was im Urtext
+aneinanderklebte, und verweigert, wenn der Formatierer es
+auseinanderrücken würde. Ein unbekannter Operator führt damit zu einem
+klaren „geht nicht" statt zu stillem Unsinn. Das ist wichtiger als die
+Operatorliste, denn vollständig wird die nie.
+
+**Der Meldungszettel ging nie wieder weg.** Er wird jetzt zu Beginn von
+`standZeigen()` versteckt und nur bei Bedarf wieder gezeigt.
+
+**Die Tastenkürzel trugen `⌘`** auf einer Anwendung für Windows. Überall
+`Strg` und `Umschalt`, ausgeschrieben. Auf den Kacheln steht nur noch
+die Ziffer; das Kürzel nennt die Überschrift einmal für alle acht.
+
+**Beispieldaten werden jetzt überall gleich erkannt.** Bookmarks
+bekommen ihre Kennung in `vorgabe()` statt erst in `heile()` — genau
+die Werte, die `heile()` bisher vergab, damit vorhandene Sicherungen
+ihre angehefteten Plätze behalten. Der Vergleich über den Inhalt fällt
+damit weg, und mit ihm eine Ungleichheit: Ein bearbeitetes Beispiel
+galt nur bei den Bookmarks als „jetzt meins".
+
+Es zählt jetzt überall weiter als Beispiel und verschwindet mit. **Das
+ist eine Entscheidung, keine Nachlässigkeit.** Ein Vergleich über den
+Inhalt könnte es besser, aber nur bei den Bereichen ohne Datum:
+`vorgabe()` erzeugt bewegliche Daten, die Signatur eines unberührten
+Termins wäre morgen schon eine andere. Lieber eine Regel, die überall
+gleich gilt — und ein Rückfragedialog, der sie ausspricht. Er tut es
+jetzt.
+
+**Die Kontrastregel steht im Prüflauf**, nicht mehr nur im Dokument.
+Vierzehn Paare je Thema, gerechnet nach WCAG. Die Paarliste wird von
+Hand gepflegt und muss zur wirklichen Verwendung passen — warum, steht
+in Fehlerbuch 30.
+
+**Die Erfassen-Schreibweisen zeigen sich selbst.** Unter den
+Erfassen-Angeboten steht, was in dieser Eingabe noch fehlt, höchstens
+drei Stück, aus derselben Tabelle `MUSTER`, aus der sich auch die Hilfe
+baut. Der Hinweis schrumpft, während man tippt, und verschwindet, wenn
+alles benutzt ist. Vorher stand die Syntax allein in der Hilfe.
+
+**Der Planner steht unter der Modulliste, nicht darin.** Er meldet sich
+nicht über `registriere` an und trägt deshalb auch keine Modulnummer.
+Angehängt endete die sortierte Reihe mit „17, 07".
+
+### Was bewusst nicht gemacht wurde
+
+* **Maße von Pixeln auf `rem` umstellen.** Der Gedanke ist richtig: 825
+  feste Pixelwerte sind der Grund, warum die Schriftgröße als
+  `zoom`-Kunstgriff gebaut werden musste. Aber der Kunstgriff läuft und
+  ist geprüft, ein Umbau an 825 Stellen brächte keine neue Fähigkeit
+  und viel Gelegenheit für Fehler. Wenn, dann als eigener Schritt mit
+  eigener Prüfliste — nicht nebenbei in einer Wartung.
+* **Die Modulliste von rechts wegnehmen.** Eine Abwägung, keine
+  Wahrheit, und seit Modul 17 ohnehin abschaltbar. Das gehört Ihnen,
+  nicht dem Prüfer.
+

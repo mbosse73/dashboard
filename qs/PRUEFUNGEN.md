@@ -969,3 +969,67 @@ Leiste → Einstellungen.
 21. Für die Planner-Stunden gibt es **keine** Einstellung. Ein Termin um
     19:30 erscheint dort weiterhin nicht.
 
+---
+
+## Wartung — die vier Fehler
+
+### Tastenkürzel
+
+1. Steht irgendwo noch ein `⌘`? Leiste, Kacheln, Hilfe, Outliner
+   durchsehen. Es darf keines mehr geben.
+2. Hilfe öffnen: Heißt es überall `Strg`, `Umschalt`, `Rücktaste`?
+3. Über der Pinnwand steht „Strg+1 bis Strg+8". Drücken Sie
+   **Strg+1** — öffnet sich der erste Platz?
+4. Sind die Kacheltitel wieder vollständig? „MDN Web Docs" war
+   abgeschnitten.
+
+### Meldungszettel
+
+5. Erinnerung ans Sichern auf *nach 3 Tagen*, dann so lange nicht
+   sichern (oder die Uhr vorstellen), bis das Banner erscheint.
+6. Auf **Sichern** drücken. **Verschwindet das Banner sofort?** Das war
+   der Fehler.
+7. In den Einstellungen die Erinnerung auf *aus* — verschwindet es auch
+   dann?
+
+### SQL
+
+8. Beautifier öffnen, `select data->>'x' from t` formatieren.
+   Steht `data ->> 'x'` da — mit dem Pfeil **an einem Stück**?
+9. `select 1.5e10 as x from t` — bleibt `1.5e10` zusammen?
+10. `select tags @> '{a}' from t` — bleibt `@>` zusammen?
+11. `select a?|b from t` — hier muss der Formatierer **verweigern** und
+    sagen, dass er die Schreibweise nicht kennt. Eine Verweigerung ist
+    hier das richtige Ergebnis.
+12. Eine Ihrer echten Abfragen formatieren. Bleiben Tabellen- und
+    Spaltennamen Zeichen für Zeichen gleich?
+
+### Beispieldaten
+
+13. Einstellungen → Beispieldaten entfernen. Nennt die Rückfrage jetzt
+    auch den Satz über **bearbeitete Beispiele**?
+14. Ein Beispiel bearbeiten (etwa einen Kontakt umbenennen), dann
+    entfernen: Es verschwindet **mit**. So ist es gewollt — die
+    Rückfrage sagt es vorher.
+15. Nach dem Entfernen: Sind die 24 Beispiel-Bookmarks weg und die
+    Plätze frei?
+16. **Wichtig für vorhandene Sicherungen:** Eine ältere Sicherung
+    laden. Stehen die angehefteten Plätze noch richtig? Die Bookmarks
+    haben ihre Kennung jetzt aus `vorgabe()` statt aus `heile()`; die
+    Werte sind dieselben, aber das gehört einmal am eigenen Gerät
+    gesehen.
+
+### Erfassen-Hinweis
+
+17. In der Leiste `Angebot Hansen prüfen` tippen. Steht unter den
+    Angeboten eine Zeile „Geht auch: …"?
+18. Weiter tippen: `Angebot Hansen morgen 14:30 @kowalski`. Wird der
+    Hinweis **kürzer**? Es soll nur noch stehen, was fehlt.
+19. Ist die Zeile leise genug — zieht sie den Blick vom obersten
+    Treffer weg?
+
+### Modulliste
+
+20. Endet die Liste rechts mit „17 Einstellungen"? Der Planner steht
+    **darunter**, abgesetzt und ohne Nummer.
+

@@ -504,3 +504,114 @@ angehefteten Plätze mit ihnen.
 dieser Stelle überhaupt schon existiert. Fehlt es, hilft der Inhalt:
 der Eintrag ohne seine Kennung, als Zeichenkette.
 
+---
+
+## 27 — Eine Prüfung, die die falsche Eigenschaft prüft
+
+Der SQL-Formatierer hat eine Rückprobe: Nach dem Formatieren wird die
+Ausgabe erneut zerlegt und mit der Eingabe verglichen. Sie meldete
+`ok` — und gab trotzdem kaputtes SQL aus:
+
+```
+select data->>'x' from t   →   data -> > 'x'
+select 1.5e10 as x from t  →   1.5 e10
+select a#>>'{b}' from t    →   a #> > '{b}'
+select tags @> '{a}'       →   tags @ > '{a}'
+select 0x1F from t         →   0 x1F
+```
+
+Sechs Fälle, alle mit grünem Haken. Der Grund ist derselbe: Der
+Zerleger kannte den Operator nicht und teilte ihn. `->` und `>` sind
+**vor und nach** dem Formatieren dieselbe Bestandteilfolge — die
+Rückprobe verglich genau diese Folge und konnte den Unterschied
+deshalb gar nicht sehen. Der Schaden entsteht im Zwischenraum, und
+Zwischenräume hatte sie weggeworfen.
+
+**Regel:** Bei einer Prüfung nicht fragen „läuft sie durch?", sondern
+„**welche Eigenschaft** sichert sie zu — und ist das die, die kaputt
+gehen kann?". Ein Formatierer setzt Zwischenräume; also muss die Probe
+über Zwischenräume wachen.
+
+Geflickt in zwei Lagen. Der Zerleger kennt jetzt dreizeichige
+Operatoren, Exponenten und Hexzahlen. Und darunter liegt die
+**Klebeprobe**: Zu jedem Bestandteil wird gemerkt, ob im Urtext
+unmittelbar davor ein Zwischenraum stand. Rückt der Formatierer zwei
+Zeichen auseinander, die aneinanderklebten und zusammen etwas anderes
+bedeuten könnten, wird nichts ausgegeben. Damit führt ein unbekannter
+Operator zu einem klaren „geht nicht" statt zu stillem Unsinn — das
+ist der eigentliche Gewinn, denn die Operatorliste wird nie vollständig
+sein.
+
+Ausgenommen sind Klammern, Komma und Strichpunkt: Die trennen sich
+immer selbst, `count(*)` darf zu `count( * )` werden.
+
+Das ist Punkt 23 ein zweites Mal, aus derselben Richtung.
+
+---
+
+## 28 — Ein Zustand, der nur den Hinweg kennt
+
+`standZeigen()` blendete den Meldungszettel ein, wenn lange nicht
+gesichert wurde. Wieder ausgeblendet wurde er **nirgends** — `hidden`
+stand in der ganzen Datei kein zweites Mal.
+
+Sichtbar wurde das so: Das Banner bittet ums Sichern. Man drückt
+„Sichern". Das Banner bleibt stehen, mit dem alten Text. Die Anwendung
+reagiert nicht auf die Handlung, um die sie gerade gebeten hat.
+
+Der Fehler ist ein Ausrutscher aus dem eigenen Bauprinzip. Jeder
+andere Zustand dieser Datei wird bei jedem Malen vollständig neu
+hergeleitet; diese eine Stelle setzte nur.
+
+**Regel:** Wer einen Zustand setzt, muss ihn im selben Durchlauf auch
+zurücksetzen können. Am einfachsten: am Anfang der Funktion auf den
+Grundzustand stellen, dann bei Bedarf ändern.
+
+---
+
+## 29 — Beschriftet für die falsche Tastatur
+
+Die Zielumgebung steht in `CLAUDE.md` in der zweiten Zeile: Windows,
+Edge. Trotzdem trug jedes Tastenkürzel in der Oberfläche das
+Mac-Zeichen — `⌘1` auf den Plätzen, `⌘P` an „Planner öffnen", die
+ganze Tastentabelle in der Hilfe. Zweiunddreißig Stellen.
+
+Der Code war nie falsch: Er hört seit jeher auf
+`e.ctrlKey||e.metaKey`. Falsch war allein, was danebenstand. Auf einer
+deutschen Windows-Tastatur gibt es keine Taste mit diesem Zeichen, und
+ausgerechnet die Hilfe — die einzige Stelle, die die Kürzel *erklärt* —
+lehrte damit ein Symbol, das am Zielrechner nicht vorkommt.
+
+**Regel:** Eine Beschriftung gehört zur Zielumgebung, nicht zum
+Rechner, auf dem entwickelt wird. Steht die Zielumgebung im
+Arbeitsdokument, ist sie beim Beschriften nachzulesen.
+
+Nebenbei aufgefallen: `Strg+1` achtmal nebeneinander auf den Kacheln
+war so breit, dass „MDN Web Docs" abschnitt. Das Kürzel steht jetzt
+einmal in der Überschrift, die Kachel trägt nur die Ziffer. Der
+Vorlesetext nennt es weiterhin je Kachel vollständig.
+
+---
+
+## 30 — Eine Prüfung, die auf etwas zeigt, das es nicht gibt
+
+Beim Einbau der Kontrastprüfung stand als eines der Paare `--gut` auf
+`--gut-s`. Sie meldete sofort einen Verstoß: Basecamp mit 2,15 : 1.
+
+Nur gibt es dieses Paar nicht. `--gut-s` steht in drei Themenblöcken
+und wird in der ganzen Anwendung **null Mal** benutzt; `--gut` färbt
+einen Streifen und einen Stern, nie Text. Die Prüfung hätte den
+nächsten Bearbeiter dazu gebracht, eine funktionierende Farbe zu
+ändern, um eine Zahl zu bessern, die nichts bedeutet.
+
+**Regel:** Eine Prüfung, die etwas Erfundenes meldet, ist schlimmer als
+keine — sie kostet Vertrauen und erzeugt falsche Arbeit. Vor dem
+Einbau nachsehen, ob es die geprüfte Stelle wirklich gibt. Die Liste
+der Paare steht deshalb von Hand gepflegt und kommentiert in
+`werkzeug/pruefen.mjs`.
+
+Dieselbe Prüfung fand im selben Lauf etwas Echtes: `referenz/workflow-dialog.html`
+und `browsertest.html` trugen `--ink3` noch mit `#87837c` — dem Wert
+mit 3,46 : 1, der in `dashboard.html` längst behoben war. Ein Fix, der
+nur an einer von drei Stellen ankam.
+

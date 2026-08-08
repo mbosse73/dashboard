@@ -111,7 +111,7 @@ sodass sich einzelne Teile ersetzen lassen, ohne die Datei anzufassen.
 ## Stand
 
 Beide Oberflächen stehen. 13 Module angemeldet,
-davon 10 fertig und 3 als Gerüst.
+davon 11 fertig und 2 als Gerüst.
 Fertig heißt: Anlegen, Bearbeiten und Löschen tragen — Kontakte,
 Aufgaben, Kalender, Jahreskalender, Notizen, Bookmarks, Rechner,
 Code-Beautifier, Hilfe. Die übrigen vier

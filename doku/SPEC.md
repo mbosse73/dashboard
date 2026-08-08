@@ -205,7 +205,7 @@ auf.
 
 ---
 
-## 08 Appstarter — Gerüst
+## 08 Appstarter — fertig
 
 Lokale HTML-Werkzeuge, öffnen in einem neuen Tab. **Starten trägt** —
 `appOeffne()` benutzt denselben Weg wie ein Bookmark, nur ohne
@@ -216,7 +216,22 @@ lässt.
 Es sind keine Bookmark-Plätze, sondern Plätze; das Zeichen im Platz sagt,
 woher der Eintrag kommt.
 
-**Fehlt noch:** Anlegen, Bearbeiten und Löschen der Einträge.
+**Anlegen, Bearbeiten und Löschen** über denselben Dialog-Baustein wie
+Kontakte und Bookmarks. Vier Felder: Titel, Pfad, Wozu, Anheften.
+Titel und Pfad sind Pflicht.
+
+**Keine Gruppen.** Bookmarks haben sie, Apps nicht: Eine Handvoll lokaler
+Werkzeuge braucht keine Ordnung in Ordnern, und was oft gebraucht wird,
+liegt ohnehin auf einem Platz.
+
+**Löschen räumt den Platz mit ab.** Die Rückfrage sagt vorher, welcher
+Platz frei wird und dass die Datei selbst bleibt, wo sie ist — gelöscht
+wird nur der Eintrag.
+
+**In der Leiste** erscheint das Angebot „als neue App anlegen" nur, wenn
+das Getippte nach einem Pfad aussieht: `file:`, ein Laufwerksbuchstabe,
+zwei Rückstriche oder ein führender Schrägstrich. Sonst stünde bei jedem
+getippten Wort ein App-Vorschlag zwischen den übrigen.
 
 **Der Weg steht fest:** `browsertest.html` hat am 7. August 2026 bestätigt, dass
 Edge eine andere lokale Datei öffnet. `window.open` genügt; der

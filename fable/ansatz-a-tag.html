@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Ansatz A — Der Tag als Dokument</title>
+<style>
+/* Mockup, kein Bauplan. Dieselben Farbwerte wie dashboard.html, damit
+   sich der Ansatz vergleichen lässt und nicht die Farben. */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  color-scheme:light;
+  --ff:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,ui-serif,serif;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","Fira Code",Consolas,monospace;
+  --paper:#f7f5f0; --sheet:#fffefb; --raise:#efece4;
+  --rule:#e2ded4;  --rule2:#cbc6ba;
+  --ink:#1a1a18;   --ink2:#54514b;  --ink3:#6b675e;
+  --tinte:#2f3a8c; --tinte-s:#e7eaf6;
+  --signal:#a8321f;--signal-s:#fbe9e5;
+  --gut:#2b6b46;
+}
+html,body{background:var(--paper);color:var(--ink);height:100%}
+body{font-family:var(--ff);-webkit-font-smoothing:antialiased}
+button{font:inherit;border:0;background:transparent;cursor:pointer;color:inherit;text-align:left}
+
+/* ---------- Erklärband oben — gehört zum Mockup, nicht zum Entwurf ---------- */
+.erklaer{background:#fdf6e3;border-bottom:1px solid #e8ddb8;padding:11px 22px;
+  font-size:12.5px;line-height:1.6;color:#5f5847}
+.erklaer b{color:#40382c}
+
+/* ---------- Kopf, wie im Dashboard ---------- */
+.kopf{display:flex;align-items:center;gap:12px;padding:11px 22px;
+  background:var(--sheet);border-bottom:1px solid var(--rule)}
+.kopf .zeit{font-family:var(--mono);font-size:12px;letter-spacing:.07em;color:var(--ink2);
+  font-weight:600}
+.kopf .sp{flex:1}
+.kopf .akt{font-size:12.5px;color:var(--ink2);border:1px solid var(--rule2);border-radius:8px;
+  padding:5px 12px;background:var(--paper)}
+
+/* ---------- Der Tag ---------- */
+.blatt{max-width:860px;margin:0 auto;padding:26px 22px 60px}
+
+.tagkopf{display:flex;align-items:baseline;gap:14px;margin-bottom:4px}
+.tagkopf h1{font-family:var(--serif);font-size:27px;font-weight:700;letter-spacing:-.01em}
+.tagkopf .blaettern{margin-left:auto;display:flex;gap:4px}
+.tagkopf .blaettern button{font-size:12.5px;color:var(--ink2);border:1px solid var(--rule2);
+  border-radius:7px;padding:4px 11px;background:var(--sheet)}
+.tagkopf .blaettern button:hover{color:var(--tinte);border-color:var(--tinte)}
+.untertitel{font-size:12.5px;color:var(--ink3);margin-bottom:22px}
+.untertitel b{color:var(--signal);font-weight:600}
+
+/* Der Zeitstrahl: eine Spalte Uhrzeiten, eine Linie, daneben die
+   Einträge. Termine, Notizen und Erledigtes stehen im selben Fluss —
+   das ist die eigentliche Aussage dieses Ansatzes. */
+.strahl{position:relative;padding-left:76px}
+.strahl::before{content:"";position:absolute;left:62px;top:6px;bottom:6px;
+  width:1px;background:var(--rule)}
+
+.e{position:relative;padding:0 0 18px 18px}
+.e .uhr{position:absolute;left:-76px;top:1px;width:52px;text-align:right;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink3)}
+.e::before{content:"";position:absolute;left:-15px;top:5px;width:9px;height:9px;
+  border-radius:50%;background:var(--sheet);border:1.5px solid var(--rule2)}
+.e.jetzt::before{border-color:var(--tinte);background:var(--tinte)}
+.e.vorbei{opacity:.62}
+
+.e .art{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
+.e .t{font-size:14.5px;font-weight:600}
+.e .m{font-size:12.5px;color:var(--ink3);margin-top:2px}
+
+/* Ein Termin ist ein Kasten mit Dauer, eine Notiz ist Text mit
+   Einzug, eine erledigte Aufgabe ein Haken — drei Formen, ein Fluss. */
+.e.termin .kasten{background:var(--sheet);border:1px solid var(--rule);border-radius:9px;
+  padding:9px 12px;border-left:3px solid var(--tinte)}
+.e.notiz .zettel{background:var(--tinte-s);border-radius:9px;padding:9px 12px;
+  font-size:13px;line-height:1.55;color:var(--ink2);max-width:56ch}
+.e.notiz .zettel b{color:var(--ink)}
+.e.haken .t{color:var(--ink2);font-weight:500}
+.e.haken .t::before{content:"✓";color:var(--gut);font-weight:700;margin-right:7px}
+
+/* Was liegen blieb, rollt sichtbar an den Anfang des nächsten
+   Abschnitts — nichts wird unsichtbar. */
+.rest{margin:8px 0 22px;background:var(--signal-s);border:1px solid #f0cfc7;
+  border-radius:10px;padding:11px 14px}
+.rest .rk{font-family:var(--mono);font-size:10px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--signal);font-weight:700;margin-bottom:6px}
+.rest .rz{display:flex;gap:9px;align-items:baseline;font-size:13.5px;padding:2px 0}
+.rest .rz em{font-style:normal;font-size:11.5px;color:var(--ink3)}
+.rest .rz .zieh{margin-left:auto;font-size:11.5px;color:var(--tinte)}
+
+/* Abendabschnitt: der noch leere Rest des Tages lädt zum Planen ein,
+   statt leer zu wirken. */
+.frei{padding:2px 0 18px 18px;position:relative}
+.frei::before{content:"";position:absolute;left:-15px;top:7px;width:9px;height:9px;
+  border-radius:50%;background:var(--paper);border:1.5px dashed var(--rule2)}
+.frei .uhr{position:absolute;left:-76px;top:1px;width:52px;text-align:right;
+  font-family:var(--mono);font-size:11.5px;color:var(--ink3)}
+.frei .hin{font-size:12.5px;color:var(--ink3);border:1px dashed var(--rule2);
+  border-radius:9px;padding:8px 12px;max-width:46ch}
+
+.fuss{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule);
+  font-size:12px;color:var(--ink3);line-height:1.6;max-width:70ch}
+</style>
+</head>
+<body>
+
+<div class="erklaer">
+  <b>Ansatz A — Der Tag als Dokument.</b> Mockup zur Frage „Hätte Fable 5
+  einen anderen Ansatz gewählt?" — kein geplanter Schritt. Die eine
+  zentrale Fläche ist der heutige Tag: Termine, Notizen und Erledigtes
+  stehen chronologisch in <b>einem</b> Fluss statt in zehn Bereichen.
+  Module wären Ansichten auf dieselben Einträge, keine Orte.
+  Begründung und Preis in <code>fable/ANSAETZE.md</code>.
+</div>
+
+<div class="kopf">
+  <span class="zeit">14:45</span>
+  <span class="zeit" style="color:var(--ink3)">Samstag, 8. August</span>
+  <span class="sp"></span>
+  <span class="akt">Sichern</span>
+  <span class="akt">Laden</span>
+</div>
+
+<div class="blatt">
+  <div class="tagkopf">
+    <h1>Freitag, 8. August</h1>
+    <span class="blaettern">
+      <button>‹ Donnerstag</button>
+      <button>Heute</button>
+      <button>Montag ›</button>
+    </span>
+  </div>
+  <div class="untertitel">3 Termine · 2 Notizen · 4 von 6 Aufgaben erledigt · <b>2 liegen geblieben</b></div>
+
+  <div class="rest">
+    <div class="rk">Von Donnerstag liegen geblieben</div>
+    <div class="rz"><span>Rechnung 2026-114 freigeben</span><em>Skonto läuft · Eva Bergmann</em>
+      <span class="zieh">auf heute ziehen ›</span></div>
+    <div class="rz"><span>Rückruf Kanzlei</span><em>seit Montag</em>
+      <span class="zieh">auf heute ziehen ›</span></div>
+  </div>
+
+  <div class="strahl">
+    <div class="e termin vorbei">
+      <span class="uhr">08:00</span>
+      <div class="kasten">
+        <div class="t">Standup</div>
+        <div class="m">30 Minuten · Team</div>
+      </div>
+    </div>
+
+    <div class="e notiz vorbei">
+      <span class="uhr">09:42</span>
+      <div class="art">Telefonnotiz · Lisa Meier</div>
+      <div class="zettel"><b>Preismodell Staffeln.</b> Umstellung auf Staffeln ab Q4.
+        Details folgen per Mail, Rückruf nächste Woche.</div>
+    </div>
+
+    <div class="e termin vorbei">
+      <span class="uhr">10:00</span>
+      <div class="kasten">
+        <div class="t">Strategie-Call</div>
+        <div class="m">60 Minuten · Video · Lisa Meier</div>
+      </div>
+    </div>
+
+    <div class="e haken vorbei">
+      <span class="uhr">11:20</span>
+      <div class="t">Feature-Matrix erstellt</div>
+      <div class="m">Aufgabe · für Jan</div>
+    </div>
+
+    <div class="e notiz vorbei">
+      <span class="uhr">13:05</span>
+      <div class="art">Notiz</div>
+      <div class="zettel">Sitzungsraum 2.14 ab 14 Uhr, Code Drucker: 4417</div>
+    </div>
+
+    <div class="e termin jetzt">
+      <span class="uhr">14:00</span>
+      <div class="kasten">
+        <div class="t">Abstimmung Layout</div>
+        <div class="m">30 Minuten · Büro 2.14 · Jan Kowalski · <b style="color:var(--tinte)">läuft gerade</b></div>
+      </div>
+    </div>
+
+    <div class="frei">
+      <span class="uhr">ab 15</span>
+      <div class="hin">Nichts geplant. Tippen erfasst hierher — <b>„SWOT fertigstellen 16:00"</b>
+        legt den Eintrag in diese Lücke.</div>
+    </div>
+  </div>
+
+  <div class="fuss">
+    Rückwärts blättern ist Gedächtnis, vorwärts blättern ist Planung.
+    „Alle Notizen zu Bergmann" wäre eine <i>Ansicht</i> über dieselben
+    Einträge — kein eigener Ort, an dem sie noch einmal liegen.
+  </div>
+</div>
+
+</body>
+</html>

@@ -11,13 +11,17 @@ import { readFileSync, existsSync } from "node:fs";
 import vm from "node:vm";
 
 const DATEIEN = ["dashboard.html",
+                 /* Der Prototyp auf diesem Branch. Er gilt dieselben harten
+                    Regeln wie die Anwendung — eine Fassung, die sie brechen
+                    darf, waere kein Prototyp, sondern eine Ausrede. */
+                 "prototyp/dashboard-tag.html",
                  "referenz/workflow-dialog.html", "browsertest.html"];
 
 /* Fehlt eine Datei aus dieser Liste, ist das ein Fehler und kein Hinweis.
    Sonst läuft die Prüfung grün durch, ohne die Anwendung angesehen zu
    haben — ein Prüflauf, der nichts geprüft hat, ist schlimmer als keiner.
    Genau das ist passiert, als dashboard.html vorübergehend index.html hieß. */
-const PFLICHT = ["dashboard.html"];
+const PFLICHT = ["dashboard.html", "prototyp/dashboard-tag.html"];
 
 let fehler = 0, warnungen = 0;
 const ok   = (t) => console.log("  \u2713 " + t);
@@ -360,8 +364,10 @@ for (const f of DATEIEN) {
   pruefeNamen(f, css);
   pruefeKontrast(f, css);
   pruefeMarker(f, js);
-  if (f === "dashboard.html") pruefeSicherung(f, js);
-  if (f === "dashboard.html") pruefeHilfe(f, js);
+  if (f.endsWith("dashboard.html") || f.endsWith("dashboard-tag.html")) {
+    pruefeSicherung(f, js);
+    pruefeHilfe(f, js);
+  }
 }
 console.log("\nÜbergreifend");
 pruefeReadme();

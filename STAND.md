@@ -1,7 +1,44 @@
 # Stand
 
-Notiz zur Übergabe an eine neue Unterhaltung. Ergänzt die übrigen
-Dokumente um das, was noch offen ist.
+**Zuletzt: Schritt 9 — der Outliner, in drei Stufen.**
+
+Aus einer mitgebrachten Outliner-App wurde der Funktionsumfang Punkt für
+Punkt durchgegangen und entschieden. Umgesetzt ist die schlanke Fassung,
+erweitert um Fokusmodus, Notizzeile, Rückgängig, Gantt, Mindmap und
+PDF-Ausgabe mit Formatwahl.
+
+* **9a** Datenmodell mit `id`, flache Ebene `e`, Migration in `heile()`,
+  Anlegen, Ein- und Ausrücken, Verschieben, Klappen, Notizzeile,
+  Fokusmodus mit Pfad, Rückgängig
+* **9b** eigene Fristen und Zeiträume, getippt (`@20.8.`,
+  `@20.8...31.8.`, `@morgen`), dazu der Gantt
+* **9c** Mindmap, PDF ohne Bibliothek und ohne Druckdialog,
+  Blattformat A4 bis A0 zur Wahl
+
+**Getrennt geblieben:** Die Fristen des Outliners erscheinen nicht im
+Planner, nicht im Kalender (06) und nicht im Jahreskalender (14).
+
+**Rückgängig gibt es nur hier** — sonst nirgends im Dashboard. Das ist
+bewusst so und wird jemanden irgendwann wundern.
+
+## Was der Mensch noch prüfen muss
+
+Drei Dinge sind am Zielrechner **nicht bestätigt**:
+
+1. **Lädt Edge das PDF herunter?** Der Weg ist derselbe wie beim Sichern,
+   der funktioniert — mit dieser Dateiart aber ungesehen.
+2. **`Strg+Y`** — manche Browser belegen es selbst.
+3. `F1` und `⇧F1` der Hilfe, seit Schritt 8 offen.
+
+Die vollständige Liste steht in `qs/PRUEFUNGEN.md` unter „Schritt 9".
+
+## Offen
+
+* **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7**
+* **Die Tastenprüfung** in `browsertest.html`
+* **Schritt 6** — Workflows, zuletzt
+* Der Jahreskalender ist am eigenen Gerät noch nie angesehen worden
+* Alte Branches auf GitHub aufräumen — nur vom Menschen möglich
 
 ---
 

@@ -560,11 +560,91 @@ kbd{font-family:var(--etikett);font-size:11.5px;background:var(--raise);border:1
 .zurueck:hover{color:var(--ink)}
 .karte{padding:12px 14px;border-radius:10px;border:1px solid var(--rule);background:var(--sheet);
   margin-bottom:4px}
-.baum{padding-left:0}
-.knoten{display:flex;align-items:baseline;gap:9px;padding:6px 8px;border-radius:7px}
-.knoten:hover{background:var(--sheet)}
-.knoten .pkt{width:5px;height:5px;border-radius:50%;background:var(--rule2);flex-shrink:0}
-.knoten .tx{font-size:14px}
+/* ---------- 15 Outliner ---------- */
+.ol-baum{padding:2px 0 40px}
+.ol-k{position:relative;display:flex;align-items:flex-start;gap:7px;
+  padding:4px 8px;border-radius:7px;min-height:28px}
+.ol-k:hover{background:var(--sheet)}
+.ol-k.mark{background:var(--tinte-s)}
+.ol-drei{width:15px;height:22px;flex-shrink:0;border:0;background:none;padding:0;
+  color:var(--ink3);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.ol-drei svg{width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;transform:rotate(90deg)}
+.ol-drei.zu svg{transform:rotate(0)}
+.ol-drei.leer{cursor:default}
+.ol-pkt{width:5px;height:5px;border-radius:50%;background:var(--rule2);
+  flex-shrink:0;margin-top:9px;cursor:pointer}
+.ol-pkt.hat{box-shadow:0 0 0 3px var(--raise)}
+/* Der Knoten ist ein Feld, kein Text mit Dialog dahinter. Randlos und
+   in derselben Schrift wie der Rest — man soll nicht sehen, dass es
+   ein Formularfeld ist. */
+.ol-tx{flex:1;border:0;background:none;resize:none;overflow:hidden;
+  font-family:var(--ff);font-size:14px;line-height:1.5;color:var(--ink);
+  padding:3px 0;min-height:22px}
+.ol-tx:focus{outline:none}
+.ol-k.wurzel .ol-tx{font-weight:650}
+.ol-notiz{border:0;background:none;resize:none;overflow:hidden;width:100%;
+  font-family:var(--ff);font-size:12.5px;line-height:1.5;color:var(--ink3);
+  padding:2px 0 4px 10px;border-left:2px solid var(--rule2);min-height:20px}
+.ol-notiz:focus{outline:none;border-left-color:var(--tinte)}
+.ol-nz{margin:-3px 0 4px}
+.ol-zu{font-size:11px;color:var(--ink3);background:var(--raise);border-radius:20px;
+  padding:1px 7px;margin-top:5px;flex-shrink:0}
+.ol-d{font-family:var(--mono);font-size:11px;color:var(--ink3);background:var(--raise);
+  border-radius:5px;padding:1px 6px;margin-top:5px;white-space:nowrap;flex-shrink:0}
+.ol-d.spaet{background:var(--signal-s);color:var(--signal);font-weight:600}
+/* Die Fuehrungslinie des Zweigs, in dem die Schreibmarke steht. Sie
+   sitzt an der Kante des uebergeordneten Zweigs, nicht an der eigenen —
+   sonst schnitte sie durch das eigene Dreieck. */
+.ol-spur{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--tinte);
+  opacity:.45;border-radius:2px}
+.ol-pfad{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--ink3);
+  margin:2px 0 10px;flex-wrap:wrap}
+.ol-pfad button{border:0;background:none;color:var(--ink3);font-size:12px;
+  font-family:var(--ff);cursor:pointer;padding:0}
+.ol-pfad button:hover{color:var(--tinte);text-decoration:underline}
+.ol-pfad b{color:var(--ink);font-weight:600}
+.ol-leiste{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:2px 0 12px}
+.ol-schalter{display:inline-flex;gap:2px;background:var(--raise);border-radius:8px;padding:3px}
+.ol-schalter button{font-size:12.5px;padding:3px 12px;border-radius:6px;color:var(--ink2);
+  border:0;background:none;font-family:var(--ff);cursor:pointer}
+.ol-schalter button[aria-current="true"]{background:var(--sheet);color:var(--tinte);
+  font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+/* Gantt auf der Fläche */
+.olg{margin:4px 0 14px;min-width:0}
+.olg-r{display:flex;align-items:center;height:30px;border-bottom:1px solid var(--rule)}
+.olg-r:last-child{border-bottom:0}
+.olg-kopf{height:24px;border-bottom:1px solid var(--rule2)}
+.olg-nm{width:210px;flex-shrink:0;font-size:12.5px;color:var(--ink2);padding-right:10px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.olg-feld{position:relative;flex:1;height:100%}
+.olg-w{position:absolute;top:4px;font-family:var(--mono);font-size:10.5px;color:var(--ink3);
+  border-left:1px solid var(--rule);padding-left:5px;height:20px;white-space:nowrap}
+.olg-balken{position:absolute;top:50%;margin-top:-6px;height:13px;border-radius:4px;
+  background:var(--tinte);opacity:.85}
+.olg-balken.fasst{background:none;border:1.5px solid var(--rule2);opacity:1;
+  height:11px;margin-top:-5px}
+.olg-balken.spaet{background:var(--signal)}
+.olg-raute{position:absolute;top:50%;margin-top:-6px;margin-left:-6px;width:11px;height:11px;
+  background:var(--tinte);transform:rotate(45deg);border-radius:2px}
+.olg-raute.spaet{background:var(--signal)}
+.olg-bez{position:absolute;top:50%;margin-top:-7px;margin-left:9px;font-family:var(--mono);
+  font-size:10.5px;color:var(--ink3);white-space:nowrap}
+.olg-heute{position:absolute;top:0;bottom:0;width:1.5px;background:var(--signal);opacity:.4}
+/* Mindmap auf der Fläche */
+.olm-raum{overflow-x:auto;margin:6px 0 14px;background:var(--sheet);
+  border:1px solid var(--rule);border-radius:10px}
+.olm{position:relative;margin:0 auto}
+.olm svg{position:absolute;left:0;top:0}
+.olm-l{fill:none;stroke:var(--rule)}
+.olm-l.rule2{stroke:var(--rule2)}
+.olm-k{position:absolute;transform:translate(-50%,-50%);font-size:12px;white-space:nowrap;
+  background:var(--sheet);border:1px solid var(--rule);border-radius:7px;
+  padding:3px 9px;color:var(--ink2)}
+.olm-k.ast{color:var(--ink);font-weight:600}
+.olm-k.wurzel{font-size:13.5px;font-weight:650;color:var(--ink);
+  background:var(--raise);border-color:var(--rule2)}
+.olm-k.spaet{border-color:var(--signal);color:var(--signal);background:var(--signal-s)}
 textarea.code{width:100%;min-height:150px;border:1px solid var(--rule2);border-radius:9px;
   background:var(--sheet);padding:12px;font-family:var(--mono);font-size:12.5px;line-height:1.6;
   resize:vertical;color:var(--ink)}
@@ -1548,10 +1628,22 @@ function vorgabe(){ return {
   {t:"Intranet",u:"intranet.example.com",g:"Intern"},{t:"Confluence",u:"confluence.example.com",g:"Intern"}
  ],
  pins:["developer.mozilla.org","github.com","excalidraw.com","linear.app/docs"],
+ /* Der Outliner. `e` ist die Ebene, die Liste ist flach: ein Teilbaum
+    ist ein zusammenhängender Abschnitt. Ein- und Ausrücken, Verschieben
+    und Löschen sind damit ein `splice`.
+    `frist`, `von` und `bis` gehören dem Outliner allein — sie erscheinen
+    nicht im Planner, nicht im Kalender und nicht im Jahreskalender. */
  baum:[
-  {ebene:0,t:"Produktstrategie 2026"},{ebene:1,t:"Marktlage"},{ebene:2,t:"Vier Anbieter geprüft"},
-  {ebene:2,t:"Zwei davon relevant"},{ebene:1,t:"Positionierung"},{ebene:2,t:"Einzeldatei als Merkmal"},
-  {ebene:1,t:"Preismodell"},{ebene:2,t:"Staffeln ab Q4"}
+  {id:"b1",e:0,t:"Produktstrategie 2026"},
+  {id:"b2",e:1,t:"Marktlage"},
+  {id:"b3",e:2,t:"Vier Anbieter geprüft"},
+  {id:"b4",e:2,t:"Zwei davon relevant",frist:tagPlus(5),
+   notiz:"Nordstern und Kranich. Beide setzen auf eine einzelne Datei."},
+  {id:"b5",e:1,t:"Positionierung"},
+  {id:"b6",e:2,t:"Einzeldatei als Merkmal",von:tagPlus(3),bis:tagPlus(14)},
+  {id:"b7",e:1,t:"Preismodell"},
+  {id:"b8",e:2,t:"Rabattlogik prüfen",frist:tagPlus(-2)},
+  {id:"b9",e:2,t:"Staffeln ab Q4",von:tagPlus(17),bis:tagPlus(28)}
  ]
 };}
 
@@ -1621,6 +1713,17 @@ function heile(z){
       z.pins.length=0; paare.forEach(p=>z.pins.push(p));
     }
   }
+
+  /* Der Outliner hatte anfangs `ebene` und keine Kennung. Beides trägt
+     nicht mehr: Fokusmodus und Rückgängig müssen sich einen Knoten
+     merken, und eine Position taugt dafür nicht, sobald etwas
+     verschoben wird. Das Feld heißt jetzt `e` — kürzer, weil es in
+     jedem Knoten steht. */
+  (z.baum||[]).forEach((k,i)=>{
+    if(k.e===undefined && k.ebene!==undefined){ k.e=k.ebene; delete k.ebene; n++; }
+    if(!(k.e>=0)) { k.e=0; n++; }
+    if(!k.id){ k.id="b-alt-"+(i+1); n++; }
+  });
   return n;
 }
 heile(Z);
@@ -3383,28 +3486,921 @@ function rechne(text){
 /* ===== MODUL outliner ===== */
 registriere({
   id:"outliner", nr:"15", nm:"Outliner",
-  hilfe:"Gliederungen mit eingerückten Knoten. Gedacht zum Ordnen von Gedanken. Tab rückt ein, Umschalt und Tab rücken aus.",
-  geruest:"Die Gliederung lässt sich ansehen, aber noch nicht bearbeiten.",
+  hilfe:"Gliederungen mit eingerückten Knoten. Ein Knoten ist ein Feld. Enter legt den nächsten an. Tab rückt ein, Umschalt und Tab rücken aus. Alt und Pfeil verschieben einen Knoten samt allem darunter. Umschalt und Enter öffnen eine Notizzeile. Ein Klick auf den Punkt springt hinein. Strg und Z nehmen zurück. Ein Datum wird getippt: @20.8. setzt eine Frist. Mit @20.8...31.8. wird ein Zeitraum daraus. Diese Fristen gehören dem Outliner allein. Sie erscheinen nicht im Planner. Auch nicht im Kalender. Gantt und Mindmap zeigen dieselbe Gliederung anders. Beide lassen sich als PDF ausgeben. Das Blattformat wird dabei gewählt.",
   zahl:()=>BAUM.length,
   suche(q){
+    if(q.length<3) return [];
     return BAUM.filter(k=>k.t.toLowerCase().includes(q)).slice(0,4).map(k=>
-      treff("Gliederung",k.t,"Ebene "+(k.ebene+1)+" · Produktstrategie 2026","↵",
-        ()=>zeigeFlaeche("outliner")));
+      treff("Gliederung", k.t, "Ebene "+(k.e+1)+" · "+(BAUM[0]?BAUM[0].t:"Gliederung"), "↵",
+        ()=>{ olFokus=null; olMarke=k.id; zeigeFlaeche("outliner"); }));
   },
-  flaeche(b){
-    b.appendChild(abschnitt("Produktstrategie 2026",BAUM.length+" Knoten"));
-    const baum=el("div","baum");
-    BAUM.forEach(k=>{
-      const n=el("div","knoten",'<span class="pkt"></span>'
-        +'<span class="tx" style="font-weight:'+(k.ebene===0?650:400)+'">'+esc(k.t)+'</span>');
-      n.style.paddingLeft=(k.ebene*22+8)+"px";
-      n.onclick=()=>melde(nochNicht(k.t));
-      baum.appendChild(n);
-    });
-    b.appendChild(baum);
-  }
+  flaeche(b){ olMalen(b); }
 });
 /* ===== ENDE outliner ===== */
+
+/* ---------- Der Outliner, ausführlich ----------
+   Die Liste ist flach. `e` ist die Ebene, ein Teilbaum ist ein
+   zusammenhängender Abschnitt. Ein- und Ausrücken, Verschieben und
+   Löschen sind deshalb ein `splice` und kein Umhängen.
+
+   Rückgängig liegt als Abzug der ganzen Liste auf einem Stapel, nicht
+   als Befehlsstapel je Knoten. Bei einigen Hundert Knoten kostet ein
+   Abzug nichts, und er kann nicht danebenliegen — ein Befehlsstapel
+   kann. Getipptes wird zu einem Schritt gebündelt.
+
+   Nichts davon liegt in `Z`: Schreibmarke, Fokus und Stapel sind
+   Ansicht, kein Anwendungsdatum. */
+let olFokus=null;                /* Kennung des Knotens, in dem wir stehen */
+let olMarke=null;                /* Kennung des Knotens mit der Schreibmarke */
+let olFeld="t";                  /* "t" oder "notiz" */
+let olPos=null;                  /* Cursorstelle, null = ans Ende */
+let olAnsicht="gliederung";
+const OL_STAPEL=[]; let olZeiger=-1, olLetzte=0;
+
+const olWo   = id => BAUM.findIndex(k=>k.id===id);
+const olHole = id => BAUM.find(k=>k.id===id);
+/* Wie viele Knoten hängen unter dem an Stelle `i`? */
+function olTeil(i){
+  let n=0;
+  for(let j=i+1; j<BAUM.length && BAUM[j].e>BAUM[i].e; j++) n++;
+  return n;
+}
+const olAbzug = () => BAUM.map(k=>Object.assign({},k));
+
+function olStapelStart(){
+  OL_STAPEL.length=0; OL_STAPEL.push(olAbzug()); olZeiger=0; olLetzte=0;
+}
+/* Nach jeder Änderung aufrufen. `buendeln` fasst Tippen zusammen:
+   Wer einen Satz schreibt, will ihn mit einem Strg+Z los sein und
+   nicht dreißigmal drücken. */
+function olFertig(buendeln){
+  const jetzt=Date.now();
+  if(buendeln && jetzt-olLetzte<900 && olZeiger>=0){
+    OL_STAPEL[olZeiger]=olAbzug();
+  } else {
+    OL_STAPEL.splice(olZeiger+1);
+    OL_STAPEL.push(olAbzug());
+    while(OL_STAPEL.length>60) OL_STAPEL.shift();
+    olZeiger=OL_STAPEL.length-1;
+  }
+  olLetzte=jetzt;
+  bewahre();
+}
+function olSchritt(richtung){
+  const z=olZeiger+richtung;
+  if(z<0 || z>=OL_STAPEL.length){
+    melde(richtung<0 ? "Nichts mehr zurückzunehmen" : "Nichts wiederherzustellen");
+    return;
+  }
+  olZeiger=z;
+  ersetze(BAUM, OL_STAPEL[z].map(k=>Object.assign({},k)));
+  /* Fokus und Schreibmarke können auf Knoten zeigen, die es nach dem
+     Zurücknehmen nicht mehr gibt. Dann auf den ersten sichtbaren
+     ausweichen — nicht einfach löschen. Ohne Schreibmarke verlässt der
+     Fokus die Fläche, und danach greift keine weitere Taste mehr:
+     Zurücknehmen ging dann genau einmal. */
+  if(olFokus && !olHole(olFokus)) olFokus=null;
+  if(olMarke && !olHole(olMarke)) olMarke=null;
+  if(!olMarke){ const s=olSichtbar(); if(s.length) olMarke=s[0].k.id; }
+  olFeld="t"; olPos=null; olLetzte=0;
+  bewahre(); male();
+  melde(richtung<0 ? "Zurückgenommen" : "Wiederhergestellt");
+}
+
+/* ---------- Welche Knoten sind zu sehen? ----------
+   Zugeklapptes bleibt weg, aber sein Zähler sagt, wie viel darunter
+   liegt — nichts darf unsichtbar werden. Im Fokusmodus zählt nur der
+   Teilbaum des angesprungenen Knotens; er selbst steht im Pfad und
+   nicht noch einmal als Zeile. */
+function olSichtbar(){
+  let von=0, bis=BAUM.length, rueck=0;
+  if(olFokus){
+    const i=olWo(olFokus);
+    if(i<0){ olFokus=null; }
+    else { von=i+1; bis=i+1+olTeil(i); rueck=BAUM[i].e+1; }
+  }
+  const aus=[]; let zuAb=-1;
+  for(let i=von;i<bis;i++){
+    const k=BAUM[i];
+    if(zuAb>=0){ if(k.e>zuAb) continue; zuAb=-1; }
+    if(k.zu && olTeil(i)>0) zuAb=k.e;
+    aus.push({k, i, tiefe:k.e-rueck});
+  }
+  return aus;
+}
+
+/* ---------- Zeichnen ---------- */
+function olHoehe(f){ f.style.height="auto"; f.style.height=(f.scrollHeight)+"px"; }
+
+function olMalen(b){
+  if(OL_STAPEL.length===0) olStapelStart();
+  if(!BAUM.length){ BAUM.push({id:neueId("b"), e:0, t:""}); bewahre(); }
+
+  b.appendChild(olLeisteMalen());
+  if(olFokus) b.appendChild(olPfadMalen());
+  if(olAnsicht!=="gliederung"){ olAnsichtMalen(b); return; }
+
+  const sicht=olSichtbar();
+  const spurBis=olSpur();
+  const baum=el("div","ol-baum");
+
+  sicht.forEach(({k,i,tiefe})=>{
+    const kinder=olTeil(i);
+    const z=el("div","ol-k"+(k.id===olMarke?" mark":"")+(tiefe===0?" wurzel":""));
+    z.style.paddingLeft=(tiefe*24)+"px";
+
+    if(spurBis.includes(k.id) && tiefe>0){
+      const sp=el("span","ol-spur");
+      sp.style.left=((tiefe-1)*24+7)+"px";
+      z.appendChild(sp);
+    }
+
+    if(kinder){
+      const d=el("button","ol-drei"+(k.zu?" zu":""),
+        '<svg viewBox="0 0 12 12"><path d="M4 2.5 8 6l-4 3.5"/></svg>');
+      d.setAttribute("aria-label",(k.zu?"Aufklappen: ":"Zuklappen: ")+(k.t||"ohne Text"));
+      d.onclick=()=>{ k.zu=!k.zu; olFertig(); male(); };
+      z.appendChild(d);
+    } else z.appendChild(el("span","ol-drei leer"));
+
+    const pkt=el("span","ol-pkt"+(kinder?" hat":""));
+    pkt.title="Hineinspringen";
+    pkt.onclick=()=>olHinein(k.id);
+    z.appendChild(pkt);
+
+    const f=el("textarea","ol-tx");
+    f.rows=1; f.value=k.t; f.spellcheck=false;
+    f.setAttribute("aria-label","Knoten, Ebene "+(k.e+1));
+    /* Gedeutet wird bei jedem Zeichen, neu gezeichnet aber nicht: Ein
+       Neuaufbau bei jedem Buchstaben risse die Schreibmarke heraus. Die
+       Marke am Datum erscheint beim nächsten Zeichnen — spätestens mit
+       Enter, Tab oder dem Wechsel in den Gantt. */
+    f.oninput=()=>{ k.t=f.value; olDeuten(k); olHoehe(f); olFertig(true); };
+    f.onfocus=()=>{ olMarke=k.id; olFeld="t"; };
+    f.onblur=()=>{ if(olAusschreiben(k)){ f.value=k.t; olDeuten(k); olFertig(); } };
+    f.onkeydown=e=>olTaste(e,k,i,f,"t");
+    z.appendChild(f);
+
+    if(k.zu && kinder) z.appendChild(el("span","ol-zu","+"+kinder));
+    olMarkeMalen(z,k);
+
+    baum.appendChild(z);
+
+    if(k.notiz!=null){
+      const nz=el("div","ol-nz");
+      nz.style.paddingLeft=(tiefe*24+30)+"px";
+      const n=el("textarea","ol-notiz");
+      n.rows=1; n.value=k.notiz; n.placeholder="Notiz"; n.spellcheck=false;
+      n.setAttribute("aria-label","Notiz zu "+(k.t||"diesem Knoten"));
+      n.oninput=()=>{ k.notiz=n.value; olHoehe(n); olFertig(true); };
+      n.onfocus=()=>{ olMarke=k.id; olFeld="notiz"; };
+      n.onkeydown=e=>olTaste(e,k,i,n,"notiz");
+      nz.appendChild(n);
+      baum.appendChild(nz);
+    }
+  });
+
+  b.appendChild(baum);
+
+  /* Erst nachdem `male()` die Fläche ins Dokument gehängt hat. `flaeche`
+     bekommt einen losgelösten Knoten — dort ist `scrollHeight` null und
+     `focus()` wirkungslos. Ohne diesen Aufschub verlor die Schreibmarke
+     nach jedem Neuzeichnen den Halt, und jede weitere Taste ging ins
+     Leere. Ein Mikrotask läuft, sobald `male()` fertig ist. */
+  queueMicrotask(()=>{
+    if(!baum.isConnected) return;
+    baum.querySelectorAll("textarea").forEach(olHoehe);
+    olMarkeSetzen(baum);
+  });
+}
+
+/* Der Zweig, in dem die Schreibmarke steht — alle Vorfahren des
+   markierten Knotens, er selbst eingeschlossen. */
+function olSpur(){
+  const i=olWo(olMarke);
+  if(i<0) return [];
+  const aus=[BAUM[i].id];
+  let e=BAUM[i].e;
+  for(let j=i-1;j>=0 && e>0;j--){
+    if(BAUM[j].e<e){ e=BAUM[j].e; aus.push(BAUM[j].id); }
+  }
+  return aus;
+}
+
+function olMarkeSetzen(baum){
+  if(!olMarke) return;
+  const zeilen=[...baum.querySelectorAll(".ol-k")];
+  const treffer=zeilen[olSichtbar().findIndex(x=>x.k.id===olMarke)];
+  if(!treffer) return;
+  const f = olFeld==="notiz"
+    ? (treffer.nextSibling && treffer.nextSibling.querySelector
+       ? treffer.nextSibling.querySelector(".ol-notiz") : null)
+    : treffer.querySelector(".ol-tx");
+  if(!f) return;
+  f.focus();
+  const p = olPos==null ? f.value.length : Math.min(olPos, f.value.length);
+  f.setSelectionRange(p,p);
+  olPos=null;
+}
+
+function olLeisteMalen(){
+  const l=el("div","ol-leiste");
+  const sch=el("div","ol-schalter");
+  [["gliederung","Gliederung"],["gantt","Gantt"],["mindmap","Mindmap"]].forEach(([id,nm])=>{
+    const kn=el("button",null,nm);
+    kn.setAttribute("aria-current",String(olAnsicht===id));
+    kn.onclick=()=>{ olAnsicht=id; male(); };
+    sch.appendChild(kn);
+  });
+  l.appendChild(sch);
+  return l;
+}
+
+function olPfadMalen(){
+  const p=el("div","ol-pfad");
+  const kette=[]; let i=olWo(olFokus), e=BAUM[i].e;
+  for(let j=i-1;j>=0 && e>0;j--) if(BAUM[j].e<e){ e=BAUM[j].e; kette.unshift(BAUM[j]); }
+  const ganz=el("button",null,"Ganze Gliederung");
+  ganz.onclick=()=>{ olFokus=null; male(); };
+  p.append(ganz);
+  kette.forEach(k=>{
+    p.appendChild(el("span",null,"›"));
+    const kn=el("button",null,esc(k.t||"Ohne Text"));
+    kn.onclick=()=>{ olFokus=k.id; male(); };
+    p.appendChild(kn);
+  });
+  p.appendChild(el("span",null,"›"));
+  p.appendChild(el("b",null,esc(BAUM[i].t||"Ohne Text")));
+  return p;
+}
+
+function olHinein(id){
+  const i=olWo(id);
+  if(olTeil(i)===0){ melde("Nichts darunter, worauf man springen könnte"); return; }
+  olFokus=id; olMarke=null; male();
+}
+function olHeraus(){
+  if(!olFokus){ melde("Schon in der ganzen Gliederung"); return; }
+  const i=olWo(olFokus); let e=BAUM[i].e, hoch=null;
+  for(let j=i-1;j>=0;j--) if(BAUM[j].e<e){ hoch=BAUM[j].id; break; }
+  olFokus=hoch; male();
+}
+
+/* ---------- Die Tasten ----------
+   Sie hängen am Feld, nicht an `document`. Rückgängig gibt es sonst
+   nirgends im Dashboard; eine Taste, die überall angeboten wird und
+   meist ins Leere geht, wäre schlechter als eine, die nur dort wirkt,
+   wo sie etwas kann. */
+function olTaste(e,k,i,f,welches){
+  const mod=e.ctrlKey||e.metaKey;
+  const pos=f.selectionStart, ende=f.value.length;
+
+  if(mod && e.key.toLowerCase()==="z"){
+    e.preventDefault(); olSchritt(e.shiftKey?1:-1); return; }
+  if(mod && e.key.toLowerCase()==="y"){ e.preventDefault(); olSchritt(1); return; }
+
+  if(mod && (e.key==="."||e.code==="Period")){
+    e.preventDefault();
+    if(olTeil(i)===0){ melde("Nichts zum Klappen"); return; }
+    k.zu=!k.zu; olMarke=k.id; olFertig(); male(); return;
+  }
+  if(e.altKey && e.shiftKey && e.key==="ArrowRight"){ e.preventDefault(); olHinein(k.id); return; }
+  if(e.altKey && e.shiftKey && e.key==="ArrowLeft"){ e.preventDefault(); olHeraus(); return; }
+
+  /* --- in der Notizzeile gilt weniger --- */
+  if(welches==="notiz"){
+    if(e.key==="Escape" || (e.key==="Enter"&&!e.shiftKey)){
+      e.preventDefault(); olMarke=k.id; olFeld="t"; olPos=null; male(); return;
+    }
+    if(e.key==="Backspace" && f.value===""){
+      e.preventDefault(); k.notiz=null; olMarke=k.id; olFeld="t";
+      olFertig(); male(); return;
+    }
+    return;
+  }
+
+  if(e.key==="Enter" && e.shiftKey){
+    e.preventDefault();
+    if(k.notiz==null) k.notiz="";
+    olMarke=k.id; olFeld="notiz"; olPos=null;
+    olFertig(); male(); return;
+  }
+  if(e.key==="Enter"){
+    e.preventDefault();
+    /* Teilt an der Schreibmarke — was rechts steht, wandert in den
+       neuen Knoten. Ein Knoten mit Kindern bekommt sein Geschwister
+       hinter dem ganzen Teilbaum, nicht mitten hinein. */
+    const rest=f.value.slice(pos);
+    k.t=f.value.slice(0,pos);
+    const neu={id:neueId("b"), e:k.e, t:rest};
+    BAUM.splice(i+1+olTeil(i), 0, neu);
+    olMarke=neu.id; olFeld="t"; olPos=0;
+    olFertig(); male(); return;
+  }
+
+  if(e.key==="Tab"){
+    e.preventDefault();
+    olPos=pos;
+    if(e.shiftKey) olAusruecken(k,i); else olEinruecken(k,i);
+    return;
+  }
+
+  if(e.altKey && (e.key==="ArrowUp"||e.key==="ArrowDown")){
+    e.preventDefault(); olPos=pos; olSchieben(i, e.key==="ArrowUp"?-1:1); return;
+  }
+
+  if(e.key==="ArrowUp" || e.key==="ArrowDown"){
+    const sicht=olSichtbar();
+    const stelle=sicht.findIndex(x=>x.k.id===k.id);
+    const ziel=sicht[stelle+(e.key==="ArrowUp"?-1:1)];
+    if(!ziel) return;
+    e.preventDefault();
+    olMarke=ziel.k.id; olFeld="t"; olPos=Math.min(pos, ziel.k.t.length);
+    male(); return;
+  }
+
+  if(e.key==="Backspace" && pos===0 && f.selectionEnd===0){
+    const sicht=olSichtbar();
+    const stelle=sicht.findIndex(x=>x.k.id===k.id);
+    const vor=sicht[stelle-1];
+    if(!vor) return;
+    if(olTeil(i)>0){
+      e.preventDefault();
+      melde("Erst die Unterknoten wegräumen oder ausrücken");
+      return;
+    }
+    e.preventDefault();
+    const zi=olWo(vor.k.id);
+    olPos=vor.k.t.length;
+    vor.k.t += f.value;
+    BAUM.splice(i,1);
+    olMarke=vor.k.id; olFeld="t";
+    olFertig(); male(); return;
+  }
+
+  if(e.key==="Escape"){ e.preventDefault(); f.blur(); zeigeFlaeche("leiste"); return; }
+}
+
+/* ---------- Umbauen ---------- */
+function olEinruecken(k,i){
+  /* Es braucht einen Knoten darüber auf gleicher Ebene, unter den
+     dieser rutschen kann. Fehlt er, misslingt es nicht still. */
+  let vor=null;
+  for(let j=i-1;j>=0;j--){ if(BAUM[j].e===k.e){ vor=BAUM[j]; break; } if(BAUM[j].e<k.e) break; }
+  if(!vor){ melde("Kein Knoten darüber auf gleicher Ebene"); return; }
+  const n=olTeil(i);
+  for(let j=i;j<=i+n;j++) BAUM[j].e++;
+  if(vor.zu) vor.zu=false;          /* sonst verschwände der Knoten sofort */
+  olFertig(); male();
+}
+function olAusruecken(k,i){
+  if(k.e===0){ melde("Steht schon ganz links"); return; }
+  const n=olTeil(i);
+  for(let j=i;j<=i+n;j++) BAUM[j].e--;
+  /* Was hinter dem Teilbaum auf der alten Ebene folgte, gehört jetzt
+     unter diesen Knoten — sonst risse die Gliederung auseinander. */
+  olFertig(); male();
+}
+function olSchieben(i, richtung){
+  const n=olTeil(i)+1;
+  const teil=BAUM.slice(i,i+n);
+  if(richtung<0){
+    let vor=-1;
+    for(let j=i-1;j>=0;j--){ if(BAUM[j].e===BAUM[i].e){ vor=j; break; }
+      if(BAUM[j].e<BAUM[i].e) break; }
+    if(vor<0){ melde("Kein Geschwister darüber"); return; }
+    BAUM.splice(i,n); BAUM.splice(vor,0,...teil);
+  } else {
+    const nach=i+n;
+    if(nach>=BAUM.length || BAUM[nach].e<BAUM[i].e){ melde("Kein Geschwister darunter"); return; }
+    const m=olTeil(nach)+1;
+    BAUM.splice(i,n); BAUM.splice(i+m,0,...teil);
+  }
+  olFertig(); male();
+}
+
+/* ---------- Datumsangaben ----------
+   Sie werden getippt, nicht ausgewählt: `@20.8.`, `@2026-08-20`,
+   `@heute`, `@morgen`, `@mo`, dazu `@20.8...31.8.` für einen Zeitraum.
+   Der Text bleibt damit die einzige Wahrheit — es gibt keinen zweiten
+   Ort, der abgeglichen werden müsste.
+
+   Diese Fristen gehören dem Outliner allein. Sie stehen nicht im
+   Planner, nicht im Kalender und nicht im Jahreskalender. Wer eine
+   Frist an beiden Orten braucht, trägt sie an beiden Orten ein. */
+const OL_TAGE={so:0,mo:1,di:2,mi:3,do:4,fr:5,sa:6};
+function olDatum(s){
+  s=String(s||"").trim().toLowerCase();
+  if(!s) return null;
+  if(s==="heute") return HEUTE;
+  if(s==="morgen") return tagPlus(1);
+  if(s==="übermorgen"||s==="uebermorgen") return tagPlus(2);
+  if(OL_TAGE[s]!==undefined){
+    const heute=new Date(HEUTE+"T00:00:00");
+    let d=(OL_TAGE[s]-heute.getDay()+7)%7; if(d===0) d=7;
+    return tagPlus(d);
+  }
+  let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if(m) return s;
+  m=s.match(/^(\d{1,2})\.(\d{1,2})\.?(\d{4})?$/);
+  if(m){
+    /* Ohne Jahr das laufende — es sei denn, der Tag liegt dann schon
+       mehr als ein halbes Jahr zurück. Dann war das nächste gemeint. */
+    let j=m[3] ? Number(m[3]) : Number(HEUTE.slice(0,4));
+    let d=j+"-"+p2(Number(m[2]))+"-"+p2(Number(m[1]));
+    if(!m[3] && d < tagPlus(-183)) d=(j+1)+d.slice(4);
+    return d;
+  }
+  return null;
+}
+/* Liest die Angaben aus einer Zeile und schreibt sie in den Knoten.
+   Was nicht als Datum zu deuten ist, bleibt einfach Text. */
+function olDeuten(k){
+  const alt=(k.frist||"")+"|"+(k.von||"")+"|"+(k.bis||"");
+  let frist=null, von=null, bis=null;
+  const re=/@([^\s@]+)/g; let m;
+  while((m=re.exec(k.t))){
+    const roh=m[1];
+    /* Gierig teilen, nicht mit `split`. Bei `20.8...31.8.` sind drei
+       Punkte hintereinander: der hinter dem Tag und die beiden des
+       Trenners. `split("..")` greift beim ersten Paar zu und reißt den
+       Tagespunkt mit ab — herauskamen `20.8` und `.31.8.`, und beides
+       war kein Datum mehr. Ein gieriges `.+` nimmt den linken Teil so
+       lang wie möglich und trifft damit den richtigen Trenner. */
+    const zwei=roh.match(/^(.+)\.\.(.+)$/);
+    if(zwei){
+      const a=olDatum(zwei[1]), b=olDatum(zwei[2]);
+      if(a&&b){ von=a<b?a:b; bis=a<b?b:a; }
+    } else {
+      const d=olDatum(roh);
+      if(d) frist=d;
+    }
+  }
+  k.frist=frist; k.von=von; k.bis=bis;
+  return alt !== (frist||"")+"|"+(von||"")+"|"+(bis||"");
+}
+/* Relative Angaben ausschreiben, sobald die Zeile verlassen wird.
+   Sonst liefen Text und gespeicherte Frist ab morgen auseinander:
+   `@morgen` meint dann einen anderen Tag als den festgehaltenen. */
+function olAusschreiben(k){
+  const vorher=k.t;
+  k.t=k.t.replace(/@([^\s@]+)/g, (ganz, roh)=>{
+    const zwei=roh.match(/^(.+)\.\.(.+)$/);
+    const wandle = x => {
+      const d=olDatum(x);
+      if(!d || /^\d{4}-\d{2}-\d{2}$/.test(x) || /^\d{1,2}\.\d{1,2}\.\d{4}$/.test(x)) return x;
+      const t=new Date(d+"T00:00:00");
+      return t.getDate()+"."+(t.getMonth()+1)+"."+t.getFullYear();
+    };
+    return "@"+(zwei ? wandle(zwei[1])+".."+wandle(zwei[2]) : wandle(roh));
+  });
+  return k.t!==vorher;
+}
+const olSpaet = k => { const d=k.frist||k.bis; return !!d && d<HEUTE; };
+function olMarkeMalen(z,k){
+  const d = k.von ? (kurzTag(k.von)+" – "+kurzTag(k.bis)) : k.frist ? kurzTag(k.frist) : null;
+  if(!d) return;
+  z.appendChild(el("span","ol-d"+(olSpaet(k)?" spaet":""),
+    (olSpaet(k)?"überfällig · ":"")+d));
+}
+const kurzTag = s => { const d=new Date(s+"T00:00:00");
+  return d.getDate()+". "+MONK[d.getMonth()]; };
+
+/* ---------- Zeilen mit Datum, für Gantt ----------
+   Ein Elternpunkt ohne eigenes Datum fasst zusammen, was unter ihm
+   liegt. Wer nichts Datiertes unter sich hat, fällt weg. */
+function olReihen(){
+  const aus=[];
+  const liste=olSichtbarFuerAnsicht();
+  liste.forEach(({k,i,tiefe})=>{
+    let von=k.von||k.frist, bis=k.bis||k.frist, art=k.von?"balken":"raute";
+    if(!von){
+      const n=olTeil(i);
+      const ki=BAUM.slice(i+1,i+1+n).filter(x=>x.von||x.frist);
+      if(!ki.length) return;
+      von=ki.map(x=>x.von||x.frist).sort()[0];
+      bis=ki.map(x=>x.bis||x.frist).sort().pop();
+      art="fasst";
+    }
+    aus.push({k,von,bis,art,tiefe});
+  });
+  return aus;
+}
+/* Für Gantt und Mindmap zählt der Fokus, aber **nicht** das Zuklappen:
+   Zuklappen ist eine Lesehilfe der Gliederung und darf keine Fristen
+   still verschwinden lassen. */
+function olSichtbarFuerAnsicht(){
+  let von=0, bis=BAUM.length, rueck=0;
+  if(olFokus){
+    const i=olWo(olFokus);
+    if(i>=0){ von=i; bis=i+1+olTeil(i); rueck=BAUM[i].e; }
+  }
+  const aus=[];
+  for(let i=von;i<bis;i++) aus.push({k:BAUM[i], i, tiefe:BAUM[i].e-rueck});
+  return aus;
+}
+
+function olAnsichtMalen(b){
+  const reihen=olReihen();
+  if(!reihen.length){
+    b.appendChild(el("div","leer",
+      olAnsicht==="gantt"
+        ? "Noch keine Fristen. Schreiben Sie @20.8. oder @20.8...31.8. in eine Zeile."
+        : "Noch nichts zu zeigen."));
+    return;
+  }
+  if(olAnsicht==="gantt") olGanttMalen(b, reihen);
+  else olMindmapMalen(b);
+}
+
+/* ---------- Gantt auf der Fläche ----------
+   Dieselbe Rechnung wie im PDF, nur mit Kästen statt Zeichenbefehlen:
+   Zeitraum wird zum Balken, bloße Frist zur Raute, ein Elternpunkt
+   ohne eigenes Datum bekommt den offenen Rahmen. */
+function olGanttMalen(b, reihen){
+  let von=reihen.map(r=>r.von).sort()[0];
+  const bis=reihen.map(r=>r.bis).sort().pop();
+  if(HEUTE<von) von=HEUTE;
+  const tage=Math.max(1, Math.round((new Date(bis+"T00:00:00")-new Date(von+"T00:00:00"))/86400000)+1);
+  const anteil = d => Math.round((new Date(d+"T00:00:00")-new Date(von+"T00:00:00"))/86400000)/tage*100;
+
+  const g=el("div","olg");
+  const kopf=el("div","olg-r olg-kopf");
+  kopf.appendChild(el("div","olg-nm"));
+  const skala=el("div","olg-feld");
+  olAchse(von,bis,tage).forEach(([a,bez])=>{
+    const s=el("span","olg-w",esc(bez)); s.style.left=a+"%"; skala.appendChild(s);
+  });
+  kopf.appendChild(skala);
+  g.appendChild(kopf);
+
+  reihen.forEach(({k,von:v,bis:z,art,tiefe})=>{
+    const r=el("div","olg-r");
+    const nm=el("div","olg-nm",esc(k.t||"Ohne Text"));
+    nm.style.paddingLeft=(tiefe*11)+"px";
+    if(tiefe<=1) nm.style.fontWeight="600";
+    r.appendChild(nm);
+    const f=el("div","olg-feld");
+    const l=anteil(v), br=Math.max(anteil(z)-l+100/tage, 1.2);
+    const rot=olSpaet(k);
+    if(art==="raute"){
+      const d=el("span","olg-raute"+(rot?" spaet":"")); d.style.left=l+"%"; f.appendChild(d);
+    } else {
+      const s=el("span","olg-balken"+(art==="fasst"?" fasst":"")+(rot?" spaet":""));
+      s.style.left=l+"%"; s.style.width=br+"%"; f.appendChild(s);
+    }
+    if(art!=="fasst"){
+      const bez=el("span","olg-bez", k.von ? kurzTag(v)+" – "+kurzTag(z) : kurzTag(v));
+      bez.style.left=(l+br)+"%"; f.appendChild(bez);
+    }
+    r.appendChild(f); g.appendChild(r);
+  });
+
+  if(HEUTE>=von && HEUTE<=bis){
+    const h=el("span","olg-heute"); h.style.left=anteil(HEUTE)+"%";
+    g.querySelectorAll(".olg-r:not(.olg-kopf) .olg-feld").forEach(f=>{
+      const l=el("span","olg-heute"); l.style.left=anteil(HEUTE)+"%"; f.appendChild(l);
+    });
+  }
+
+  b.appendChild(g);
+  b.appendChild(el("div","hinweis",
+    "Balken: Zeitraum · Raute: einzelne Frist · offener Rahmen: fasst die "
+    +"Unterpunkte zusammen. Diese Fristen gehören dem Outliner — sie stehen "
+    +"nicht im Planner, nicht im Kalender und nicht im Jahreskalender."));
+  b.appendChild(olPdfKnopf());
+}
+
+/* Die Achse wird gröber, wenn der Zeitraum lang ist: Wochen, Monate,
+   Vierteljahre. Ein Zeitstrahl, dessen Beschriftungen sich überlappen,
+   ist keiner. */
+function olAchse(von,bis,tage){
+  const aus=[], a=new Date(von+"T00:00:00"), z=new Date(bis+"T00:00:00");
+  const anteil = d => (d-a)/86400000/tage*100;
+  if(tage<=70){
+    for(let i=0;i<tage;i+=7){
+      const d=new Date(a.getTime()+i*86400000);
+      aus.push([anteil(d), d.getDate()+". "+MONK[d.getMonth()]]);
+    }
+    return aus;
+  }
+  let j=new Date(a.getFullYear(), a.getMonth()+1, 1);
+  const jeder = tage>430 ? 3 : 1;
+  let n=0;
+  while(j<=z){
+    if(n%jeder===0) aus.push([anteil(j),
+      MONK[j.getMonth()]+(j.getMonth()===0?" "+j.getFullYear():"")]);
+    j=new Date(j.getFullYear(), j.getMonth()+1, 1); n++;
+  }
+  return aus;
+}
+
+/* ---------- Die Anordnung der Mindmap ----------
+   Nicht radial. Ein Fächer sieht bei drei Ästen gut aus und schiebt
+   bei dreißig Punkten die Beschriftungen übereinander — dagegen hilft
+   auch kein größeres Blatt, das vergrößert die Überlappung mit.
+
+   Stattdessen die klassische Anordnung: die Wurzel in der Mitte, die
+   Äste nach links und rechts, und **jeder Punkt bekommt seine eigene
+   Zeile**. Damit kann sich nichts überdecken, gleich wie groß die
+   Gliederung wird. */
+function olMindLage(gr1,gr2,grW){
+  const liste=olSichtbarFuerAnsicht();
+  if(!liste.length) return null;
+  const wurzel=liste[0].k;
+  const eins=liste.filter(x=>x.tiefe===1).map(x=>({
+    k:x.k, kinder:BAUM.slice(x.i+1, x.i+1+olTeil(x.i)).filter(c=>c.e===x.k.e+1)
+  }));
+  if(!eins.length) return null;
+
+  const halb=(t,g,f)=>(pdfBreite(t||"Ohne Text",g,f)+18)/2;
+  const wH=halb(wurzel.t,grW,true);
+  const aH=Math.max(...eins.map(p=>halb(p.k.t,gr1,true)));
+  const bH=Math.max(...eins.flatMap(p=>p.kinder.map(c=>halb(c.t,gr2,false))), 40);
+  const SP1=wH+64+aH, SP2=SP1+aH+56+bH;
+
+  /* Abwechselnd auf beide Seiten, damit sie ungefähr gleich lang
+     werden. */
+  const seiten=[[],[]], last=[0,0];
+  eins.forEach(p=>{
+    const s=last[0]<=last[1] ? 0 : 1;
+    seiten[s].push(p);
+    last[s]+=Math.max(1,p.kinder.length)+0.6;
+  });
+
+  const ZEILE=26, kaesten=[], bogen=[];
+  const merke=(t,x,y,g,f,rot)=>kaesten.push({t:t||"Ohne Text",x,y,gr:g,fett:f,rot,
+    b:pdfBreite(t||"Ohne Text",g,f)+18, h:g+11});
+  merke(wurzel.t,0,0,grW,true,false);
+
+  seiten.forEach((liste2,si)=>{
+    const vz=si===0?1:-1;
+    const zeilen=liste2.reduce((n,p)=>n+Math.max(1,p.kinder.length)+0.6,-0.6);
+    let y=-zeilen*ZEILE/2;
+    liste2.forEach(p=>{
+      const n=Math.max(1,p.kinder.length), yA=y+(n-1)*ZEILE/2;
+      bogen.push([0,0,vz*SP1,yA,"rule2",1.1]);
+      merke(p.k.t, vz*SP1, yA, gr1, true, false);
+      p.kinder.forEach((c,ci)=>{
+        bogen.push([vz*SP1,yA,vz*SP2,y+ci*ZEILE,"rule",1]);
+        merke(c.t, vz*SP2, y+ci*ZEILE, gr2, false, olSpaet(c));
+      });
+      y+=(n+0.6)*ZEILE;
+    });
+  });
+  return {kaesten,bogen,wurzel};
+}
+
+function olMindmapMalen(b){
+  const L=olMindLage(11,9.5,12.5);
+  if(!L){ b.appendChild(el("div","leer",
+    "Zum Zeichnen braucht es mindestens eine Ebene unter der Wurzel.")); return; }
+  const K=L.kaesten;
+  const l=Math.min(...K.map(k=>k.x-k.b/2)), r=Math.max(...K.map(k=>k.x+k.b/2));
+  const o=Math.min(...K.map(k=>k.y-k.h/2)), u=Math.max(...K.map(k=>k.y+k.h/2));
+  const BR=r-l, HO=u-o;
+
+  /* In echten Pixeln zeichnen, nicht in Prozent. Erst lagen die
+     Verbindungen um den Innenabstand versetzt neben den Kästen:
+     Prozentwerte eines Kindes rechnen gegen die Polsterkante des
+     Elternteils, die Zeichenfläche daneben tat es nicht. Bei gleicher
+     Einheit für beides kann das nicht mehr auseinanderlaufen.
+     Wird es breiter als die Spalte, scrollt der Rahmen — die Seite
+     nicht. */
+  const RAUM=20;
+  const raum=el("div","olm-raum");
+  const kasten=el("div","olm");
+  kasten.style.width=Math.round(BR+RAUM*2)+"px";
+  kasten.style.height=Math.round(HO+RAUM*2)+"px";
+  const vx=x=>x-l+RAUM, vy=y=>y-o+RAUM;
+
+  const NS="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(NS,"svg");
+  svg.setAttribute("width",BR+RAUM*2); svg.setAttribute("height",HO+RAUM*2);
+  L.bogen.forEach(([x1,y1,x2,y2,farbe,d])=>{
+    const pf=document.createElementNS(NS,"path");
+    const mx=(vx(x1)+vx(x2))/2;
+    pf.setAttribute("d","M"+vx(x1)+" "+vy(y1)+" C"+mx+" "+vy(y1)+" "
+      +mx+" "+vy(y2)+" "+vx(x2)+" "+vy(y2));
+    pf.setAttribute("class","olm-l "+farbe);
+    pf.setAttribute("stroke-width",d);
+    svg.appendChild(pf);
+  });
+  kasten.appendChild(svg);
+
+  K.forEach(k=>{
+    const d=el("div","olm-k"+(k.fett?" ast":"")+(k.rot?" spaet":"")
+      +(k.gr>12?" wurzel":""), esc(k.t));
+    d.style.left=Math.round(vx(k.x))+"px";
+    d.style.top=Math.round(vy(k.y))+"px";
+    kasten.appendChild(d);
+  });
+  raum.appendChild(kasten);
+  b.appendChild(raum);
+  b.appendChild(el("div","hinweis",
+    "Die Wurzel in der Mitte, die Äste nach beiden Seiten. Jeder Punkt hat "
+    +"seine eigene Zeile, damit sich nichts überdeckt. Überfälliges ist rot."));
+  b.appendChild(olPdfKnopf());
+}
+
+/* ---------- Ausgeben ---------- */
+const OL_FORMAT={A4:[842,595], A3:[1191,842], A2:[1684,1191],
+                 A1:[2384,1684], A0:[3370,2384]};
+const OL_FARBE={
+  paper:[0.969,0.961,0.941], sheet:[1,0.996,0.984], raise:[0.937,0.925,0.894],
+  rule:[0.886,0.871,0.831], rule2:[0.796,0.776,0.729],
+  ink:[0.102,0.102,0.094], ink2:[0.329,0.318,0.294], ink3:[0.420,0.404,0.369],
+  tinte:[0.184,0.227,0.549], tinteS:[0.906,0.918,0.965],
+  signal:[0.659,0.196,0.122], signalS:[0.984,0.914,0.898]
+};
+const PRAND=42;
+
+function olPdfKnopf(){
+  const kn=el("button","tat still","Als PDF ausgeben …");
+  kn.style.marginTop="6px";
+  kn.onclick=olPdfFragen;
+  return kn;
+}
+
+/* Die Wahl trifft der Mensch, nicht das Programm: Ein Wandplan und ein
+   Ausdruck für die Mappe sind verschiedene Dinge, und das weiß nur er.
+   Vorgeschlagen wird, was zur Ansicht passt. */
+function olPdfFragen(){
+  const gantt = olAnsicht==="gantt";
+  dialog({
+    art:"PDF ausgeben",
+    titel: gantt ? "Gantt als PDF" : "Mindmap als PDF",
+    werte:{ format: gantt ? "A4" : "auto" },
+    felder:[
+      {schl:"format", nm:"Blattformat", art:"auswahl", breit:true,
+       optionen:[["auto","Von selbst wählen"],["A4","A4 quer"],["A3","A3 quer"],
+                 ["A2","A2 quer"],["A1","A1 quer"],["A0","A0 quer"]],
+       sub: gantt
+         ? "Passt nicht alles auf ein Blatt, wird umgebrochen. Kopf und Namensspalte stehen auf jedem Blatt."
+         : "Eine Mindmap wird nie umgebrochen. Ein größeres Blatt macht die Schrift lesbarer."}
+    ],
+    merk: gantt
+      ? "Die Zeitachse wird immer auf die Blattbreite gerechnet. Nur ihre Beschriftung wird gröber."
+      : "„Von selbst wählen“ nimmt das kleinste Blatt, auf dem die Schrift noch lesbar bleibt.",
+    speichern(w){ gantt ? olPdfGantt(w.format) : olPdfMindmap(w.format); }
+  });
+}
+
+function pdfGrund(s,titel,unter,sk){
+  s.fuell(OL_FARBE.paper).rechteck(0,0,s.B,s.H);
+  s.fuell(OL_FARBE.sheet).rund(PRAND-14,PRAND-14,s.B-(PRAND-14)*2,s.H-(PRAND-14)*2,10);
+  s.fuell(OL_FARBE.ink).text(titel,PRAND,PRAND+4+3*sk,17*sk,{fett:true});
+  s.fuell(OL_FARBE.ink3).text(unter,PRAND,PRAND+16+7*sk,9*sk);
+  s.strich(OL_FARBE.rule).dick(0.8).linie(PRAND,PRAND+24+9*sk,s.B-PRAND,PRAND+24+9*sk);
+}
+function pdfFuss(s,links,rechts,sk){
+  s.fuell(OL_FARBE.ink3).text(links,PRAND,s.H-PRAND+4,8*sk);
+  s.text(rechts,s.B-PRAND,s.H-PRAND+4,8*sk,{wo:"r"});
+}
+function olPdfName(was){ return "outliner-"+was+"-"+HEUTE+".pdf"; }
+function olPdfGeben(name, seiten){
+  const bytes=pdfBauen(seiten);
+  const blob=new Blob([bytes],{type:"application/pdf"});
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),4000);
+}
+
+function olPdfGantt(format){
+  /* Ein Auswahlfeld bietet immer „— ohne —“ an. Das ist kein Format;
+     ungeprüft schlüge der Zugriff darauf fehl und die Ausgabe bräche
+     ab, ohne etwas zu sagen. */
+  if(format!=="auto" && !OL_FORMAT[format]) format="auto";
+  const reihen=olReihen();
+  if(!reihen.length){ melde("Keine Fristen zum Zeichnen"); return; }
+  const [B,H]=OL_FORMAT[format==="auto"?"A4":format];
+  const titel=(olFokus?olHole(olFokus).t:BAUM[0].t)||"Gliederung";
+
+  let von=reihen.map(r=>r.von).sort()[0];
+  const bis=reihen.map(r=>r.bis).sort().pop();
+  const tageBis=(a,b)=>Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/86400000);
+  if(HEUTE<von && tageBis(HEUTE,von)<=90) von=HEUTE;
+  const tage=Math.max(1,tageBis(von,bis)+1);
+
+  /* Größere Bogen bekommen größere Schrift — sonst säße auf einem A2
+     eine A4-Überschrift: richtig gerechnet und trotzdem verloren. */
+  const sk=Math.min(1.6, Math.sqrt(B/842));
+  const NAM=Math.round(B*0.23), X0=PRAND+NAM, X1=B-PRAND, FB=X1-X0;
+  const px = d => X0 + tageBis(von,d)/tage*FB;
+
+  /* Erst der Umbruch, dann die Zeilenhöhe. Andersherum entschied die
+     gewünschte Höhe über den Umbruch, und ein großer Bogen rutschte auf
+     zwei Blätter, obwohl alles darauf gepasst hätte. */
+  const OBEN=PRAND+80, PLATZ=H-PRAND-40-OBEN;
+  const jeSeite=Math.max(3, Math.floor(PLATZ/(20*sk)));
+  const anzahl=Math.ceil(reihen.length/jeSeite);
+  const ZH=Math.min(46*sk, PLATZ/(anzahl===1?reihen.length:jeSeite));
+
+  const marken=olAchse(von,bis,tage);
+  const seiten=[];
+  for(let sn=0;sn<anzahl;sn++){
+    const s=pdfBlatt(B,H);
+    const teil=reihen.slice(sn*jeSeite,(sn+1)*jeSeite);
+    const UNTEN=OBEN+teil.length*ZH-ZH/2;
+    pdfGrund(s, titel+(sn?" (Fortsetzung)":""),
+      "Gantt · Stand "+kurzTag(HEUTE)+" · "+kurzTag(von)+" bis "+kurzTag(bis)
+      +" · eigene Fristen des Outliners", sk);
+    s.dick(0.7);
+    marken.forEach(([a,bez])=>{
+      const x=X0+a/100*FB;
+      s.strich(OL_FARBE.rule).linie(x,OBEN-16,x,UNTEN);
+      s.fuell(OL_FARBE.ink3).text(bez,x+5,OBEN-21,8*Math.min(sk,1.3));
+    });
+    if(HEUTE>=von && HEUTE<=bis){
+      s.strich(OL_FARBE.signal).dick(1).linie(px(HEUTE),OBEN-16,px(HEUTE),UNTEN);
+      s.fuell(OL_FARBE.signal).text("heute",px(HEUTE),OBEN-34,7.5*Math.min(sk,1.3),{wo:"m"});
+    }
+    let y=OBEN;
+    teil.forEach(({k,von:v,bis:z,art,tiefe})=>{
+      s.fuell(tiefe===0?OL_FARBE.ink:OL_FARBE.ink2)
+       .textEng(k.t||"Ohne Text", PRAND+tiefe*12*sk, y+4*sk,
+                (tiefe===0?10:9.5)*sk, NAM-16-tiefe*12*sk, {fett:tiefe<=1});
+      const x=px(v), br=Math.max(px(z)-x+FB/tage, 4*sk), rot=olSpaet(k), BH=12*sk;
+      if(art==="raute"){
+        const r=5.5*sk;
+        s.fuell(rot?OL_FARBE.signal:OL_FARBE.tinte).weg([[x,y-r],[x+r,y],[x,y+r],[x-r,y]]);
+      } else if(art==="fasst"){
+        s.strich(OL_FARBE.rule2).dick(1).rund(x,y-BH*0.375,br,BH*0.75,2.5*sk,"S");
+      } else {
+        s.fuell(rot?OL_FARBE.signal:OL_FARBE.tinte).rund(x,y-BH/2,br,BH,3*sk);
+      }
+      if(art!=="fasst"){
+        const bez = k.von ? kurzTag(v)+" – "+kurzTag(z) : kurzTag(v);
+        const bb=pdfBreite(bez,7.5*sk);
+        let bx = art==="raute" ? x+10*sk : x+br+6*sk;
+        const h=px(HEUTE);
+        if(bx-4<h && h<bx+bb+4) bx=x-10*sk-bb;
+        if(bx>X0-70 && bx+bb<X1)
+          s.fuell(rot?OL_FARBE.signal:OL_FARBE.ink3).text(bez,bx,y+3*sk,7.5*sk);
+      }
+      y+=ZH;
+    });
+    s.strich(OL_FARBE.rule).dick(0.8).linie(PRAND,UNTEN+10,X1,UNTEN+10);
+    s.fuell(OL_FARBE.ink3).text("Balken: Zeitraum   ·   Raute: einzelne Frist   ·   "
+      +"offener Rahmen: fasst die Unterpunkte zusammen",
+      PRAND, UNTEN+18+8*sk, 8*sk);
+    pdfFuss(s,"Diese Fristen gehören dem Outliner. Sie stehen nicht im Planner, "
+      +"nicht im Kalender und nicht im Jahreskalender.",
+      (format==="auto"?"A4":format)+" quer · "
+      +(anzahl>1 ? "Blatt "+(sn+1)+" von "+anzahl : "ein Blatt"), sk);
+    seiten.push(s);
+  }
+  olPdfGeben(olPdfName("gantt"), seiten);
+  melde("PDF ausgegeben · "+(anzahl>1 ? anzahl+" Blätter" : "ein Blatt"));
+}
+
+function olPdfMindmap(format){
+  if(format!=="auto" && !OL_FORMAT[format]) format="auto";
+  const L=olMindLage(11,9.5,12.5);
+  if(!L){ melde("Zu wenig zum Zeichnen"); return; }
+  const K=L.kaesten;
+  const l=Math.min(...K.map(k=>k.x-k.b/2)), r=Math.max(...K.map(k=>k.x+k.b/2));
+  const o=Math.min(...K.map(k=>k.y-k.h/2)), u=Math.max(...K.map(k=>k.y+k.h/2));
+  const kleinste=Math.min(...K.map(k=>k.gr));
+
+  /* Nie umbrechen. Ein zerschnittener Ast ist kein halber Ast. Also das
+     kleinste Blatt nehmen, auf dem die Schrift über sieben Punkt
+     bleibt — darunter ist ein Ausdruck nicht mehr zu lesen. */
+  const kette = format==="auto" ? ["A4","A3","A2","A1","A0"] : [format];
+  let gew=kette[kette.length-1], m=0, B=0, H=0, FX,FY,FB,FH;
+  for(const nm of kette){
+    [B,H]=OL_FORMAT[nm];
+    FX=PRAND+8; FY=PRAND+58; FB=B-2*FX; FH=H-FY-PRAND-26;
+    m=Math.min(FB/(r-l), FH/(u-o), 1.5);
+    gew=nm;
+    if(kleinste*m>=7) break;
+  }
+
+  const s=pdfBlatt(B,H);
+  const sk=Math.min(1.6,Math.sqrt(B/842));
+  pdfGrund(s,(L.wurzel.t||"Gliederung"),
+    "Mindmap · Stand "+kurzTag(HEUTE)+" · "+K.length+" Punkte", sk);
+
+  const vx=FX+FB/2-(l+r)/2*m, vy=FY+FH/2-(o+u)/2*m;
+  const PX=x=>vx+x*m, PY=y=>vy+y*m;
+  L.bogen.forEach(([x1,y1,x2,y2,farbe,d])=>
+    s.strich(OL_FARBE[farbe]).dick(d*Math.max(m,0.6)).bogen(PX(x1),PY(y1),PX(x2),PY(y2)));
+  K.forEach(k=>{
+    const b=k.b*m, h=k.h*m, gr=k.gr*m;
+    const x=PX(k.x)-b/2, y=PY(k.y)-h/2;
+    s.fuell(k.rot?OL_FARBE.signalS:(k.gr>12?OL_FARBE.raise:OL_FARBE.sheet)).rund(x,y,b,h,5*m);
+    s.strich(k.rot?OL_FARBE.signal:OL_FARBE.rule2).dick((k.rot?1:0.8)*Math.max(m,0.6))
+     .rund(x,y,b,h,5*m,"S");
+    s.fuell(k.rot?OL_FARBE.signal:(k.fett?OL_FARBE.ink:OL_FARBE.ink2))
+     .text(k.t,PX(k.x),PY(k.y)+gr*0.35,gr,{wo:"m",fett:k.fett});
+  });
+  pdfFuss(s,"Die Wurzel in der Mitte, die Äste nach beiden Seiten. Überfälliges ist rot.",
+    gew+" quer · ein Blatt", sk);
+
+  olPdfGeben(olPdfName("mindmap"), [s]);
+  melde("PDF ausgegeben · "+gew+" quer");
+}
 
 /* ---------- Code-Beautifier ---------- */
 /* ===== MODUL beautifier ===== */
@@ -4062,6 +5058,155 @@ function standZeigen(){
 }
 
 /* ============================================================
+   9b — EIN PDF VON HAND SCHREIBEN
+
+   Ohne Bibliothek und ohne Druckdialog — beides zusammen lässt nur
+   einen Weg: die Datei selbst bauen. Eine Bibliothek wäre erlaubt
+   gewesen; jsPDF steht unter MIT und dürfte eingebettet werden. Es
+   sind aber 420 KB gegenüber diesen rund 200 Zeilen, sie brächte
+   nichts, was Gantt und Mindmap brauchen, und ihre Zeichengrenze
+   wäre dieselbe. Die Messung steht in `doku/SPEC.md`.
+
+   Ein PDF ist ein Textformat aus nummerierten Objekten, einer Tabelle
+   ihrer Byte-Positionen und einem Strom von Zeichenbefehlen. Benutzt
+   werden nur die vierzehn Standardschriften — Helvetica ist darunter
+   und muss deshalb nicht eingebettet werden. Das spart die
+   Schriftdatei und die Lizenzfrage.
+
+   Zwei Fallen sind hier ausgeräumt:
+
+   * Der Nullpunkt liegt **unten links**, nicht oben links. `hoch()`
+     rechnet um, damit der Zeichencode von oben denken darf.
+   * Die Standardschriften erwarten **WinAnsi**, nicht UTF-8. Ein „ä“
+     ist dort ein einzelnes Byte. Ohne die Umrechnung stünde
+     Kauderwelsch im Blatt.
+
+   Die Grenze: Pfeile und Häkchen werden zu „?“. Namen, Umlaute und
+   das Eurozeichen nicht.
+   ============================================================ */
+const PDF_NORM=[278,278,355,556,556,889,667,191,333,333,389,584,278,333,278,278,
+556,556,556,556,556,556,556,556,556,556,278,278,584,584,584,556,
+1015,667,667,722,722,667,611,778,722,278,500,667,556,833,722,778,
+667,778,722,667,611,722,667,944,667,667,611,278,278,278,469,556,
+333,556,556,500,556,556,278,556,556,222,222,500,222,833,556,556,
+556,556,333,500,278,556,500,722,500,500,500,334,260,334,584];
+const PDF_FETT=[278,333,474,556,556,889,722,238,333,333,389,584,278,333,278,278,
+556,556,556,556,556,556,556,556,556,556,333,333,584,584,584,611,
+975,722,722,722,722,667,611,778,722,278,556,722,611,833,722,778,
+667,778,722,667,611,722,667,944,667,667,611,333,278,333,584,556,
+333,556,611,556,611,556,333,611,611,278,278,556,278,889,611,611,
+611,611,389,556,333,611,556,778,556,556,500,389,280,389,584];
+const PDF_SONDER={0xE4:[556,556],0xF6:[556,611],0xFC:[556,611],0xC4:[667,722],
+  0xD6:[778,778],0xDC:[722,722],0xDF:[611,611],0xB7:[278,278],0x96:[556,556],
+  0x97:[1000,1000],0xA0:[278,278],0xE9:[556,556],0xE8:[556,556]};
+const PDF_UMSETZ={0x2013:0x96,0x2014:0x97,0x2018:0x91,0x2019:0x92,0x201A:0x82,
+  0x201C:0x93,0x201D:0x94,0x201E:0x84,0x2022:0x95,0x2026:0x85,0x20AC:0x80,
+  0x2039:0x8B,0x203A:0x9B};
+
+function pdfBytes(s){
+  const aus=[];
+  for(const z of String(s)){
+    const c=z.codePointAt(0);
+    if(PDF_UMSETZ[c]!==undefined) aus.push(PDF_UMSETZ[c]);
+    else if(c<=0xFF) aus.push(c);
+    else aus.push(0x3F);
+  }
+  return aus;
+}
+function pdfBreite(text, groesse, fett){
+  let s=0;
+  for(const c of pdfBytes(text)){
+    if(c>=32 && c<=126) s+=(fett?PDF_FETT:PDF_NORM)[c-32];
+    else if(PDF_SONDER[c]) s+=PDF_SONDER[c][fett?1:0];
+    else s+=556;
+  }
+  return s/1000*groesse;
+}
+const pdfRoh = t => pdfBytes(t).map(c =>
+  (c===40||c===41||c===92) ? "\\"+String.fromCharCode(c)
+  : (c<32||c>126) ? "\\"+c.toString(8).padStart(3,"0")
+  : String.fromCharCode(c)).join("");
+const pz = n => (Math.round(n*100)/100).toString();
+
+function pdfBlatt(B,H){
+  const op=[], hoch=y=>H-y;
+  const S={
+    B,H,hoch,
+    fuell(f){ op.push(pz(f[0])+" "+pz(f[1])+" "+pz(f[2])+" rg"); return S; },
+    strich(f){ op.push(pz(f[0])+" "+pz(f[1])+" "+pz(f[2])+" RG"); return S; },
+    dick(w){ op.push(pz(w)+" w"); return S; },
+    rechteck(x,y,b,h,a){ op.push(pz(x)+" "+pz(hoch(y+h))+" "+pz(b)+" "+pz(h)+" re "+(a||"f")); return S; },
+    rund(x,y,b,h,r,a){
+      r=Math.min(r,b/2,h/2); const k=r*0.5523, Y=v=>hoch(v);
+      op.push(pz(x+r)+" "+Y(y)+" m", pz(x+b-r)+" "+Y(y)+" l",
+        pz(x+b-r+k)+" "+Y(y)+" "+pz(x+b)+" "+Y(y+r-k)+" "+pz(x+b)+" "+Y(y+r)+" c",
+        pz(x+b)+" "+Y(y+h-r)+" l",
+        pz(x+b)+" "+Y(y+h-r+k)+" "+pz(x+b-r+k)+" "+Y(y+h)+" "+pz(x+b-r)+" "+Y(y+h)+" c",
+        pz(x+r)+" "+Y(y+h)+" l",
+        pz(x+r-k)+" "+Y(y+h)+" "+pz(x)+" "+Y(y+h-r+k)+" "+pz(x)+" "+Y(y+h-r)+" c",
+        pz(x)+" "+Y(y+r)+" l",
+        pz(x)+" "+Y(y+r-k)+" "+pz(x+r-k)+" "+Y(y)+" "+pz(x+r)+" "+Y(y)+" c",
+        "h "+(a||"f"));
+      return S;
+    },
+    linie(x1,y1,x2,y2){ op.push(pz(x1)+" "+pz(hoch(y1))+" m "+pz(x2)+" "+pz(hoch(y2))+" l S"); return S; },
+    bogen(x1,y1,x2,y2){ const mx=(x1+x2)/2;
+      op.push(pz(x1)+" "+pz(hoch(y1))+" m "+pz(mx)+" "+pz(hoch(y1))+" "
+        +pz(mx)+" "+pz(hoch(y2))+" "+pz(x2)+" "+pz(hoch(y2))+" c S"); return S; },
+    weg(pk,a){ pk.forEach(([x,y],i)=>op.push(pz(x)+" "+pz(hoch(y))+" "+(i?"l":"m")));
+      op.push("h "+(a||"f")); return S; },
+    text(t,x,y,gr,o){
+      o=o||{}; const b=pdfBreite(t,gr,o.fett);
+      const px = o.wo==="m" ? x-b/2 : o.wo==="r" ? x-b : x;
+      op.push("BT /"+(o.fett?"F2":"F1")+" "+pz(gr)+" Tf 1 0 0 1 "
+        +pz(px)+" "+pz(hoch(y))+" Tm ("+pdfRoh(t)+") Tj ET");
+      return S;
+    },
+    textEng(t,x,y,gr,max,o){
+      t=String(t);
+      if(pdfBreite(t,gr,o&&o.fett)>max){
+        while(t.length>1 && pdfBreite(t+"…",gr,o&&o.fett)>max) t=t.slice(0,-1);
+        t+="…";
+      }
+      return S.text(t,x,y,gr,o);
+    },
+    strom:()=>op.join("\n")
+  };
+  return S;
+}
+
+function pdfBauen(seiten){
+  let aus="", pos=[];
+  const schreib=s=>{ aus+=s; };
+  const objekt=(nr,inhalt)=>{ pos[nr]=aus.length; schreib(nr+" 0 obj\n"+inhalt+"\nendobj\n"); };
+  schreib("%PDF-1.4\n%\xE2\xE3\xCF\xD3\n");
+  const ERST=5, nrn=seiten.map((_,i)=>ERST+i*2);
+  objekt(1,"<< /Type /Catalog /Pages 2 0 R >>");
+  objekt(2,"<< /Type /Pages /Kids ["+nrn.map(n=>n+" 0 R").join(" ")
+    +"] /Count "+seiten.length+" >>");
+  objekt(3,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>");
+  objekt(4,"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>");
+  seiten.forEach((s,i)=>{
+    const nr=nrn[i];
+    objekt(nr,"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 "+pz(s.B)+" "+pz(s.H)
+      +"] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents "+(nr+1)+" 0 R >>");
+    const inhalt=s.strom();
+    objekt(nr+1,"<< /Length "+inhalt.length+" >>\nstream\n"+inhalt+"\nendstream");
+  });
+  const xref=aus.length, anz=ERST+seiten.length*2;
+  let t="xref\n0 "+anz+"\n0000000000 65535 f \n";
+  for(let n=1;n<anz;n++) t+=String(pos[n]||0).padStart(10,"0")+" 00000 n \n";
+  schreib(t);
+  schreib("trailer\n<< /Size "+anz+" /Root 1 0 R >>\nstartxref\n"+xref+"\n%%EOF\n");
+  /* Als Bytes ausgeben, nicht als Text: Die Byte-Positionen in der
+     Tabelle oben zählen Bytes. Ginge die Datei als UTF-8 hinaus, wäre
+     jedes Zeichen über 127 zwei Bytes lang und jede Position falsch. */
+  const bytes=new Uint8Array(aus.length);
+  for(let i=0;i<aus.length;i++) bytes[i]=aus.charCodeAt(i)&0xFF;
+  return bytes;
+}
+
+/* ============================================================
    10 — TASTATUR
    ============================================================ */
 /* ---------- Die Tastenkuerzel ----------
@@ -4094,7 +5239,19 @@ const TASTEN=[
    wo:"je nach Ort"},
   {t:"↑ ↓", nm:"Treffer wählen", wo:"Leiste, wenn getippt"},
   {t:"↵", nm:"Gewählten Treffer nehmen", wo:"Leiste, wenn getippt"},
-  {t:"a–z", nm:"Springt ins Suchfeld", wo:"Leiste"}
+  {t:"a–z", nm:"Springt ins Suchfeld", wo:"Leiste"},
+  /* Die Tasten des Outliners hängen am Feld, nicht an `document` — sie
+     tragen deshalb kein `tun`. In der Liste stehen sie trotzdem, weil
+     die Hilfe sie nennen muss; die Spalte sagt, wo sie gelten.
+     Rückgängig gibt es sonst nirgends im Dashboard. */
+  {t:"↵", nm:"Neuer Knoten, teilt an der Schreibmarke", wo:"Outliner"},
+  {t:"Tab · ⇧Tab", nm:"Einrücken · Ausrücken, mit allen Unterknoten", wo:"Outliner"},
+  {t:"Alt ↑ ↓", nm:"Knoten verschieben, mit allen Unterknoten", wo:"Outliner"},
+  {t:"⌫", nm:"Am Zeilenanfang: mit der Zeile darüber verbinden", wo:"Outliner"},
+  {t:"⌘.", nm:"Zweig zu- und aufklappen", wo:"Outliner"},
+  {t:"⇧↵", nm:"Notizzeile öffnen", wo:"Outliner"},
+  {t:"Alt ⇧ → ←", nm:"In einen Knoten springen · wieder heraus", wo:"Outliner"},
+  {t:"⌘Z · ⌘⇧Z · ⌘Y", nm:"Rückgängig · Wiederherstellen", wo:"Outliner · ⌘Y noch nicht bestätigt"}
 ];
 
 document.addEventListener("keydown",e=>{

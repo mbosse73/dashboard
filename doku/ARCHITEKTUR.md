@@ -316,3 +316,26 @@ das an, statt still zu verschieben.
 
 **Nicht belegen:** `⌘N`, `⌘T`, `⌘W` — Edge fängt sie ab. Eine Beschriftung,
 die etwas verspricht, das nicht passiert, ist schlechter als keine.
+
+---
+
+## Ein PDF schreiben
+
+`pdfBlatt(breite, hoehe)` liefert ein Blatt mit `fuell`, `strich`,
+`dick`, `rechteck`, `rund`, `linie`, `bogen`, `weg`, `text` und
+`textEng`. `pdfBauen([blatt, …])` macht daraus die fertigen Bytes.
+`pdfBreite(text, groesse, fett)` misst, was Zentrieren und
+Kastenbreiten brauchen.
+
+Zwei Dinge, die man beim Aufrufen wissen muss:
+
+* Die Blätter rechnen **von oben**. Der Nullpunkt eines PDF liegt unten
+  links; `hoch()` dreht das um, damit der Zeichencode nicht umdenken
+  muss.
+* Es gibt nur **Helvetica und Helvetica-Bold**, und nur die Zeichen, die
+  WinAnsi kennt. Alles darüber wird zu `?`. Umlaute, Akzente und das
+  Eurozeichen sind dabei; Pfeile und Häkchen nicht.
+
+Der Schreiber ist bewusst kein allgemeines PDF-Werkzeug. Er kann, was
+Gantt und Mindmap brauchen, und sonst nichts.
+

@@ -427,3 +427,45 @@ stand sich selbst im Weg.
 **Regel:** Über den Umbruch entscheidet die **kleinste vertretbare**
 Größe. Erst danach wird das Blatt gefüllt.
 
+---
+
+## 22 — Aufräumen mit `replace`, nachdem der Text schon fertig war
+
+Der SQL-Formatierer setzte beim Zusammenbauen zu viele Zwischenräume und
+rückte sie hinterher mit `replace(/ +\./g, ".")` gerade. Das griff in
+**jede** Stelle des Textes — auch in Zeichenketten. Aus `'a . b'` wäre
+still `'a. b'` geworden.
+
+**Regel:** Wer über Zwischenräume entscheidet, tut das an **einer**
+Stelle beim Schreiben, nicht hinterher am fertigen Text. Ein
+Suchen-und-Ersetzen kennt den Unterschied zwischen Code und Inhalt
+nicht.
+
+---
+
+## 23 — Eine Prüfung, die den eigentlichen Fehler nicht sehen konnte
+
+Die Rückprobe des SQL-Formatierers verglich alle Wörter **ohne Rücksicht
+auf Groß und Klein** — sie sollte ja gerade zulassen, dass
+Schlüsselwörter großgeschrieben werden. Damit hätte sie einen
+umgeschriebenen Spaltennamen nie bemerkt, und das ist genau der Fehler,
+den sie fangen soll.
+
+**Regel:** Eine Prüfung, die eine Abweichung erlaubt, muss die Erlaubnis
+so eng fassen wie möglich. Hier: Der Schriftfall darf sich nur bei den
+vierundzwanzig Wörtern unterscheiden, die überhaupt großgeschrieben
+werden dürfen.
+
+---
+
+## 24 — Ein Backtick im Kommentar beendet das Template-Literal
+
+Ein CSS-Kommentar innerhalb eines JavaScript-Template-Literals enthielt
+`\`min-width:0\`` in Anführung — die Backticks beendeten die
+Zeichenkette mitten im Satz. Die Fehlermeldung zeigte auf die Zeile
+danach und nannte einen Bezeichner, den es nicht gab.
+
+**Regel:** In Template-Literalen keine Backticks zur Auszeichnung. Dort
+gelten die deutschen Anführungszeichen, die im Projekt ohnehin üblich
+sind.
+

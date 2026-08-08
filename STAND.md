@@ -1,6 +1,26 @@
 # Stand
 
-**Zuletzt: Schritt 9 — der Outliner, in drei Stufen.**
+**Zuletzt: SQL im Code-Beautifier (Modul 16).**
+
+Der Beautifier formatiert jetzt auch SQL und erkennt es in der Leiste.
+Drei Vorgaben bestimmten die Umsetzung: `CASE` bricht um, SQL wird
+erkannt, und **Tabellen- und Spaltennamen dürfen sich nicht ändern,
+auch nicht im Schriftfall**.
+
+Die letzte war die folgenreichste. Sie hat die Liste der
+großzuschreibenden Wörter von rund siebzig auf vierundzwanzig
+zusammengestrichen — Datentypen und Wörter wie `TEXT`, `DATE`, `KEY`,
+`NAME`, `ROW` sind heraus, weil eine Spalte so heißen darf. Und sie hat
+eine zweite Prüfung in die Rückprobe gebracht, die vorher gar nicht
+sehen konnte, ob ein Name umgeschrieben wurde.
+
+`werkzeug/sql.mjs` bleibt als Prüfstand liegen: derselbe Code, außerhalb
+der Anwendung ausführbar. Wer die Regeln ändert, kann sie dort ohne
+Browser durchspielen.
+
+---
+
+**Davor: Schritt 9 — der Outliner, in drei Stufen.**
 
 Aus einer mitgebrachten Outliner-App wurde der Funktionsumfang Punkt für
 Punkt durchgegangen und entschieden. Umgesetzt ist die schlanke Fassung,

@@ -540,9 +540,49 @@ Balken wachsen mit dem Format. Eine Mindmap wird **nie** umgebrochen; bei
 
 ---
 
-## 16 Code-Beautifier — Gerüst
+## 16 Code-Beautifier — fertig
 
-JSON einrücken. Erkennt JSON in der Leiste selbst und bietet Formatieren an.
+JSON und SQL einrücken. Beides wird in der Leiste selbst erkannt und
+sofort als Angebot gezeigt.
+
+**SQL ist kein Parser.** Der Formatierer zerlegt in Wörter und setzt
+Zeilenumbrüche. Er versteht nicht, was die Abfrage tut, kennt keinen
+Dialekt und prüft nicht, ob das SQL gültig ist.
+
+**Namen werden nie angetastet.** Großgeschrieben wird nur, was
+strukturell als Schlüsselwort erkannt ist — die Klausel- und
+Verbundfolgen sowie eine kurze Liste von Operatorwörtern. Alles andere
+bleibt Zeichen für Zeichen so stehen, wie es getippt wurde, **auch im
+Schriftfall**. Die Liste war zunächst länger und enthielt Datentypen und
+Wörter wie `TEXT`, `DATE`, `KEY`, `NAME`, `FIRST`, `ROW`; das war falsch,
+denn eine Spalte darf so heißen. `left(name, 3)` bleibt deshalb
+unberührt, obwohl `LEFT` ein reserviertes Wort ist.
+
+**Die Rückprobe.** Nach dem Formatieren wird die Ausgabe erneut zerlegt
+und Bestandteil für Bestandteil mit der Eingabe verglichen — Art, Text
+und bei Namen auch der Schriftfall. Weicht etwas ab, wird **nichts**
+ausgegeben, sondern gesagt, woran es lag. Ein Formatierer, der still ein
+Wort verschluckt, ist gefährlicher als gar keiner: Man merkt es erst an
+falschen Zahlen.
+
+**Die Regeln**
+
+* Jede Klausel beginnt eine Zeile, ebenso jeder Verbund.
+* Nach `SELECT`, `GROUP BY`, `ORDER BY`, `SET`, `VALUES`, `RETURNING`
+  steht ein Eintrag je Zeile, eingerückt.
+* `ON` steht eingerückt unter seinem Verbund, die Bedingung in derselben
+  Zeile; folgende `AND` darunter.
+* `CASE` bricht um: `WHEN`, `ELSE` und `END` beginnen je eine Zeile,
+  `THEN` bleibt bei seinem `WHEN`. Auch verschachtelt.
+* Eine Klammer bricht nur um, wenn eine Unterabfrage darin steht.
+  `count(*)` bleibt `count(*)`.
+* Zeichenketten, Kommentare und zitierte Namen bleiben unverändert, auch
+  `'Müller''s'` und `[Vor Name]`.
+
+**Erkennung in der Leiste.** JSON an `{` oder `[`, SQL am ersten Wort —
+`select`, `with`, `insert`, `update`, `delete`, `create`, `alter`,
+`drop`, `truncate`. Bewusst streng: Ein „select" mitten in einem Satz
+macht daraus keine Abfrage, und ein bloßes `select` ist zu kurz.
 
 **Möglich später:** HTML, CSS, XML. Ohne externe Bibliothek — alles muss
 selbst geschrieben werden.

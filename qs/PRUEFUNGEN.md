@@ -827,3 +827,59 @@ Platzhalter für die kommenden Schritte, damit nichts verlorengeht.
 34. Planner, Kalender und Jahreskalender öffnen — taucht **keine**
     Outliner-Frist dort auf?
 
+---
+
+## Schritt 16 — SQL im Code-Beautifier
+
+`dashboard.html` per **Doppelklick** in Edge.
+
+### Erkennung in der Leiste
+
+1. `select id from kunden where a=1` tippen — erscheint „SQL einrücken"?
+2. `Ich soll etwas selektieren und dann melden` — erscheint **kein**
+   Angebot? (Das Wort „selektieren" steht nicht am Anfang.)
+3. Nur `select` tippen — **kein** Angebot? (Zu kurz.)
+4. `{"a":1,"b":[2,3]}` — erscheint „JSON einrücken", **nicht** SQL?
+5. Ein Treffer angeklickt: Öffnet sich der Beautifier mit der richtigen
+   Art vorgewählt und dem Text schon im Feld?
+
+### Namen bleiben, wie sie stehen
+
+Das ist der wichtigste Abschnitt. Diese Zeile einsetzen und formatieren:
+
+```
+select date, text, key, name, [Vor Name], left(name,3) from Kunden_Stamm where Status='offen'
+```
+
+6. Stehen `date`, `text`, `key`, `name` danach immer noch **klein**?
+7. Ist aus `left(name,3)` **nicht** `LEFT(...)` geworden?
+8. Steht `Kunden_Stamm` unverändert da, mit großem K und großem S?
+9. Steht `Status` unverändert da, nicht `STATUS`?
+10. Ist `[Vor Name]` unangetastet, samt Leerzeichen?
+
+### Formatieren
+
+11. Eine Abfrage mit `LEFT JOIN … ON … AND …` — steht `ON` eingerückt
+    unter dem Verbund, das `AND` darunter?
+12. Eine Abfrage mit `CASE WHEN … THEN … ELSE … END` — bricht sie um?
+    Bleibt `THEN` bei seinem `WHEN`?
+13. Eine Unterabfrage in Klammern — bricht die Klammer um?
+14. `count(*)` — bleibt es zusammen, ohne Umbruch?
+15. Ein Text mit Apostroph: `'Müller''s Firma'` — bleibt er unverändert?
+16. Ein Kommentar `-- so` und `/* so */` — bleiben beide erhalten?
+17. Zwei Anweisungen mit `;` — steht eine Leerzeile dazwischen?
+
+### Wenn es nicht geht
+
+18. Etwas eingeben, das kein SQL ist (ein deutscher Satz) — kommt eine
+    Ausgabe oder eine Meldung? Beides ist zulässig, **verschwinden darf
+    nichts**.
+19. Auf JSON umschalten und ungültiges JSON formatieren — erscheint die
+    rote Meldung, und bleibt das Ausgabefeld leer?
+
+### Zusammenspiel
+
+20. Zwischen JSON und SQL hin- und herschalten — bleibt die Eingabe
+    stehen, wird das Ergebnis geleert?
+21. Beide Themen ansehen — ist der Schalter in Basecamp lesbar?
+

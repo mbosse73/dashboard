@@ -9,11 +9,16 @@ dieser Reihenfolge:
 
 0. **Schritt 0** ist erledigt — alle Prüfungen bestanden, nichts mehr
    blockiert
-1. **Schritt 4** (Textbausteine) und der Apps-Teil von **Schritt 7** —
-   seit dem bestandenen Browsertest nicht mehr blockiert
-2. **Die Tastenprüfung** — welche Kombinationen Edge durchlässt. `F1`
-   und `⇧F1` der Hilfe sowie `Strg+Y` im Outliner sind nicht bestätigt
+1. **Schritt 4** — Textbausteine. Seit dem bestandenen Browsertest nicht
+   mehr blockiert und damit das letzte offene Modul außer Workflows
+2. **Die Tastenprüfung** — welche Kombinationen Edge durchlässt. Nicht
+   bestätigt sind `F1` und `⇧F1` der Hilfe, `Strg+Y` im Outliner und ob
+   Edge das PDF des Outliners überhaupt herunterlädt
 3. **Schritt 6** — Workflows, zuletzt
+
+**Schritt 7 ist seit dem Apps-Teil vollständig.** Von dreizehn Modulen
+sind elf fertig; Gerüst sind nur noch Textbausteine (05) und
+Workflows (13).
 
 ---
 
@@ -203,7 +208,7 @@ Format wie die Felder des Dialog-Bausteins.
 
 ---
 
-## Schritt 7 — Bookmarks und Apps bearbeiten
+## Schritt 7 — Bookmarks und Apps bearbeiten · **erledigt**
 
 **Bookmarks: erledigt.** Anlegen, Bearbeiten, Löschen, Anheften und Lösen,
 Gruppen umbenennen und zusammenlegen. Öffnen in einem neuen Tab, aus dem
@@ -218,10 +223,20 @@ Entwurf mit drei Fassungen und gemessenen Höhen unter
 Der Teil hing **nicht** am Browsertest: Der betrifft das Öffnen einer
 lokalen Datei, und Bookmarks zeigen auf `http(s)`. Deshalb vorgezogen.
 
-**Apps: offen, aber nicht mehr blockiert.** Schritt 0 hat bestätigt, dass
-Edge eine andere lokale Datei aus einer lokal geöffneten Datei heraus
-öffnet. `window.open` genügt, der anklickbare Verweis als Notweg entfällt.
-Zu bauen bleiben: Anlegen, Bearbeiten, Löschen und das Starten selbst.
+**Apps: erledigt.** Anlegen, Bearbeiten und Löschen über denselben
+Dialog-Baustein wie Kontakte und Bookmarks, ohne Gruppen. Löschen räumt
+einen belegten Platz mit ab. Ein Angebot in der Leiste erscheint nur,
+wenn das Getippte nach einem Pfad aussieht.
+
+Schritt 0 hatte bestätigt, dass Edge eine andere lokale Datei aus einer
+lokal geöffneten Datei heraus öffnet; `window.open` genügt, der
+anklickbare Verweis als Notweg entfiel.
+
+**Eine Korrektur an dieser Stelle:** Hier stand bis zuletzt „Zu bauen
+bleiben: Anlegen, Bearbeiten, Löschen **und das Starten selbst**". Das
+Starten trug schon seit dem Browsertest — `doku/SPEC.md` sagte es
+richtig, diese Datei war nicht nachgezogen worden. Zwei Dokumente, die
+sich widersprechen, sind schlimmer als eines, das schweigt.
 
 ---
 

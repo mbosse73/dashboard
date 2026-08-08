@@ -883,3 +883,36 @@ select date, text, key, name, [Vor Name], left(name,3) from Kunden_Stamm where S
     stehen, wird das Ergebnis geleert?
 21. Beide Themen ansehen — ist der Schalter in Basecamp lesbar?
 
+---
+
+## Schritt 7, Apps-Teil — Anlegen, Bearbeiten, Löschen
+
+Leiste → Appstarter.
+
+1. „Neue App" — geht der Dialog auf? Stehen die Felder in der Reihenfolge
+   Titel, Pfad, Wozu, Anheften? Nimmt keines davon nur eine halbe Zeile
+   allein ein?
+2. Ohne Titel speichern — wird das Titelfeld beanstandet und gezeigt?
+3. Ohne Pfad speichern — dasselbe für den Pfad?
+4. Eine App mit Titel und Pfad anlegen, „Auf die Leiste heften" an —
+   erscheint sie in der Liste **und** unter „Häufig benutzt" in der
+   Leiste?
+5. Sie **starten** — öffnet sich die Datei? (Nur mit einem Pfad, den es
+   auf Ihrem Rechner wirklich gibt.)
+6. „bearbeiten", Titel ändern, speichern — ändert sich auch die
+   Beschriftung auf dem Platz?
+7. „bearbeiten", Haken bei „Auf die Leiste heften" entfernen —
+   verschwindet der Platz?
+8. Löschen: Nennt die Rückfrage den freiwerdenden Platz? Sagt sie, dass
+   die Datei selbst bleibt?
+9. Nach dem Löschen: Rückt das, was hinter dem Platz lag, auf?
+10. Zwölf Plätze belegen, dann eine dreizehnte App anheften — kommt die
+    Meldung „12 Plätze belegt, nicht angeheftet"?
+11. In der Leiste `file:///C:/Tools/x.html` tippen — erscheint „als neue
+    App anlegen"? Ist der Pfad im Dialog schon eingetragen?
+12. In der Leiste ein gewöhnliches Wort tippen — erscheint **kein**
+    App-Angebot?
+13. Alle Apps löschen — steht dort ein Satz, der den Weg zeigt, statt
+    einer leeren Fläche?
+14. Sichern, neu laden, Laden — kommt alles zurück?
+

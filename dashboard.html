@@ -1616,9 +1616,9 @@ function vorgabe(){ return {
   {id:"b5",grp:"Rechnung",titel:"Zahlungserinnerung",text:"Unsere Rechnung {Nummer} vom {Datum} ist noch offen."}
  ],
  apps:[
-  {id:"p1",titel:"MD-Editor",url:"file:///C:/Tools/MD_Editor.html"},
-  {id:"p2",titel:"Vault-Manager",url:"file:///C:/Tools/vault.html"},
-  {id:"p3",titel:"Rechnungsdruck",url:"file:///C:/Tools/druck.html"}
+  {id:"p1",titel:"MD-Editor",url:"file:///C:/Tools/MD_Editor.html",notiz:"Markdown schreiben und ansehen"},
+  {id:"p2",titel:"Vault-Manager",url:"file:///C:/Tools/vault.html",notiz:""},
+  {id:"p3",titel:"Rechnungsdruck",url:"file:///C:/Tools/druck.html",notiz:""}
  ],
  marken:[
   {t:"MDN Web Docs",u:"developer.mozilla.org",g:"Dev"},{t:"GitHub",u:"github.com",g:"Dev"},
@@ -2822,9 +2822,7 @@ registriere({
 /* ===== MODUL apps ===== */
 registriere({
   id:"apps", nr:"08", nm:"Appstarter",
-  hilfe:"Lokale Werkzeuge zum Starten. Ein Klick öffnet die Datei in einem neuen Tab. Apps lassen sich anheften. Sie liegen dann auf denselben Plätzen wie Bookmarks.",
-  geruest:"Starten und Anheften tragen. Anlegen, Bearbeiten und Löschen "
-    +"fehlen noch.",
+  hilfe:"Lokale Werkzeuge zum Starten. Ein Klick öffnet die Datei in einem neuen Tab. Apps lassen sich anlegen, bearbeiten und löschen. Sie lassen sich auch anheften. Sie liegen dann auf denselben Plätzen wie Bookmarks. Beim Löschen wird ein belegter Platz frei.",
   zahl:()=>APPS.length,
   /* Apps liegen auf denselben Plätzen wie Bookmarks — es sind keine
      Bookmark-Plätze, sondern Plätze. Das Zeichen unterscheidet sie. */
@@ -2838,23 +2836,45 @@ registriere({
       treff("App starten",a.titel,a.url+heftPlatz("apps",a.id),"↵",
         ()=>appOeffne(a)));
   },
+  /* Ein Angebot in der Leiste nur, wenn das Getippte nach einem Pfad
+     aussieht. Sonst stünde bei jedem Wort ein App-Vorschlag zwischen
+     den übrigen. */
+  erfassen(d){
+    if(!/^(file:|[A-Za-z]:[\\/]|\\\\|\.{0,2}\/)/.test(d.titel)) return [];
+    return [treff("App", d.titel, "als neue App anlegen", "↵",
+      ()=>appDialog(null, d.titel))];
+  },
   flaeche(b){
-    b.appendChild(abschnitt("Apps",String(APPS.length)));
+    b.appendChild(abschnitt("Apps", String(APPS.length)));
     b.appendChild(el("div","hinweis",
       "Jede App öffnet in einem neuen Tab. „anheften“ legt sie auf einen "
       +"der Plätze in der Leiste — dieselben, auf denen auch Bookmarks liegen."));
+
+    const anlegen=el("button","tat","Neue App");
+    anlegen.style.margin="2px 0 12px";
+    anlegen.onclick=()=>appDialog(null);
+    b.appendChild(anlegen);
+
+    if(!APPS.length){
+      b.appendChild(el("div","leer",
+        "Noch keine App. „Neue App“ legt die erste an — Titel und Pfad genügen."));
+      return;
+    }
     APPS.forEach(a=>{
       const i=heftWo("apps",a.id), an=i>=0;
       const r=el("div","z");
       const st=el("button","zb",'<span class="zt">'+esc(a.titel)+'</span>'
-        +'<span class="zm">'+esc(a.url)+'</span>');
+        +'<span class="zm">'+esc(a.url)+(a.notiz?" · "+esc(a.notiz):"")+'</span>');
       st.setAttribute("aria-label",a.titel+" starten");
       st.onclick=()=>appOeffne(a);
-      const p=el("button", an?"tat":"tat still",
+      const be=el("button","tat still","bearbeiten");
+      be.setAttribute("aria-label","Bearbeiten: "+a.titel);
+      be.onclick=()=>appDialog(a);
+      const pf=el("button", an?"tat":"tat still",
         an ? (i<HEFT_TASTEN?"⌘"+(i+1):"angeheftet") : "anheften");
-      p.setAttribute("aria-label",(an?"Anheftung lösen: ":"Anheften: ")+a.titel);
-      p.onclick=()=>heften("apps",a.id,a.titel);
-      r.append(st,p); b.appendChild(r);
+      pf.setAttribute("aria-label",(an?"Anheftung lösen: ":"Anheften: ")+a.titel);
+      pf.onclick=()=>heften("apps",a.id,a.titel);
+      r.append(st,be,pf); b.appendChild(r);
     });
   }
 });
@@ -2868,6 +2888,93 @@ function appOeffne(a){
   if(!String(a.url||"").trim()){ melde(a.titel+" hat keine Adresse"); return; }
   oeffneWeg(mkUrl(a.url), true);
   melde(a.titel+" gestartet");
+}
+
+/* ---------- Anlegen, Bearbeiten, Löschen ----------
+   Derselbe Baustein wie bei Kontakten und Bookmarks. Keine Gruppen: Eine
+   Handvoll lokaler Werkzeuge braucht keine Ordnung in Ordnern, und was
+   oft gebraucht wird, liegt ohnehin auf einem Platz. */
+const APPLEER={id:null, titel:"", url:"", notiz:"", fest:false};
+
+function appDialog(a, vorbelegt){
+  const neu=!a;
+  const start=Object.assign({}, APPLEER, a||{});
+  if(neu && vorbelegt) start.url=vorbelegt;
+  start.fest = !neu && heftWo("apps",a.id)>=0;
+  dialog({
+    art: neu ? "Neue App" : "App bearbeiten",
+    titel: w=>String(w.titel||"").trim()||String(w.url||"").trim(),
+    werte: start,
+    felder:[
+      /* Breit, obwohl ein Titel kurz ist: Es gibt kein zweites Feld,
+         das daneben passte, und ein Feld allein in einer halben Zeile
+         verbietet CLAUDE.md. Bei Bookmarks steht dort die Gruppe. */
+      {schl:"titel", nm:"Titel", art:"text", breit:true},
+      {schl:"url", nm:"Pfad zur Datei", art:"text", breit:true,
+       sub:"Zum Beispiel file:///C:/Tools/rechner.html — ein vorhandenes Schema bleibt unangetastet."},
+      {schl:"notiz", nm:"Wozu", art:"mehrzeilig", breit:true, ohneLeiste:true},
+      {schl:"fest", nm:"Auf die Leiste heften", art:"schalter",
+       sub:"Einer von "+HEFT_MAX+" Plätzen; die ersten "+HEFT_TASTEN
+         +" tragen ⌘1 bis ⌘8."}
+    ],
+    merk:"<b>Titel und Pfad sind Pflicht.</b> Eine App ist eine lokale Datei. "
+      +"Der Browsertest hat bestätigt, dass Edge sie aus einer lokal geöffneten "
+      +"Datei heraus öffnet.",
+    pruefe: w=>{
+      if(!String(w.titel||"").trim()) return {schl:"titel", text:"Ohne Titel geht es nicht."};
+      if(!String(w.url||"").trim()) return {schl:"url", text:"Ohne Pfad geht es nicht."};
+      return null;
+    },
+    loeschen: neu ? null : {
+      frage: w=>{
+        const i=heftWo("apps",a.id);
+        return "<b>"+esc(String(w.titel||"").trim()||a.titel)+" wirklich löschen?</b><ul>"
+          +"<li>Die Zeile verschwindet aus der Liste.</li>"
+          +"<li>"+(i>=0
+            ? "Platz "+(i<HEFT_TASTEN?"⌘"+(i+1):String(i+1))
+              +" wird frei; was dahinter liegt, rückt auf."
+            : "Es ist nichts angeheftet, kein Platz ändert sich.")+"</li>"
+          +"<li>Die Datei selbst bleibt, wo sie ist — gelöscht wird nur der Eintrag.</li>"
+          +"</ul>";
+      },
+      tun: ()=>appLoeschen(a)
+    },
+    speichern: w=>appSpeichern(w,neu)
+  });
+}
+
+function appSpeichern(w,neu){
+  w.titel=String(w.titel||"").trim();
+  w.url=String(w.url||"").trim();
+  w.notiz=String(w.notiz||"").trim();
+  const fest=!!w.fest; delete w.fest;
+
+  if(neu){ w.id=neueId("p"); APPS.push(w); }
+  else {
+    /* An Ort und Stelle ändern, nicht austauschen — PINS und die Leiste
+       zeigen auf dieses Objekt. */
+    const z=APPS.find(x=>x.id===w.id);
+    if(!z){ melde("Die App ist nicht mehr da."); male(); return; }
+    ["titel","url","notiz"].forEach(k=>{ z[k]=w[k]; });
+  }
+  const i=heftWo("apps",w.id);
+  let zusatz="";
+  if(fest && i<0){
+    if(PINS.length>=HEFT_MAX) zusatz=" · "+HEFT_MAX+" Plätze belegt, nicht angeheftet";
+    else { PINS.push({m:"apps", id:w.id});
+      zusatz=PINS.length<=HEFT_TASTEN ? " · liegt auf ⌘"+PINS.length : " · angeheftet"; }
+  } else if(!fest && i>=0){ PINS.splice(i,1); zusatz=" · Anheftung gelöst"; }
+  bewahre(); male();
+  melde(w.titel+(neu?" angelegt":" gespeichert")+zusatz);
+}
+
+function appLoeschen(a){
+  const nm=a.titel, i=heftWo("apps",a.id);
+  if(i>=0) PINS.splice(i,1);
+  const j=APPS.indexOf(a);
+  if(j>=0) APPS.splice(j,1);
+  bewahre(); male();
+  melde(nm+" gelöscht"+(i>=0?" · Platz frei":""));
 }
 /* ===== ENDE apps ===== */
 

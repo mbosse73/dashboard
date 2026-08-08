@@ -1,6 +1,20 @@
 # Stand
 
-**Zuletzt: SQL im Code-Beautifier (Modul 16).**
+**Zuletzt: Der Apps-Teil von Schritt 7 — Anlegen, Bearbeiten, Löschen.**
+
+Damit ist Schritt 7 vollständig. Der Appstarter meldet sich nicht mehr
+als Gerüst an; von dreizehn Modulen sind elf fertig, zwei sind Gerüst
+(Textbausteine und Workflows).
+
+Dabei kam ein Widerspruch zwischen zwei Dokumenten heraus:
+`doku/ROADMAP.md` behauptete, auch das **Starten** fehle noch. Es trug
+seit dem Browsertest, und `doku/SPEC.md` sagte es richtig — die Roadmap
+war nicht nachgezogen worden. Richtiggestellt, mit einer Notiz an der
+Stelle.
+
+---
+
+**Davor: SQL im Code-Beautifier (Modul 16).**
 
 Der Beautifier formatiert jetzt auch SQL und erkennt es in der Leiste.
 Drei Vorgaben bestimmten die Umsetzung: `CASE` bricht um, SQL wird

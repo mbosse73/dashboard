@@ -1,6 +1,32 @@
 # Stand
 
-**Zuletzt: Modul 17 — Einstellungen.**
+**Zuletzt: Wartung — vier Fehler behoben.**
+
+Eine Durchsicht der Anwendung hat vier Fehler gefunden, alle in
+Bestehendem, keiner in einem neuen Modul.
+
+Der schwerste: **Der SQL-Formatierer gab kaputtes SQL aus und meldete
+Erfolg dabei.** Sechs Schreibweisen waren betroffen, darunter `->>`
+und `1.5e10`. Die Rückprobe konnte es nicht sehen, weil sie die
+falsche Eigenschaft prüfte. Sie wacht jetzt auch über Zwischenräume und
+verweigert bei allem, was sie nicht kennt.
+
+Dazu: Der Meldungszettel ging nach dem Sichern nie wieder weg. Die
+Tastenkürzel trugen das Mac-Zeichen `⌘` auf einer Anwendung für
+Windows. Und Beispieldaten wurden in zehn Bereichen nach zwei
+verschiedenen Regeln erkannt.
+
+Neu im Prüflauf: **Kontrast.** Vierzehn Paare je Thema, gerechnet. Er
+fand sofort, dass zwei Referenzdateien noch den alten `--ink3` mit
+3,46 : 1 trugen.
+
+Zwei Vorschläge sind bewusst nicht umgesetzt: die Umstellung von
+Pixeln auf `rem` und das Verlegen der Modulliste. Begründung in
+`doku/SPEC.md`.
+
+---
+
+**Davor: Modul 17 — Einstellungen.**
 
 Sechs Einstellungen und zwei Knöpfe. Von vierzehn Modulen sind zwölf
 fertig; Gerüst sind nur noch Textbausteine (05) und Workflows (13).

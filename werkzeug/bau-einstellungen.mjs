@@ -131,11 +131,7 @@ ${abschnitt("3","Was in der Leiste steht",
   + '</div><div class="e-u">Ausgeschaltetes verschwindet nur aus der Leiste. '
   + 'Die Einträge selbst bleiben und sind über ihr Modul erreichbar.</div></div>')}
 
-${abschnitt("4","Ausgabe",
-  zeile("PDF-Format", wahl(["jedes Mal fragen","A4","A3","A2"],"jedes Mal fragen"),
-    "Betrifft Gantt und Mindmap im Outliner. Wer immer dasselbe nimmt, will nicht jedes Mal gefragt werden."))}
-
-${abschnitt("5","Daten",
+${abschnitt("4","Daten",
   zeile("Erinnerung ans Sichern", wahl(["aus","nach 3 Tagen","nach 7 Tagen"],"nach 7 Tagen"),
     "Die App weiß, wann Sie zuletzt gesichert haben. Bisher sagt sie nichts dazu.")
 + zeile("Beispieldaten", '<span class="knopf weg">Beispieldaten entfernen</span>',
@@ -174,6 +170,8 @@ festen Tabelle. Wären sie frei, stünde dort Falsches.</li>
 die Tastatur vor, nicht die App.</li>
 <li><b>Einstellungen für den Beautifier.</b> Einzugtiefe, führende
 Kommas, Kleinschreibung. Eine Gestalt, und die ist entschieden.</li>
+<li><b>Ein voreingestelltes PDF-Format.</b> Auf Ihren Wunsch gestrichen —
+der Dialog fragt weiterhin jedes Mal.</li>
 </ul>
 </div>
 </section>
@@ -181,10 +179,10 @@ Kommas, Kleinschreibung. Eine Gestalt, und die ist entschieden.</li>
 <section class="karte">
 <h2><span class="nr">i</span>Was das kostet</h2>
 <div class="hin">
-Rund <b>230 Zeilen</b> in <code>dashboard.html</code>: das Modul selbst,
+Rund <b>200 Zeilen</b> in <code>dashboard.html</code>: das Modul selbst,
 ein neuer Datenbereich für die beiden Arbeitsregeln, die Migration und
 die Stellen, an denen die Werte wirken.<br><br>
-<b>Neun Einstellungen sind das obere Ende.</b> Jede muss gesichert,
+<b>Sieben Einstellungen und zwei Knöpfe.</b> Jede muss gesichert,
 geladen, in der Hilfe erklärt und in jeder Fläche beachtet werden, die
 sie betrifft. Streichen Sie, was Sie nicht wirklich brauchen — jede
 gestrichene Zeile ist eine, die nie kaputtgehen kann.
